@@ -1,8 +1,16 @@
+import Head from "next/head"
 import Image from "next/image"
-import { Inter } from "next/font/google"
-
-const inter = Inter({ subsets: ["latin"] })
+import styles from "../styles/Home.module.css"
 
 export default function Home() {
-  return <div>Sell Page</div>
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>Sell - NFT Marketplace</title>
+        <meta name="description" content="Sell your NFT on the NFT Marketplace" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      Sell Page
+    </div>
+  )
 }
