@@ -3,18 +3,16 @@ import Link from "next/link"
 
 export default function Header() {
   return (
-    /* Styling doesnt get displayed in browser... */
-    <nav className="p-5 border-b-2 flex flex-row justify-betwwen items-center">
+    <nav className="p-5 border-b-2 flex flex-row justify-between items-center">
       <h1 className="py-4 px-4 font-bold text-3xl">NFT Marketplace</h1>
       <div className="flex flex-row items-center">
-        <Link className="mr-4 p-6" href="/">
-          Home
+        <Link href="/">
+          <a className="mr-4 p-6">Home</a>
         </Link>
-        <Link className="mr-4 p-6" href="/sell-nft">
-          Sell page
+        <Link href="/sell-nft">
+          <a className="mr-4 p-6">Sell NFT</a>
         </Link>
         <ConnectButton moralisAuth={false} />
-        {/* this means that we do not automatically try to connect to the moralis Database but just to our wallet */}
       </div>
     </nav>
   )
