@@ -27,8 +27,13 @@ deploying "NftMarketplace" (tx: 0xd8d83e529e72b9ec44754d36e6216caa34f81c4eb64d79
 deploying "BasicNft" (tx: 0x6f61206b6e82fc53e30f3abb392a13df6c520d19eff633e27e63456652de4cd5)...: deployed at 0x2c9D7F070D03D83588E22C23fE858AA71274AD2a with 2072874 gas
 
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-constants:
-this is the API for Patricks BasicNft. Is it correct for mine? Also why do i even need to have all the NFT Smart Contracts APIs? That means Every NFT Smart contract has to get "registered" at my marketplace to be able to get sold. Is that realistic for the real world?
-same goes for nft Marketplace, wher patricks is definetely not the same as mine. But where do i get the ABI from in that format? 
---> rewatch the moralis section where he sets up the constants.
+The Graph Deployment:
+
+✔ Upload subgraph to IPFS
+
+Build completed: QmWmKKLLWtAfChGi9rJwr18jWNi3dnrFXhaqVqTsai17nC
+
+Deployed to https://thegraph.com/studio/subgraph/nft-marketplace
+
+Subgraph endpoints:
+Queries (HTTP):     https://api.studio.thegraph.com/query/46078/nft-marketplace/v0.0.1
