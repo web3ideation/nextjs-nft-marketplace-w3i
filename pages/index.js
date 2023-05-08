@@ -16,7 +16,7 @@ export default function Home() {
     <div className="container mx-auto">
       <h1 className="py-4 px-4 font-bold text-2xl">Recently Listed</h1>
       <div className="flex flex-wrap">
-        {isWeb3Enabled && chainId ? (
+        {isWeb3Enabled && chainId ? ( // !!! it should show the available NFTs also without having a wallet connected.
           loading || !listedNfts ? (
             <div>Loading...</div>
           ) : (

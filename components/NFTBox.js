@@ -29,15 +29,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   const hideModal = () => setShowModal(false)
   const dispatch = useNotification()
 
-  const { runContractFunction: getTokenURI } = useWeb3Contract({
-    abi: nftAbi,
-    contractAddress: nftAddress,
-    functionName: "tokenURI",
-    params: {
-      tokenId: tokenId,
-    },
-  })
-
+  // !!! getTokenUri didn't work so probably the buyItem function wont work as well!
   const { runContractFunction: buyItem } = useWeb3Contract({
     abi: nftMarketplaceAbi,
     contractAddress: marketplaceAddress,
@@ -50,9 +42,10 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   })
 
   async function updateUI() {
-    const tokenURI = await getTokenURI()
-    console.log(`The TokenURI is ${tokenURI}`)
-    // We are going to cheat a little here...
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const basicNft = new ethers.Contract(nftAddress, nftAbi, provider)
+    const tokenURI = await basicNft.tokenURI(tokenId)
+    // We are going to cheat a little here... !!! what does he mean and how to do it the correct way?
     if (tokenURI) {
       // IPFS Gateway: A server that will return IPFS files from a "normal" URL.
       const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
