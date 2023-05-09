@@ -29,7 +29,12 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   const hideModal = () => setShowModal(false)
   const dispatch = useNotification()
 
-  // !!! getTokenUri didn't work so probably the buyItem function wont work as well!
+  const { runContractFunction: getTokenURI } = useWeb3Contract({
+    abi: nftAbi,
+    contractAddress: nftAddress,
+    functionName: "TOKEN_URI",
+  })
+
   const { runContractFunction: buyItem } = useWeb3Contract({
     abi: nftMarketplaceAbi,
     contractAddress: marketplaceAddress,
@@ -42,9 +47,8 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   })
 
   async function updateUI() {
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const basicNft = new ethers.Contract(nftAddress, nftAbi, provider)
-    const tokenURI = await basicNft.tokenURI(tokenId)
+    const tokenURI = await getTokenURI()
+    console.log(`The TokenURI is ${tokenURI}`)
     // We are going to cheat a little here... !!! what does he mean and how to do it the correct way?
     if (tokenURI) {
       // IPFS Gateway: A server that will return IPFS files from a "normal" URL.
@@ -55,13 +59,12 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
       setImageURI(imageURIURL)
       setTokenName(tokenURIResponse.name)
       setTokenDescription(tokenURIResponse.description)
+      // Ways for decentralizantion
       // We could render the Image on our sever, and just call our sever.
       // For testnets & mainnet -> use moralis server hooks
       // Have the world adopt IPFS
       // Build our own IPFS gateway
     }
-    // get the tokenURI
-    // using the image tag from the tokenURI, get the image
   }
 
   useEffect(() => {
