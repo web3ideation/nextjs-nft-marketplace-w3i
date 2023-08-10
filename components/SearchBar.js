@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import GET_ACTIVE_ITEMS from '../constants/subgraphQueries';
 
 const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
   const history = useRouter();
 
   const { loading, error, data } = useQuery(GET_ACTIVE_ITEMS, {
@@ -14,23 +13,26 @@ const SearchBar = ({ onSearch }) => {
     },
   });
 
-  const handleSearch = async () => {
-    if (data && data.activeItems) {
-      setSearchResults(data.activeItems);
+  useEffect(() => {
+    // Handle the fetched data here
+    if (!loading && !error && data && data.activeItems) {
+      onSearch(data.activeItems);
       console.log('Search term:', searchTerm, 'Results:', data.activeItems);
     }
+  }, [loading, error, data, searchTerm, onSearch]);
 
+  const handleSearch = async () => {
     try {
       const response = await fetch(`/my-nft?q=${searchTerm}`);
-      const data = await response.json();
+      const searchData = await response.json();
 
-      if (data && Array.isArray(data)) {
-        setSearchResults(data);
-        console.log('Search term:', searchTerm, 'Results:', data);
+      if (Array.isArray(searchData)) {
+        onSearch(searchData);
+        console.log('Search term:', searchTerm, 'Results:', searchData);
       }
     } catch (error) {
       console.error('Error fetching data:', error.message);
-      setSearchResults([]);
+      onSearch([]);
     }
 
     history.push(`/SearchResultPage?search=${searchTerm}`);
