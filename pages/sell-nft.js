@@ -1,5 +1,3 @@
-import Head from "next/head"
-import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import { Form, useNotification, Button } from "web3uikit"
 import { useMoralis, useWeb3Contract } from "react-moralis"
@@ -110,19 +108,21 @@ export default function Home() {
           {
             name: "NFT Address",
             type: "text",
-            inputWidth: "50%",
+            inputWidth: "100%",
             value: "",
             key: "nftAddress",
           },
           {
             name: "Token ID",
             type: "number",
+            inputWidth: "100%",
             value: "",
             key: "tokenId",
           },
           {
             name: "Price (in ETH)",
             type: "number",
+            inputWidth: "100%",
             value: "",
             key: "price",
           },
@@ -130,9 +130,13 @@ export default function Home() {
         title="Sell your NFT!"
         id="Main Form"
       />
-      <div>Withdraw {proceeds} proceeds</div>
+      <div className="flex flex-row justify-center">
+        <div>Withdraw {proceeds} proceeds</div>
+      </div>
       {proceeds != "0" ? (
         <Button
+          name="Withdraw"
+          type="button"
           onClick={() => {
             runContractFunction({
               params: {
@@ -145,11 +149,11 @@ export default function Home() {
               onSuccess: () => handleWithdrawSuccess,
             })
           }}
-          text="Withdraw"
-          type="button"
         />
       ) : (
-        <div>No proceeds detected</div>
+        <div className="flex flex-row justify-center">
+          <div>No proceeds detected</div>
+        </div>
       )}
     </div>
   )

@@ -7,6 +7,7 @@ import { Card, useNotification } from "web3uikit"
 import { ethers } from "ethers"
 import UpdateListingModal from "./UpdateListingModal"
 
+
 const truncateStr = (fullStr, strLen) => {
   if (fullStr.length <= strLen) return fullStr
 
@@ -28,6 +29,9 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   const [showModal, setShowModal] = useState(false)
   const hideModal = () => setShowModal(false)
   const dispatch = useNotification()
+
+  const [loadingImage, setLoadingImage] = useState(false); // Added loading state
+  const [errorLoadingImage, setErrorLoadingImage] = useState(false); // Added error state
 
   const { runContractFunction: getTokenURI } = useWeb3Contract({
     abi: nftAbi,
@@ -80,9 +84,9 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
     isOwnedByUser
       ? setShowModal(true)
       : buyItem({
-          onError: (error) => console.log(error),
-          onSuccess: handleBuyItemSuccess,
-        })
+        onError: (error) => console.log(error),
+        onSuccess: handleBuyItemSuccess,
+      })
   }
 
   const handleBuyItemSuccess = async (tx) => {
@@ -95,11 +99,39 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
     })
   }
 
+  // Load the image from IPFS and fall back to HTTP if needed
+  const loadImage = async () => {
+    try {
+      setLoadingImage(true); // Set loading state to true
+      setErrorLoadingImage(false); // Reset error state
+
+      const tokenURI = await getTokenURI();
+      if (tokenURI) {
+        const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
+        const tokenURIResponse = await (await fetch(requestURL)).json();
+        const imageURI = tokenURIResponse.image;
+        const imageURIURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/");
+        setImageURI({ src: imageURIURL, width: 100 });
+      }
+      setLoadingImage(false); // Set loading state to false after image is loaded
+    } catch (error) {
+      console.error("Error loading image:", error);
+      setErrorLoadingImage(true); // Set error state to true
+      setLoadingImage(false); // Set loading state to false in case of error
+    }
+  };
+
+  useEffect(() => {
+    if (isWeb3Enabled) {
+      loadImage(); // Load the image when the component mounts
+    }
+  }, [isWeb3Enabled]);
+
   return (
-    <div>
+    <div className="hover:bg-blue-500 hover:shadow rounded-3xl m-4">
       <div>
         {imageURI ? (
-          <div>
+          <div className="m-1">
             <UpdateListingModal
               isVisible={showModal}
               tokenId={tokenId}
@@ -107,12 +139,24 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
               nftAddress={nftAddress}
               onClose={hideModal}
             />
-            <Card title={tokenName} description={tokenDescription} onClick={handleCardClick}>
-              <div className="p-2">
+            <Card className="border ring-1 rounded-2xl shadow" title={tokenName} description={tokenDescription} onClick={handleCardClick}>
+              <div>
                 <div className="flex flex-col items-end gap-2">
                   <div>#{tokenId}</div>
-                  <div className="italic text-sm">Owned by {formattedSellerAddress}</div>
-                  <Image loader={() => imageURI} src={imageURI} height="200" width="200" />
+                  <div className="italic text-sm w-48">Owned by {formattedSellerAddress}</div>
+                  {imageURI ? (
+                    <Image src={imageURI.src} height={100} width={100} alt="Sweet PUG" />
+                  ) : (
+                    <div>
+              {loadingImage ? (
+                    <div>Loading Image... </div>
+                    ) : errorLoadingImage ? (
+                      <div>Error loading image</div>
+                    ) : (
+                      <Image src={imageURI.src} height={100} width={100} alt="Sweet PUG" />
+                    )}
+                  </div>
+                  )}
                   <div className="font-bold">{ethers.utils.formatUnits(price, "ether")} ETH</div>
                 </div>
               </div>
