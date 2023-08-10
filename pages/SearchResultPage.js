@@ -1,34 +1,51 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import DropDownSearch from '../components/DropDownSearch';
-import SearchBar from '../components/SearchBar';
 
-const SearchResultPage = ({ searchResults = [] }) => {
+const SearchResultPage = ({ searchResults = [], setSearchResults }) => {
   const [sortingOption, setSortingOption] = useState('default');
-  const [showDropdowns, setShowDropdowns] = useState(true); // Zustand für Dropdown-Anzeige
+  const [showDropdowns, setShowDropdowns] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // ... (other filtering states and logic can be added here)
-
-  // Function to handle sorting option change
-  const handleSortingChange = (event) => {
-    setSortingOption(event.target.value);
+  const handleSortingChange = (event, sortingType) => {
+    setSortingOption(sortingType);
     let sortedResults = [...searchResults]; // Create a new array to avoid modifying the original
-    switch (event.target.value) {
+    console.log(searchResults)
+    switch (sortingType) {
       case 'Active Items':
-        sortedResults.sort((a, b) => a.activeItems - b.activeItems);
+        // Default sorting by ID (you can replace with appropriate field)
+        sortedResults.sort((a, b) => a.id.localeCompare(b.id));
         break;
       case 'Recently Sold':
-        sortedResults.sort((a, b) => b.recentlySoldCount - a.recentlySoldCount);
+        // Sorting by most recent date (you can replace with appropriate field)
+        sortedResults.sort((a, b) => new Date(b.recentlySoldDate) - new Date(a.recentlySoldDate));
         break;
       case 'Most Sold':
+        // Sorting by most sold count
         sortedResults.sort((a, b) => b.mostSoldCount - a.mostSoldCount);
         break;
-      // Add more options and corresponding sorting logic as needed
+      case 'Oldest':
+        // Sorting by oldest date (you can replace with appropriate field)
+        sortedResults.sort((a, b) => new Date(a.date) - new Date(b.date));
+        break;
+      case 'Youngest':
+        // Sorting by most recent date
+        sortedResults.sort((a, b) => new Date(b.date) - new Date(a.date));
+        break;
+      case 'Highest Price':
+        // Sorting by highest price
+        sortedResults.sort((a, b) => b.price - a.price);
+        break;
       default:
         // Use default sorting logic here
         break;
     }
-    // Set the sorted results to the state or do any further processing
+
+    // Set the sorted results to the state or perform any further processing
+    setSearchResults(sortedResults);
+
+    console.log("Hier stehen die sortierten Ergebnisse" + sortedResults)
   };
 
   const toggleDropdowns = () => {
@@ -36,10 +53,11 @@ const SearchResultPage = ({ searchResults = [] }) => {
   };
 
   return (
-    <div className='relative'>
+    <div className='relative flex flex-row'>
       <div className='flex flex-col justify-col items-start p-5'>
-        <button className="hover:bg-blue-500 mb-1 bg-blue-400 flex justify-center items-center p-2 w-48 rounded-2xl shadow cursor-pointer"
-          onClick={toggleDropdowns} // Hier wird der Status umgekehrt, wenn "Filters" geklickt wird 
+        <button
+          className="hover:bg-blue-500 mb-1 bg-blue-400 flex justify-center items-center p-2 w-48 rounded-2xl shadow cursor-pointer"
+          onClick={toggleDropdowns}
         >
           Filters
         </button>
@@ -57,10 +75,11 @@ const SearchResultPage = ({ searchResults = [] }) => {
                     { id: 'youngest', label: 'Youngest' },
                     { id: 'highest Price', label: 'Highest Price' }
                   ]}
-                  onChange={handleSortingChange}
+                  onChange={(event, sortingType) => handleSortingChange(event, sortingType)}
                   value={sortingOption}
                 />
-              </div>)}
+              </div>
+            )}
           </div>
           <div className=''>
             {showDropdowns && (
@@ -77,7 +96,7 @@ const SearchResultPage = ({ searchResults = [] }) => {
                     { id: 'and more', label: 'And More' },
                     { id: 'and morer', label: 'And Morer' }
                   ]}
-                  onChange={handleSortingChange}
+                  onChange={(event, sortingType) => handleSortingChange(event, sortingType)}
                   value={sortingOption}
                 />
               </div>)}
@@ -95,19 +114,25 @@ const SearchResultPage = ({ searchResults = [] }) => {
                     { id: 'jupiter', label: 'Jupiter' },
                     { id: 'saturn', label: 'Saturn' }
                   ]}
-                  onChange={handleSortingChange}
+                  onChange={(event, sortingType) => handleSortingChange(event, sortingType)}
                   value={sortingOption}
                 />
               </div>)}
           </div>
         </div>
       </div>
+      <h2>Suchergebnisse</h2>
       <ul>
-        {searchResults.map((searchResults) => (
-          <li key={searchResults.id}>
-            <h3>{searchResults.art}</h3>
-            <p>{searchResults.music}</p>
-          </li>
+        {loading && <p>Loading...</p>}
+        {error && <p>Error: {error.message}</p>}
+        {searchResults.map((result) => (
+          <div>
+            <li key={result.id} className="border border-gray-300 p-4 mb-2 w-96 rounded-lg shadow-md">
+              <h3 className="text-xl font-semibold">{result.art}</h3>
+              <p className="text-gray-600">{result.music}</p>
+              {/* You can add more information from the search result object */}
+            </li>
+          </div>
         ))}
       </ul>
     </div>
@@ -120,6 +145,7 @@ SearchResultPage.propTypes = {
     art: PropTypes.string.isRequired,
     music: PropTypes.string.isRequired,
   })).isRequired,
+  setSearchResults: PropTypes.func.isRequired,
 };
 
 export default SearchResultPage;
