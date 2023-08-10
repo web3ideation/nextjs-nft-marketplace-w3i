@@ -15,12 +15,6 @@ export default function Header() {
       </div>
       <div className="flex flex-row items-center">
       <SearchBar/>
-        <Link href="/sell-nft" className="hover:bg-blue-500 bg-blue-400 flex justify-center items-center mr-4 p-2 w-32 rounded-2xl shadow">
-          <div className="">Sell NFT</div>
-        </Link>
-        <Link href="/collections" className="hover:bg-blue-500 bg-blue-400 flex justify-center items-center mr-4 p-2 w-32 rounded-2xl shadow">
-          <div className="">Collections</div>
-        </Link>
         <Link href="" className="hover:bg-blue-500 bg-blue-400 flex justify-center items-center p-2 w-32 rounded-2xl shadow">
           <div className="">Create</div>
         </Link>
