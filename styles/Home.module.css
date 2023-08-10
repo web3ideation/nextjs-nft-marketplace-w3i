@@ -1,5 +1,115 @@
 .container {
-  padding: 0 2rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 50px;
+  background-color: rgb(219 234 254);
+  margin: 2.5rem 12rem;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.container form{
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  padding: 1rem;
+}
+
+.filterBox {
+  background-color: rgb(96 165 250);
+  outline: none;
+  margin: 0.25rem;
+  padding: 0.5rem;
+  width: 8rem;
+  appearance: none;
+  border-radius: 1rem;
+}
+
+.filterBox option {
+  background-color: rgb(96 165 250);
+  outline: none;
+  margin: 0.25rem;
+  padding: 0.5rem;
+  width: 8rem;
+  appearance: none;
+  border-radius: 1rem;
+}
+.scrollbar {
+  max-height: 12rem;
+  overflow-y: auto;
+  margin-left: 0.75rem;
+}
+
+.scrollbar::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgb(191 219 254);
+    border-radius: 0.75rem;
+    border: 0.25 solid white;
+}
+
+.modal div {
+  border-radius: 1rem;
+  background-color: rgb(219 234 254);
+}
+
+.modal div div div {
+  background-color: rgb(191 219 254);
+  outline: none;
+
+}
+
+.modal div div div:hover {
+  background-color: rgb(147 197 253);
+  outline: none;
+
+}
+
+.modal div div div input {
+  outline: none;
+  border: none;
+}
+
+.modal div div div label {
+  background-color: transparent;
+  color: black;
+}
+
+.modal footer {
+  border: none;
+}
+
+.modal footer button {
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 8rem;
+  border-radius: 1rem;
+  background-color: rgb(191 219 254);
+  border: none;
+}
+
+.modal footer button span {
+  color: black;
+}
+
+.modal footer button:hover {
+  background-color: rgb(96 165 250);
+}
+
+.button {
+  background-color: blue;
+  padding: 6px;
+}
+
+.button:hover {
+  background: rgb(96 165 250);
 }
 
 .main {

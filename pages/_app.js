@@ -1,16 +1,22 @@
-import "../styles/globals.css"
-import { MoralisProvider } from "react-moralis"
-import Header from "../components/Header"
-import Head from "next/head"
-import { NotificationProvider } from "web3uikit"
+
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
+import Head from "next/head"
+import { MoralisProvider } from "react-moralis"
+import { NotificationProvider } from "web3uikit"
+import Header from "../components/Header"
+import "../styles/globals.css"
+import SearchResultPage from './SearchResultPage';
+import React, { useState } from 'react';
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   uri: process.env.NEXT_PUBLIC_SUBGRAPH_URL, // !!! this is centralized!
 })
 
+
+
 function MyApp({ Component, pageProps }) {
+  const [searchResults, setSearchResults] = useState([]); // Zustand für die Suchergebnisse
   return (
     <div>
       <Head>
@@ -21,7 +27,8 @@ function MyApp({ Component, pageProps }) {
       <MoralisProvider initializeOnMount={false}>
         <ApolloProvider client={client}>
           <NotificationProvider>
-            <Header />
+            <Header setSearchResults={setSearchResults} />
+            {searchResults.length > 0 && <SearchResultPage searchResults={searchResults} />}
             <Component {...pageProps} />
           </NotificationProvider>
         </ApolloProvider>
