@@ -4,7 +4,7 @@ import networkMapping from "../constants/networkMapping.json"
 import GET_ACTIVE_ITEMS from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
 import Link from "next/link"
-import React from 'react'
+import React from "react"
 
 export default function Home() {
   const { isWeb3Enabled, chainId } = useMoralis()
@@ -17,7 +17,7 @@ export default function Home() {
       <h1 className="py-4 font-bold text-2xl text-center">Recently Listed</h1>
       <div className="flex flex-row items-center">
         <div className="flex flex-wrap pb-4">
-          {isWeb3Enabled && chainId ? ( // !!! it should show the available NFTs also without having a wallet connected.
+          {isWeb3Enabled && chainId ? ( // !!!W it should show the available NFTs also without having a wallet connected.
             loading || !listedNfts ? (
               <div>Loading...</div>
             ) : (
@@ -26,23 +26,19 @@ export default function Home() {
                 const { price, nftAddress, tokenId, seller, imageIpfsUrl } = nft
 
                 // Try fetching image from IPFS
-                const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`;
-                const imgSrc = new Image();
-                imgSrc.src = ipfsImage;
+                const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`
+                const imgSrc = new Image()
+                imgSrc.src = ipfsImage
 
                 imgSrc.onload = () => {
                   // IPFS image loaded successfully, render the image
-                  return (
-                    <img src={ipfsImage} alt="NFT" />
-                  );
-                };
+                  return <img src={ipfsImage} alt="NFT" />
+                }
 
                 imgSrc.onerror = () => {
                   // IPFS image load failed, fall back to HTTP image
-                  return (
-                    <img src={`https://your-http-image-url/${tokenId}.png`} alt="NFT" />
-                  );
-                };
+                  return <img src={`https://your-http-image-url/${tokenId}.png`} alt="NFT" />
+                }
 
                 return (
                   <NFTBox
@@ -62,7 +58,10 @@ export default function Home() {
         </div>
       </div>
       <div className="hover:bg-blue-500 bg-blue-400 shadow rounded-2xl px-4 mx-4 mb-4">
-        <Link href="/sell-nft" className="cursor-pointer flex flex-row items-center justify-center">
+        <Link
+          href="/sell-nft"
+          className="cursor-pointer flex flex-row items-center justify-center"
+        >
           <img className="p-4" src="/pfeil.png" width="100" height="100"></img>
           <div className="p-4 text-center">Show more</div>
         </Link>
@@ -71,5 +70,5 @@ export default function Home() {
   )
 }
 
-// !!! Patrick is converting the NFT URI and image URI from ipfs to http bc most browsers dont support ipfs out of the box. I should find a way to default display the ipfs way and only if that doesnt work it should automatically use the https. but ipfs would be slower...
-// !!! the next js <image/> tag stops us from making this a static site, thus it cant be hosted on ipfs (that means it would be hosted centralized)... how do i decentralize it then? what about fleek or vercel? Is there an alternative to the <image/> tag? Maybe I should develop two versions of the site, one being with the centralized things like URI Http and the <image /> tags and the other one being static...
+// !!!W Patrick is converting the NFT URI and image URI from ipfs to http bc most browsers dont support ipfs out of the box. I should find a way to default display the ipfs way and only if that doesnt work it should automatically use the https. but ipfs would be slower...
+// !!!W the next js <image/> tag stops us from making this a static site, thus it cant be hosted on ipfs (that means it would be hosted centralized)... how do i decentralize it then? what about fleek or vercel? Is there an alternative to the <image/> tag? Maybe I should develop two versions of the site, one being with the centralized things like URI Http and the <image /> tags and the other one being static...

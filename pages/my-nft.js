@@ -1,27 +1,27 @@
-import { useMoralis } from "react-moralis";
-import { useState } from "react";
-import NFTBox from "../components/NFTBox";
-import networkMapping from "../constants/networkMapping.json";
-import GET_ACTIVE_ITEMS from "../constants/subgraphQueries";
-import { useQuery } from "@apollo/client";
+import { useMoralis } from "react-moralis"
+import { useState } from "react"
+import NFTBox from "../components/NFTBox"
+import networkMapping from "../constants/networkMapping.json"
+import GET_ACTIVE_ITEMS from "../constants/subgraphQueries"
+import { useQuery } from "@apollo/client"
 
 export default function Home() {
-  const { isWeb3Enabled, chainId, account } = useMoralis();
-  const chainString = chainId ? parseInt(chainId).toString() : "31337";
-  const marketplaceAddress = networkMapping[chainString].NftMarketplace[0];
+  const { isWeb3Enabled, chainId, account } = useMoralis()
+  const chainString = chainId ? parseInt(chainId).toString() : "31337"
+  const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
 
-  const { loading, data: listedNfts, error } = useQuery(GET_ACTIVE_ITEMS);
-  const [hasOwnNFT, setHasOwnNFT] = useState(false);
+  const { loading, data: listedNfts, error } = useQuery(GET_ACTIVE_ITEMS)
+  const [hasOwnNFT, setHasOwnNFT] = useState(false)
 
   if (loading || !listedNfts) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   if (error) {
-    return <div>Error loading NFTs</div>;
+    return <div>Error loading NFTs</div>
   }
 
-  const isOwnedByUser = (seller) => seller === account || seller === undefined;
+  const isOwnedByUser = (seller) => seller === account || seller === undefined
 
   return (
     <div className="mt-10 mx-48 p-4 bg-blue-100 rounded-2xl">
@@ -50,5 +50,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -7,7 +7,6 @@ import { Card, useNotification } from "web3uikit"
 import { ethers } from "ethers"
 import UpdateListingModal from "./UpdateListingModal"
 
-
 const truncateStr = (fullStr, strLen) => {
   if (fullStr.length <= strLen) return fullStr
 
@@ -30,8 +29,8 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   const hideModal = () => setShowModal(false)
   const dispatch = useNotification()
 
-  const [loadingImage, setLoadingImage] = useState(false); // Added loading state
-  const [errorLoadingImage, setErrorLoadingImage] = useState(false); // Added error state
+  const [loadingImage, setLoadingImage] = useState(false) // Added loading state
+  const [errorLoadingImage, setErrorLoadingImage] = useState(false) // Added error state
 
   const { runContractFunction: getTokenURI } = useWeb3Contract({
     abi: nftAbi,
@@ -53,7 +52,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   async function updateUI() {
     const tokenURI = await getTokenURI()
     console.log(`The TokenURI is ${tokenURI}`)
-    // We are going to cheat a little here... !!! what does he mean and how to do it the correct way?
+    // We are going to cheat a little here... !!!W what does he mean and how to do it the correct way?
     if (tokenURI) {
       // IPFS Gateway: A server that will return IPFS files from a "normal" URL.
       const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
@@ -84,9 +83,10 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
     isOwnedByUser
       ? setShowModal(true)
       : buyItem({
-        onError: (error) => console.log(error),
-        onSuccess: handleBuyItemSuccess,
-      })
+          // !!!W here it should also have a modal coming up, which displays detailed infromation about the nft and on there there would be a button for the buy function
+          onError: (error) => console.log(error),
+          onSuccess: handleBuyItemSuccess,
+        })
   }
 
   const handleBuyItemSuccess = async (tx) => {
@@ -102,30 +102,30 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   // Load the image from IPFS and fall back to HTTP if needed
   const loadImage = async () => {
     try {
-      setLoadingImage(true); // Set loading state to true
-      setErrorLoadingImage(false); // Reset error state
+      setLoadingImage(true) // Set loading state to true
+      setErrorLoadingImage(false) // Reset error state
 
-      const tokenURI = await getTokenURI();
+      const tokenURI = await getTokenURI()
       if (tokenURI) {
-        const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
-        const tokenURIResponse = await (await fetch(requestURL)).json();
-        const imageURI = tokenURIResponse.image;
-        const imageURIURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/");
-        setImageURI({ src: imageURIURL, width: 100 });
+        const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
+        const tokenURIResponse = await (await fetch(requestURL)).json()
+        const imageURI = tokenURIResponse.image
+        const imageURIURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
+        setImageURI({ src: imageURIURL, width: 100 })
       }
-      setLoadingImage(false); // Set loading state to false after image is loaded
+      setLoadingImage(false) // Set loading state to false after image is loaded
     } catch (error) {
-      console.error("Error loading image:", error);
-      setErrorLoadingImage(true); // Set error state to true
-      setLoadingImage(false); // Set loading state to false in case of error
+      console.error("Error loading image:", error)
+      setErrorLoadingImage(true) // Set error state to true
+      setLoadingImage(false) // Set loading state to false in case of error
     }
-  };
+  }
 
   useEffect(() => {
     if (isWeb3Enabled) {
-      loadImage(); // Load the image when the component mounts
+      loadImage() // Load the image when the component mounts
     }
-  }, [isWeb3Enabled]);
+  }, [isWeb3Enabled])
 
   return (
     <div className="hover:bg-blue-500 hover:shadow rounded-3xl m-4">
@@ -139,7 +139,12 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
               nftAddress={nftAddress}
               onClose={hideModal}
             />
-            <Card className="border ring-1 rounded-2xl shadow" title={tokenName} description={tokenDescription} onClick={handleCardClick}>
+            <Card
+              className="border ring-1 rounded-2xl shadow"
+              title={tokenName}
+              description={tokenDescription}
+              onClick={handleCardClick}
+            >
               <div>
                 <div className="flex flex-col items-end gap-2">
                   <div>#{tokenId}</div>
@@ -148,14 +153,14 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                     <Image src={imageURI.src} height={100} width={100} alt="Sweet PUG" />
                   ) : (
                     <div>
-              {loadingImage ? (
-                    <div>Loading Image... </div>
-                    ) : errorLoadingImage ? (
-                      <div>Error loading image</div>
-                    ) : (
-                      <Image src={imageURI.src} height={100} width={100} alt="Sweet PUG" />
-                    )}
-                  </div>
+                      {loadingImage ? (
+                        <div>Loading Image... </div>
+                      ) : errorLoadingImage ? (
+                        <div>Error loading image</div>
+                      ) : (
+                        <Image src={imageURI.src} height={100} width={100} alt="Sweet PUG" />
+                      )}
+                    </div>
                   )}
                   <div className="font-bold">{ethers.utils.formatUnits(price, "ether")} ETH</div>
                 </div>

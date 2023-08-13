@@ -42,6 +42,13 @@ export default function Home() {
   }
 
   async function handleApproveSuccess(tx, nftAddress, tokenId, price) {
+    // !!!W also dispatch a notification here like:
+    // dispatch({
+    //   type: "success",
+    //   message: "Approval",
+    //   title: "Marketplace approved",
+    //   position: "topR",
+    // })
     console.log("Ok! Now time to list")
     await tx.wait()
     const listOptions = {
@@ -105,6 +112,7 @@ export default function Home() {
       <Form
         onSubmit={approveAndList}
         data={[
+          // !!!W add guides for the user, so they can not input letters where only a number makes sense, and that it has to have a specific length, and that the price field sees , and . both as the decimal point.
           {
             name: "NFT Address",
             type: "text",

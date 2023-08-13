@@ -14,7 +14,7 @@ export default function UpdateListingModal({
 }) {
   const dispatch = useNotification()
 
-  const [priceToUpdateListingWith, setPriceToUpdateListingWith] = useState(0)
+  const [priceToUpdateListingWith, setPriceToUpdateListingWith] = useState(0) //!!!W this means that if i just open the modal and klick OK without entering a number the nfts price will be set to 0. which is a problem! tho there should be an error from the marketplace smartcontract that the price can not be zero, i think.
 
   const handleUpdateListingSuccess = async (tx) => {
     await tx.wait(1)
@@ -25,7 +25,7 @@ export default function UpdateListingModal({
       position: "topR",
     })
     onClose && onClose()
-    setPriceToUpdateListingWith("0")
+    setPriceToUpdateListingWith("0") // !!!W this has to be done in the error case, right? so add it at line 48? Bc if an error happens it will not be reset to 0...
   }
 
   const { runContractFunction: updateListing } = useWeb3Contract({
@@ -35,7 +35,7 @@ export default function UpdateListingModal({
     params: {
       nftAddress: nftAddress,
       tokenId: tokenId,
-      newPrice: ethers.utils.parseEther(priceToUpdateListingWith || "0"),
+      newPrice: ethers.utils.parseEther(priceToUpdateListingWith || "0"), //!!!W this means that if i just open the modal and klick OK without entering a number the nfts price will be set to 0. which is a problem! tho there should be an error from the marketplace smartcontract that the price can not be zero, i think.
     },
   })
 
@@ -55,8 +55,7 @@ export default function UpdateListingModal({
       }}
     >
       <Input
-        style={{outline: "none",
-          appearance: "none"}}
+        style={{ outline: "none", appearance: "none" }}
         label="Update listing price in L1 Currency (ETH)"
         name="New listing price"
         type="number"
