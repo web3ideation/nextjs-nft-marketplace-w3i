@@ -14,7 +14,6 @@ function NFTListed({ isWeb3Enabled, chainId }) {
     return (
         <div className={styles.recentlyListed}>
             <h1>Recently Listed</h1>
-
             <div className={styles.NFTListed}>
                 {isWeb3Enabled && chainId ? (
                     loading || !listedNfts ? (
@@ -23,11 +22,11 @@ function NFTListed({ isWeb3Enabled, chainId }) {
                         listedNfts.activeItems.map((nft) => {
                             console.log(nft)
                             const { price, nftAddress, tokenId, seller, imageIpfsUrl } = nft
-
                             const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`
                             const imgSrc = new Image()
-                            imgSrc.src = ipfsImage
 
+                            imgSrc.src = ipfsImage
+                            
                             imgSrc.onload = () => {
                                 return <img src={ipfsImage} alt="NFT" />
                             }
@@ -51,7 +50,6 @@ function NFTListed({ isWeb3Enabled, chainId }) {
                 ) : (
                     <div>Web3 Currently Not Enabled</div>
                 )}
-
             </div>
             <div className="hover:bg-blue-500 bg-blue-400 shadow rounded-2xl px-4 mx-4 mb-4">
                 <Link
@@ -67,3 +65,6 @@ function NFTListed({ isWeb3Enabled, chainId }) {
 }
 
 export default NFTListed
+
+// !!!W Patrick is converting the NFT URI and image URI from ipfs to http bc most browsers dont support ipfs out of the box. I should find a way to default display the ipfs way and only if that doesnt work it should automatically use the https. but ipfs would be slower...
+// !!!W the next js <image/> tag stops us from making this a static site, thus it cant be hosted on ipfs (that means it would be hosted centralized)... how do i decentralize it then? what about fleek or vercel? Is there an alternative to the <image/> tag? Maybe I should develop two versions of the site, one being with the centralized things like URI Http and the <image /> tags and the other one being static...
