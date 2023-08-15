@@ -7,6 +7,7 @@ const SearchResultPage = ({ searchResults = [], setSearchResults }) => {
   const [showDropdowns, setShowDropdowns] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  console.log("searchResults prop:", searchResults);
 
   const handleSortingChange = (event, sortingType) => {
     setSortingOption(sortingType);

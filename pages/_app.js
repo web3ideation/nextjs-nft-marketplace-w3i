@@ -25,8 +25,9 @@ function MyApp({ Component, pageProps }) {
         <ApolloProvider client={client}>
           <NotificationProvider>
             <Header setSearchResults={setSearchResults} />
-            {searchResults.length > 0 && <SearchResultPage searchResults={searchResults} />}
+            
             <Component {...pageProps} setSearchResults={setSearchResults} />
+            {searchResults.length > 0 && <SearchResultPage searchResults={searchResults} />}
           </NotificationProvider>
         </ApolloProvider>
       </MoralisProvider>
