@@ -12,14 +12,15 @@ const SearchBar = ({ onSearch }) => {
       searchTerm,
     },
   });
-
-  useEffect(() => {
-    // Handle the fetched data here
-    if (!loading && !error && data && data.activeItems) {
-      onSearch(data.activeItems);
-      console.log('Search term:', searchTerm, 'Results:', data.activeItems);
-    }
-  }, [loading, error, data, searchTerm, onSearch]);
+  
+// hier wird eine loop produziert
+//  useEffect(() => {
+//    // Handle the fetched data here
+//    if (!loading && !error && data && data.activeItems) {
+//      onSearch(data.activeItems);
+//      console.log('Search term:', searchTerm, 'Results:', data.activeItems);
+//    }
+//  }, [loading, error, data, searchTerm, onSearch]);
 
   const handleSearch = async () => {
     try {
