@@ -50,7 +50,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   })
 
   async function updateUI() {
-    const tokenURI = await getTokenURI()
+    const tokenURI = await getTokenURI() // !!!W getTokenURI is a proparitary solution in our basicNFT. ERC721 optional standard is tokenURI! -> change that tho tokenURI and test if it can still retrieve the URI, then it should also be able to retrieve it from any other ERC721 optional Metadata contract.
     console.log(`The TokenURI is ${tokenURI}`)
     // We are going to cheat a little here... !!!W what does he mean and how to do it the correct way?
     if (tokenURI) {
