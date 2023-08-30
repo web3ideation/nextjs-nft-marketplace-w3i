@@ -56,6 +56,7 @@ deploying "NftMarketplace" (tx: 0xd8d83e529e72b9ec44754d36e6216caa34f81c4eb64d79
 
 deploying "BasicNft" (tx: 0x6f61206b6e82fc53e30f3abb392a13df6c520d19eff633e27e63456652de4cd5)...: deployed at 0x2c9D7F070D03D83588E22C23fE858AA71274AD2a with 2072874 gas
 
+deploying "RegularNft" (tx: 0x469fb3cf0cdf870996b0e3b6d8370608b7523206793ecd58cc4c20494cdda61f)...: deployed at 0x474ecBebfdD671179AF2ea5880E5eE881658ECFb with 2762469 gas
 
 The Graph Deployment:
 
@@ -127,3 +128,10 @@ Tho I want that without manual adding of the address that the user can see all t
 
 
 !!! add licence file in github
+
+
+
+
+!!!W
+so when i mint the regularNft using my mint script metamask can manually import and display the nft. when using the frontends sell function the approval function goes through, but then nothing happens, the listing doesnt get displayed.
+maybe because the graph is not reading for that nfts address?? -> I have to update the active items and stuff in the graph repo.
