@@ -113,12 +113,17 @@ But: If a user wants to list an nft, they have to enter their nft contracts addr
 Tho I want that without manual adding of the address that the user can see all their nfts already when connecting without having to "manual import" the nft contract addresse (like it is with metamask). however maybe if i just let the event log get scanned for ALL ERC721 nft addresses that can be achieved. Is that how the big marketplaces do it?
 
 1. i need to know the nft contracts addresses beforehand to get the attributes. That happens in the components/NFTBox.js line 33 where i need to have the abi to run getTokenUri function. But i think this could already be a standard of the ERC721. Then I could use a raw function call where i do not need to know the complete abi to get the tokenUri of any ERC721 NFT.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-> Ok I did that. but still only the basic nfts are getting displayed. Maybe check if the regualr nft is even recognized in my graph ql.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 
 2. also when using graph ql i think i need to know the nfts contracts address, maybe also already in the marketplace smartcontract backend.
 
 3. at the sell-nft page we import the abi "import nftAbi from "../constants/BasicNft.json"". everywhere where we use this abi is a problem when we use a different nft collection. But as said before I think i can make a raw function call to every nft contract without having to know its abi, since there is the ERC721 standard...
 
 4. in the 99-update-frontend.js from the deployscripts of the marketplace the constants for the frontend get updated. however this sucks, cause this way only the nft contracts defined in there can be displayed... 
+
 
 
 !!!W I created a new nft contract BORIS, where I used the update frontend deploy script to adapt the constants, I think it kinda overwrote the basif nft.json tho, so this is pfusch... i did this on 08.08.23 so I can just restore the version from github from the latest checkin since then. But i have to find a solution to not have to import the abi for every new nft contract... this should be possible to get around by just reliyng on the erc721 standard...
@@ -135,3 +140,16 @@ Tho I want that without manual adding of the address that the user can see all t
 !!!W
 so when i mint the regularNft using my mint script metamask can manually import and display the nft. when using the frontends sell function the approval function goes through, but then nothing happens, the listing doesnt get displayed.
 maybe because the graph is not reading for that nfts address?? -> I have to update the active items and stuff in the graph repo.
+
+
+!!!W
+scaling:
+subgraph must be paid(?)
+website hoster must be reliable
+reentrancy guard must allow two users simountanously access the withdraw function (?)
+
+!!!W
+if we use the graph to display the users owned nfts, the graph starting block must be set to a value where the very first NFT has been minted.
+
+!!!W
+wanting to display all the nfts a user owns, the graph not only has to listen/scan for transfer events, but also minting! (or does mining involve the transfer function...?)
