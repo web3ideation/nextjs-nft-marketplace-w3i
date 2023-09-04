@@ -165,7 +165,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
             <Card
               className="border ring-1 rounded-2xl shadow"
               title={tokenName}
-              description={tokenDescription}
+              description={tokenDescription || '...'}
               onClick={handleCardClick}
             >
               <div>
@@ -178,7 +178,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                     src={imageURI.src}
                     height={100}
                     width={100}
-                    alt="Sweet PUG" />
+                    alt={tokenDescription} />
                   ) : (
                     <div>
                       {loadingImage ? (
@@ -191,7 +191,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                         src={imageURI.src}
                         height={100}
                         width={100}
-                        alt="Sweet PUG" />
+                        alt={tokenDescription} />
                       )}
                     </div>
                   )}
