@@ -1,11 +1,117 @@
-//neuer Teil SCSS
-
-$primary-color: rgb(96, 165, 250);
-$secondary-color: rgb(191, 219, 254);
-$highlight-color: rgb(147, 197, 253);
+//Farb-Variablen
+$primary-color: rgb(91, 160, 236);
+$secondary-color: rgb(173, 205, 231);
+$highlight-color: rgb(9, 116, 241);
 $background-color: rgb(255, 249, 226);
 
-.recentlyListed {
+//Schrift-Variablen
+
+
+.headerContainer {
+  background-color: $background-color;
+
+  nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+  }
+}
+
+.logoHeadlineWrapper {
+  display: flex;
+  align-items: center;
+
+  .headerLogo {
+
+    img {
+      margin-left: 4px;
+      width: 48px;
+      border-radius: 50%;
+    }
+
+  }
+
+  .headerHeadline {
+    padding: 1rem;
+    font-weight: bold;
+    font-size: 1.875rem;
+  }
+}
+
+.headerElementsWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.headerButton {
+  background-color: $secondary-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 16px;
+  padding: 8px;
+  width: 128px;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+  &:hover {
+    background-color: $primary-color;
+  }
+}
+
+.connectButton {
+  margin-right: 16px;
+  padding: 0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.popupMenuWrapper {
+  background-color: $secondary-color;
+  margin-right: 16px;
+  border-radius: 16px;
+}
+
+.popupMenuButton {
+  background-color: $secondary-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  width: 128px;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+  &:hover {
+    background-color: $primary-color;
+  }
+}
+
+.popupMenuLinksWrapper {
+  position: absolute;
+  z-index: 10;
+}
+
+.popupMenuLinks {
+  background-color: $secondary-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 4px;
+  padding: 8px;
+  width: 128px;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+  &:hover {
+    background-color: $primary-color;
+  }
+}
+
+.NFTContainer {
   background-color: $background-color;
   margin: 2.5rem 12rem 0 12rem;
   padding: 2rem;
@@ -22,13 +128,18 @@ $background-color: rgb(255, 249, 226);
     text-align: center;
   }
 
-//  div {
-//    display: flex;
-//    flex-direction: row;
-//    padding-bottom: 4rem;
-//    align-items: center;
-//  }
+  //  div {
+  //    display: flex;
+  //    flex-direction: row;
+  //    padding-bottom: 4rem;
+  //    align-items: center;
+  //  }
 
+}
+
+.NFTImage {
+  max-width: 100px;
+  max-height: 100px;
 }
 
 .NFTListed {
@@ -38,7 +149,7 @@ $background-color: rgb(255, 249, 226);
   align-items: center;
 }
 
-.container {
+.SELLContainer {
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -59,6 +170,37 @@ $background-color: rgb(255, 249, 226);
   }
 }
 
+.moreContainer {
+  background-color: $secondary-color;
+  border-radius: 1rem;
+  padding: 0 4px;
+  margin: 0 4px 4px 4px;
+
+  &:hover {
+    background-color: $primary-color;
+  }
+
+  .moreLink {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      padding: 1rem;
+
+    }
+
+    div {
+      padding: 1rem;
+      text-align: center;
+    }
+
+  }
+
+}
+
 .filterBox {
   background-color: $primary-color;
   outline: none;
@@ -69,7 +211,8 @@ $background-color: rgb(255, 249, 226);
   border-radius: 1rem;
 }
 
-.filterBox, .filterBox option {
+.filterBox,
+.filterBox option {
   background-color: $primary-color;
   outline: none;
   margin: 0.25rem;
@@ -259,235 +402,3 @@ $background-color: rgb(255, 249, 226);
   height: 1em;
   margin-left: 0.5rem;
 }
-
-
-
-
-//ab hier alter Teil CSS
-
-//.container {
-//    padding: 0;
-//    display: flex;
-//    flex-direction: column;
-//    justify-content: center;
-//    align-items: center;
-//    margin: 50px;
-//    background-color: rgb(219 234 254);
-//    margin: 2.5rem 12rem;
-//    border-radius: 1rem;
-//    padding: 1rem;
-//  }
-//  
-//  .container form{
-//    width: 50%;
-//    display: flex;
-//    flex-direction: column;
-//    justify-content: center;
-//    align-items: stretch;
-//    padding: 1rem;
-//  }
-//  
-//  .filterBox {
-//    background-color: rgb(96 165 250);
-//    outline: none;
-//    margin: 0.25rem;
-//    padding: 0.5rem;
-//    width: 8rem;
-//    appearance: none;
-//    border-radius: 1rem;
-//  }
-//  
-//  .filterBox option {
-//    background-color: rgb(96 165 250);
-//    outline: none;
-//    margin: 0.25rem;
-//    padding: 0.5rem;
-//    width: 8rem;
-//    appearance: none;
-//    border-radius: 1rem;
-//  }
-//  .scrollbar {
-//    max-height: 12rem;
-//    overflow-y: auto;
-//    margin-left: 0.75rem;
-//  }
-//  
-//  .scrollbar::-webkit-scrollbar {
-//      width: 0.5rem;
-//  }
-//  
-//  .scrollbar::-webkit-scrollbar-thumb {
-//      background-color: rgb(191 219 254);
-//      border-radius: 0.75rem;
-//      border: 0.25 solid white;
-//  }
-//  
-//  .modal div {
-//    border-radius: 1rem;
-//    background-color: rgb(219 234 254);
-//  }
-//  
-//  .modal div div div {
-//    background-color: rgb(191 219 254);
-//    outline: none;
-//  
-//  }
-//  
-//  .modal div div div:hover {
-//    background-color: rgb(147 197 253);
-//    outline: none;
-//  
-//  }
-//  
-//  .modal div div div input {
-//    outline: none;
-//    border: none;
-//  }
-//  
-//  .modal div div div label {
-//    background-color: transparent;
-//    color: black;
-//  }
-//  
-//  .modal footer {
-//    border: none;
-//  }
-//  
-//  .modal footer button {
-//    margin: 1rem;
-//    padding: 0.5rem;
-//    width: 8rem;
-//    border-radius: 1rem;
-//    background-color: rgb(191 219 254);
-//    border: none;
-//  }
-//  
-//  .modal footer button span {
-//    color: black;
-//  }
-//  
-//  .modal footer button:hover {
-//    background-color: rgb(96 165 250);
-//  }
-//  
-//  .button {
-//    background-color: blue;
-//    padding: 6px;
-//  }
-//  
-//  .button:hover {
-//    background: rgb(96 165 250);
-//  }
-//  
-//  .main {
-//    min-height: 100vh;
-//    padding: 4rem 0;
-//    flex: 1;
-//    display: flex;
-//    flex-direction: column;
-//    justify-content: center;
-//    align-items: center;
-//  }
-//  
-//  .footer {
-//    display: flex;
-//    flex: 1;
-//    padding: 2rem 0;
-//    border-top: 1px solid #eaeaea;
-//    justify-content: center;
-//    align-items: center;
-//  }
-//  
-//  .footer a {
-//    display: flex;
-//    justify-content: center;
-//    align-items: center;
-//    flex-grow: 1;
-//  }
-//  
-//  .title a {
-//    color: #0070f3;
-//    text-decoration: none;
-//  }
-//  
-//  .title a:hover,
-//  .title a:focus,
-//  .title a:active {
-//    text-decoration: underline;
-//  }
-//  
-//  .title {
-//    margin: 0;
-//    line-height: 1.15;
-//    font-size: 4rem;
-//  }
-//  
-//  .title,
-//  .description {
-//    text-align: center;
-//  }
-//  
-//  .description {
-//    margin: 4rem 0;
-//    line-height: 1.5;
-//    font-size: 1.5rem;
-//  }
-//  
-//  .code {
-//    background: #fafafa;
-//    border-radius: 5px;
-//    padding: 0.75rem;
-//    font-size: 1.1rem;
-//    font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-//      Bitstream Vera Sans Mono, Courier New, monospace;
-//  }
-//  
-//  .grid {
-//    display: flex;
-//    align-items: center;
-//    justify-content: center;
-//    flex-wrap: wrap;
-//    max-width: 800px;
-//  }
-//  
-//  .card {
-//    margin: 1rem;
-//    padding: 1.5rem;
-//    text-align: left;
-//    color: inherit;
-//    text-decoration: none;
-//    border: 1px solid #eaeaea;
-//    border-radius: 10px;
-//    transition: color 0.15s ease, border-color 0.15s ease;
-//    max-width: 300px;
-//  }
-//  
-//  .card:hover,
-//  .card:focus,
-//  .card:active {
-//    color: #0070f3;
-//    border-color: #0070f3;
-//  }
-//  
-//  .card h2 {
-//    margin: 0 0 1rem 0;
-//    font-size: 1.5rem;
-//  }
-//  
-//  .card p {
-//    margin: 0;
-//    font-size: 1.25rem;
-//    line-height: 1.5;
-//  }
-//  
-//  .logo {
-//    height: 1em;
-//    margin-left: 0.5rem;
-//  }
-//  
-//  @media (max-width: 600px) {
-//    .grid {
-//      width: 100%;
-//      flex-direction: column;
-//    }
-//  }
