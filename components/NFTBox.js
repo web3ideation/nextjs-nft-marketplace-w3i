@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
-import nftAbi from "../constants/BasicNft.json"
 import Image from "next/image"
 import { Card, useNotification } from "web3uikit"
 import { ethers } from "ethers"
@@ -37,9 +36,11 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
 
     const getRawTokenURI = async () => {
       try {
-        const functionSignature = "0xc87b56dd" // First 4 bytes of the Keccak-256 hash of "tokenURI(uint256)"
-        const tokenIdHex = ethers.BigNumber.from(tokenId).toHexString()
-        const data = functionSignature + ethers.utils.hexZeroPad(tokenIdHex, 32).slice(2)
+        const functionSignature = ethers.utils.id("tokenURI(uint256)").slice(0, 10)
+        const tokenIdHex = ethers.utils
+          .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
+          .slice(2)
+        const data = functionSignature + tokenIdHex
 
         const result = await provider.call({
           to: nftAddress,
@@ -72,8 +73,6 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
 
   async function updateUI() {
     const tokenURI = await getRawTokenURI()
-    console.log("Token URI:", tokenURI)
-
     console.log(`The TokenURI is ${tokenURI}`)
     // We are going to cheat a little here... !!!W what does he mean and how to do it the correct way?
     if (tokenURI) {
