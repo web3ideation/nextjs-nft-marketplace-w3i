@@ -113,7 +113,7 @@ But: If a user wants to list an nft, they have to enter their nft contracts addr
 Tho I want that without manual adding of the address that the user can see all their nfts already when connecting without having to "manual import" the nft contract addresse (like it is with metamask). however maybe if i just let the event log get scanned for ALL ERC721 nft addresses that can be achieved. Is that how the big marketplaces do it?
 
 1. i need to know the nft contracts addresses beforehand to get the attributes. That happens in the components/NFTBox.js line 33 where i need to have the abi to run getTokenUri function. But i think this could already be a standard of the ERC721. Then I could use a raw function call where i do not need to know the complete abi to get the tokenUri of any ERC721 NFT.
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -> Ok I did that. but still only the basic nfts are getting displayed. Maybe check if the regualr nft is even recognized in my graph ql.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
