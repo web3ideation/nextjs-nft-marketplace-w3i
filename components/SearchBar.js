@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
 import GET_ACTIVE_ITEMS from '../constants/subgraphQueries';
+import styles from '../styles/Home.module.css'
 
 const SearchBar = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,20 +47,16 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <div className="flex flex-row justify-center">
+    <div class={styles.searchBarWrapper}>
       <input
-        className="hover:bg-blue-300 bg-blue-200 flex justify-center items-center ml-4 p-2 rounded-l-2xl shadow"
         type="text"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyPress={handleKeyPress}
-        placeholder="Search"
-        style={{ outline: 'none' }}
+        placeholder="Search..."
       />
       <button
-        className="hover:bg-blue-500 bg-blue-400 flex justify-center items-center mr-4 p-2 w-16 rounded-r-2xl shadow"
         onClick={handleSearch}
-        style={{ outline: 'none' }}
       >
         Go
       </button>

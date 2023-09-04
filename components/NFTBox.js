@@ -5,6 +5,7 @@ import Image from "next/image"
 import { Card, useNotification } from "web3uikit"
 import { ethers } from "ethers"
 import UpdateListingModal from "./UpdateListingModal"
+import styles from '../styles/Home.module.css'
 
 const truncateStr = (fullStr, strLen) => {
   if (fullStr.length <= strLen) return fullStr
@@ -172,7 +173,12 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                   <div>#{tokenId}</div>
                   <div className="italic text-sm w-48">Owned by {formattedSellerAddress}</div>
                   {imageURI ? (
-                    <Image src={imageURI.src} height={100} width={100} alt="Sweet PUG" />
+                    <Image
+                    className={styles.NFTImage}
+                    src={imageURI.src}
+                    height={100}
+                    width={100}
+                    alt="Sweet PUG" />
                   ) : (
                     <div>
                       {loadingImage ? (
@@ -180,7 +186,12 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                       ) : errorLoadingImage ? (
                         <div>Error loading image</div>
                       ) : (
-                        <Image src={imageURI.src} height={100} width={100} alt="Sweet PUG" />
+                        <Image
+                        className={styles.NFTImage}
+                        src={imageURI.src}
+                        height={100}
+                        width={100}
+                        alt="Sweet PUG" />
                       )}
                     </div>
                   )}

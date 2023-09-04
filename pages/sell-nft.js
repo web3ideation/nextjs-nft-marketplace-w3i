@@ -137,7 +137,7 @@ export default function Home() {
   }, [proceeds, account, isWeb3Enabled, chainId])
 
   return (
-    <div className={styles.container}>
+    <div className={styles.SELLContainer}>
       <Form
         onSubmit={approveAndList}
         data={[
