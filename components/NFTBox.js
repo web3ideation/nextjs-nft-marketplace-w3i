@@ -33,11 +33,32 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   const [loadingImage, setLoadingImage] = useState(false) // Added loading state
   const [errorLoadingImage, setErrorLoadingImage] = useState(false) // Added error state
 
-  const { runContractFunction: getTokenURI } = useWeb3Contract({
-    abi: nftAbi,
-    contractAddress: nftAddress,
-    functionName: "TOKEN_URI",
-  })
+  function useRawTokenURI(nftAddress, tokenId) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+
+    const getRawTokenURI = async () => {
+      try {
+        const functionSignature = "0xc87b56dd" // First 4 bytes of the Keccak-256 hash of "tokenURI(uint256)"
+        const tokenIdHex = ethers.BigNumber.from(tokenId).toHexString()
+        const data = functionSignature + ethers.utils.hexZeroPad(tokenIdHex, 32).slice(2)
+
+        const result = await provider.call({
+          to: nftAddress,
+          data: data,
+        })
+        const decodedData = ethers.utils.defaultAbiCoder.decode(["string"], result)
+        const tokenUri = decodedData[0]
+        return tokenUri
+      } catch (error) {
+        console.error("Error fetching raw tokenURI:", error)
+        throw error
+      }
+    }
+
+    return getRawTokenURI
+  }
+
+  const getRawTokenURI = useRawTokenURI(nftAddress, tokenId)
 
   const { runContractFunction: buyItem } = useWeb3Contract({
     abi: nftMarketplaceAbi,
@@ -51,7 +72,9 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   })
 
   async function updateUI() {
-    const tokenURI = await getTokenURI()
+    const tokenURI = await getRawTokenURI()
+    console.log("Token URI:", tokenURI)
+
     console.log(`The TokenURI is ${tokenURI}`)
     // We are going to cheat a little here... !!!W what does he mean and how to do it the correct way?
     if (tokenURI) {
@@ -106,7 +129,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
       setLoadingImage(true) // Set loading state to true
       setErrorLoadingImage(false) // Reset error state
 
-      const tokenURI = await getTokenURI()
+      const tokenURI = await getRawTokenURI()
       if (tokenURI) {
         const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
         const tokenURIResponse = await (await fetch(requestURL)).json()
