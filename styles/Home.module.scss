@@ -1,6 +1,6 @@
 //Farb-Variablen
-$primary-color: rgb(91, 160, 236);
-$secondary-color: rgb(173, 205, 231);
+$primary-color: rgb(9, 116, 241);
+$secondary-color: rgb(118, 175, 234);
 $highlight-color: rgb(9, 116, 241);
 $background-color: rgb(255, 249, 226);
 
@@ -19,7 +19,7 @@ $background-color: rgb(255, 249, 226);
   }
 }
 
-.logoHeadlineWrapper {
+.logoAndHeadlineWrapper {
   display: flex;
   align-items: center;
 
@@ -44,6 +44,42 @@ $background-color: rgb(255, 249, 226);
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.searchBarWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  input {
+    background-color: $secondary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 16px;
+    padding: 9px;
+    outline: none;
+    border-radius: 16px 0 0 16px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+  }
+
+  button {
+    background-color: $secondary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    margin-right: 16px;
+    padding: 9px;
+    outline: none;
+    border-radius: 0 16px 16px 0;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+    &:hover {
+      background-color: $primary-color;
+    }
+  }
 }
 
 .headerButton {
