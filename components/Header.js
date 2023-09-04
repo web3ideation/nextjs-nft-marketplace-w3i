@@ -28,30 +28,30 @@ export default function Header({ setSearchResults }) {
   };
 
   return (
-    <div class={styles.headerContainer}>
+    <div className={styles.headerContainer}>
       <nav>
-        <div class={styles.logoAndHeadlineWrapper}>
+        <div className={styles.logoAndHeadlineWrapper}>
           <Link
-            class={styles.headerLogo}
+            className={styles.headerLogo}
             href="/"
           >
             <img src="/favicon.ico/"></img>
           </Link>
-          <h1 class={styles.headerHeadline}>NFT Marketplace</h1>
+          <h1 className={styles.headerHeadline}>NFT Marketplace</h1>
         </div>
-        <div class={styles.headerElementsWrapper}>
+        <div className={styles.headerElementsWrapper}>
           <SearchBar
             onSearch={handleSearch}
             setSearchResults={setSearchResults}
           />
           <Link
             href=""
-            class={styles.headerButton}
+            className={styles.headerButton}
           >
             <div>Create</div>
           </Link>
           <ConnectButton
-            class={styles.connectButton}
+            className={styles.connectButton}
             moralisAuth={false}
           />
           <div>

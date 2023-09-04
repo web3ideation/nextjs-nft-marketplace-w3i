@@ -25,23 +25,23 @@ const PopupMenu = () => {
   }, []);
 
   return (
-    <div class={styles.popupMenuWrapper} ref={menuRef}>
-      <button class={styles.popupMenuButton} onClick={toggleMenu}>
+    <div className={styles.popupMenuWrapper} ref={menuRef}>
+      <button className={styles.popupMenuButton} onClick={toggleMenu}>
         Menu
       </button>
       {isOpen && (
-        <div class={styles.popupMenuLinksWrapper}>
+        <div className={styles.popupMenuLinksWrapper}>
           {<Link href="/sell-nft" class={styles.popupMenuLinks}>
-            <div class={styles.menuLink}>Sell NFT</div>
+            <div className={styles.menuLink}>Sell NFT</div>
           </Link>}
           {<Link href="/collections" class={styles.popupMenuLinks}>
-            <div class={styles.menuLink}>Collections</div>
+            <div className={styles.menuLink}>Collections</div>
           </Link>}
           {<Link href="" class={styles.popupMenuLinks}>
-            <div class={styles.menuLink}>Create</div>
+            <div className={styles.menuLink}>Create</div>
           </Link>}
           {<Link href="/my-nft" class={styles.popupMenuLinks}>
-            <div class={styles.menuLink}>My NFT</div>
+            <div className={styles.menuLink}>My NFT</div>
           </Link>}
         </div>
       )}

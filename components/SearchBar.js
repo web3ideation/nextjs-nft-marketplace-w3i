@@ -47,7 +47,7 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <div class={styles.searchBarWrapper}>
+    <div className={styles.searchBarWrapper}>
       <input
         type="text"
         value={searchTerm}
