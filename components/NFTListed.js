@@ -12,7 +12,7 @@ function NFTListed({ isWeb3Enabled, chainId }) {
     const { loading, data: listedNfts } = useQuery(GET_ACTIVE_ITEMS)
 
     return (
-        <div className={styles.recentlyListed}>
+        <div className={styles.NFTContainer}>
             <h1>Recently Listed</h1>
             <div className={styles.NFTListed}>
                 {isWeb3Enabled && chainId ? (
@@ -51,13 +51,13 @@ function NFTListed({ isWeb3Enabled, chainId }) {
                     <div>Web3 Currently Not Enabled</div>
                 )}
             </div>
-            <div className="hover:bg-blue-500 bg-blue-400 shadow rounded-2xl px-4 mx-4 mb-4">
+            <div className={styles.moreContainer}>
                 <Link
                     href="/sell-nft"
-                    className="cursor-pointer flex flex-row items-center justify-center"
+                    className={styles.moreLink}
                 >
-                    <img className="p-4" src="/pfeil.png" width="100" height="100"></img>
-                    <div className="p-4 text-center">Show more</div>
+                    <img src="/pfeil.png" width="100" height="100"></img>
+                    <div>Show more</div>
                 </Link>
             </div>
         </div>

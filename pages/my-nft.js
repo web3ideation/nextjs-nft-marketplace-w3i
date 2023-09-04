@@ -4,6 +4,7 @@ import NFTBox from "../components/NFTBox"
 import networkMapping from "../constants/networkMapping.json"
 import GET_ACTIVE_ITEMS from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
+import styles from '../styles/Home.module.css'
 
 export default function Home() {
   const { isWeb3Enabled, chainId, account } = useMoralis()
@@ -24,9 +25,9 @@ export default function Home() {
   const isOwnedByUser = (seller) => seller === account || seller === undefined
 
   return (
-    <div className="mt-10 mx-48 p-4 bg-blue-100 rounded-2xl">
-      <h1 className="py-4 font-bold text-2xl text-center">My NFT</h1>
-      <div className="flex flex-row justify-center items-center">
+    <div className={styles.NFTContainer}>
+      <h1>My NFT</h1>
+      <div className={styles.NFTListed}>
         <div className="flex flex-wrap pb-4">
           {isWeb3Enabled && chainId ? (
             <>
