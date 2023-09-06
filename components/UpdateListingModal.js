@@ -45,6 +45,9 @@ export default function UpdateListingModal({
       isVisible={isVisible}
       onCancel={onClose}
       onCloseButtonPressed={onClose}
+      okButtonColor={'red'}
+      width="400px"
+      border= "3px solid red"
       onOk={() => {
         updateListing({
           onError: (error) => {

@@ -151,7 +151,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   }, [isWeb3Enabled])
 
   return (
-    <div className="hover:bg-blue-500 hover:shadow rounded-3xl m-4">
+    <div className={styles.NFTCardWrapper}/*"hover:bg-blue-500 hover:shadow rounded-3xl m-4"*/>
       <div>
         {imageURI ? (
           <div className="m-1">
@@ -163,15 +163,15 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
               onClose={hideModal}
             />
             <Card
-              className="border ring-1 rounded-2xl shadow"
+              className={styles.NFTCard}
               title={tokenName}
               description={tokenDescription || '...'}
               onClick={handleCardClick}
             >
               <div>
-                <div className="flex flex-col items-end gap-2">
+                <div className={styles.NFTTextArea}>
                   <div>#{tokenId}</div>
-                  <div className="italic text-sm w-48">Owned by {formattedSellerAddress}</div>
+                  <div className={styles.NFTOwner}>Owned by {formattedSellerAddress}</div>
                   {imageURI ? (
                     <Image
                     className={styles.NFTImage}
