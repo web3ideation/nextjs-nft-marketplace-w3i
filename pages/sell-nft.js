@@ -15,47 +15,48 @@ export default function Home() {
 
   const { runContractFunction } = useWeb3Contract()
 
+  function useRawApprove(nftAddress) {
+    // !!!W this function shouldnt be in a function!
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+
+    const rawApprove = async (to, tokenId) => {
+      try {
+        // Calculate the function signature for "approve(address,uint256)"
+        const functionSignature = ethers.utils.id("approve(address,uint256)").slice(0, 10)
+
+        // Convert the parameters to the required format
+        const addressPadded = ethers.utils.hexZeroPad(to, 32).slice(2)
+        const tokenIdHex = ethers.utils
+          .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
+          .slice(2)
+
+        // Construct the data for the raw call
+        const data = functionSignature + addressPadded + tokenIdHex
+
+        // Get the signer from the provider
+        const signer = provider.getSigner()
+
+        // Send the transaction using the signer
+        const tx = await signer.sendTransaction({
+          to: nftAddress,
+          data: data,
+        })
+
+        return tx
+      } catch (error) {
+        console.error("Error sending raw approve transaction:", error)
+        throw error
+      }
+    }
+
+    return rawApprove
+  }
+
   async function approveAndList(data) {
     console.log("Approving...")
     const nftAddress = data.data[0].inputResult
     const tokenId = data.data[1].inputResult
     const price = ethers.utils.parseUnits(data.data[2].inputResult, "ether").toString()
-    function useRawApprove(nftAddress) {
-      // !!!W this function shouldnt be in a function!
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-
-      const rawApprove = async (to, tokenId) => {
-        try {
-          // Calculate the function signature for "approve(address,uint256)"
-          const functionSignature = ethers.utils.id("approve(address,uint256)").slice(0, 10)
-
-          // Convert the parameters to the required format
-          const addressPadded = ethers.utils.hexZeroPad(to, 32).slice(2)
-          const tokenIdHex = ethers.utils
-            .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
-            .slice(2)
-
-          // Construct the data for the raw call
-          const data = functionSignature + addressPadded + tokenIdHex
-
-          // Get the signer from the provider
-          const signer = provider.getSigner()
-
-          // Send the transaction using the signer
-          const tx = await signer.sendTransaction({
-            to: nftAddress,
-            data: data,
-          })
-
-          return tx
-        } catch (error) {
-          console.error("Error sending raw approve transaction:", error)
-          throw error
-        }
-      }
-
-      return rawApprove
-    }
 
     const rawApprove = useRawApprove(nftAddress)
 

@@ -13,7 +13,7 @@ const client = new ApolloClient({
 })
 
 function MyApp({ Component, pageProps }) {
-  const [searchResults, setSearchResults] = useState([]) // Zustand für die Suchergebnisse
+  const [searchResults, setSearchResults] = useState([]) // Responsible for the search results
   return (
     <div>
       <Head>
@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }) {
         <ApolloProvider client={client}>
           <NotificationProvider>
             <Header setSearchResults={setSearchResults} />
-            
+
             <Component {...pageProps} setSearchResults={setSearchResults} />
             {searchResults.length > 0 && <SearchResultPage searchResults={searchResults} />}
           </NotificationProvider>

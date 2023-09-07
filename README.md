@@ -108,6 +108,10 @@ since i guess that if web3 is not enabled the not connected user would be able t
 
 
 !!!W
+how should the UX for selling an nft be? does the user always need to input the nft address and token id? how do opensea and blur do it? try it out on testnet: mint an nft on goerli (like just deploy the regular nft on goerli) and try to list that on blur and opensea testnet.
+
+
+*DONE* 
 Why nft contracts have to be registered at nft marketplaces before they can get listed:
 But: If a user wants to list an nft, they have to enter their nft contracts address anyway.
 Tho I want that without manual adding of the address that the user can see all their nfts already when connecting without having to "manual import" the nft contract addresse (like it is with metamask). however maybe if i just let the event log get scanned for ALL ERC721 nft addresses that can be achieved. Is that how the big marketplaces do it?
@@ -124,7 +128,8 @@ Tho I want that without manual adding of the address that the user can see all t
 
 
 4. in the 99-update-frontend.js from the deployscripts of the marketplace the constants for the frontend get updated. however this sucks, cause this way only the nft contracts defined in there can be displayed... 
-!!!!!!!!!!!!!!!!!!!!!!! Since I dont need the BasicNft.json in constants anymore I can delete it and change the 99-update-frontend.js to not create it anymore.
+Since I dont need the BasicNft.json in constants anymore I can delete it and change the 99-update-frontend.js to not create it anymore.
+:check -> the Frontend doesnt need the BasicNft ABI anymore, so I deactivated the "export" of the basicNft ABI from the 99-update-frontend script.
 
 
 !!!W I created a new nft contract BORIS, where I used the update frontend deploy script to adapt the constants, I think it kinda overwrote the basif nft.json tho, so this is pfusch... i did this on 08.08.23 so I can just restore the version from github from the latest checkin since then. But i have to find a solution to not have to import the abi for every new nft contract... this should be possible to get around by just reliyng on the erc721 standard...
