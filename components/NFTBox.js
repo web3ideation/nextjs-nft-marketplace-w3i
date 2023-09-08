@@ -192,6 +192,8 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                     <Image
                       className={styles.NFTImage}
                       src={imageURI.src}
+                      height={100}
+                      width={100}
                       alt={tokenDescription} />
                   ) : (
                     <div>
