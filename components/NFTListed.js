@@ -5,6 +5,7 @@ import GET_ACTIVE_ITEMS from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
 import styles from '../styles/Home.module.css';
 import Link from "next/link"
+import { Button } from "web3uikit"
 
 function NFTListed({ isWeb3Enabled, chainId }) {
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
@@ -26,7 +27,7 @@ function NFTListed({ isWeb3Enabled, chainId }) {
                             const imgSrc = new Image()
 
                             imgSrc.src = ipfsImage
-                            
+
                             imgSrc.onload = () => {
                                 return <img src={ipfsImage} alt="NFT" />
                             }
@@ -52,13 +53,17 @@ function NFTListed({ isWeb3Enabled, chainId }) {
                 )}
             </div>
             <div className={styles.moreContainer}>
+
                 <Link
                     href="/sell-nft"
-                    className={styles.moreLink}
-                >
-                    <img src="/pfeil.png" width="100" height="100"></img>
-                    <div>Show more</div>
+                    className={styles.moreLink}>
+                    <Button
+                    text="Show More"
+                    size="large"
+                    >
+                    </Button>
                 </Link>
+
             </div>
         </div>
     )
