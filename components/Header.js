@@ -1,4 +1,4 @@
-import { ConnectButton } from "web3uikit"
+import { Button, ConnectButton } from "web3uikit"
 import Link from "next/link"
 import PopupMenu from './PopupMenu'
 import SearchBar from "./SearchBar";
@@ -46,9 +46,11 @@ export default function Header({ setSearchResults }) {
           />
           <Link
             href=""
-            className={styles.headerButton}
-          >
-            <div>Create</div>
+            className={styles.headerButton}>
+            <Button
+              size="small"
+              text="Create">
+            </Button>
           </Link>
           <ConnectButton
             className={styles.connectButton}
