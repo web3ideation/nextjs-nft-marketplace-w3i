@@ -192,8 +192,6 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                     <Image
                       className={styles.NFTImage}
                       src={imageURI.src}
-                      height={100}
-                      width={100}
                       alt={tokenDescription} />
                   ) : (
                     <div>
@@ -227,17 +225,15 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
           onCloseButtonPressed={() => setShowInfoModal(false)}
           onCancel={() => setShowInfoModal(false)}
           onOk={handleBuyClick}
+          title="NFT Information"
           okText="BUY!"
-          width="max-content"
+          width="300px"
         >
           <Image
             className={styles.NFTImage}
             src={imageURI.src}
-            height={100}
-            width={100}
             alt={tokenDescription}
           />
-          <h2>NFT Information</h2>
           <p>Owned by: {formattedSellerAddress}</p>
           <p>Token-Id: {tokenId}</p>
           <p>Name: {tokenName}</p>
@@ -253,17 +249,15 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
           onCloseButtonPressed={() => setShowSellModal(false)}
           onCancel={() => setShowSellModal(false)}
           onOk={() => handleSellButtonClick()}
+          title="Your NFT"
           okText="Update price"
-          width="max-content"
+          width="300px"
         >
           <Image
             className={styles.NFTImage}
             src={imageURI.src}
-            height={100}
-            width={100}
             alt={tokenDescription}
           />
-          <h2>Your NFT</h2>
           <p>Token-Id: {tokenId}</p>
           <p>Name: {tokenName}</p>
           <p>Description: {tokenDescription}</p>
