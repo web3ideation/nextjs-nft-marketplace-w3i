@@ -213,8 +213,7 @@ $background-color: rgb(255, 249, 226);
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  max-width:100%;
+  max-width: 100%;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
@@ -232,6 +231,14 @@ $background-color: rgb(255, 249, 226);
 .NFTListed::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 4px;
+}
+
+.NFTInfoModal {
+
+  footer {
+    border: none;
+  }
+  
 }
 
 .SELLContainer {
@@ -259,7 +266,7 @@ $background-color: rgb(255, 249, 226);
   background-color: $secondary-color;
   border-radius: 1rem;
   padding: 0 4px;
-  margin: 0 4px 4px 4px;
+  margin: 20px 4px 4px 4px;
 
   &:hover {
     background-color: $primary-color;
