@@ -6,6 +6,15 @@ $background-color: rgb(255, 249, 226);
 
 //Schrift-Variablen
 
+.loadingIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Zentriere das Symbol vertikal auf der Seite */
+}
+
+/* Weitere CSS-Stile für das Ladezeitsymbol */
+
 
 .headerContainer {
   background-color: $background-color;
@@ -204,8 +213,11 @@ $background-color: rgb(255, 249, 226);
 }
 
 .NFTImage {
-  max-width: 100px;
-  max-height: 100px;
+  width: 120px;
+  height: 120px;
+  display: block;
+  margin: 10px auto;
+  border: solid 1px $highlight-color;
 }
 
 .NFTListed {

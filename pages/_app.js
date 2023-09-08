@@ -5,7 +5,9 @@ import { NotificationProvider } from "web3uikit"
 import Header from "../components/Header"
 import "../styles/globals.css"
 import SearchResultPage from "./SearchResultPage"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import LoadingIcon from "../public/LoadingIcon";
+import styles from "../styles/Home.module.css"
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -14,6 +16,15 @@ const client = new ApolloClient({
 
 function MyApp({ Component, pageProps }) {
   const [searchResults, setSearchResults] = useState([]) // Responsible for the search results
+  const [isLoading, setIsLoading] = useState(true); // Zustandsvariable für die Ladeanzeige
+
+  useEffect(() => {
+    // Simuliere eine kurze Ladezeit (kann durch deine tatsächliche Ladezeit ersetzt werden)
+    setTimeout(() => {
+      setIsLoading(false); // Setze isLoading auf false, wenn die Seite geladen ist
+    }, 2000); // Ändere die Dauer nach Bedarf
+  }, []);
+
   return (
     <div>
       <Head>
@@ -25,9 +36,17 @@ function MyApp({ Component, pageProps }) {
         <ApolloProvider client={client}>
           <NotificationProvider>
             <Header setSearchResults={setSearchResults} />
-
-            <Component {...pageProps} setSearchResults={setSearchResults} />
-            {searchResults.length > 0 && <SearchResultPage searchResults={searchResults} />}
+            {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
+            {isLoading ? (
+              <div className={styles.loadingIcon}>
+                <LoadingIcon />
+              </div>
+            ) : (
+              <>
+                <Component {...pageProps} setSearchResults={setSearchResults} />
+                {searchResults.length > 0 && <SearchResultPage searchResults={searchResults} />}
+              </>
+            )}
           </NotificationProvider>
         </ApolloProvider>
       </MoralisProvider>
