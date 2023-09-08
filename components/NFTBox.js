@@ -190,13 +190,12 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                   <div>#{tokenId}</div>
                   <div className={styles.NFTOwner}>Owned by {formattedSellerAddress}</div>
                   {imageURI ? (
-                    imageURI.src && (
-                      <Image
-                        className={styles.NFTImage}
-                        src={imageURI.src}
-                        height={100}
-                        width={100}
-                        alt={tokenDescription} />)
+                    <Image
+                      className={styles.NFTImage}
+                      src={imageURI.src}
+                      height={100}
+                      width={100}
+                      alt={tokenDescription} />
                   ) : (
                     <div>
                       {loadingImage ? (
@@ -204,13 +203,12 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                       ) : errorLoadingImage ? (
                         <div>Error loading image</div>
                       ) : (
-                        imageURI.src && (
-                          <Image
-                            className={styles.NFTImage}
-                            src={imageURI.src}
-                            height={100}
-                            width={100}
-                            alt={tokenDescription}/>)
+                        <Image
+                          className={styles.NFTImage}
+                          src={imageURI.src}
+                          height={100}
+                          width={100}
+                          alt={tokenDescription} />
                       )}
                     </div>
                   )}
@@ -234,14 +232,11 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
           okText="BUY!"
           width="300px"
         >
-          {imageURI.src && (
-            <Image
-              className={styles.NFTImage}
-              src={imageURI.src}
-              alt={tokenDescription}
-              height={100}
-              width={100}
-            />)}
+          <Image
+            className={styles.NFTImage}
+            src={imageURI.src}
+            alt={tokenDescription}
+          />
           <p>Owned by: {formattedSellerAddress}</p>
           <p>Token-Id: {tokenId}</p>
           <p>Name: {tokenName}</p>
@@ -261,14 +256,11 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
           okText="Update price"
           width="300px"
         >
-          {imageURI.src && (
-            <Image
-              className={styles.NFTImage}
-              src={imageURI.src}
-              alt={tokenDescription}
-              height={100}
-              width={100}
-            />)}
+          <Image
+            className={styles.NFTImage}
+            src={imageURI.src}
+            alt={tokenDescription}
+          />
           <p>Token-Id: {tokenId}</p>
           <p>Name: {tokenName}</p>
           <p>Description: {tokenDescription}</p>
