@@ -58,7 +58,7 @@ export default function UpdateListingModal({
       }}
     >
       <Input
-        style={{ outline: "none", appearance: "none" }}
+        className={styles.modalInput}
         label="Update listing price in L1 Currency (ETH)"
         name="New listing price"
         type="number"
