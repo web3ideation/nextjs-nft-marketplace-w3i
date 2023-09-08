@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import Image from "next/image"
-import { Card, useNotification } from "web3uikit"
+import { Card, useNotification, Modal } from "web3uikit"
 import { ethers } from "ethers"
 import UpdateListingModal from "./UpdateListingModal"
 import styles from '../styles/Home.module.css'
@@ -28,6 +28,9 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   const [showModal, setShowModal] = useState(false)
   const hideModal = () => setShowModal(false)
   const dispatch = useNotification()
+
+  const [showInfoModal, setShowInfoModal] = useState(false) // Modal for NFT info
+  const [showSellModal, setShowSellModal] = useState(false) // Modal for selling NFT
 
   const [loadingImage, setLoadingImage] = useState(false) // Added loading state
   const [errorLoadingImage, setErrorLoadingImage] = useState(false) // Added error state
@@ -102,14 +105,22 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   const isOwnedByUser = seller === account || seller === undefined
   const formattedSellerAddress = isOwnedByUser ? "you" : truncateStr(seller || "", 15)
 
-  const handleCardClick = () => {
+  const handleBuyClick = () => {
     isOwnedByUser
       ? setShowModal(true)
       : buyItem({
-          // !!!W here it should also have a modal coming up, which displays detailed infromation about the nft and on there there would be a button for the buy function
-          onError: (error) => console.log(error),
-          onSuccess: handleBuyItemSuccess,
-        })
+        // !!!W here it should also have a modal coming up, which displays detailed infromation about the nft and on there there would be a button for the buy function
+        onError: (error) => console.log(error),
+        onSuccess: handleBuyItemSuccess,
+      })
+  }
+
+  const handleCardClick = () => {
+    if (isOwnedByUser) {
+      setShowSellModal(true)
+    } else {
+      setShowInfoModal(true) // Open NFT info modal
+    }
   }
 
   const handleBuyItemSuccess = async (tx) => {
@@ -120,6 +131,11 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
       title: "Item Bought",
       position: "topR",
     })
+  }
+
+  const handleSellButtonClick = () => {
+    setShowModal(true);
+    setShowSellModal(false); // Open NFT selling modal
   }
 
   // Load the image from IPFS and fall back to HTTP if needed
@@ -151,7 +167,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
   }, [isWeb3Enabled])
 
   return (
-    <div className={styles.NFTCardWrapper}/*"hover:bg-blue-500 hover:shadow rounded-3xl m-4"*/>
+    <div className={styles.NFTCardWrapper}>
       <div>
         {imageURI ? (
           <div className="m-1">
@@ -174,11 +190,11 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                   <div className={styles.NFTOwner}>Owned by {formattedSellerAddress}</div>
                   {imageURI ? (
                     <Image
-                    className={styles.NFTImage}
-                    src={imageURI.src}
-                    height={100}
-                    width={100}
-                    alt={tokenDescription} />
+                      className={styles.NFTImage}
+                      src={imageURI.src}
+                      height={100}
+                      width={100}
+                      alt={tokenDescription} />
                   ) : (
                     <div>
                       {loadingImage ? (
@@ -187,11 +203,11 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                         <div>Error loading image</div>
                       ) : (
                         <Image
-                        className={styles.NFTImage}
-                        src={imageURI.src}
-                        height={100}
-                        width={100}
-                        alt={tokenDescription} />
+                          className={styles.NFTImage}
+                          src={imageURI.src}
+                          height={100}
+                          width={100}
+                          alt={tokenDescription} />
                       )}
                     </div>
                   )}
@@ -204,6 +220,56 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
           <div>Loading...</div>
         )}
       </div>
+      {/* NFT Info Modal */}
+      {showInfoModal && (
+        <Modal
+        className={styles.NFTInfoModal}
+          onCloseButtonPressed={() => setShowInfoModal(false)}
+          onCancel={() => setShowInfoModal(false)}
+          onOk={handleBuyClick}
+          okText="BUY!"
+          width="max-content"
+        >
+          <Image
+            className={styles.NFTImage}
+            src={imageURI.src}
+            height={100}
+            width={100}
+            alt={tokenDescription}
+          />
+          <h2>NFT Information</h2>
+          <p>Owned by: {formattedSellerAddress}</p>
+          <p>Token-Id: {tokenId}</p>
+          <p>Name: {tokenName}</p>
+          <p>Description: {tokenDescription}</p>
+          <p>Price: {ethers.utils.formatUnits(price, "ether")} ETH</p>
+        </Modal>
+      )}
+
+      {/* NFT Selling Modal */}
+      {showSellModal && (
+        <Modal
+        className={styles.NFTInfoModal}
+          onCloseButtonPressed={() => setShowSellModal(false)}
+          onCancel={() => setShowSellModal(false)}
+          onOk={() => handleSellButtonClick()}
+          okText="Update price"
+          width="max-content"
+        >
+          <Image
+            className={styles.NFTImage}
+            src={imageURI.src}
+            height={100}
+            width={100}
+            alt={tokenDescription}
+          />
+          <h2>Your NFT</h2>
+          <p>Token-Id: {tokenId}</p>
+          <p>Name: {tokenName}</p>
+          <p>Description: {tokenDescription}</p>
+          <p>Price: {ethers.utils.formatUnits(price, "ether")} ETH</p>
+        </Modal>
+      )}
     </div>
   )
 }
