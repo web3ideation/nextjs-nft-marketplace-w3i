@@ -6,340 +6,388 @@ $background-color: rgb(255, 249, 226);
 
 //Schrift-Variablen
 
+$font-black: rgb(0, 0, 0);
+
 .loadingIcon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; /* Zentriere das Symbol vertikal auf der Seite */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
 }
 
-/* Weitere CSS-Stile für das Ladezeitsymbol */
-
-
 .headerContainer {
-  background-color: $background-color;
+    background-color: $background-color;
 
-  nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
-  }
+    nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px;
+    }
 }
 
 .logoAndHeadlineWrapper {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 
-  .headerLogo {
+    .headerLogo {
 
-    img {
-      margin-left: 4px;
-      width: 48px;
-      border-radius: 50%;
+        img {
+            margin-left: 4px;
+            width: 48px;
+            border-radius: 50%;
+        }
+
     }
 
-  }
-
-  .headerHeadline {
-    padding: 1rem;
-    font-weight: bold;
-    font-size: 1.875rem;
-  }
+    .headerHeadline {
+        padding: 1rem;
+        font-weight: bold;
+        font-size: 1.875rem;
+    }
 }
 
 .headerElementsWrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .searchBarWrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 
-  input {
+    input {
+        background-color: $secondary-color;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 16px;
+        padding: 8px;
+        outline: none;
+        border-radius: 16px 0 0 16px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+    }
+
+    button {
+        background-color: $secondary-color;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 64px;
+        margin-right: 16px;
+        padding: 9px;
+        outline: none;
+        border-radius: 0 16px 16px 0;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+        &:hover {
+            background-color: $primary-color;
+        }
+    }
+}
+
+.headerButton button {
     background-color: $secondary-color;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 16px;
-    padding: 9px;
-    outline: none;
-    border-radius: 16px 0 0 16px;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-
-  }
-
-  button {
-    background-color: $secondary-color;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 64px;
-    margin-right: 16px;
-    padding: 9px;
-    outline: none;
-    border-radius: 0 16px 16px 0;
+    padding: 8px;
+    width: 128px;
+    border: none;
+    border-radius: 16px;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 
     &:hover {
-      background-color: $primary-color;
+        background-color: $primary-color;
+
     }
-  }
-}
-
-.headerButton {
-  background-color: $secondary-color;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 16px;
-  padding: 8px;
-  width: 128px;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-
-  &:hover {
-    background-color: $primary-color;
-  }
 }
 
 .connectButton {
-  margin-right: 16px;
-  padding: 0;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    margin-right: 16px;
+    padding: 8px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
-.popupMenuWrapper {
-  background-color: $secondary-color;
-  margin-right: 16px;
-  border-radius: 16px;
+
+/* Styling für das popoverDropdown */
+.popoverDropdown {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: $secondary-color;
+    color: $font-black;
+    padding: 8px;
+    margin-right: 16px;
+    border-radius: 16px;
+    width: 128px;
+
+    button {
+        padding: 8px;
+    }
+
+    :nth-child() {
+        margin-right: 16px;
+    }
 }
+
+/* Styling für die popoverElemente */
+.popoverElement {
+    display: flex;
+    background-color: $secondary-color;
+    justify-content: center;
+    align-items: center;
+    color: $font-black;
+    padding: 8px;
+    width: 128px;
+    border-radius: 16px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $primary-color;
+    }
+}
+
 
 .popupMenuButton {
-  background-color: $secondary-color;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px;
-  width: 128px;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    background-color: $secondary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    width: 128px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 
-  &:hover {
-    background-color: $primary-color;
-  }
+    &:hover {
+        background-color: $primary-color;
+    }
 }
 
 .popupMenuLinksWrapper {
-  position: absolute;
-  z-index: 10;
+    position: absolute;
+    z-index: 10;
 }
 
 .popupMenuLinks {
-  background-color: $secondary-color;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 4px;
-  padding: 8px;
-  width: 128px;
-  border-radius: 16px;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    background-color: $secondary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 4px;
+    padding: 8px;
+    width: 128px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 
-  &:hover {
-    background-color: $primary-color;
-  }
+    &:hover {
+        background-color: $primary-color;
+    }
 }
 
 .NFTContainer {
-  background-color: $background-color;
-  margin: 2.5rem 12rem 0 12rem;
-  padding: 2rem;
-  border-radius: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    background-color: $background-color;
+    margin: 40px 192px 0 192px;
+    padding: 16px 32px;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-  h1 {
-    padding: 1rem 0;
-    font-weight: bolder;
-    font-size: larger;
-    text-align: center;
-  }
+    h1 {
+        padding: 1rem 0;
+        font-weight: bolder;
+        font-size: larger;
+        text-align: center;
+    }
 
-  //  div {
-  //    display: flex;
-  //    flex-direction: row;
-  //    padding-bottom: 4rem;
-  //    align-items: center;
-  //  }
+    //  div {
+    //    display: flex;
+    //    flex-direction: row;
+    //    padding-bottom: 4rem;
+    //    align-items: center;
+    //  }
 
 }
 
 .NFTCardWrapper {
-  background-color: $secondary-color;
-  border-radius: 24px;
-  margin: 2px;
+    background-color: $secondary-color;
+    border-radius: 24px;
+    margin: 2px;
 
-  &:hover {
-    background-color: $primary-color;
-  }
+    &:hover {
+        background-color: $primary-color;
+    }
 }
 
 .NFTCard {
-  border: 1px;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  border-radius: 16px;
+    border: 1px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    border-radius: 16px;
 }
 
 .NFTTextArea {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
 }
 
 .NFTOwner {
-  font-style: italic;
-  font-weight: bold;
-  font-size: 14px;
-  width: 192px;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 14px;
+    width: 192px;
 }
 
 .NFTImage {
-  width: 120px;
-  height: 120px;
-  display: block;
-  margin: 10px auto;
-  border: solid 1px $highlight-color;
+    width: 120px;
+    max-width: 160px;
+    height: 120px;
+    display: block;
+    margin: 10px auto;
+    border: solid 1px $highlight-color;
+}
+
+.NFTInformation {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        text-wrap: wrap;
+        text-align: end;
+    }
 }
 
 .NFTListed {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-  white-space: nowrap;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 16px;
+    width: 100%;
+    overflow-x: scroll;
+    white-space: nowrap;
+    scrollbar-width: none;
+    /* Verstecke die Scrollleiste für Firefox */
+    -ms-overflow-style: none;
+    /* Verstecke die Scrollleiste für IE und Edge */
 }
 
+
+/* Für Webkit-basierte Browser (Chrome, Safari) */
 .NFTListed::-webkit-scrollbar {
-  width: 8px;
-}
-
-.NFTListed::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-.NFTListed::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
+    width: 0;
 }
 
 .NFTInfoModal {
 
-  footer {
-    border: none;
-  }
-  
+    footer {
+        border: none;
+    }
+
 }
 
 .SELLContainer {
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 2.5rem 12rem;
-  background-color: $background-color;
-  border-radius: 1rem;
-  padding: 1rem;
-
-  form {
-    width: 50%;
+    padding: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: stretch;
-    padding: 1rem;
-  }
-}
-
-.moreContainer {
-  background-color: $secondary-color;
-  border-radius: 1rem;
-  padding: 0 4px;
-  margin: 20px 4px 4px 4px;
-
-  &:hover {
-    background-color: $primary-color;
-  }
-
-  .moreLink {
-    cursor: pointer;
-    display: flex;
-    flex-direction: row-reverse;
     align-items: center;
-    justify-content: center;
+    margin: 2.5rem 12rem;
+    background-color: $background-color;
+    border-radius: 1rem;
+    padding: 1rem;
 
-    img {
-      padding: 1rem;
-
+    form {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+        padding: 1rem;
     }
-
-    div {
-      padding: 1rem;
-      text-align: center;
-    }
-
-  }
-
 }
+
+.moreButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+
+    button {
+        background-color: $secondary-color;
+        display: flex;
+        justify-content: center;
+        color: $font-black;
+        font-size: 14px;
+        margin: 20px 0;
+        padding: 8px;
+        width: 128px;
+        height: 40px;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+        &:hover {
+            background-color: $primary-color;
+        }
+    }
+}
+
+.arrows {
+    font-size: 35px;
+}
+
+
 
 .filterBox {
-  background-color: $primary-color;
-  outline: none;
-  margin: 0.25rem;
-  padding: 0.5rem;
-  width: 8rem;
-  appearance: none;
-  border-radius: 1rem;
+    background-color: $primary-color;
+    outline: none;
+    margin: 0.25rem;
+    padding: 0.5rem;
+    width: 8rem;
+    appearance: none;
+    border-radius: 1rem;
 }
 
 .filterBox,
 .filterBox option {
-  background-color: $primary-color;
-  outline: none;
-  margin: 0.25rem;
-  padding: 0.5rem;
-  width: 8rem;
-  appearance: none;
-  border-radius: 1rem;
+    background-color: $primary-color;
+    outline: none;
+    margin: 0.25rem;
+    padding: 0.5rem;
+    width: 8rem;
+    appearance: none;
+    border-radius: 1rem;
 }
 
 .scrollbar {
-  max-height: 12rem;
-  overflow-y: auto;
-  margin-left: 0.75rem;
+    max-height: 12rem;
+    overflow-y: auto;
+    margin-left: 0.75rem;
 
-  &::-webkit-scrollbar {
-    width: 0.5rem;
-  }
+    &::-webkit-scrollbar {
+        width: 0.5rem;
+    }
 
-  &::-webkit-scrollbar-thumb {
-    background-color: $secondary-color;
-    border-radius: 0.75rem;
-    border: 0.25 solid white;
-  }
+    &::-webkit-scrollbar-thumb {
+        background-color: $secondary-color;
+        border-radius: 0.75rem;
+        border: 0.25 solid white;
+    }
 }
 
 //.modal {
@@ -393,116 +441,116 @@ $background-color: rgb(255, 249, 226);
 //}
 
 .button {
-  background-color: blue;
-  padding: 6px;
+    background-color: blue;
+    padding: 6px;
 
-  &:hover {
-    background: $primary-color;
-  }
+    &:hover {
+        background: $primary-color;
+    }
 }
 
 .main {
-  min-height: 100vh;
-  padding: 4rem 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    min-height: 100vh;
+    padding: 4rem 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .footer {
-  display: flex;
-  flex: 1;
-  padding: 2rem 0;
-  border-top: 1px solid #eaeaea;
-  justify-content: center;
-  align-items: center;
-
-  a {
     display: flex;
+    flex: 1;
+    padding: 2rem 0;
+    border-top: 1px solid #eaeaea;
     justify-content: center;
     align-items: center;
-    flex-grow: 1;
-  }
+
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+    }
 }
 
 .title {
-  a {
-    color: #0070f3;
+    a {
+        color: #0070f3;
+        text-decoration: none;
+
+        &:hover,
+        &:focus,
+        &:active {
+            text-decoration: underline;
+        }
+    }
+
+    margin: 0;
+    line-height: 1.15;
+    font-size: 4rem;
+}
+
+.description {
+    margin: 4rem 0;
+    line-height: 1.5;
+    font-size: 1.5rem;
+}
+
+.code {
+    background: #fafafa;
+    border-radius: 5px;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+        Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+.grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 800px;
+
+    @media (max-width: 600px) {
+        width: 100%;
+        flex-direction: column;
+    }
+}
+
+.card {
+    margin: 1rem;
+    padding: 1.5rem;
+    text-align: left;
+    color: inherit;
     text-decoration: none;
+    border: 1px solid #eaeaea;
+    border-radius: 10px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    max-width: 300px;
 
     &:hover,
     &:focus,
     &:active {
-      text-decoration: underline;
+        color: #0070f3;
+        border-color: #0070f3;
     }
-  }
 
-  margin: 0;
-  line-height: 1.15;
-  font-size: 4rem;
-}
+    h2 {
+        margin: 0 0 1rem 0;
+        font-size: 1.5rem;
+    }
 
-.description {
-  margin: 4rem 0;
-  line-height: 1.5;
-  font-size: 1.5rem;
-}
-
-.code {
-  background: #fafafa;
-  border-radius: 5px;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-.grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
-
-  @media (max-width: 600px) {
-    width: 100%;
-    flex-direction: column;
-  }
-}
-
-.card {
-  margin: 1rem;
-  padding: 1.5rem;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
-
-  &:hover,
-  &:focus,
-  &:active {
-    color: #0070f3;
-    border-color: #0070f3;
-  }
-
-  h2 {
-    margin: 0 0 1rem 0;
-    font-size: 1.5rem;
-  }
-
-  p {
-    margin: 0;
-    font-size: 1.25rem;
-    line-height: 1.5;
-  }
+    p {
+        margin: 0;
+        font-size: 1.25rem;
+        line-height: 1.5;
+    }
 }
 
 .logo {
-  height: 1em;
-  margin-left: 0.5rem;
+    height: 1em;
+    margin-left: 0.5rem;
 }
