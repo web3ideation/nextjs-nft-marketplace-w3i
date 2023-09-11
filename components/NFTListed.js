@@ -1,21 +1,52 @@
-import React from "react"
+import React, { useCallback, useState, useEffect } from "react"
 import NFTBox from "../components/NFTBox"
 import networkMapping from "../constants/networkMapping.json"
 import GET_ACTIVE_ITEMS from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
-import styles from '../styles/Home.module.css';
-import Link from "next/link"
+import styles from '../styles/Home.module.css'
 import { Button } from "web3uikit"
+import { ArrowLeft, Arrow } from '@web3uikit/icons'
 
 function NFTListed({ isWeb3Enabled, chainId }) {
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
     const { loading, data: listedNfts } = useQuery(GET_ACTIVE_ITEMS)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    
+    const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState(false);
+
+    const handleNFTListedScroll = useCallback((event) => {
+        if (isModalOpen || isMouseWheelDisabled) {
+            return;
+        }
+        // Prüfen, ob das Scrollen im NFT-Container stattfindet
+        const container = document.getElementById('NFTListed');
+        if (container && !isModalOpen) {
+            if (event.deltaY < 0) {
+                container.scrollLeft -= 226; // Nach links scrollen (negativer Wert)
+                console.log('Scrolling left');
+            } else {
+                container.scrollLeft += 226; // Nach rechts scrollen (positiver Wert)
+                console.log('scrolling Right')
+            }
+            event.preventDefault(); // Verhindern Sie das Standard-Mausradverhalten
+        }
+    }, [isModalOpen, isMouseWheelDisabled]);
+
+    // Funktion, um das MouseWheel zu deaktivieren, wenn ein Modal geöffnet ist
+    const disableMouseWheel = () => {
+        setIsMouseWheelDisabled(true);
+    };
+
+    // Funktion, um das MouseWheel zu aktivieren, wenn ein Modal geschlossen wird
+    const enableMouseWheel = () => {
+        setIsMouseWheelDisabled(false);
+    };
 
     return (
         <div className={styles.NFTContainer}>
             <h1>Recently Listed</h1>
-            <div className={styles.NFTListed}>
+            <div id="NFTListed" className={styles.NFTListed} onWheel={handleNFTListedScroll}>
                 {isWeb3Enabled && chainId ? (
                     loading || !listedNfts ? (
                         <div>Loading...</div>
@@ -44,6 +75,8 @@ function NFTListed({ isWeb3Enabled, chainId }) {
                                     marketplaceAddress={marketplaceAddress}
                                     seller={seller}
                                     key={`${nftAddress}${tokenId}`}
+                                    disableMouseWheel={disableMouseWheel} // Übergeben Sie die Funktion als Prop
+                                    enableMouseWheel={enableMouseWheel}   // Übergeben Sie die Funktion als Prop
                                 />
                             )
                         })
@@ -52,18 +85,36 @@ function NFTListed({ isWeb3Enabled, chainId }) {
                     <div>Web3 Currently Not Enabled</div>
                 )}
             </div>
-            <div className={styles.moreContainer}>
-
-                <Link
-                    href="/sell-nft"
-                    className={styles.moreLink}>
-                    <Button
+            <div className={styles.moreButton}> {/*!!!N those buttons need individual keys */}
+                <Button
+                    key='leftButton'
+                    icon={<ArrowLeft className={styles.arrows} title="arrow left icon" />}
+                    iconLayout="icon-only"
+                    onClick={() => {
+                        const container = document.getElementById('NFTListed');
+                        if (container) {
+                            container.scrollLeft -= 226;
+                        }
+                    }}
+                />
+                <Button
+                    key='showMoreButton'
                     text="Show More"
-                    size="large"
-                    >
-                    </Button>
-                </Link>
-
+                    onClick={() => {
+                        window.location.href = '/sell-nft';
+                    }}
+                />
+                <Button
+                    key='rightButton'
+                    icon={<Arrow className={styles.arrows} title="arrow right icon" />}
+                    iconLayout="icon-only"
+                    onClick={() => {
+                        const container = document.getElementById('NFTListed');
+                        if (container) {
+                            container.scrollLeft += 226;
+                        }
+                    }}
+                />
             </div>
         </div>
     )
