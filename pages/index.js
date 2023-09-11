@@ -3,10 +3,10 @@ import React from "react"
 import NFTListed from "../components/NFTListed"
 
 export default function Home() {
-  const { isWeb3Enabled, chainId } = useMoralis()
+    const { isWeb3Enabled, chainId } = useMoralis()
 
-  return (
+    return (
         <NFTListed isWeb3Enabled={isWeb3Enabled} chainId={chainId} />
-  )
+    )
 }
 
