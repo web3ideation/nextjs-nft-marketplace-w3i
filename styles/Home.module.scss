@@ -8,6 +8,15 @@ $background-color: rgb(255, 249, 226);
 
 $font-black: rgb(0, 0, 0);
 
+.loadingIconWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #ffffff;
+}
+
 .loadingIcon {
     display: flex;
     justify-content: center;
@@ -24,6 +33,7 @@ $font-black: rgb(0, 0, 0);
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+
         padding: 5px;
     }
 }
@@ -31,11 +41,11 @@ $font-black: rgb(0, 0, 0);
 .logoAndHeadlineWrapper {
     display: flex;
     align-items: center;
+    margin-left: 16px;
 
     .headerLogo {
 
         img {
-            margin-left: 4px;
             width: 48px;
             border-radius: 50%;
         }
@@ -59,18 +69,21 @@ $font-black: rgb(0, 0, 0);
     display: flex;
     flex-direction: row;
     justify-content: center;
+    background-color: #ffffff;
+    box-sizing: content-box;
+    border-radius: 16px;
+    padding: 0;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    height: 40px;
+    margin-right: 16px;
 
-    input {
-        background-color: $secondary-color;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-left: 16px;
-        padding: 8px;
+
+    .searchBar {
         outline: none;
+        border: none;
         border-radius: 16px 0 0 16px;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-
+        background-color: #ffffff;
+        padding: 0 16px;
     }
 
     button {
@@ -78,12 +91,10 @@ $font-black: rgb(0, 0, 0);
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 8px 16px;
         width: 64px;
-        margin-right: 16px;
-        padding: 9px;
         outline: none;
-        border-radius: 0 16px 16px 0;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        color: $font-black;
 
         &:hover {
             background-color: $primary-color;
@@ -101,6 +112,7 @@ $font-black: rgb(0, 0, 0);
     border: none;
     border-radius: 16px;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    color: $font-black;
 
     &:hover {
         background-color: $primary-color;
@@ -115,64 +127,35 @@ $font-black: rgb(0, 0, 0);
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
-
-/* Styling für das popoverDropdown */
-.popoverDropdown {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    background-color: $secondary-color;
-    color: $font-black;
-    padding: 8px;
+.popupMenuWrapper {
     margin-right: 16px;
-    border-radius: 16px;
-    width: 128px;
 
-    button {
-        padding: 8px;
-    }
-
-    :nth-child(1) {
-        margin-right: 16px;
-    }
-}
-
-/* Styling für die popoverElemente */
-.popoverElement {
-    display: flex;
+button {
     background-color: $secondary-color;
+    display: flex;
     justify-content: center;
     align-items: center;
+    padding: 8px;
+    width: 128px;
+    height: 40px;
+    border-radius: 16px;
     color: $font-black;
-    padding: 8px;
-    width: 128px;
-    border-radius: 16px;
-    cursor: pointer;
-
-    &:hover {
-        background-color: $primary-color;
-    }
-}
-
-
-.popupMenuButton {
-    background-color: $secondary-color;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 8px;
-    width: 128px;
-    border-radius: 16px;
+    border: none;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 
     &:hover {
         background-color: $primary-color;
     }
 }
+}
 
 .popupMenuLinksWrapper {
     position: absolute;
     z-index: 10;
+
+    button {
+        margin: 2px 0;
+    }
 }
 
 .popupMenuLinks {
@@ -195,7 +178,7 @@ $font-black: rgb(0, 0, 0);
     background-color: $background-color;
     margin: 40px 192px 0 192px;
     padding: 16px 32px;
-    border-radius: 1rem;
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -208,23 +191,10 @@ $font-black: rgb(0, 0, 0);
         text-align: center;
     }
 
-    //  div {
-    //    display: flex;
-    //    flex-direction: row;
-    //    padding-bottom: 4rem;
-    //    align-items: center;
-    //  }
-
 }
 
 .NFTCardWrapper {
-    background-color: $secondary-color;
-    border-radius: 24px;
     margin: 2px;
-
-    &:hover {
-        background-color: $primary-color;
-    }
 }
 
 .NFTCard {
@@ -248,12 +218,13 @@ $font-black: rgb(0, 0, 0);
 }
 
 .NFTImage {
-    width: 120px;
-    max-width: 160px;
-    height: 120px;
+    width: 170px;
+    height: 170px;
     display: block;
-    margin: 10px auto;
+    margin: 11px auto;
     border: solid 1px $highlight-color;
+    background-color: #ffffff;
+    align-items: center;
 }
 
 .NFTInformation {
@@ -278,7 +249,6 @@ $font-black: rgb(0, 0, 0);
     padding-top: 16px;
     width: 100%;
     overflow-x: scroll;
-    white-space: nowrap;
     scrollbar-width: none;
     /* Verstecke die Scrollleiste für Firefox */
     -ms-overflow-style: none;
@@ -292,11 +262,24 @@ $font-black: rgb(0, 0, 0);
 }
 
 .NFTInfoModal {
-
+    header {
+        padding: 0;
+    }
     footer {
         border: none;
     }
 
+}
+
+.NFTModalImage {
+    width: 250px;
+    height: 250px;
+    display: block;
+    margin: 30px auto;
+
+    border: solid 1px $highlight-color;
+    background-color: #ffffff;
+    align-items: center;
 }
 
 .SELLContainer {
@@ -335,6 +318,38 @@ $font-black: rgb(0, 0, 0);
         font-size: 14px;
         margin: 20px 0;
         padding: 8px;
+        width: 64px;
+        height: 40px;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+        &:hover {
+            background-color: $primary-color;
+        }
+    }
+}
+.showMoreButton button{
+    width: 128px;
+}
+
+.arrows {
+    font-size: 35px;
+}
+
+
+
+.dropDownSearchWrapper {
+    position: absolute;
+
+    button {
+        background-color: $secondary-color;
+        display: flex;
+        justify-content: center;
+        color: $font-black;
+        font-size: 14px;
+        margin: 40px 0 0 16px;
+        padding: 8px;
         width: 128px;
         height: 40px;
         border: none;
@@ -347,98 +362,63 @@ $font-black: rgb(0, 0, 0);
     }
 }
 
-.arrows {
-    font-size: 35px;
+.dropDownSearchItems {
+    button {
+        background-color: $secondary-color;
+        display: flex;
+        justify-content: center;
+        color: $font-black;
+        font-size: 14px;
+        margin: 2px 0 0 16px;
+        padding: 8px;
+        width: 128px;
+        height: 40px;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+        &:hover {
+            background-color: $primary-color;
+        }
+    }
 }
 
+.searchResultsWrapper {
+    background-color: $background-color;
+    margin: 40px 192px 0 192px;
+    padding: 16px 32px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
+        h2 {
+            padding: 16px 0;
+            font-weight: bolder;
+            font-size: larger;
+            text-align: center;
+        }
 
-.filterBox {
-    background-color: $primary-color;
-    outline: none;
-    margin: 0.25rem;
-    padding: 0.5rem;
-    width: 8rem;
-    appearance: none;
-    border-radius: 1rem;
-}
-
-.filterBox,
-.filterBox option {
-    background-color: $primary-color;
-    outline: none;
-    margin: 0.25rem;
-    padding: 0.5rem;
-    width: 8rem;
-    appearance: none;
-    border-radius: 1rem;
 }
 
 .scrollbar {
-    max-height: 12rem;
+    max-height: 192px;
     overflow-y: auto;
-    margin-left: 0.75rem;
+    overflow-x: hidden;
+
 
     &::-webkit-scrollbar {
-        width: 0.5rem;
+        width: 8px;
+
     }
 
     &::-webkit-scrollbar-thumb {
         background-color: $secondary-color;
-        border-radius: 0.75rem;
-        border: 0.25 solid white;
+        border-radius: 12px;
+        border: 2px solid white;
     }
 }
-
-//.modal {
-//  div {
-//    border-radius: 1rem;
-//    background-color: $background-color;
-//
-//    div {
-//      div {
-//        background-color: $secondary-color;
-//        outline: none;
-//
-//        &:hover {
-//          background-color: $highlight-color;
-//          outline: none;
-//        }
-//
-//        input {
-//          outline: none;
-//          border: none;
-//        }
-//
-//        label {
-//          background-color: transparent;
-//          color: black;
-//        }
-//      }
-//    }
-//  }
-//
-//  footer {
-//    border: none;
-//
-//    button {
-//      margin: 1rem;
-//      padding: 0.5rem;
-//      width: 8rem;
-//      border-radius: 1rem;
-//      background-color: $secondary-color;
-//      border: none;
-//
-//      span {
-//        color: black;
-//      }
-//
-//      &:hover {
-//        background-color: $primary-color;
-//      }
-//    }
-//  }
-//}
 
 .button {
     background-color: blue;
