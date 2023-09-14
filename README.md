@@ -58,6 +58,9 @@ deploying "BasicNft" (tx: 0x6f61206b6e82fc53e30f3abb392a13df6c520d19eff633e27e63
 
 deploying "RegularNft" (tx: 0x469fb3cf0cdf870996b0e3b6d8370608b7523206793ecd58cc4c20494cdda61f)...: deployed at 0x474ecBebfdD671179AF2ea5880E5eE881658ECFb with 2762469 gas
 
+New NftMarketplace.sol version 12.09.2023
+deploying "NftMarketplace" (tx: 0x12aaf6703c3aa1411a363dedd5b17c1cb154288e443702f35ecd1ce7df16f8cd)...: deployed at 0x6B6825FbDA1dF2C890086E6E1F31f5D573788224 with 2053807 gas
+
 The Graph Deployment:
 
 ✔ Upload subgraph to IPFS
