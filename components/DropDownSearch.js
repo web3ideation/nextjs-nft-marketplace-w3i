@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../styles/Home.module.css';
+import { Button } from 'web3uikit';
 
 const DropDownSearch = ({ buttonText, options }) => {
     // State to track whether the dropdown is open or closed
@@ -31,22 +32,18 @@ const DropDownSearch = ({ buttonText, options }) => {
     }, []);
 
     return (
-        <div className={`bg-blue-200/40 flex flex-col mb-1 rounded-2xl overflow-hidden`} ref={dropdownRef}>
-            <button
-                className={`hover:bg-blue-500 bg-blue-400 rounded-2xl shadow p-2 w-48`}
+        <div className={styles.dropDownSearchItems} ref={dropdownRef}>
+            <Button
                 onClick={toggleMenu}
-            >
-                {buttonText}
-            </button>
+                text={buttonText}
+            />
             {isOpen && (
                 <div className={styles.scrollbar}>
                     {options.map((option) => (
-                        <div
-                            className={`hover:bg-blue-500 bg-blue-500/50 flex justify-center my-1 mr-1 p-2 rounded-2xl shadow`}
+                        <Button
                             key={option.id}
-                        >
-                            {option.label}
-                        </div>
+                            text={option.label}
+                        />
                     ))}
                 </div>
             )}
