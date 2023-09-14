@@ -31,16 +31,16 @@ const PopupMenu = () => {
       </button>
       {isOpen && (
         <div className={styles.popupMenuLinksWrapper}>
-          {<Link href="/sell-nft" class={styles.popupMenuLinks}>
+          {<Link href="/sell-nft" className={styles.popupMenuLinks}>
             <div className={styles.menuLink}>Sell NFT</div>
           </Link>}
-          {<Link href="/collections" class={styles.popupMenuLinks}>
+          {<Link href="/collections" className={styles.popupMenuLinks}>
             <div className={styles.menuLink}>Collections</div>
           </Link>}
-          {<Link href="" class={styles.popupMenuLinks}>
+          {<Link href="" className={styles.popupMenuLinks}>
             <div className={styles.menuLink}>Create</div>
           </Link>}
-          {<Link href="/my-nft" class={styles.popupMenuLinks}>
+          {<Link href="/my-nft" className={styles.popupMenuLinks}>
             <div className={styles.menuLink}>My NFT</div>
           </Link>}
         </div>

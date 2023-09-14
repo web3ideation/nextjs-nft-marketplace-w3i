@@ -21,7 +21,17 @@ const truncateStr = (fullStr, strLen) => {
     )
 }
 
-export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress, seller, disableMouseWheel, enableMouseWheel, isModalOpen }) {
+export default function NFTBox({
+    price,
+    nftAddress,
+    tokenId,
+    marketplaceAddress,
+    seller,
+    disableMouseWheel,
+    enableMouseWheel,
+    anyModalIsOpen,
+    anyModalIsClosed,
+}) {
     const { isWeb3Enabled, account } = useMoralis()
     const [imageURI, setImageURI] = useState("")
     const [tokenName, setTokenName] = useState("")
@@ -115,10 +125,12 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
     const handleCardClick = () => {
         if (isOwnedByUser) {
             setShowSellModal(true) // Open NFT sell modal
-            disableMouseWheel(); // Call the function to disable the mouse wheel
+            disableMouseWheel(true); // Call the function to disable the mouse wheel
+            anyModalIsOpen(true);
         } else {
             setShowInfoModal(true) // Open NFT info modal
-            disableMouseWheel(); // Call the function to disable the mouse wheel
+            disableMouseWheel(true); // Call the function to disable the mouse wheel
+            anyModalIsOpen(true);
         }
     }
 
@@ -146,17 +158,17 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
     }
 
     const handleBuyItemSuccess = async (tx) => {
-try {
-        await tx.wait(1)
-        dispatch({
-            type: "success",
-            message: "Item bought!",
-            title: "Item Bought",
-            position: "topR",
-        });
-        enableMouseWheel(); // Call the function to enable the mousewheel
-    } catch (error) {
-       console.error("Error processing transaction success:", error);
+        try {
+            await tx.wait(1)
+            dispatch({
+                type: "success",
+                message: "Item bought!",
+                title: "Item Bought",
+                position: "topR",
+            });
+            enableMouseWheel(); // Call the function to enable the mousewheel
+        } catch (error) {
+            console.error("Error processing transaction success:", error);
             setTransactionError("An error occurred while processing the transaction.");
         } finally {
             setBuying(false); // Reset buying state
@@ -193,57 +205,56 @@ try {
 
     return (
         <div className={styles.NFTCardWrapper}>
-                {imageURI ? (
-                        <Card
-                            className={styles.NFTCard}
-                            title={tokenName}
-                            description={tokenDescription || '...'}
-                            onClick={() => {
-                                handleCardClick();
-                                disableMouseWheel();
-                            }}
-                        >
-                            <div>
-                                <div className={styles.NFTTextArea}>
-                                    <div>#{tokenId}</div>
-                                    <div className={styles.NFTOwner}>Owned by {formattedSellerAddress}</div>
-                                    {imageURI ? (
+            {imageURI ? (
+                <Card
+                    className={styles.NFTCard}
+                    title={tokenName}
+                    description={tokenDescription || '...'}
+                    onClick={() => {
+                        handleCardClick();
+                    }}
+                >
+                    <div>
+                        <div className={styles.NFTTextArea}>
+                            <div>#{tokenId}</div>
+                            <div className={styles.NFTOwner}>Owned by {formattedSellerAddress}</div>
+                            {imageURI ? (
+                                <Image
+                                    className={styles.NFTImage}
+                                    src={imageURI.src}
+                                    height={100}
+                                    width={100}
+                                    loading="eager"
+                                    alt={tokenDescription} />
+                            ) : (
+                                <div>
+                                    {loadingImage ? (
+                                        <div>Loading Image... </div>
+                                    ) : errorLoadingImage ? (
+                                        <div>Error loading image</div>
+                                    ) : (
                                         <Image
                                             className={styles.NFTImage}
                                             src={imageURI.src}
                                             height={100}
                                             width={100}
-                                            loading="eager"
                                             alt={tokenDescription} />
-                                    ) : (
-                                        <div>
-                                            {loadingImage ? (
-                                                <div>Loading Image... </div>
-                                            ) : errorLoadingImage ? (
-                                                <div>Error loading image</div>
-                                            ) : (
-                                                <Image
-                                                    className={styles.NFTImage}
-                                                    src={imageURI.src}
-                                                    height={100}
-                                                    width={100}
-                                                    alt={tokenDescription} />
-                                            )}
-                                        </div>
                                     )}
-                                    <div className="font-bold">{ethers.utils.formatUnits(price, "ether")} ETH</div>
                                 </div>
-                            </div>
-                        </Card>
-                ) : (
-                    <div className={styles.loadingIcon}>
-                        <LoadingIcon /></div>
-                )}
+                            )}
+                            <div className="font-bold">{ethers.utils.formatUnits(price, "ether")} ETH</div>
+                        </div>
+                    </div>
+                </Card>
+            ) : (
+                <div className={styles.loadingIcon}>
+                    <LoadingIcon /></div>
+            )}
             {/* NFT Info Modal */}
             {showInfoModal && (
                 <Modal
                     className={styles.NFTInfoModal}
-                    onCancel={() => { setShowInfoModal(false); enableMouseWheel(); }}
+                    onCancel={() => { setShowInfoModal(false); enableMouseWheel(); anyModalIsClosed();}}
                     onOk={handleBuyClick}
                     closeButton={<Button disabled text=""></Button>}
                     cancelText="Close"
@@ -288,7 +299,7 @@ try {
                     }
                     okText="Update price"
                     onCancel={() => {
-                        setShowSellModal(false); enableMouseWheel()
+                        setShowSellModal(false); enableMouseWheel(); anyModalIsClosed();
                     }}
                     cancelText="Close"
                     closeButton={<Button disabled text=""></Button>}
@@ -331,7 +342,7 @@ try {
                 marketplaceAddress={marketplaceAddress}
                 nftAddress={nftAddress}
                 onCancel={() => {
-                    setShowUpdateListingModal(false); enableMouseWheel()
+                    setShowUpdateListingModal(false); enableMouseWheel(); anyModalIsClosed();
                 }}
             />
             )}

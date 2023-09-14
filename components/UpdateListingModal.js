@@ -17,8 +17,8 @@ export default function UpdateListingModal({
     const dispatch = useNotification()
 
     const [priceToUpdateListingWith, setPriceToUpdateListingWith] = useState("") //!!!W this means that if i just open the modal and klick OK without entering a number the nfts price will be set to 0. which is a problem! tho there should be an error from the marketplace smartcontract that the price can not be zero, i think.
-    const [error, setError] = useState(null); // Fehlerzustand hinzugefügt
-    const [transactionError, setTransactionError] = useState(null);
+    const [error, setError] = useState(null); // Error state if something with the value is wrong
+    const [transactionError, setTransactionError] = useState(null); // Error state if something with wallet is wrong
 
     const handleUpdateListingSuccess = async (tx) => {
         await tx.wait(1)
@@ -44,7 +44,7 @@ export default function UpdateListingModal({
             newPrice: ethers.utils.parseEther(priceToUpdateListingWith || "0"), //!!!W this means that if i just open the modal and klick OK without entering a number the nfts price will be set to 0. which is a problem! tho there should be an error from the marketplace smartcontract that the price can not be zero, i think.
         },
     })
-    const handleUpdateButtonClick = async () => {
+    const handleUpdateButtonClick = async () => { // !!!N Komma should be reassigned with a dot
         if (priceToUpdateListingWith.trim() === "") {
             setError("Add your new price");
         } else if (parseFloat(priceToUpdateListingWith) === 0) {
@@ -75,7 +75,7 @@ export default function UpdateListingModal({
     return (
         <Modal
             className={styles.modal}
-            onOk={handleUpdateButtonClick} // Änderung hier
+            onOk={handleUpdateButtonClick}
             okText="Update"
             onCancel={() => {
                 onCancel && onCancel();
