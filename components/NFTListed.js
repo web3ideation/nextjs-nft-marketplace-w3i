@@ -10,11 +10,11 @@ import { ArrowLeft, Arrow } from "@web3uikit/icons"
 function NFTListed({ isWeb3Enabled, chainId }) {
   const chainString = chainId ? parseInt(chainId).toString() : "31337"
   const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
-  const { loading, data: listedNfts } = useQuery(GET_ACTIVE_ITEMS)
+  const { loading, data } = useQuery(GET_ACTIVE_ITEMS)
 
   console.log("Is Web3 enabled:" + isWeb3Enabled)
   console.log("Chain ID:" + chainId)
-  console.log("Listed nfts:" + listedNfts)
+  console.log("Listed nfts:" + data)
 
   const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -81,10 +81,10 @@ function NFTListed({ isWeb3Enabled, chainId }) {
       <h1>Recently Listed</h1>
       <div id="NFTListed" className={styles.NFTListed} onWheel={handleNFTListedScroll}>
         {isWeb3Enabled && chainId ? (
-          loading || !listedNfts ? (
+          loading || !data ? (
             <div>Loading......</div>
           ) : (
-            listedNfts.activeItems.map((nft) => {
+            data.items.map((nft) => {
               console.log(nft)
               const { price, nftAddress, tokenId, seller, imageIpfsUrl } = nft
               const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`

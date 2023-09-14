@@ -17,9 +17,9 @@ const SearchBar = ({ onSearch }) => {
   // hier wird eine loop produziert
   //  useEffect(() => {
   //    // Handle the fetched data here
-  //    if (!loading && !error && data && data.activeItems) {
-  //      onSearch(data.activeItems);
-  //      console.log('Search term:', searchTerm, 'Results:', data.activeItems);
+  //    if (!loading && !error && data && data.items) {
+  //      onSearch(data.items);
+  //      console.log('Search term:', searchTerm, 'Results:', data.items);
   //    }
   //  }, [loading, error, data, searchTerm, onSearch]);
 
