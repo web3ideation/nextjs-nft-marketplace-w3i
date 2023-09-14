@@ -3,30 +3,37 @@ import { gql } from "@apollo/client"
 // This gives all the Items which are currently listed
 const GET_ACTIVE_ITEMS = gql`
   {
-    activeItems(where: { buyer: "0x0000000000000000000000000000000000000000" }) {
-      id
-      buyer
-      seller
+    items(where: { isListed: true }) {
+      listingId
       nftAddress
       tokenId
+      isListed # this is a boolean. True means the item is listed, false means it is not
       price
+      seller
+      buyer # is null if it has not been sold yet
+      desiredNftAddress # is "0x0000000000000000000000000000000000000000" if there is no desiredNft
+      desiredTokenId
     }
   }
 `
 // This gives all the Items which have ever been listed, including the ones which have been sold, but doesnt include the buyers address
-// !!!W create a new query which includes the buyers address
-const GET_LISTED_ITEMS = gql`
+const GET_INACTIVE_ITEMS = gql`
   {
-    itemListeds(where: {}) {
-      id
-      seller
+    items(where: { isListed: false }) {
+      listingId
       nftAddress
       tokenId
+      isListed # this is a boolean. True means the item is listed, false means it is not
       price
+      seller
+      buyer
+      desiredNftAddress # is "0x0000000000000000000000000000000000000000" if there was no desiredNft
+      desiredTokenId
     }
   }
 `
 
-// !!!W I turned off the `first 5` limit, make sure to use pages in the future to not have performance issues when there are a lot of items in the marketplace.
-export default GET_ACTIVE_ITEMS
-GET_LISTED_ITEMS
+module.exports = {
+  GET_ACTIVE_ITEMS,
+  GET_INACTIVE_ITEMS,
+}

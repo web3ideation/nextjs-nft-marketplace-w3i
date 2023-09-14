@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
-import GET_ACTIVE_ITEMS from '../constants/subgraphQueries';
+import { GET_ACTIVE_ITEMS } from '../constants/subgraphQueries';
 import styles from '../styles/Home.module.css'
 import { Button } from 'web3uikit';
 
@@ -18,9 +18,9 @@ const SearchBar = ({ onSearch }) => {
     // hier wird eine loop produziert
     //  useEffect(() => {
     //    // Handle the fetched data here
-    //    if (!loading && !error && data && data.activeItems) {
-    //      onSearch(data.activeItems);
-    //      console.log('Search term:', searchTerm, 'Results:', data.activeItems);
+    //    if (!loading && !error && data && data.items) {
+    //      onSearch(data.items);
+    //      console.log('Search term:', searchTerm, 'Results:', data.items);
     //    }
     //  }, [loading, error, data, searchTerm, onSearch]);
 

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import NFTBox from "../components/NFTBox";
 import networkMapping from "../constants/networkMapping.json";
-import GET_ACTIVE_ITEMS from "../constants/subgraphQueries";
+import { GET_ACTIVE_ITEMS } from "../constants/subgraphQueries";
 import { useQuery } from "@apollo/client";
 import styles from '../styles/Home.module.css';
 import { Button } from "web3uikit";
@@ -19,7 +19,11 @@ const preloadImage = (url) => {
 function NFTListed({ isWeb3Enabled, chainId }) {
   const chainString = chainId ? parseInt(chainId).toString() : "31337";
   const marketplaceAddress = networkMapping[chainString].NftMarketplace[0];
-  const { loading, data: listedNfts } = useQuery(GET_ACTIVE_ITEMS);
+  const { loading, data } = useQuery(GET_ACTIVE_ITEMS);
+
+  console.log("Is Web3 enabled:" + isWeb3Enabled)
+  console.log("Chain ID:" + chainId)
+  console.log("Listed nfts:" + data)
 
   const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,8 +52,8 @@ function NFTListed({ isWeb3Enabled, chainId }) {
   }, []);
 
   useEffect(() => {
-    if (isWeb3Enabled && chainId && !loading && listedNfts) {
-      listedNfts.activeItems.forEach((nft) => {
+    if (isWeb3Enabled && chainId && !loading && data) {
+      data.items.forEach((nft) => {
         const { tokenId, imageIpfsUrl } = nft;
         const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`;
         const fallbackImage = `https://your-http-image-url/${tokenId}.png`;
@@ -63,17 +67,17 @@ function NFTListed({ isWeb3Enabled, chainId }) {
           });
       });
     }
-  }, [isWeb3Enabled, chainId, loading, listedNfts]);
+  }, [isWeb3Enabled, chainId, loading, data]);
 
   return (
     <div className={styles.NFTContainer}>
       <h1>Recently Listed</h1>
       <div id="NFTListed" className={styles.NFTListed} onWheel={handleNFTListedScroll}>
         {isWeb3Enabled && chainId ? (
-          loading || !listedNfts ? (
+          loading || !data ? (
             <div>Loading...</div>
           ) : (
-            listedNfts.activeItems.map((nft) => {
+            data.items.map((nft) => {
               const { price, nftAddress, tokenId, seller } = nft;
               const imgSrc = images[tokenId] || '';
 

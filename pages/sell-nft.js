@@ -52,6 +52,8 @@ export default function Home() {
     return rawApprove
   }
 
+  // !!! when the user wants to sell an nft that is not theirs, example: entering a wrong tokenId and klick submit, nothing happens. But when you check the browser console, you see that actually an error has been thrown, that the user is not approved. So this error message should also be visible to the user in the frontend.
+
   async function approveAndList(data) {
     console.log("Approving...")
     const nftAddress = data.data[0].inputResult
@@ -89,6 +91,8 @@ export default function Home() {
         nftAddress: nftAddress,
         tokenId: tokenId,
         price: price,
+        desiredNftAddress: "0x0000000000000000000000000000000000000000",
+        desiredTokenId: "0",
       },
     }
 

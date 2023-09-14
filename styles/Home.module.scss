@@ -33,7 +33,6 @@ $font-black: rgb(0, 0, 0);
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-
         padding: 5px;
     }
 }
@@ -419,6 +418,56 @@ button {
         border: 2px solid white;
     }
 }
+
+//.modal {
+//  div {
+//    border-radius: 1rem;
+//    background-color: $background-color;
+//
+//    div {
+//      div {
+//        background-color: $secondary-color;
+//        outline: none;
+//
+//        &:hover {
+//          background-color: $highlight-color;
+//          outline: none;
+//        }
+//
+//        input {
+//          outline: none;
+//          border: none;
+//        }
+//
+//        label {
+//          background-color: transparent;
+//          color: black;
+//        }
+//      }
+//    }
+//  }
+//
+//  footer {
+//    border: none;
+//
+//    button {
+//      margin: 1rem;
+//      padding: 0.5rem;
+//      width: 8rem;
+//      border-radius: 1rem;
+//      background-color: $secondary-color;
+//      border: none;
+//
+//      span {
+//        color: black;
+//      }
+//
+//      &:hover {
+//        background-color: $primary-color;
+//      }
+//    }
+//  }
+//}
 
 .button {
     background-color: blue;

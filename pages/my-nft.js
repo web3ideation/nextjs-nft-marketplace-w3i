@@ -2,7 +2,7 @@ import { useMoralis } from "react-moralis"
 import { useCallback, useEffect, useState } from "react"
 import NFTBox from "../components/NFTBox"
 import networkMapping from "../constants/networkMapping.json"
-import GET_ACTIVE_ITEMS from "../constants/subgraphQueries"
+import { GET_ACTIVE_ITEMS } from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
 import styles from '../styles/Home.module.css'
 
@@ -11,10 +11,10 @@ export default function Home() {
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
 
-    const { loading, data: listedNfts, error } = useQuery(GET_ACTIVE_ITEMS)
+    const { loading, data, error } = useQuery(GET_ACTIVE_ITEMS)
     const [hasOwnNFT, setHasOwnNFT] = useState(false)
 
-    if (loading || !listedNfts) {
+    if (loading || !data) {
         return <div>Loading...</div>
     }
 
@@ -56,7 +56,7 @@ export default function Home() {
                 <div className="flex flex-wrap pb-4">
                     {isWeb3Enabled && chainId ? (
                         <>
-                            {listedNfts.activeItems.map((nft) =>
+                            {data.items.map((nft) =>
                                 isOwnedByUser(nft.seller) ? (
                                     <NFTBox
                                         price={nft.price}
