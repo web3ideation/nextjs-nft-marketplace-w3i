@@ -10,48 +10,49 @@ import LoadingIcon from "../public/LoadingIcon";
 import styles from "../styles/Home.module.css"
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  uri: process.env.NEXT_PUBLIC_SUBGRAPH_URL, // !!!W this is centralized!
+    cache: new InMemoryCache(),
+    uri: process.env.NEXT_PUBLIC_SUBGRAPH_URL, // !!!W this is centralized!
 })
 
 function MyApp({ Component, pageProps }) {
-  const [searchResults, setSearchResults] = useState([]) // Responsible for the search results
-  const [isLoading, setIsLoading] = useState(true); // Zustandsvariable für die Ladeanzeige
+    const [searchResults, setSearchResults] = useState([]) // Responsible for the search results
+    const [isLoading, setIsLoading] = useState(true); // Responsible for loading
 
-  useEffect(() => {
-    // Simuliere eine kurze Ladezeit (kann durch deine tatsächliche Ladezeit ersetzt werden)
-    setTimeout(() => {
-      setIsLoading(false); // Setze isLoading auf false, wenn die Seite geladen ist
-    }, 2000); // Ändere die Dauer nach Bedarf
-  }, []);
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 4000); // Duration for loading symbol
+    }, []);
 
-  return (
-    <div>
-      <Head>
-        <title>NFT Marketplace</title>
-        <meta name="description" content="NFT Marketplace" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <MoralisProvider initializeOnMount={false}>
-        <ApolloProvider client={client}>
-          <NotificationProvider>
-            <Header setSearchResults={setSearchResults} />
-            {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
-            {isLoading ? (
-              <div className={styles.loadingIcon}>
-                <LoadingIcon />
-              </div>
-            ) : (
-              <>
-                <Component {...pageProps} setSearchResults={setSearchResults} />
-                {searchResults.length > 0 && <SearchResultPage searchResults={searchResults} />}
-              </>
-            )}
-          </NotificationProvider>
-        </ApolloProvider>
-      </MoralisProvider>
-    </div>
-  )
+    return (
+            <div>
+                <Head>
+                    <title>NFT Marketplace</title>
+                    <meta name="description" content="NFT Marketplace" />
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
+                <MoralisProvider initializeOnMount={false}>
+                    <ApolloProvider client={client}>
+                        <NotificationProvider>
+                            <Header setSearchResults={setSearchResults} />
+                            {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
+                            {isLoading ? (
+                                <div>
+                                    <div className={styles.loadingIconWrapper}>
+                                        <LoadingIcon className={styles.loadingIcon} />
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <Component {...pageProps} setSearchResults={setSearchResults} />
+                                    {searchResults.length > 0 && <SearchResultPage searchResults={searchResults} />}
+                                </>
+                            )}
+                        </NotificationProvider>
+                    </ApolloProvider>
+                </MoralisProvider>
+            </div>
+    )
 }
 
 export default MyApp

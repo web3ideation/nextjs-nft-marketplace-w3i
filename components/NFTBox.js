@@ -44,6 +44,7 @@ export default function NFTBox({
 
     const [loadingImage, setLoadingImage] = useState(false) // Added loading state
     const [errorLoadingImage, setErrorLoadingImage] = useState(false) // Added error state
+    const [transactionError, setTransactionError] = useState("");
 
     function useRawTokenURI(nftAddress, tokenId) {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -148,13 +149,13 @@ export default function NFTBox({
 
     const openUpdateListingModal = () => {
         setShowUpdateListingModal(true);
-        disableMouseWheel();
+        disableMouseWheel(true);
     };
 
     const handleUpdatePriceButtonClick = () => {
         openUpdateListingModal(true);
         setShowSellModal(false); // Close NFT Selling Modal
-        disableMouseWheel(); // Call the function to enable the mousewheel
+        enableMouseWheel(false); // Call the function to enable the mousewheel
     }
 
     const handleBuyItemSuccess = async (tx) => {
@@ -208,6 +209,7 @@ export default function NFTBox({
             {imageURI ? (
                 <Card
                     className={styles.NFTCard}
+                    style={{ backgroundColor: 'white', transition: 'background-color 0.5s' }}
                     title={tokenName}
                     description={tokenDescription || '...'}
                     onClick={() => {
@@ -216,8 +218,6 @@ export default function NFTBox({
                 >
                     <div>
                         <div className={styles.NFTTextArea}>
-                            <div>#{tokenId}</div>
-                            <div className={styles.NFTOwner}>Owned by {formattedSellerAddress}</div>
                             {imageURI ? (
                                 <Image
                                     className={styles.NFTImage}
@@ -226,6 +226,7 @@ export default function NFTBox({
                                     width={100}
                                     loading="eager"
                                     alt={tokenDescription} />
+
                             ) : (
                                 <div>
                                     {loadingImage ? (
@@ -242,6 +243,7 @@ export default function NFTBox({
                                     )}
                                 </div>
                             )}
+                            <div className={styles.NFTOwner}>Owned by {formattedSellerAddress}</div>
                             <div className="font-bold">{ethers.utils.formatUnits(price, "ether")} ETH</div>
                         </div>
                     </div>
@@ -254,7 +256,7 @@ export default function NFTBox({
             {showInfoModal && (
                 <Modal
                     className={styles.NFTInfoModal}
-                    onCancel={() => { setShowInfoModal(false); enableMouseWheel(); anyModalIsClosed();}}
+                    onCancel={() => { setShowInfoModal(false); enableMouseWheel(); anyModalIsClosed(); }}
                     onOk={handleBuyClick}
                     closeButton={<Button disabled text=""></Button>}
                     cancelText="Close"
@@ -262,7 +264,7 @@ export default function NFTBox({
                     width="325px"
                 >
                     <Image
-                        className={styles.NFTImage}
+                        className={styles.NFTModalImage}
                         src={imageURI.src}
                         alt={tokenDescription}
                         height={100}
