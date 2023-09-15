@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false);
-        }, 4000); // Duration for loading symbol
+        }, 400); // Duration for loading symbol
     }, []);
 
     return (
