@@ -26,6 +26,7 @@ function NFTTopCollections({ isWeb3Enabled, chainId }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [images, setImages] = useState({});
 
+  // !!!N prevent scrolling when less items
   const handleNFTCollectionsListedScroll = useCallback((event) => {
     if (isModalOpen || isMouseWheelDisabled) {
       return;
