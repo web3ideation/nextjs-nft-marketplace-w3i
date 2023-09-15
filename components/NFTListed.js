@@ -95,7 +95,7 @@ function NFTListed({ isWeb3Enabled, chainId }) {
                   anyModalIsClosed={() => setIsModalOpen(false)}
                   imgSrc={imgSrc}
                 />
-              );
+              )
             })
           )
         ) : (
