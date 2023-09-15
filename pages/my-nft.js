@@ -4,7 +4,7 @@ import NFTBox from "../components/NFTBox"
 import networkMapping from "../constants/networkMapping.json"
 import { GET_ACTIVE_ITEMS } from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
-import styles from '../styles/Home.module.css'
+import styles from "../styles/Home.module.css"
 
 export default function Home() {
     const { isWeb3Enabled, chainId, account } = useMoralis()
@@ -22,30 +22,37 @@ export default function Home() {
         return <div>Error loading NFTs</div>
     }
 
-    const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState(false)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const handleNFTListedScroll = useCallback((event) => {
-    if (isModalOpen || isMouseWheelDisabled) {
-      return;
-    }
-    const container = document.getElementById('NFTListed');
-    if (container) {
-      container.scrollLeft += event.deltaY < 0 ? -226 : 226;
-    }
-  }, [isModalOpen, isMouseWheelDisabled]);
+    const handleNFTListedScroll = useCallback(
+        (event) => {
+            if (isModalOpen || isMouseWheelDisabled) {
+                return
+            }
+            const container = document.getElementById("NFTListed")
+            if (container) {
+                container.scrollLeft += event.deltaY < 0 ? -226 : 226
+            }
+        },
+        [isModalOpen, isMouseWheelDisabled]
+    )
 
-  useEffect(() => {
-    const preventPageScroll = () => {
-      const container = document.getElementById('NFTListed');
-      if (container) {
-        container.addEventListener("wheel", (event) => {
-          event.preventDefault();
-        }, { passive: false });
-      }
-    };
-    preventPageScroll();
-  }, []);
+    useEffect(() => {
+        const preventPageScroll = () => {
+            const container = document.getElementById("NFTListed")
+            if (container) {
+                container.addEventListener(
+                    "wheel",
+                    (event) => {
+                        event.preventDefault()
+                    },
+                    { passive: false }
+                )
+            }
+        }
+        preventPageScroll()
+    }, [])
 
     const isOwnedByUser = (seller) => seller === account || seller === undefined
 

@@ -17,8 +17,8 @@ export default function UpdateListingModal({
     const dispatch = useNotification()
 
     const [priceToUpdateListingWith, setPriceToUpdateListingWith] = useState("") //!!!W this means that if i just open the modal and klick OK without entering a number the nfts price will be set to 0. which is a problem! tho there should be an error from the marketplace smartcontract that the price can not be zero, i think.
-    const [error, setError] = useState(null); // Error state if something with the value is wrong
-    const [transactionError, setTransactionError] = useState(null); // Error state if something with wallet is wrong
+    const [error, setError] = useState(null) // Error state if something with the value is wrong
+    const [transactionError, setTransactionError] = useState(null) // Error state if something with wallet is wrong
 
     const handleUpdateListingSuccess = async (tx) => {
         await tx.wait(1)
@@ -44,30 +44,34 @@ export default function UpdateListingModal({
             newPrice: ethers.utils.parseEther(priceToUpdateListingWith || "0"), //!!!W this means that if i just open the modal and klick OK without entering a number the nfts price will be set to 0. which is a problem! tho there should be an error from the marketplace smartcontract that the price can not be zero, i think.
         },
     })
-    const handleUpdateButtonClick = async () => { // !!!N Komma should be reassigned with a dot
+    const handleUpdateButtonClick = async () => {
+        // !!!N Komma should be reassigned with a dot
         if (priceToUpdateListingWith.trim() === "") {
-            setError("Add your new price");
+            setError("Add your new price")
         } else if (parseFloat(priceToUpdateListingWith) === 0) {
             setError("Price can't be zero.")
         } else {
             try {
                 const tx = await updateListing({
                     onError: (error) => {
-                        if (error.message === "MetaMask Tx Signature: User denied transaction signature.") {
-                            setTransactionError("Transaction was denied by the user.");
+                        if (
+                            error.message ===
+                            "MetaMask Tx Signature: User denied transaction signature."
+                        ) {
+                            setTransactionError("Transaction was denied by the user.")
                         } else {
-                        setError(error.message);
+                            setError(error.message)
                         }
-                        setPriceToUpdateListingWith("");
-                        console.error(error);
+                        setPriceToUpdateListingWith("")
+                        console.error(error)
                     },
                     onSuccess: handleUpdateListingSuccess,
-                });
-                setError(null);
+                })
+                setError(null)
             } catch (error) {
-                setError(error.message);
-                setPriceToUpdateListingWith("");
-                console.error(error);
+                setError(error.message)
+                setPriceToUpdateListingWith("")
+                console.error(error)
             }
         }
     }
@@ -78,9 +82,9 @@ export default function UpdateListingModal({
             onOk={handleUpdateButtonClick}
             okText="Update"
             onCancel={() => {
-                onCancel && onCancel();
-                enableMouseWheel && enableMouseWheel();
-                setError(null);
+                onCancel && onCancel()
+                enableMouseWheel && enableMouseWheel()
+                setError(null)
             }}
             cancelText="Close"
             width="325px"

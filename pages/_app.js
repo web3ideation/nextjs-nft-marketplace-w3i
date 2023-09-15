@@ -6,7 +6,7 @@ import Header from "../components/Header"
 import "../styles/globals.css"
 import SearchResultPage from "./SearchResultPage"
 import React, { useEffect, useState } from "react"
-import LoadingIcon from "../public/LoadingIcon";
+import LoadingIcon from "../public/LoadingIcon"
 import styles from "../styles/Home.module.css"
 
 const client = new ApolloClient({
@@ -16,42 +16,44 @@ const client = new ApolloClient({
 
 function MyApp({ Component, pageProps }) {
     const [searchResults, setSearchResults] = useState([]) // Responsible for the search results
-    const [isLoading, setIsLoading] = useState(true); // Responsible for loading
+    const [isLoading, setIsLoading] = useState(true) // Responsible for loading
 
     useEffect(() => {
         setTimeout(() => {
-            setIsLoading(false);
-        }, 400); // Duration for loading symbol
-    }, []);
+            setIsLoading(false)
+        }, 400) // Duration for loading symbol
+    }, [])
 
     return (
-            <div>
-                <Head>
-                    <title>NFT Marketplace</title>
-                    <meta name="description" content="NFT Marketplace" />
-                    <link rel="icon" href="/favicon.ico" />
-                </Head>
-                <MoralisProvider initializeOnMount={false}>
-                    <ApolloProvider client={client}>
-                        <NotificationProvider>
-                            <Header setSearchResults={setSearchResults} />
-                            {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
-                            {isLoading ? (
-                                <div>
-                                    <div className={styles.loadingIconWrapper}>
-                                        <LoadingIcon className={styles.loadingIcon} />
-                                    </div>
+        <div>
+            <Head>
+                <title>NFT Marketplace</title>
+                <meta name="description" content="NFT Marketplace" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <MoralisProvider initializeOnMount={false}>
+                <ApolloProvider client={client}>
+                    <NotificationProvider>
+                        <Header setSearchResults={setSearchResults} />
+                        {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
+                        {isLoading ? (
+                            <div>
+                                <div className={styles.loadingIconWrapper}>
+                                    <LoadingIcon className={styles.loadingIcon} />
                                 </div>
-                            ) : (
-                                <>
-                                    <Component {...pageProps} setSearchResults={setSearchResults} />
-                                    {searchResults.length > 0 && <SearchResultPage searchResults={searchResults} />}
-                                </>
-                            )}
-                        </NotificationProvider>
-                    </ApolloProvider>
-                </MoralisProvider>
-            </div>
+                            </div>
+                        ) : (
+                            <>
+                                <Component {...pageProps} setSearchResults={setSearchResults} />
+                                {searchResults.length > 0 && (
+                                    <SearchResultPage searchResults={searchResults} />
+                                )}
+                            </>
+                        )}
+                    </NotificationProvider>
+                </ApolloProvider>
+            </MoralisProvider>
+        </div>
     )
 }
 

@@ -1,28 +1,28 @@
 import { Button, ConnectButton } from "web3uikit"
 import Link from "next/link"
-import PopupMenu from './PopupMenu'
-import SearchBar from "./SearchBar";
-import React from 'react';
-import styles from '../styles/Home.module.css'
+import PopupMenu from "./PopupMenu"
+import SearchBar from "./SearchBar"
+import React from "react"
+import styles from "../styles/Home.module.css"
 
 export default function Header({ setSearchResults }) {
     const handleSearch = async (searchTerm) => {
         try {
-            const response = await fetch(`/?q=${searchTerm}`);
-            const data = await response.json();
+            const response = await fetch(`/?q=${searchTerm}`)
+            const data = await response.json()
 
             if (Array.isArray(data)) {
-                setSearchResults(data);
-                console.log('Search term:', searchTerm, 'Results:', data);
+                setSearchResults(data)
+                console.log("Search term:", searchTerm, "Results:", data)
             } else {
-                setSearchResults([]);
+                setSearchResults([])
             }
-            setSearchResults(results);
+            setSearchResults(results)
         } catch (error) {
-            console.error('Error fetching data:', error.message);
-            setSearchResults([]);
+            console.error("Error fetching data:", error.message)
+            setSearchResults([])
         }
-    };
+    }
 
     return (
         <div className={styles.headerContainer}>
