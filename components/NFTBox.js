@@ -23,17 +23,7 @@ const truncateStr = (fullStr, strLen) => {
     )
 }
 
-export default function NFTBox({
-    price,
-    nftAddress,
-    tokenId,
-    marketplaceAddress,
-    seller,
-    disableMouseWheel,
-    enableMouseWheel,
-    anyModalIsOpen,
-    anyModalIsClosed,
-}) {
+export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress, seller }) {
     const { isWeb3Enabled, account } = useMoralis()
     const [imageURI, setImageURI] = useState("")
     const [tokenName, setTokenName] = useState("")
@@ -43,6 +33,7 @@ export default function NFTBox({
     const [showInfoModal, setShowInfoModal] = useState(false) // Modal for info NFT
     const [showSellModal, setShowSellModal] = useState(false) // Modal for selling NFT
     const [showUpdateListingModal, setShowUpdateListingModal] = useState(false) // Modal for updating Price
+    const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
 
     const [loadingImage, setLoadingImage] = useState(false) // Added loading state
     const [errorLoadingImage, setErrorLoadingImage] = useState(false) // Added error state
@@ -128,37 +119,55 @@ export default function NFTBox({
     const handleCardClick = () => {
         if (isOwnedByUser) {
             setShowSellModal(true) // Open NFT sell modal
-            disableMouseWheel(true) // Call the function to disable the mouse wheel
-            anyModalIsOpen(true)
         } else {
             setShowInfoModal(true) // Open NFT info modal
-            disableMouseWheel(true) // Call the function to disable the mouse wheel
-            anyModalIsOpen(true)
         }
     }
 
     const [buying, setBuying] = useState(false) // Added buying state
 
-    const handleBuyClick = () => {
-        isOwnedByUser
-            ? setShowInfoModal(true)
-            : buyItem({
-                  // !!!W here it should also have a modal coming up, which displays detailed infromation about the nft and on there there would be a button for the buy function
-                  onError: (error) => console.log(error),
-                  onSuccess: handleBuyItemSuccess,
-              })
+    const handleBuyClick = async () => {
+        if (buying) return // Verhindere mehrfache Klicks, solange ein Kaufvorgang läuft
+        setBuying(true)
+        try {
+            if (isOwnedByUser) {
+                setShowInfoModal(true)
+            } else {
+                await buyItem({
+                    // !!!W here it should also have a modal coming up, which displays detailed infromation about the nft and on there there would be a button for the buy function
+                    onError: (error) => {
+                        console.error(error)
+                        setBuying(false)
+                    },
+                    onSuccess: handleBuyItemSuccess,
+                })
+            }
+        } finally {
+            setBuying(false)
+        }
     }
 
     const openUpdateListingModal = () => {
         setShowUpdateListingModal(true)
-        disableMouseWheel()
     }
 
     const handleUpdatePriceButtonClick = () => {
         openUpdateListingModal(true)
         setShowSellModal(false) // Close NFT Selling Modal
-        disableMouseWheel() // Call the function to enable the mousewheel
     }
+
+    const preventScroll = (shouldPrevent) => {
+        document.body.style.overflow = shouldPrevent ? "hidden" : "auto"
+    }
+
+    const modalListener = () => {
+        setAnyModalIsOpen(showUpdateListingModal || showInfoModal || showSellModal)
+    }
+
+    useEffect(() => {
+        modalListener()
+        preventScroll(anyModalIsOpen)
+    }, [anyModalIsOpen])
 
     const handleBuyItemSuccess = async (tx) => {
         try {
@@ -169,7 +178,6 @@ export default function NFTBox({
                 title: "Item Bought",
                 position: "topR",
             })
-            enableMouseWheel() // Call the function to enable the mousewheel
         } catch (error) {
             console.error("Error processing transaction success:", error)
             setTransactionError("An error occurred while processing the transaction.")
@@ -205,6 +213,27 @@ export default function NFTBox({
             loadImage() // Load the image when the component mounts
         }
     }, [isWeb3Enabled])
+    const [isCopying, setIsCopying] = useState(false)
+    const handleMouseEnter = () => {
+        setIsCopying(true)
+    }
+
+    const handleMouseLeave = () => {
+        setIsCopying(false)
+    }
+
+    const copyNftAddressToClipboard = () => {
+        // Kopieren Sie die NFT-Adresse in die Zwischenablage
+        const textArea = document.createElement("textarea")
+        textArea.value = nftAddress
+        document.body.appendChild(textArea)
+        textArea.select()
+        document.execCommand("copy")
+        document.body.removeChild(textArea)
+
+        // Benachrichtigen Sie den Benutzer, dass die Adresse kopiert wurde (optional)
+        // Hier können Sie eine Benachrichtigung hinzufügen oder Feedback geben
+    }
 
     return (
         <div className={styles.NFTCardWrapper}>
@@ -266,8 +295,6 @@ export default function NFTBox({
                     className={styles.NFTInfoModal}
                     onCancel={() => {
                         setShowInfoModal(false)
-                        enableMouseWheel()
-                        anyModalIsClosed()
                     }}
                     onOk={handleBuyClick}
                     closeButton={<Button disabled text=""></Button>}
@@ -289,7 +316,18 @@ export default function NFTBox({
                         </div>
                         <div>
                             <p>Token-Adress: </p>
-                            <p>{formattedNftAddress}</p>
+                            <div
+                                onMouseEnter={() => handleMouseEnter}
+                                onMouseLeave={() => handleMouseLeave}
+                                onClick={copyNftAddressToClipboard}
+                                style={{
+                                    display: "inline-block",
+                                    position: "relative",
+                                    cursor: isCopying ? "text" : "copy", // different cursor???
+                                }}
+                            >
+                                <p>{formattedNftAddress}</p>
+                            </div>
                         </div>
                         <div>
                             <p>Token-Id: </p>
@@ -319,8 +357,6 @@ export default function NFTBox({
                     okText="Update price"
                     onCancel={() => {
                         setShowSellModal(false)
-                        enableMouseWheel()
-                        anyModalIsClosed()
                     }}
                     cancelText="Close"
                     closeButton={<Button disabled text=""></Button>}
@@ -371,8 +407,6 @@ export default function NFTBox({
                     nftAddress={nftAddress}
                     onCancel={() => {
                         setShowUpdateListingModal(false)
-                        enableMouseWheel()
-                        anyModalIsClosed()
                     }}
                 />
             )}

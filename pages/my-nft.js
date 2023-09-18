@@ -22,7 +22,7 @@ export default function Home() {
         return <div>Error loading NFTs</div>
     }
 
-    const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState(false)
+    const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState()
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const handleNFTListedScroll = useCallback(

@@ -21,23 +21,7 @@ function NFTTopCollections({ isWeb3Enabled, chainId }) {
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
     const { loading, data } = useQuery(GET_INACTIVE_ITEMS)
 
-    const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState(false)
-    const [isModalOpen, setIsModalOpen] = useState(false)
     const [images, setImages] = useState({})
-
-    // !!!N prevent scrolling when less items
-    const handleNFTCollectionsListedScroll = useCallback(
-        (event) => {
-            if (isModalOpen || isMouseWheelDisabled) {
-                return
-            }
-            const container = document.getElementById("NFTCollectionsListed")
-            if (container) {
-                container.scrollLeft += event.deltaY < 0 ? -226 : 226
-            }
-        },
-        [isModalOpen, isMouseWheelDisabled]
-    )
 
     useEffect(() => {
         if (isWeb3Enabled && chainId && !loading && data) {
@@ -60,11 +44,7 @@ function NFTTopCollections({ isWeb3Enabled, chainId }) {
     return (
         <div className={styles.NFTContainer}>
             <h1>Collections</h1>
-            <div
-                id="NFTCollectionsListed"
-                className={styles.NFTListed}
-                onWheel={handleNFTCollectionsListedScroll}
-            >
+            <div id="NFTCollectionsListed" className={styles.NFTListed}>
                 {isWeb3Enabled && chainId ? (
                     loading || !data ? (
                         <div>Loading...</div>
@@ -82,10 +62,6 @@ function NFTTopCollections({ isWeb3Enabled, chainId }) {
                                     marketplaceAddress={marketplaceAddress}
                                     seller={seller}
                                     key={`${nftAddress}${tokenId}`}
-                                    disableMouseWheel={() => setIsMouseWheelDisabled(true)}
-                                    enableMouseWheel={() => setIsMouseWheelDisabled(false)}
-                                    anyModalIsOpen={() => setIsModalOpen(true)}
-                                    anyModalIsClosed={() => setIsModalOpen(false)}
                                     imgSrc={imgSrc}
                                 />
                             )

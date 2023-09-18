@@ -25,38 +25,7 @@ function NFTListed({ isWeb3Enabled, chainId }) {
     console.log("Chain ID:" + chainId)
     console.log("Listed nfts:" + data)
 
-    const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState(false)
-    const [isModalOpen, setIsModalOpen] = useState(false)
     const [images, setImages] = useState({})
-
-    const handleNFTListedScroll = useCallback(
-        (event) => {
-            if (isModalOpen || isMouseWheelDisabled) {
-                return
-            }
-            const container = document.getElementById("NFTListed")
-            if (container) {
-                container.scrollLeft += event.deltaY < 0 ? -226 : 226
-            }
-        },
-        [isModalOpen, isMouseWheelDisabled]
-    )
-
-    useEffect(() => {
-        const preventPageScroll = () => {
-            const container = document.getElementById("NFTListed")
-            if (container) {
-                container.addEventListener(
-                    "wheel",
-                    (event) => {
-                        event.preventDefault()
-                    },
-                    { passive: false }
-                )
-            }
-        }
-        preventPageScroll()
-    }, [])
 
     useEffect(() => {
         if (isWeb3Enabled && chainId && !loading && data) {
@@ -79,7 +48,7 @@ function NFTListed({ isWeb3Enabled, chainId }) {
     return (
         <div className={styles.NFTContainer}>
             <h1>Recently Listed</h1>
-            <div id="NFTListed" className={styles.NFTListed} onWheel={handleNFTListedScroll}>
+            <div id="NFTListed" className={styles.NFTListed}>
                 {isWeb3Enabled && chainId ? (
                     loading || !data ? (
                         <div>Loading...</div>
@@ -96,10 +65,6 @@ function NFTListed({ isWeb3Enabled, chainId }) {
                                     marketplaceAddress={marketplaceAddress}
                                     seller={seller}
                                     key={`${nftAddress}${tokenId}`}
-                                    disableMouseWheel={() => setIsMouseWheelDisabled(true)}
-                                    enableMouseWheel={() => setIsMouseWheelDisabled(false)}
-                                    anyModalIsOpen={() => setIsModalOpen(true)}
-                                    anyModalIsClosed={() => setIsModalOpen(false)}
                                     imgSrc={imgSrc}
                                 />
                             )
