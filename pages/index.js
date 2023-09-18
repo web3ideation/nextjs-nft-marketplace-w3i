@@ -8,7 +8,7 @@ export default function Home() {
 
     return (
         <div>
-            <NFTListed isWeb3Enabled={isWeb3Enabled} chainId={chainId} />,
+            <NFTListed isWeb3Enabled={isWeb3Enabled} chainId={chainId} />
             <NFTTopCollections isWeb3Enabled={isWeb3Enabled} chainId={chainId} />
         </div>
     )
