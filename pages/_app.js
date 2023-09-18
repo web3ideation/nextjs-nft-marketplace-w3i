@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }) {
             <MoralisProvider initializeOnMount={false}>
                 <ApolloProvider client={client}>
                     <NotificationProvider>
-                        <Header setSearchResults={setSearchResults} />
+                        <Header />
                         {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
                         {isLoading ? (
                             <div>
@@ -44,10 +44,12 @@ function MyApp({ Component, pageProps }) {
                             </div>
                         ) : (
                             <>
-                                <Component {...pageProps} setSearchResults={setSearchResults} />
-                                {searchResults.length > 0 && (
-                                    <SearchResultPage searchResults={searchResults} />
-                                )}
+                                <Component
+                                    {...pageProps}
+                                    searchResults={searchResults}
+                                    setSearchResults={setSearchResults}
+                                />
+                                {searchResults.length > 0 && <SearchResultPage />}
                             </>
                         )}
                     </NotificationProvider>
