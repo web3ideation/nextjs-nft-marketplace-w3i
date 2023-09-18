@@ -2,27 +2,11 @@ import { Button, ConnectButton } from "web3uikit"
 import Link from "next/link"
 import PopupMenu from "./PopupMenu"
 import SearchBar from "./SearchBar"
-import React from "react"
+import React, { useState } from "react"
 import styles from "../styles/Home.module.css"
 
-export default function Header({ setSearchResults }) {
-    const handleSearch = async (searchTerm) => {
-        try {
-            const response = await fetch(`/?q=${searchTerm}`)
-            const data = await response.json()
-
-            if (Array.isArray(data)) {
-                setSearchResults(data)
-                console.log("Search term:", searchTerm, "Results:", data)
-            } else {
-                setSearchResults([])
-            }
-            setSearchResults(results)
-        } catch (error) {
-            console.error("Error fetching data:", error.message)
-            setSearchResults([])
-        }
-    }
+export default function Header({}) {
+    const [searchResults, setSearchResults] = useState([])
 
     return (
         <div className={styles.headerContainer}>
@@ -34,7 +18,7 @@ export default function Header({ setSearchResults }) {
                     <h1 className={styles.headerHeadline}>NFT Marketplace</h1>
                 </div>
                 <div className={styles.headerElementsWrapper}>
-                    <SearchBar onSearch={handleSearch} setSearchResults={setSearchResults} />
+                    <SearchBar setSearchResults={searchResults} />
                     <Link href="/my-nft" className={styles.headerButton}>
                         <Button text="Create" />
                     </Link>

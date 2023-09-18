@@ -1,50 +1,66 @@
-import React, { useState, useEffect } from "react"
-import { useRouter } from "next/router"
-import { useQuery } from "@apollo/client"
-import { GET_ACTIVE_ITEMS } from "../constants/subgraphQueries"
+import React, { useState } from "react"
 import styles from "../styles/Home.module.css"
 import { Button } from "web3uikit"
+import { useRouter } from "next/router"
+import { GET_ACTIVE_ITEMS } from "../constants/subgraphQueries"
+import { useQuery } from "@apollo/client"
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = ({}) => {
+    const router = useRouter()
+    const [searchResults, setSearchResults] = useState([])
+
     const [searchTerm, setSearchTerm] = useState("")
-    const history = useRouter()
-
     const { loading, error, data } = useQuery(GET_ACTIVE_ITEMS, {
-        variables: {
-            searchTerm,
-        },
+        variables: { searchTerm },
     })
-
-    //  useEffect(() => {
-    //    // Handle the fetched data here
-    //    if (!loading && !error && data && data.items) {
-    //      onSearch(data.items);
-    //      console.log('Search term:', searchTerm, 'Results:', data.items);
-    //    }
-    //  }, [loading, error, data, searchTerm, onSearch]);
 
     const handleSearch = async () => {
         try {
-            const response = await fetch(`/?q=${searchTerm}`)
-            const searchData = await response.json()
-            console.log(searchData)
-            if (Array.isArray(searchData)) {
-                onSearch(searchData)
+            if (!loading && !error && data && data.items) {
+                const searchResults = data.items.filter((item) => {
+                    const concatenatedFields = [
+                        item.listingId,
+                        item.nftAddress,
+                        item.tokenId,
+                        item.seller,
+                    ].join(" ")
+                    const lowerCaseConcatenated = concatenatedFields.toLowerCase()
+                    const lowerCaseSearchTerm = searchTerm.toLowerCase()
 
-                console.log("Search term:", searchTerm, "Results:", searchData)
+                    return lowerCaseConcatenated.includes(lowerCaseSearchTerm)
+                })
+                console.log("Search term:", searchTerm, "Results:", searchResults)
+
+                setSearchResults(searchResults)
+            } else {
+                console.log("No results found.")
             }
         } catch (error) {
             console.error("Error fetching data:", error.message)
-            onSearch([])
+            console.error("Error fetching data:", error)
         }
+    }
 
-        history.push(`/SearchResultPage?search=${searchTerm}`)
+    const navigateToSearchResultPage = () => {
+        router.push({
+            pathname: "/SearchResultPage",
+            query: {
+                search: searchTerm,
+                searchResults: JSON.stringify(searchResults),
+            },
+        })
     }
 
     const handleKeyPress = (event) => {
         if (event.key === "Enter") {
             handleSearch()
+            navigateToSearchResultPage(searchTerm)
         }
+    }
+
+    const handleOnClick = () => {
+        handleSearch()
+        navigateToSearchResultPage(searchTerm)
     }
 
     return (
@@ -57,7 +73,7 @@ const SearchBar = ({ onSearch }) => {
                 onKeyPress={handleKeyPress}
                 placeholder="Search..."
             />
-            <Button key="goButton" text="Go" onClick={handleSearch} />
+            <Button key="goButton" text="Go" onClick={handleOnClick} />
         </div>
     )
 }

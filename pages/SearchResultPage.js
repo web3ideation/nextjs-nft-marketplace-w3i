@@ -3,13 +3,21 @@ import PropTypes from "prop-types"
 import DropDownSearch from "../components/DropDownSearch"
 import { Button } from "web3uikit"
 import styles from "../styles/Home.module.css"
+import NFTBox from "../components/NFTBox"
+import { useRouter } from "next/router"
+import { ArrowLeft, Arrow } from "web3uikit"
 
-const SearchResultPage = ({ searchResults = [], setSearchResults }) => {
+const SearchResultPage = ({}) => {
+    const router = useRouter()
     const [sortingOption, setSortingOption] = useState("default")
+    const [selectedCategory, setSelectedCategory] = useState("default")
+    const [selectedCollection, setSelectedCollection] = useState("default")
     const [showDropdowns, setShowDropdowns] = useState(true)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
-    console.log("searchResults prop:", searchResults)
+
+    const searchTermFromQuery = router.query.search || ""
+    const searchResultsFromQuery = JSON.parse(router.query.searchResults || "[]")
+
+    console.log("search results from query:", searchResultsFromQuery)
 
     const handleSortingChange = (event, sortingType) => {
         setSortingOption(sortingType)
@@ -20,37 +28,35 @@ const SearchResultPage = ({ searchResults = [], setSearchResults }) => {
                 // Default sorting by ID (you can replace with appropriate field)
                 sortedResults.sort((a, b) => a.id.localeCompare(b.id))
                 break
-            case "Recently Sold":
-                // Sorting by most recent date (you can replace with appropriate field)
-                sortedResults.sort(
-                    (a, b) => new Date(b.recentlySoldDate) - new Date(a.recentlySoldDate)
-                )
-                break
-            case "Most Sold":
-                // Sorting by most sold count
-                sortedResults.sort((a, b) => b.mostSoldCount - a.mostSoldCount)
-                break
-            case "Oldest":
-                // Sorting by oldest date (you can replace with appropriate field)
-                sortedResults.sort((a, b) => new Date(a.date) - new Date(b.date))
-                break
-            case "Youngest":
-                // Sorting by most recent date
-                sortedResults.sort((a, b) => new Date(b.date) - new Date(a.date))
-                break
-            case "Highest Price":
-                // Sorting by highest price
-                sortedResults.sort((a, b) => b.price - a.price)
+            case "Inactive Items":
+                // Sorting by a different field (replace with appropriate field)
+                sortedResults.sort((a, b) => a.someField.localeCompare(b.someField))
                 break
             default:
                 // Use default sorting logic here
                 break
         }
+    }
+    const handleCategoryChange = (event, selectedCategory) => {
+        setSelectedCategory(selectedCategory)
+        const filteredResults = searchResults.filter(
+            (result) => result.category === selectedCategory
+        )
+        console.log("Choosen category:", selectedCategory)
+        // Hier können Sie Ihre Verarbeitungslogik hinzufügen, um die Suchergebnisse basierend auf der ausgewählten Kategorie zu filtern oder sortieren.
+        setSearchResults(filteredResults)
+        console.log("Here are the results filtered by categories" + filteredResults)
+    }
 
-        // Set the sorted results to the state or perform any further processing
-        setSearchResults(sortedResults)
-
-        console.log("Hier stehen die sortierten Ergebnisse" + sortedResults)
+    const handleCollectionChange = (even, selectedCollection) => {
+        setSelectedCollection(selectedCollection)
+        const filteredResults = searchResults.filter(
+            (result) => result.category === selectedCollection
+        )
+        console.log("Choosen collection:", selectedCollection)
+        // Hier können Sie Ihre Verarbeitungslogik hinzufügen, um die Suchergebnisse basierend auf der ausgewählten Kategorie zu filtern oder sortieren.
+        setSearchResults(filteredResults)
+        console.log("Here are the results filtered by collections" + filteredResults)
     }
 
     const toggleDropdowns = () => {
@@ -61,7 +67,6 @@ const SearchResultPage = ({ searchResults = [], setSearchResults }) => {
         <div className={styles.searchResultPage}>
             <div className={styles.dropDownSearchWrapper}>
                 <Button onClick={toggleDropdowns} text="Filters" />
-
                 <div>
                     {showDropdowns && (
                         <div className="">
@@ -69,11 +74,7 @@ const SearchResultPage = ({ searchResults = [], setSearchResults }) => {
                                 buttonText="Sort by"
                                 options={[
                                     { id: "active", label: "Active Items" },
-                                    { id: "recent", label: "Recently Sold" },
-                                    { id: "most", label: "Most Sold" },
-                                    { id: "oldest", label: "Oldest" },
-                                    { id: "youngest", label: "Youngest" },
-                                    { id: "highest Price", label: "Highest Price" },
+                                    { id: "inactive", label: "Inactive Items" },
                                 ]}
                                 onChange={(event, sortingType) =>
                                     handleSortingChange(event, sortingType)
@@ -89,19 +90,13 @@ const SearchResultPage = ({ searchResults = [], setSearchResults }) => {
                             <DropDownSearch
                                 buttonText="Categories"
                                 options={[
-                                    { id: "music", label: "Music" },
-                                    { id: "art", label: "Art" },
-                                    { id: "dao", label: "DAO" },
                                     { id: "wearables", label: "Wearables" },
                                     { id: "utillities", label: "Utillities" },
-                                    { id: "more", label: "More" },
-                                    { id: "and more", label: "And More" },
-                                    { id: "and morer", label: "And Morer" },
                                 ]}
-                                onChange={(event, sortingType) =>
-                                    handleSortingChange(event, sortingType)
+                                onChange={(event, selectedCategory) =>
+                                    handleCategoryChange(event, selectedCategory)
                                 }
-                                value={sortingOption}
+                                value={selectedCategory}
                             />
                         </div>
                     )}
@@ -112,56 +107,36 @@ const SearchResultPage = ({ searchResults = [], setSearchResults }) => {
                             <DropDownSearch
                                 buttonText="Collections"
                                 options={[
-                                    { id: "sun", label: "Sun" },
+                                    { id: "pug", label: "Pug" },
                                     { id: "moon", label: "Moon" },
-                                    { id: "earth", label: "Earth" },
-                                    { id: "venus", label: "Venus" },
-                                    { id: "jupiter", label: "Jupiter" },
-                                    { id: "saturn", label: "Saturn" },
                                 ]}
-                                onChange={(event, sortingType) =>
-                                    handleSortingChange(event, sortingType)
+                                onChange={(event, selectedCollection) =>
+                                    handleCollectionChange(event, selectedCollection)
                                 }
-                                value={sortingOption}
+                                value={selectedCollection}
                             />
                         </div>
                     )}
                 </div>
             </div>
             <div className={styles.searchResultsWrapper}>
-                <h2>Suchergebnisse</h2>
-                <div className={styles.searchResults}>
-                    <ul>
-                        {loading && <p>Loading...</p>}
-                        {error && <p>Error: {error.message}</p>}
-                        {searchResults.map((result) => (
-                            <div>
-                                <li
-                                    key={result.id}
-                                    className="border border-gray-300 p-4 mb-2 w-96 rounded-lg shadow-md"
-                                >
-                                    <h3 className="text-xl font-semibold">{result.art}</h3>
-                                    <p className="text-gray-600">{result.music}</p>
-                                    {/* You can add more information from the search result object */}
-                                </li>
-                            </div>
-                        ))}
-                    </ul>
+                <h2>Search results for: {searchTermFromQuery} </h2>
+                <div className={styles.NFTListed}>
+                    {searchResultsFromQuery.map((result) => (
+                        <div key={`${result.nftAddress}${result.tokenId}`}>
+                            <NFTBox
+                                price={result.price}
+                                nftAddress={result.nftAddress}
+                                tokenId={result.tokenId}
+                                marketplaceAddress={result.marketplaceAddress}
+                                seller={result.seller}
+                            ></NFTBox>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
     )
-}
-
-SearchResultPage.propTypes = {
-    searchResults: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            art: PropTypes.string.isRequired,
-            music: PropTypes.string.isRequired,
-        })
-    ).isRequired,
-    setSearchResults: PropTypes.func.isRequired,
 }
 
 export default SearchResultPage
