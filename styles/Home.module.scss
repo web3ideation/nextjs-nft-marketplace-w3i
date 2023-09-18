@@ -43,12 +43,10 @@ $font-black: rgb(0, 0, 0);
     margin-left: 16px;
 
     .headerLogo {
-
         img {
             width: 48px;
             border-radius: 50%;
         }
-
     }
 
     .headerHeadline {
@@ -76,7 +74,6 @@ $font-black: rgb(0, 0, 0);
     height: 40px;
     margin-right: 16px;
 
-
     .searchBar {
         outline: none;
         border: none;
@@ -93,6 +90,7 @@ $font-black: rgb(0, 0, 0);
         padding: 8px 16px;
         width: 64px;
         outline: none;
+        border: none;
         color: $font-black;
 
         &:hover {
@@ -115,7 +113,6 @@ $font-black: rgb(0, 0, 0);
 
     &:hover {
         background-color: $primary-color;
-
     }
 }
 
@@ -129,23 +126,23 @@ $font-black: rgb(0, 0, 0);
 .popupMenuWrapper {
     margin-right: 16px;
 
-button {
-    background-color: $secondary-color;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 8px;
-    width: 128px;
-    height: 40px;
-    border-radius: 16px;
-    color: $font-black;
-    border: none;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    button {
+        background-color: $secondary-color;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        width: 128px;
+        height: 40px;
+        border-radius: 16px;
+        color: $font-black;
+        border: none;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 
-    &:hover {
-        background-color: $primary-color;
+        &:hover {
+            background-color: $primary-color;
+        }
     }
-}
 }
 
 .popupMenuLinksWrapper {
@@ -189,7 +186,6 @@ button {
         font-size: larger;
         text-align: center;
     }
-
 }
 
 .NFTCardWrapper {
@@ -254,7 +250,6 @@ button {
     /* Verstecke die Scrollleiste für IE und Edge */
 }
 
-
 /* Für Webkit-basierte Browser (Chrome, Safari) */
 .NFTListed::-webkit-scrollbar {
     width: 0;
@@ -267,7 +262,6 @@ button {
     footer {
         border: none;
     }
-
 }
 
 .NFTModalImage {
@@ -299,6 +293,11 @@ button {
         justify-content: center;
         align-items: stretch;
         padding: 1rem;
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     }
 }
 
@@ -328,15 +327,13 @@ button {
         }
     }
 }
-.showMoreButton button{
+.showMoreButton button {
     width: 128px;
 }
 
 .arrows {
     font-size: 35px;
 }
-
-
 
 .dropDownSearchWrapper {
     position: absolute;
@@ -392,13 +389,12 @@ button {
     justify-content: center;
     align-items: center;
 
-        h2 {
-            padding: 16px 0;
-            font-weight: bolder;
-            font-size: larger;
-            text-align: center;
-        }
-
+    h2 {
+        padding: 16px 0;
+        font-weight: bolder;
+        font-size: larger;
+        text-align: center;
+    }
 }
 
 .scrollbar {
@@ -406,10 +402,8 @@ button {
     overflow-y: auto;
     overflow-x: hidden;
 
-
     &::-webkit-scrollbar {
         width: 8px;
-
     }
 
     &::-webkit-scrollbar-thumb {
