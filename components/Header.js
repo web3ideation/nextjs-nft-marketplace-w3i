@@ -13,7 +13,7 @@ export default function Header({}) {
             <nav>
                 <div className={styles.logoAndHeadlineWrapper}>
                     <Link className={styles.headerLogo} href="/">
-                        <img src="/favicon.ico/" alt="Logo"></img>
+                        <img src="/media/w3i-in-line-crammed-e1690296984518.png" alt="Logo"></img>
                     </Link>
                     <h1 className={styles.headerHeadline}>NFT Marketplace</h1>
                 </div>
@@ -22,8 +22,8 @@ export default function Header({}) {
                     <Link href="/my-nft" className={styles.headerButton}>
                         <Button text="Create" />
                     </Link>
-                    <ConnectButton className={styles.connectButton} moralisAuth={false} />
                     <PopupMenu />
+                    <ConnectButton className={styles.connectButton} moralisAuth={false} />
                 </div>
             </nav>
         </div>
