@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useRef } from "react"
 import styles from "../styles/Home.module.css"
 import { Button } from "web3uikit"
 import Link from "next/link"
@@ -7,42 +7,48 @@ const PopupMenu = () => {
     const [isOpen, setIsOpen] = useState(false)
     const menuRef = useRef(null)
 
-    const toggleMenu = () => {
-        setIsOpen(!isOpen)
+    const handleMouseEnter = () => {
+        setIsOpen(true)
     }
 
-    const handleOutsideClick = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-            setIsOpen(false)
-        }
+    const handleMouseLeave = () => {
+        setIsOpen(false)
     }
-
-    useEffect(() => {
-        window.addEventListener("click", handleOutsideClick)
-        return () => {
-            window.removeEventListener("click", handleOutsideClick)
-        }
-    }, [])
 
     return (
-        <div className={styles.popupMenuWrapper} ref={menuRef}>
-            <Button onClick={toggleMenu} text="Menu" />
+        <div
+            className={styles.popupMenuWrapper}
+            ref={menuRef}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className={styles.menuButton}>
+                <Button text="Menu" />
+                {isOpen ? (
+                    <span className={styles.menuIconMinus}>-</span>
+                ) : (
+                    <span className={styles.menuIcon}>+</span>
+                )}
+            </div>
             {isOpen && (
-                <div className={styles.popupMenuLinksWrapper}>
-                    <Link href="/">
+                <div
+                    className={`${styles.popupMenuLinksWrapper} ${
+                        isOpen ? styles.popupMenuLinksWrapperOpen : ""
+                    }`}
+                >
+                    <Link className={styles.popupMenuLinks} href="/">
                         <Button text="Home" />
                     </Link>
-                    <Link href="/"></Link>
-                    <Link href="/sell-nft">
+                    <Link className={styles.popupMenuLinks} href="/sell-nft">
                         <Button text="Sell NFT" />
                     </Link>
-                    <Link href="/">
+                    <Link className={styles.popupMenuLinks} href="/">
                         <Button text="Collections" />{" "}
                     </Link>
-                    <Link href="/">
+                    <Link className={styles.popupMenuLinks} href="/">
                         <Button text="Create" />{" "}
                     </Link>
-                    <Link href="/my-nft">
+                    <Link className={styles.popupMenuLinks} href="/my-nft">
                         <Button text="My NFT" />{" "}
                     </Link>
                 </div>

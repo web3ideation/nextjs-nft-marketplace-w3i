@@ -240,7 +240,11 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
             {imageURI ? (
                 <Card
                     className={styles.NFTCard}
-                    style={{ backgroundColor: "white", transition: "background-color 0.5s" }}
+                    style={{
+                        backgroundColor: "white",
+                        transition: "background-color 0.5s",
+                        borderRadius: "5px",
+                    }}
                     title={tokenName}
                     description={tokenDescription || "..."}
                     onClick={() => {
@@ -278,7 +282,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                             <div className={styles.NFTOwner}>
                                 Owned by {formattedSellerAddress}
                             </div>
-                            <div className="font-bold">
+                            <div className={styles.NFTPrice}>
                                 {ethers.utils.formatUnits(price, "ether")} ETH
                             </div>
                         </div>
@@ -376,7 +380,18 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                         </div>
                         <div>
                             <p>Token-Adress: </p>
-                            <p>{formattedNftAddress}</p>
+                            <div
+                                onMouseEnter={() => handleMouseEnter}
+                                onMouseLeave={() => handleMouseLeave}
+                                onClick={copyNftAddressToClipboard}
+                                style={{
+                                    display: "inline-block",
+                                    position: "relative",
+                                    cursor: isCopying ? "text" : "copy", // different cursor???
+                                }}
+                            >
+                                <p>{formattedNftAddress}</p>
+                            </div>
                         </div>
                         <div>
                             <p>Token-Id: </p>
