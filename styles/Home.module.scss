@@ -536,6 +536,7 @@ $line-heigth-small: 24px;
 }
 
 .NFTInfoModal {
+    border-radius: 5px;
     header {
         padding: 0;
     }
@@ -552,6 +553,18 @@ $line-heigth-small: 24px;
     border: solid 1px $highlight-color;
     background-color: #ffffff;
     align-items: center;
+}
+
+.updateListingModal {
+    footer {
+        border: none;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 }
 
 .SELLContainer {
