@@ -16,8 +16,10 @@ const SearchResultPage = ({}) => {
 
     const searchTermFromQuery = router.query.search || ""
     const searchResultsFromQuery = JSON.parse(router.query.searchResults || "[]")
+    const inactiveSearchResultsFromQuery = JSON.parse(router.query.inactiveSearchResults || "[]")
 
-    console.log("search results from query:", searchResultsFromQuery)
+    console.log("Active Search results from query:", searchResultsFromQuery)
+    console.log("Inactive search results from query:", inactiveSearchResultsFromQuery)
 
     const handleSortingChange = (event, sortingType) => {
         setSortingOption(sortingType)
@@ -121,8 +123,23 @@ const SearchResultPage = ({}) => {
             </div>
             <div className={styles.searchResultsWrapper}>
                 <h2>Search results for: {searchTermFromQuery} </h2>
+                <h3>Active items: </h3>
                 <div className={styles.NFTListed}>
                     {searchResultsFromQuery.map((result) => (
+                        <div key={`${result.nftAddress}${result.tokenId}`}>
+                            <NFTBox
+                                price={result.price}
+                                nftAddress={result.nftAddress}
+                                tokenId={result.tokenId}
+                                marketplaceAddress={result.marketplaceAddress}
+                                seller={result.seller}
+                            ></NFTBox>
+                        </div>
+                    ))}
+                </div>
+                <h3>Inactive items: </h3>
+                <div className={styles.NFTListed}>
+                    {inactiveSearchResultsFromQuery.map((result) => (
                         <div key={`${result.nftAddress}${result.tokenId}`}>
                             <NFTBox
                                 price={result.price}
