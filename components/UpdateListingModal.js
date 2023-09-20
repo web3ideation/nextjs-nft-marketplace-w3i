@@ -77,31 +77,35 @@ export default function UpdateListingModal({
     }
 
     return (
-        <Modal
-            className={styles.modal}
-            onOk={handleUpdateButtonClick}
-            okText="Update"
-            onCancel={() => {
-                onCancel && onCancel()
-                enableMouseWheel && enableMouseWheel()
-                setError(null)
-            }}
-            cancelText="Close"
-            width="325px"
-            closeButton={<Button disabled text=""></Button>}
-        >
-            <Input
-                className={styles.modalInput}
-                label="Update listing price in L1 Currency (ETH)"
-                name="New listing price"
-                type="number"
-                value={priceToUpdateListingWith}
-                onChange={(event) => {
-                    setPriceToUpdateListingWith(event.target.value)
+        <div className={styles.updateListingModal}>
+            <Modal
+                onOk={handleUpdateButtonClick}
+                okText="Update"
+                onCancel={() => {
+                    onCancel && onCancel()
+                    enableMouseWheel && enableMouseWheel()
+                    setError(null)
                 }}
-            />
-            {error && <div style={{ color: "red" }}>{error}</div>}
-            {transactionError && <div style={{ color: "red" }}>{transactionError}</div>}
-        </Modal>
+                cancelText="Close"
+                width="min-content"
+                closeButton={<Button disabled text=""></Button>}
+            >
+                <Input
+                    label="Update listing price in L1 Currency (ETH)"
+                    name="New listing price"
+                    type="number"
+                    validation={{
+                        regExp: /^\d{1,18}(\.\d{1,18})?$/,
+                        regExpInvalidMessage: "Please enter a positive amount in ETH.",
+                    }}
+                    value={priceToUpdateListingWith}
+                    onChange={(event) => {
+                        setPriceToUpdateListingWith(event.target.value)
+                    }}
+                />
+                {error && <div style={{ color: "red" }}>{error}</div>}
+                {transactionError && <div style={{ color: "red" }}>{transactionError}</div>}
+            </Modal>
+        </div>
     )
 }
