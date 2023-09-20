@@ -222,17 +222,14 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
         setIsCopying(false)
     }
 
-    const copyNftAddressToClipboard = () => {
+    const copyNftAddressToClipboard = async () => {
         // Kopieren Sie die NFT-Adresse in die Zwischenablage
-        const textArea = document.createElement("textarea")
-        textArea.value = nftAddress
-        document.body.appendChild(textArea)
-        textArea.select()
-        document.execCommand("copy")
-        document.body.removeChild(textArea)
-
-        // Benachrichtigen Sie den Benutzer, dass die Adresse kopiert wurde (optional)
-        // Hier können Sie eine Benachrichtigung hinzufügen oder Feedback geben
+        try {
+            await navigator.clipboard.writeText(nftAddress)
+            // Benachrichtigung oder Feedback hier hinzufügen
+        } catch (error) {
+            console.error("Error copying to clipboard:", error)
+        }
     }
 
     return (
@@ -247,9 +244,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                     }}
                     title={tokenName}
                     description={tokenDescription || "..."}
-                    onClick={() => {
-                        handleCardClick()
-                    }}
+                    onClick={handleCardClick}
                 >
                     <div>
                         <div className={styles.NFTTextArea}>
@@ -416,7 +411,6 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
             {/*Price Updating Modal*/}
             {showUpdateListingModal && (
                 <UpdateListingModal
-                    className={styles.updateListingPriceModal}
                     tokenId={tokenId}
                     marketplaceAddress={marketplaceAddress}
                     nftAddress={nftAddress}
