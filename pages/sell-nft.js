@@ -144,6 +144,7 @@ export default function Home() {
     return (
         <div className={styles.SELLContainer}>
             <Form
+                className={styles.SELLForm}
                 onSubmit={approveAndList}
                 data={[
                     // !!!W add guides for the user, so they can not input letters where only a number makes sense, and that it has to have a specific length, and that the price field sees , and . both as the decimal point.
@@ -153,25 +154,50 @@ export default function Home() {
                         inputWidth: "100%",
                         value: "",
                         key: "nftAddress",
+                        validation: {
+                            regExp: /^0x[0-9a-fA-F]{40}$/,
+                            regExpInvalidMessage:
+                                "Please enter a valid Ethereum address in the format 0x1234...",
+                        },
                     },
                     {
                         name: "Token ID",
                         type: "number",
                         inputWidth: "100%",
-                        value: "",
+                        value: "number",
                         key: "tokenId",
+                        validation: {
+                            regExp: /^[0-9]\d*$/,
+                            regExpInvalidMessage: "Please enter a positive integer or zero.",
+                        },
                     },
                     {
                         name: "Price (in ETH)",
                         type: "number",
                         inputWidth: "100%",
-                        value: "",
                         key: "price",
+                        validation: {
+                            regExp: /^\d{1,18}(\.\d{1,18})?$/,
+                            regExpInvalidMessage: "Please enter a positive amount in ETH.",
+                        },
+                    },
+                    {
+                        name: "Desired NFT-Address",
+                        type: "text",
+                        inputWidth: "100%",
+                        value: "",
+                        key: "desiredNftAddress",
+                        validation: {
+                            regExp: /^0x[0-9a-fA-F]{40}$/,
+                            regExpInvalidMessage:
+                                "Please enter a valid Ethereum address in the format 0x1234...",
+                        },
                     },
                 ]}
-                title="Sell your NFT!"
+                title="Sell/Swap your NFT!"
                 id="Main Form"
             />
+
             <div className="flex flex-row justify-center">
                 <div>Withdraw {proceeds} proceeds</div>
             </div>
