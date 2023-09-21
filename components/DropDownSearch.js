@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import styles from "../styles/Home.module.css"
 import { Button } from "web3uikit"
 
-const DropDownSearch = ({ buttonText, options }) => {
+const DropDownSearch = ({ buttonText, options, onChange }) => {
     // State to track whether the dropdown is open or closed
     const [isOpen, setIsOpen] = useState(false)
 
@@ -37,7 +37,7 @@ const DropDownSearch = ({ buttonText, options }) => {
             {isOpen && (
                 <div className={styles.scrollbar}>
                     {options.map((option) => (
-                        <Button key={option.id} text={option.label} />
+                        <Button key={option.id} text={option.label} onClick={onChange} />
                     ))}
                 </div>
             )}

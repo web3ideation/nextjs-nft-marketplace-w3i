@@ -7,12 +7,16 @@ import { useQuery } from "@apollo/client"
 
 const SearchBar = ({}) => {
     const router = useRouter()
-    const [searchResults, setSearchResults] = useState([])
-    const [inactiveSearchResults, setInactiveSearchResults] = useState([]) // State for the results of the second query
-
+    const [activeSearchResults, setActiveSearchResults] = useState([])
+    const [inactiveSearchResults, setInactiveSearchResults] = useState([]) // State for the results of the second querys
     const [searchTerm, setSearchTerm] = useState("")
-    const { loading, error, data } = useQuery(GET_ACTIVE_ITEMS, {
-        variables: { searchTerm },
+
+    const {
+        loading: activeLoading,
+        error: activeError,
+        data: activeData,
+    } = useQuery(GET_ACTIVE_ITEMS, {
+        variables: { searchTerm: searchTerm },
     })
 
     // second query for inactive elements
@@ -20,21 +24,19 @@ const SearchBar = ({}) => {
         loading: inactiveLoading,
         error: inactiveError,
         data: inactiveData,
+        refetch: refetchInactiveItems,
     } = useQuery(GET_INACTIVE_ITEMS, {
-        variables: { searchTerm },
+        variables: { searchTerm: searchTerm },
     })
-
-    console.log(loading)
-    console.log(error)
-    console.log(data)
-    console.log(inactiveLoading)
-    console.log(inactiveError)
-    console.log(inactiveData)
 
     const handleSearch = async () => {
         try {
-            if (!loading && !error && data && data.items) {
-                const searchResults = data.items.filter((item) => {
+            if ((activeLoading && inactiveLoading) || (activeError && inactiveError)) {
+                console.log("Data is loading or there's an error.")
+                return
+            }
+            if (!activeLoading && !activeError && activeData && activeData.items) {
+                const activeSearchResults = activeData.items.filter((item) => {
                     const concatenatedFields = [
                         item.listingId,
                         item.nftAddress,
@@ -46,16 +48,16 @@ const SearchBar = ({}) => {
 
                     return lowerCaseConcatenated.includes(lowerCaseSearchTerm)
                 })
-                console.log("Search term:", searchTerm, "Results:", searchResults)
+                console.log("Search term:", searchTerm, "Results:", activeSearchResults)
 
-                setSearchResults(searchResults)
+                setActiveSearchResults(activeSearchResults)
             } else {
                 console.log("No results found.")
             }
 
             // Process the results of the second query for inactive elements
-            if (!inactiveLoading && !inactiveError && inactiveData && inactiveData.inactiveItems) {
-                const inactiveSearchResults = inactiveData.inactiveItems.filter((item) => {
+            if (!inactiveLoading && !inactiveError && inactiveData && inactiveData.items) {
+                const inactiveSearchResults = inactiveData.items.filter((item) => {
                     const concatenatedFields = [
                         item.listingId,
                         item.nftAddress,
@@ -73,18 +75,21 @@ const SearchBar = ({}) => {
             } else {
                 console.log("No inactive results found.")
             }
+
+            await refetchInactiveItems()
+            await navigateToSearchResultPage()
         } catch (error) {
             console.error("Error fetching data:", error.message)
             console.error("Error fetching data:", error)
         }
     }
 
-    const navigateToSearchResultPage = () => {
+    const navigateToSearchResultPage = async () => {
         router.push({
             pathname: "/SearchResultPage",
             query: {
                 search: searchTerm,
-                searchResults: JSON.stringify(searchResults),
+                activeSearchResults: JSON.stringify(activeSearchResults),
                 inactiveSearchResults: JSON.stringify(inactiveSearchResults), // Add the results of the second query
             },
         })
@@ -92,13 +97,15 @@ const SearchBar = ({}) => {
 
     const handleKeyPress = (event) => {
         if (event.key === "Enter") {
-            handleSearch()
+            const termToSearch = searchTerm || ""
+            handleSearch(termToSearch)
             navigateToSearchResultPage(searchTerm)
         }
     }
 
     const handleOnClick = () => {
-        handleSearch()
+        const termToSearch = searchTerm || ""
+        handleSearch(termToSearch)
         navigateToSearchResultPage(searchTerm)
     }
 

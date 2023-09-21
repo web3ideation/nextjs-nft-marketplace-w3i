@@ -1,11 +1,9 @@
 import React, { useState } from "react"
-import PropTypes from "prop-types"
 import DropDownSearch from "../components/DropDownSearch"
 import { Button } from "web3uikit"
 import styles from "../styles/Home.module.css"
 import NFTBox from "../components/NFTBox"
 import { useRouter } from "next/router"
-import { ArrowLeft, Arrow } from "web3uikit"
 
 const SearchResultPage = ({}) => {
     const router = useRouter()
@@ -15,16 +13,16 @@ const SearchResultPage = ({}) => {
     const [showDropdowns, setShowDropdowns] = useState(true)
 
     const searchTermFromQuery = router.query.search || ""
-    const searchResultsFromQuery = JSON.parse(router.query.searchResults || "[]")
+    const activeSearchResultsFromQuery = JSON.parse(router.query.activeSearchResults || "[]")
     const inactiveSearchResultsFromQuery = JSON.parse(router.query.inactiveSearchResults || "[]")
 
-    console.log("Active Search results from query:", searchResultsFromQuery)
+    console.log("Active Search results from query:", activeSearchResultsFromQuery)
     console.log("Inactive search results from query:", inactiveSearchResultsFromQuery)
 
     const handleSortingChange = (event, sortingType) => {
         setSortingOption(sortingType)
-        let sortedResults = [...searchResults] // Create a new array to avoid modifying the original
-        console.log(searchResults)
+        let sortedResults = [...activeSearchResultsFromQuery] // Create a new array to avoid modifying the original
+        console.log(activeSearchResultsFromQuery)
         switch (sortingType) {
             case "Active Items":
                 // Default sorting by ID (you can replace with appropriate field)
@@ -125,7 +123,7 @@ const SearchResultPage = ({}) => {
                 <h2>Search results for: {searchTermFromQuery} </h2>
                 <h3>Active items: </h3>
                 <div className={styles.NFTListed}>
-                    {searchResultsFromQuery.map((result) => (
+                    {activeSearchResultsFromQuery.map((result) => (
                         <div key={`${result.nftAddress}${result.tokenId}`}>
                             <NFTBox
                                 price={result.price}
@@ -139,14 +137,14 @@ const SearchResultPage = ({}) => {
                 </div>
                 <h3>Inactive items: </h3>
                 <div className={styles.NFTListed}>
-                    {inactiveSearchResultsFromQuery.map((result) => (
-                        <div key={`${result.nftAddress}${result.tokenId}`}>
+                    {inactiveSearchResultsFromQuery.map((resultInactive) => (
+                        <div key={`${resultInactive.nftAddress}${resultInactive.tokenId}`}>
                             <NFTBox
-                                price={result.price}
-                                nftAddress={result.nftAddress}
-                                tokenId={result.tokenId}
-                                marketplaceAddress={result.marketplaceAddress}
-                                seller={result.seller}
+                                price={resultInactive.price}
+                                nftAddress={resultInactive.nftAddress}
+                                tokenId={resultInactive.tokenId}
+                                marketplaceAddress={resultInactive.marketplaceAddress}
+                                seller={resultInactive.seller}
                             ></NFTBox>
                         </div>
                     ))}
