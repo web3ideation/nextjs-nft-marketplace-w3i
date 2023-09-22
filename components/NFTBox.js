@@ -107,9 +107,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
     }
 
     useEffect(() => {
-        if (isWeb3Enabled) {
-            updateUI()
-        }
+        updateUI()
     }, [isWeb3Enabled])
 
     const isOwnedByUser = seller === account || seller === undefined
@@ -209,9 +207,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
     }
 
     useEffect(() => {
-        if (isWeb3Enabled) {
-            loadImage() // Load the image when the component mounts
-        }
+        loadImage() // Load the image when the component mounts
     }, [isWeb3Enabled])
     const [isCopying, setIsCopying] = useState(false)
     const handleMouseEnter = () => {

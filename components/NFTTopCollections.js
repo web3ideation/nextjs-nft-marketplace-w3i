@@ -16,7 +16,7 @@ const preloadImage = (url) => {
     })
 }
 
-function NFTTopCollections({ isWeb3Enabled, chainId }) {
+function NFTTopCollections({ chainId }) {
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
     const { loading, data } = useQuery(GET_INACTIVE_ITEMS)
@@ -24,7 +24,7 @@ function NFTTopCollections({ isWeb3Enabled, chainId }) {
     const [images, setImages] = useState({})
 
     useEffect(() => {
-        if (isWeb3Enabled && chainId && !loading && data) {
+        if (chainId && !loading && data) {
             data.items.forEach((nft) => {
                 const { tokenId, imageIpfsUrl } = nft
                 const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`
@@ -39,7 +39,7 @@ function NFTTopCollections({ isWeb3Enabled, chainId }) {
                     })
             })
         }
-    }, [isWeb3Enabled, chainId, loading, data])
+    }, [chainId, loading, data])
 
     return (
         <div className={styles.NFTContainer}>
