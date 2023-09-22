@@ -11,7 +11,6 @@ const SearchResultPage = ({}) => {
     const [sortingOption, setSortingOption] = useState("default")
     const [selectedCategory, setSelectedCategory] = useState("default")
     const [selectedCollection, setSelectedCollection] = useState("default")
-    const [showDropdowns, setShowDropdowns] = useState(true)
 
     const searchTermFromQuery = router.query.search || ""
     const activeSearchResultsFromQuery = JSON.parse(router.query.activeSearchResults || "[]")
