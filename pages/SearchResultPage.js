@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react"
-import DropDownSearch from "../components/DropDownSearch"
-import { Button } from "web3uikit"
+import SearchSideFilters from "../components/SearchSideFilters"
 import styles from "../styles/Home.module.css"
 import NFTBox from "../components/NFTBox"
 import { useRouter } from "next/router"
@@ -88,7 +87,7 @@ const SearchResultPage = ({}) => {
                 >
                     <p>Filter</p>
                     {isOpen && (
-                        <DropDownSearch
+                        <SearchSideFilters
                             buttonText="Show all"
                             options={[
                                 { id: "active", label: "Active Items" },
@@ -103,7 +102,7 @@ const SearchResultPage = ({}) => {
                     <div>
                         {isOpen && (
                             <div className="">
-                                <DropDownSearch
+                                <SearchSideFilters
                                     buttonText="Categories"
                                     options={[
                                         { id: "wearables", label: "Wearables" },
@@ -120,7 +119,7 @@ const SearchResultPage = ({}) => {
                     <div>
                         {isOpen && (
                             <div className="">
-                                <DropDownSearch
+                                <SearchSideFilters
                                     buttonText="Collections"
                                     options={[
                                         { id: "pug", label: "Pug" },

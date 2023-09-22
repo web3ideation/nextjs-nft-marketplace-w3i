@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react"
 import styles from "../styles/Home.module.css"
 import { Button } from "web3uikit"
 
-const DropDownSearch = ({ buttonText, options, onChange }) => {
+const SearchSideFilters = ({ buttonText, options, onChange }) => {
     const [isOpen, setIsOpen] = useState(false)
     const menuRef = useRef(null)
 
@@ -38,4 +38,4 @@ const DropDownSearch = ({ buttonText, options, onChange }) => {
     )
 }
 
-export default DropDownSearch
+export default SearchSideFilters
