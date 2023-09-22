@@ -209,12 +209,12 @@ $background-color: rgb(255, 249, 226);
         U+FFFD;
 }
 
+$font-primary: "Poppins";
+$font-secondary: "Roboto";
 $font-black: rgb(0, 0, 0);
 $font-white: rgb(255, 255, 255);
 $font-hover-blue: rgb(18, 115, 235);
 $font-hover-grey: rgb(204, 204, 204);
-$font-primary: "Poppins";
-$font-secondary: "Roboto";
 $font-size-small: 15px;
 $font-size-medium: 35px;
 $font-size-large: 70px;
@@ -240,7 +240,7 @@ $line-heigth-small: 24px;
 .headerContainer {
     background-color: $background-color;
     position: sticky;
-    z-index: 100;
+    z-index: 1000;
     top: 0;
     width: 100%;
     box-shadow: 0 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -299,6 +299,7 @@ $line-heigth-small: 24px;
     button {
         font-family: "Poppins";
         font-size: $font-size-small;
+        font-weight: 500;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -318,6 +319,7 @@ $line-heigth-small: 24px;
     button {
         font-family: $font-primary;
         font-size: $font-size-small;
+        font-weight: 500;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -355,12 +357,14 @@ $line-heigth-small: 24px;
         font-family: $font-primary;
         font-size: $font-size-small;
         line-height: $line-heigth-small;
+        font-weight: 500;
         color: $font-black;
         &:hover {
             color: $font-hover-blue;
         }
     }
 }
+
 .menuIcon {
     display: flex;
     justify-content: center;
@@ -374,6 +378,7 @@ $line-heigth-small: 24px;
     color: $font-black;
     cursor: pointer;
 }
+
 .menuIconMinus {
     display: flex;
     justify-content: center;
@@ -398,6 +403,7 @@ $line-heigth-small: 24px;
     z-index: 10;
     transition: height 5s linear 0;
 }
+
 .popupMenuLinksWrapperOpen {
     background-color: $secondary-color;
     border-radius: 0 0 5px 5px;
@@ -454,6 +460,7 @@ $line-heigth-small: 24px;
 }
 
 .NFTCard {
+    z-index: 5;
     border: 1px;
     box-shadow: 5px 5px 5px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     border-radius: 5px;
@@ -604,6 +611,7 @@ $line-heigth-small: 24px;
         justify-content: center;
         font-family: $font-secondary;
         font-size: $font-size-small;
+        font-weight: 500;
         color: $font-black;
         border: none;
 
@@ -620,66 +628,111 @@ $line-heigth-small: 24px;
     font-size: 35px;
 }
 
-.dropDownSearchWrapper {
+.searchResultPage {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.filterButton {
     position: absolute;
+    display: flex;
+    top: 120px;
+    padding: 5px;
+    background-color: $background-color;
+    border-radius: 0 5px 5px 0;
+    &:hover {
+        color: $font-hover-blue;
+    }
+}
+
+.dropDownSearchWrapper {
+    background-color: $background-color;
+    height: 100%;
+    width: 128px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 70px 0 0 0;
+    box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    z-index: 100;
+
+    p {
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        font-weight: 500;
+    }
 
     button {
-        background-color: $secondary-color;
-        display: flex;
-        justify-content: center;
+        font-family: $font-primary;
+        font-size: $font-size-small;
         color: $font-black;
-        font-size: 14px;
-        margin: 40px 0 0 16px;
-        padding: 8px;
-        width: 128px;
-        height: 40px;
+        font-weight: 500;
         border: none;
-        border-radius: 16px;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-
+        padding: 18px 32px;
         &:hover {
-            background-color: $primary-color;
+            color: $font-hover-blue;
         }
     }
 }
 
-.dropDownSearchItems {
+.DropDownSearch {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.dropDownSearchItemsWrapper {
+    background-color: $secondary-color;
+    position: absolute;
+    left: 128px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 250px;
+    border-radius: 0 5px 5px 0;
+    z-index: 10;
+    box-shadow: inset 5px 0px 5px grey;
     button {
-        background-color: $secondary-color;
-        display: flex;
-        justify-content: center;
-        color: $font-black;
-        font-size: 14px;
-        margin: 2px 0 0 16px;
-        padding: 8px;
-        width: 128px;
-        height: 40px;
         border: none;
-        border-radius: 16px;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        font-family: $font-primary;
+        color: $font-white;
+        font-weight: 400;
 
         &:hover {
-            background-color: $primary-color;
+            background-color: transparent;
+            color: $font-hover-grey;
         }
     }
 }
 
 .searchResultsWrapper {
-    background-color: $background-color;
     margin: 40px 192px 0 192px;
+    background-color: $background-color;
+    width: 100%;
     padding: 16px 32px;
-    border-radius: 16px;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    h2 {
+    h1 {
         padding: 16px 0;
+        font-family: $font-primary;
+        font-size: $font-size-medium;
         font-weight: bolder;
-        font-size: larger;
+        line-height: 35px;
         text-align: center;
     }
+}
+
+.NFTSearchResultsListed {
+    width: 100%;
 }
 
 .scrollbar {
