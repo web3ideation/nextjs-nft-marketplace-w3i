@@ -1,43 +1,36 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useRef } from "react"
 import styles from "../styles/Home.module.css"
 import { Button } from "web3uikit"
 
 const DropDownSearch = ({ buttonText, options, onChange }) => {
-    // State to track whether the dropdown is open or closed
     const [isOpen, setIsOpen] = useState(false)
+    const menuRef = useRef(null)
 
-    // Ref to the root element of the dropdown
-    const dropdownRef = useRef(null)
-
-    // Function to toggle the dropdown menu
-    const toggleMenu = () => {
-        setIsOpen(!isOpen)
+    const handleMouseEnter = () => {
+        setIsOpen(true)
     }
 
-    // Effect to close the dropdown when a click occurs outside
-    useEffect(() => {
-        const handleOutsideClick = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsOpen(false)
-            }
-        }
-
-        // Add event listener to the window
-        window.addEventListener("click", handleOutsideClick)
-
-        // Cleanup by removing event listener when component unmounts
-        return () => {
-            window.removeEventListener("click", handleOutsideClick)
-        }
-    }, [])
+    const handleMouseLeave = () => {
+        setIsOpen(false)
+    }
 
     return (
-        <div className={styles.dropDownSearchItems} ref={dropdownRef}>
-            <Button onClick={toggleMenu} text={buttonText} />
+        <div
+            className={styles.DropDownSearch}
+            ref={menuRef}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <Button text={buttonText} />
             {isOpen && (
-                <div className={styles.scrollbar}>
+                <div className={styles.dropDownSearchItemsWrapper}>
                     {options.map((option) => (
-                        <Button key={option.id} text={option.label} onClick={onChange} />
+                        <Button
+                            key={option.id}
+                            text={option.label}
+                            onClick={onChange}
+                            style={{ fontWeight: 400 }}
+                        />
                     ))}
                 </div>
             )}

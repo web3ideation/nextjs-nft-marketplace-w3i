@@ -1,9 +1,10 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import DropDownSearch from "../components/DropDownSearch"
 import { Button } from "web3uikit"
 import styles from "../styles/Home.module.css"
 import NFTBox from "../components/NFTBox"
 import { useRouter } from "next/router"
+import { Chart } from "@web3uikit/icons"
 
 const SearchResultPage = ({}) => {
     const router = useRouter()
@@ -47,7 +48,6 @@ const SearchResultPage = ({}) => {
         setSearchResults(filteredResults)
         console.log("Here are the results filtered by categories" + filteredResults)
     }
-
     const handleCollectionChange = (even, selectedCollection) => {
         setSelectedCollection(selectedCollection)
         const filteredResults = searchResults.filter(
@@ -59,68 +59,86 @@ const SearchResultPage = ({}) => {
         console.log("Here are the results filtered by collections" + filteredResults)
     }
 
-    const toggleDropdowns = () => {
-        setShowDropdowns(!showDropdowns)
+    const [isOpen, setIsOpen] = useState(false)
+    const menuRef = useRef(null)
+
+    const handleMouseEnter = () => {
+        setIsOpen(true)
+    }
+
+    const handleMouseLeave = () => {
+        setIsOpen(false)
     }
 
     return (
         <div className={styles.searchResultPage}>
-            <div className={styles.dropDownSearchWrapper}>
-                <Button onClick={toggleDropdowns} text="Filters" />
-                <div>
-                    {showDropdowns && (
-                        <div className="">
-                            <DropDownSearch
-                                buttonText="Sort by"
-                                options={[
-                                    { id: "active", label: "Active Items" },
-                                    { id: "inactive", label: "Inactive Items" },
-                                ]}
-                                onChange={(event, sortingType) =>
-                                    handleSortingChange(event, sortingType)
-                                }
-                                value={sortingOption}
-                            />
-                        </div>
-                    )}
-                </div>
-                <div>
-                    {showDropdowns && (
-                        <div className="">
-                            <DropDownSearch
-                                buttonText="Categories"
-                                options={[
-                                    { id: "wearables", label: "Wearables" },
-                                    { id: "utillities", label: "Utillities" },
-                                ]}
-                                onChange={(event, selectedCategory) =>
-                                    handleCategoryChange(event, selectedCategory)
-                                }
-                                value={selectedCategory}
-                            />
-                        </div>
-                    )}
-                </div>
-                <div>
-                    {showDropdowns && (
-                        <div className="">
-                            <DropDownSearch
-                                buttonText="Collections"
-                                options={[
-                                    { id: "pug", label: "Pug" },
-                                    { id: "moon", label: "Moon" },
-                                ]}
-                                onChange={(event, selectedCollection) =>
-                                    handleCollectionChange(event, selectedCollection)
-                                }
-                                value={selectedCollection}
-                            />
-                        </div>
-                    )}
-                </div>
+            <div
+                className={styles.filterButton}
+                ref={menuRef}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
+                <Chart fontSize="35px" />
             </div>
+            {isOpen && (
+                <div
+                    className={styles.dropDownSearchWrapper}
+                    ref={menuRef}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
+                    <p>Filter</p>
+                    {isOpen && (
+                        <DropDownSearch
+                            buttonText="Show all"
+                            options={[
+                                { id: "active", label: "Active Items" },
+                                { id: "inactive", label: "Inactive Items" },
+                            ]}
+                            onChange={(event, sortingType) =>
+                                handleSortingChange(event, sortingType)
+                            }
+                            value={sortingOption}
+                        />
+                    )}
+                    <div>
+                        {isOpen && (
+                            <div className="">
+                                <DropDownSearch
+                                    buttonText="Categories"
+                                    options={[
+                                        { id: "wearables", label: "Wearables" },
+                                        { id: "utillities", label: "Utillities" },
+                                    ]}
+                                    onChange={(event, selectedCategory) =>
+                                        handleCategoryChange(event, selectedCategory)
+                                    }
+                                    value={selectedCategory}
+                                />
+                            </div>
+                        )}
+                    </div>
+                    <div>
+                        {isOpen && (
+                            <div className="">
+                                <DropDownSearch
+                                    buttonText="Collections"
+                                    options={[
+                                        { id: "pug", label: "Pug" },
+                                        { id: "moon", label: "Moon" },
+                                    ]}
+                                    onChange={(event, selectedCollection) =>
+                                        handleCollectionChange(event, selectedCollection)
+                                    }
+                                    value={selectedCollection}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
             <div className={styles.searchResultsWrapper}>
-                <h2>Search results for: {searchTermFromQuery} </h2>
+                <h1>Search results for: {searchTermFromQuery} </h1>
                 <h3>Active items: </h3>
                 <div className={styles.NFTListed}>
                     {activeSearchResultsFromQuery.map((result) => (
