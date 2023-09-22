@@ -45,30 +45,26 @@ function NFTTopCollections({ isWeb3Enabled, chainId }) {
         <div className={styles.NFTContainer}>
             <h1>Collections</h1>
             <div id="NFTCollectionsListed" className={styles.NFTListed}>
-                {isWeb3Enabled && chainId ? (
-                    loading || !data ? (
-                        <div>Loading...</div>
-                    ) : (
-                        data.items.map((nft) => {
-                            console.log(nft)
-                            const { price, nftAddress, tokenId, seller } = nft
-                            const imgSrc = images[tokenId] || ""
-
-                            return (
-                                <NFTBox
-                                    price={price}
-                                    nftAddress={nftAddress}
-                                    tokenId={tokenId}
-                                    marketplaceAddress={marketplaceAddress}
-                                    seller={seller}
-                                    key={`${nftAddress}${tokenId}`}
-                                    imgSrc={imgSrc}
-                                />
-                            )
-                        })
-                    )
+                {loading || !data ? (
+                    <div>Loading...</div>
                 ) : (
-                    <div>Web3 Currently Not Enabled</div>
+                    data.items.map((nft) => {
+                        console.log(nft)
+                        const { price, nftAddress, tokenId, seller } = nft
+                        const imgSrc = images[tokenId] || ""
+
+                        return (
+                            <NFTBox
+                                price={price}
+                                nftAddress={nftAddress}
+                                tokenId={tokenId}
+                                marketplaceAddress={marketplaceAddress}
+                                seller={seller}
+                                key={`${nftAddress}${tokenId}`}
+                                imgSrc={imgSrc}
+                            />
+                        )
+                    })
                 )}
             </div>
             <div className={styles.moreButton}>
