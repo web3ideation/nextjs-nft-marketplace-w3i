@@ -46,6 +46,7 @@ const SearchResultPage = ({}) => {
         setSearchResults(filteredResults)
         console.log("Here are the results filtered by categories" + filteredResults)
     }
+
     const handleCollectionChange = (even, selectedCollection) => {
         setSelectedCollection(selectedCollection)
         const filteredResults = searchResults.filter(
@@ -145,8 +146,6 @@ const SearchResultPage = ({}) => {
                                 price={result.price}
                                 nftAddress={result.nftAddress}
                                 tokenId={result.tokenId}
-                                marketplaceAddress={result.marketplaceAddress}
-                                seller={result.seller}
                             ></NFTBox>
                         </div>
                     ))}
@@ -159,8 +158,6 @@ const SearchResultPage = ({}) => {
                                 price={resultInactive.price}
                                 nftAddress={resultInactive.nftAddress}
                                 tokenId={resultInactive.tokenId}
-                                marketplaceAddress={resultInactive.marketplaceAddress}
-                                seller={resultInactive.seller}
                             ></NFTBox>
                         </div>
                     ))}

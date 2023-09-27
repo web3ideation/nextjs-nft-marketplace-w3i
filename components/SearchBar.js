@@ -99,14 +99,14 @@ const SearchBar = ({}) => {
         if (event.key === "Enter") {
             const termToSearch = searchTerm || ""
             handleSearch(termToSearch)
-            navigateToSearchResultPage(termToSearch)
+            navigateToSearchResultPage(searchTerm)
         }
     }
 
     const handleOnClick = () => {
         const termToSearch = searchTerm || ""
         handleSearch(termToSearch)
-        navigateToSearchResultPage(termToSearch)
+        navigateToSearchResultPage(searchTerm)
     }
 
     return (
