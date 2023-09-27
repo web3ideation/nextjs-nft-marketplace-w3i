@@ -1,10 +1,11 @@
 import { useMoralis } from "react-moralis"
-import { useCallback, useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import NFTBox from "../components/NFTBox"
 import networkMapping from "../constants/networkMapping.json"
 import { GET_ACTIVE_ITEMS } from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
 import styles from "../styles/Home.module.css"
+import { ConnectButton } from "web3uikit"
 
 export default function Home() {
     const { isWeb3Enabled, chainId, account } = useMoralis()
@@ -22,44 +23,23 @@ export default function Home() {
         return <div>Error loading NFTs</div>
     }
 
-    const [isMouseWheelDisabled, setIsMouseWheelDisabled] = useState()
-    const [isModalOpen, setIsModalOpen] = useState(false)
-
-    const handleNFTListedScroll = useCallback(
-        (event) => {
-            if (isModalOpen || isMouseWheelDisabled) {
-                return
-            }
-            const container = document.getElementById("NFTListed")
-            if (container) {
-                container.scrollLeft += event.deltaY < 0 ? -226 : 226
-            }
-        },
-        [isModalOpen, isMouseWheelDisabled]
-    )
-
-    useEffect(() => {
-        const preventPageScroll = () => {
-            const container = document.getElementById("NFTListed")
-            if (container) {
-                container.addEventListener(
-                    "wheel",
-                    (event) => {
-                        event.preventDefault()
-                    },
-                    { passive: false }
-                )
-            }
-        }
-        preventPageScroll()
-    }, [])
-
     const isOwnedByUser = (seller) => seller === account || seller === undefined
+
+    // Verwenden Sie useEffect, um setHasOwnNFT einmalig oder bei Änderungen auszuführen
+    useEffect(() => {
+        // Überprüfen Sie, ob der Benutzer mindestens ein NFT besitzt
+        const hasNFT = data.items.some((nft) => isOwnedByUser(nft.seller))
+
+        // Aktualisieren Sie den Zustand nur, wenn sich der Wert geändert hat
+        if (hasNFT !== hasOwnNFT) {
+            setHasOwnNFT(hasNFT)
+        }
+    }, [data, hasOwnNFT]) // Fügen Sie data und hasOwnNFT als Abhängigkeiten hinzu
 
     return (
         <div className={styles.NFTContainer}>
             <h1>My NFT</h1>
-            <div className={styles.NFTListed} onWheel={handleNFTListedScroll}>
+            <div className={styles.NFTListed}>
                 <div className="flex flex-wrap pb-4">
                     {isWeb3Enabled && chainId ? (
                         <>
@@ -72,17 +52,16 @@ export default function Home() {
                                         marketplaceAddress={marketplaceAddress}
                                         seller={nft.seller}
                                         key={`${nft.nftAddress}${nft.tokenId}`}
-                                        disableMouseWheel={() => setIsMouseWheelDisabled(true)}
-                                        enableMouseWheel={() => setIsMouseWheelDisabled(false)}
-                                        anyModalIsOpen={() => setIsModalOpen(true)}
-                                        anyModalIsClosed={() => setIsModalOpen(false)}
                                     />
                                 ) : null
                             )}
-                            {hasOwnNFT && <div>Go get some NFTs for yourself!!!</div>}
+                            {!hasOwnNFT && <div>Go get some NFTs for yourself!!!</div>}
                         </>
                     ) : (
-                        <div>Web3 is currently not enabled</div>
+                        <div>
+                            <h2>Web3 is currently not enabled - Connect your Wallet here</h2>
+                            <ConnectButton></ConnectButton>
+                        </div>
                     )}
                 </div>
             </div>
