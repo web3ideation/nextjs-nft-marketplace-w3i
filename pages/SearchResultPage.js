@@ -81,7 +81,7 @@ const SearchResultPage = ({}) => {
             </div>
             {isOpen && (
                 <div
-                    className={styles.dropDownSearchWrapper}
+                    className={styles.searchSideFiltersWrapper}
                     ref={menuRef}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
@@ -139,25 +139,29 @@ const SearchResultPage = ({}) => {
             <div className={styles.searchResultsWrapper}>
                 <h1>Search results for: {searchTermFromQuery} </h1>
                 <h3>Active items: </h3>
-                <div className={styles.NFTListed}>
+                <div className={styles.nftList}>
                     {activeSearchResultsFromQuery.map((result) => (
                         <div key={`${result.nftAddress}${result.tokenId}`}>
                             <NFTBox
                                 price={result.price}
                                 nftAddress={result.nftAddress}
                                 tokenId={result.tokenId}
+                                marketplaceAddress={result.marketplaceAddress}
+                                seller={result.seller}
                             ></NFTBox>
                         </div>
                     ))}
                 </div>
                 <h3>Inactive items: </h3>
-                <div className={styles.NFTListed}>
+                <div className={styles.nftList}>
                     {inactiveSearchResultsFromQuery.map((resultInactive) => (
                         <div key={`${resultInactive.nftAddress}${resultInactive.tokenId}`}>
                             <NFTBox
                                 price={resultInactive.price}
                                 nftAddress={resultInactive.nftAddress}
                                 tokenId={resultInactive.tokenId}
+                                marketplaceAddress={resultInactive.marketplaceAddress}
+                                seller={resultInactive.seller}
                             ></NFTBox>
                         </div>
                     ))}

@@ -16,21 +16,16 @@ const SearchSideFilters = ({ buttonText, options, onChange }) => {
 
     return (
         <div
-            className={styles.DropDownSearch}
+            className={styles.searchSideFilters}
             ref={menuRef}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
             <Button text={buttonText} />
             {isOpen && (
-                <div className={styles.dropDownSearchItemsWrapper}>
+                <div className={styles.searchSideFiltersItemsWrapper}>
                     {options.map((option) => (
-                        <Button
-                            key={option.id}
-                            text={option.label}
-                            onClick={onChange}
-                            style={{ fontWeight: 400 }}
-                        />
+                        <Button key={option.id} text={option.label} onClick={onChange} />
                     ))}
                 </div>
             )}

@@ -42,9 +42,9 @@ function NFTTopCollections({ chainId }) {
     }, [chainId, loading, data])
 
     return (
-        <div className={styles.NFTContainer}>
+        <div className={styles.nftListWrapper}>
             <h1>Collections</h1>
-            <div id="NFTCollectionsListed" className={styles.NFTListed}>
+            <div id="NFTCollectionsListed" className={styles.nftList}>
                 {loading || !data ? (
                     <div>Loading...</div>
                 ) : (

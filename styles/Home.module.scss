@@ -1,9 +1,3 @@
-//Farb-Variablen
-$primary-color: rgb(9, 116, 241);
-$secondary-color: rgb(18, 115, 235);
-$highlight-color: rgb(9, 116, 241);
-$background-color: rgb(255, 249, 226);
-
 //Schrift-Variablen
 /* devanagari */
 @font-face {
@@ -1503,6 +1497,12 @@ $font-size-medium: 35px;
 $font-size-large: 70px;
 $line-heigth-small: 24px;
 
+//Farb-Variablen
+$primary-color: rgb(9, 116, 241);
+$secondary-color: rgb(18, 115, 235);
+$highlight-color: rgb(9, 116, 241);
+$background-color: rgb(255, 249, 226);
+
 .loadingIconWrapper {
     display: flex;
     justify-content: center;
@@ -1511,7 +1511,6 @@ $line-heigth-small: 24px;
     height: 100vh;
     background-color: #ffffff;
 }
-
 .loadingIcon {
     display: flex;
     justify-content: center;
@@ -1519,7 +1518,6 @@ $line-heigth-small: 24px;
     width: 50px;
     height: 50px;
 }
-
 .headerContainer {
     background-color: $background-color;
     position: sticky;
@@ -1536,34 +1534,30 @@ $line-heigth-small: 24px;
         margin: 0 16px;
     }
 }
-
 .logoAndHeadlineWrapper {
     display: flex;
     align-items: center;
 
     .headerLogo {
-        padding: 0 18px;
+        padding: 0 9px 0 18px;
         img {
-            height: 35px;
+            height: 30px;
         }
     }
 
     .headerHeadline {
         font-family: $font-primary;
-        font-weight: bold;
+        font-weight: 300;
         font-size: $font-size-medium;
-        line-height: $line-heigth-small;
         line-height: 35px;
-        padding: 0 18px;
+        padding: 0 18px 0 0;
     }
 }
-
 .headerElementsWrapper {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
-
 .searchBarWrapper {
     display: flex;
     flex-direction: row;
@@ -1595,38 +1589,26 @@ $line-heigth-small: 24px;
         }
     }
 }
-
 .headerButton {
-    padding: 20px 0;
+    padding: 20px 18px;
 
-    button {
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        font-weight: 500;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        color: $font-black;
-        padding: 0 18px;
+    img {
+        height: 24px;
 
         &:hover {
             color: $font-hover-blue;
         }
     }
 }
-
 .connectButton {
     padding: 20px 18px;
 }
-
 .popupMenuWrapper {
     padding-right: 18px;
     &:hover {
         color: $font-hover-blue;
     }
 }
-
 .menuButton {
     display: flex;
     flex-direction: row;
@@ -1647,7 +1629,6 @@ $line-heigth-small: 24px;
         }
     }
 }
-
 .menuIcon {
     display: flex;
     justify-content: center;
@@ -1661,7 +1642,6 @@ $line-heigth-small: 24px;
     color: $font-black;
     cursor: pointer;
 }
-
 .menuIconMinus {
     display: flex;
     justify-content: center;
@@ -1675,7 +1655,6 @@ $line-heigth-small: 24px;
     color: $font-hover-blue;
     cursor: pointer;
 }
-
 .popupMenuLinksWrapper {
     background-color: $secondary-color;
     border-radius: 0 0 5px 5px;
@@ -1686,7 +1665,6 @@ $line-heigth-small: 24px;
     z-index: 10;
     transition: height 5s linear 0;
 }
-
 .popupMenuLinksWrapperOpen {
     background-color: $secondary-color;
     border-radius: 0 0 5px 5px;
@@ -1698,7 +1676,6 @@ $line-heigth-small: 24px;
     transition: height 5s linear 0;
     box-shadow: inset 0px 5px 5px grey;
 }
-
 .popupMenuLinks {
     display: flex;
     justify-content: flex-start;
@@ -1719,12 +1696,10 @@ $line-heigth-small: 24px;
         }
     }
 }
-
-.NFTContainer {
-    background-color: $background-color;
-    margin: 40px 192px;
-    padding: 16px 32px;
-    border-radius: 5px;
+.nftListWrapper {
+    width: 100%;
+    margin-top: 40px;
+    padding: 16px 150px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1738,14 +1713,11 @@ $line-heigth-small: 24px;
         text-align: center;
     }
 }
-
-.NFTCardWrapper {
+.nftCardWrapper {
     margin: 7.5px;
 }
-
-.NFTCard {
-    border: 1px;
-    box-shadow: 5px 5px 5px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+.nftCard {
+    box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
     border-radius: 5px;
 
     footer {
@@ -1759,54 +1731,43 @@ $line-heigth-small: 24px;
         }
     }
 }
-
-.NFTTextArea {
+.nftImage {
+    width: 300px;
+    height: 225px;
+    object-fit: cover;
+    display: block;
+    border-radius: 5px 5px 0 0;
+    background-color: #ffffff;
+    align-items: center;
+}
+.nftTextArea {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
+    justify-content: space-between;
     font-family: $font-secondary;
     font-size: $font-size-small;
     font-weight: 500;
     color: $font-black;
-}
+    padding: 0 5px 5px 5px;
 
-.NFTOwner {
-    width: 192px;
-}
-
-.NFTImage {
-    width: 170px;
-    height: 170px;
-    display: block;
-    margin: 11px auto;
-    border: solid 1px $highlight-color;
-    background-color: #ffffff;
-    align-items: center;
-}
-
-.NFTInformation {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    div {
+    .nftOwner {
+        width: 192px;
+    }
+    .nftPrice {
+        font-weight: 900;
+    }
+    .nftCardInformation {
         display: flex;
-        flex-direction: row;
         justify-content: space-between;
-        text-wrap: wrap;
-        text-align: end;
+        .nftTitle {
+            font-weight: 900;
+        }
+        .nftDescription {
+            font-weight: 300;
+        }
     }
 }
-
-.NFTPrice {
-    font-family: $font-secondary;
-    font-size: $font-size-small;
-    font-weight: 900;
-    color: $font-black;
-}
-
-.NFTListed {
+.nftList {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -1819,13 +1780,11 @@ $line-heigth-small: 24px;
     -ms-overflow-style: none;
     /* Verstecke die Scrollleiste für IE und Edge */
 }
-
 /* Für Webkit-basierte Browser (Chrome, Safari) */
-.NFTListed::-webkit-scrollbar {
+.nftList::-webkit-scrollbar {
     width: 0;
 }
-
-.NFTInfoModal {
+.nftModalInfo {
     border-radius: 5px;
     header {
         padding: 0;
@@ -1833,18 +1792,27 @@ $line-heigth-small: 24px;
     footer {
         border: none;
     }
-}
+    .nftModalImage {
+        width: 300px;
+        height: 300px;
+        display: block;
+        background-color: #ffffff;
+        align-items: center;
+    }
+    .nftModalInformation {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
-.NFTModalImage {
-    width: 250px;
-    height: 250px;
-    display: block;
-    margin: 30px auto;
-    border: solid 1px $highlight-color;
-    background-color: #ffffff;
-    align-items: center;
+        div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            text-wrap: wrap;
+            text-align: end;
+        }
+    }
 }
-
 .updateListingModal {
     footer {
         border: none;
@@ -1856,8 +1824,7 @@ $line-heigth-small: 24px;
         margin: 0;
     }
 }
-
-.SELLContainer {
+.sellNftContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1881,7 +1848,6 @@ $line-heigth-small: 24px;
         }
     }
 }
-
 .moreButton {
     display: flex;
     flex-direction: row;
@@ -1906,246 +1872,108 @@ $line-heigth-small: 24px;
 .showMoreButton button {
     padding: 0 18px;
 }
-
 .arrows {
     font-size: 35px;
 }
-
 .searchResultPage {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-}
-
-.filterButton {
-    position: absolute;
-    display: flex;
-    top: 120px;
-    padding: 5px;
-    background-color: $background-color;
-    border-radius: 0 5px 5px 0;
-    &:hover {
-        color: $font-hover-blue;
-    }
-}
-
-.dropDownSearchWrapper {
-    background-color: $background-color;
-    height: 100%;
-    width: 128px;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 70px 0 0 0;
-    box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    z-index: 100;
-
-    p {
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        font-weight: 500;
-        border-bottom: solid 1px $font-black;
-    }
-
-    button {
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        color: $font-black;
-        font-weight: 500;
-        border: none;
-        padding: 18px 32px;
+    .filterButton {
+        position: absolute;
+        display: flex;
+        top: 120px;
+        padding: 5px;
+        background-color: $background-color;
+        border-radius: 0 5px 5px 0;
         &:hover {
             color: $font-hover-blue;
         }
     }
-}
+    .searchSideFiltersWrapper {
+        background-color: $background-color;
+        height: 100%;
+        width: 128px;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 70px 0 0 0;
+        box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        z-index: 100;
 
-.DropDownSearch {
+        p {
+            font-family: $font-primary;
+            font-size: $font-size-small;
+            font-weight: 500;
+            border-bottom: solid 1px $font-black;
+        }
+
+        button {
+            font-family: $font-primary;
+            font-size: $font-size-small;
+            color: $font-black;
+            font-weight: 500;
+            border: none;
+            padding: 18px 32px;
+            &:hover {
+                color: $font-hover-blue;
+            }
+        }
+    }
+}
+.searchSideFilters {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     flex-wrap: wrap;
-}
+    .searchSideFiltersItemsWrapper {
+        background-color: $secondary-color;
+        position: absolute;
+        left: 128px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        width: 250px;
+        border-radius: 0 5px 5px 0;
+        z-index: 10;
+        box-shadow: inset 5px 0px 5px grey;
+        button {
+            border: none;
+            font-family: $font-primary;
+            color: $font-white;
+            font-weight: 400;
 
-.dropDownSearchItemsWrapper {
-    background-color: $secondary-color;
-    position: absolute;
-    left: 128px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 250px;
-    border-radius: 0 5px 5px 0;
-    z-index: 10;
-    box-shadow: inset 5px 0px 5px grey;
-    button {
-        border: none;
-        font-family: $font-primary;
-        color: $font-white;
-        font-weight: 400;
-
-        &:hover {
-            background-color: transparent;
-            color: $font-hover-grey;
+            &:hover {
+                background-color: transparent;
+                color: $font-hover-grey;
+            }
         }
     }
 }
-
 .searchResultsWrapper {
-    margin: 40px 192px 0 192px;
-    background-color: $background-color;
     width: 100%;
-    padding: 16px 32px;
-    border-radius: 5px;
+    margin-top: 40px;
+    padding: 16px 150px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
     h1 {
-        padding: 16px 0;
         font-family: $font-primary;
         font-size: $font-size-medium;
         font-weight: bolder;
         line-height: 35px;
         text-align: center;
+        padding: 0 18px;
     }
-}
-
-.NFTSearchResultsListed {
-    width: 100%;
-}
-
-.scrollbar {
-    max-height: 192px;
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    &::-webkit-scrollbar {
-        width: 8px;
+    h3 {
+        font-size: $font-size-small;
+        font-weight: 700;
+        line-height: 35px;
+        padding: 0 18px;
     }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: $secondary-color;
-        border-radius: 12px;
-        border: 2px solid white;
-    }
-}
-
-.button {
-    background-color: blue;
-    padding: 6px;
-
-    &:hover {
-        background: $primary-color;
-    }
-}
-
-.main {
-    min-height: 100vh;
-    padding: 4rem 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.footer {
-    display: flex;
-    flex: 1;
-    padding: 2rem 0;
-    border-top: 1px solid #eaeaea;
-    justify-content: center;
-    align-items: center;
-
-    a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-grow: 1;
-    }
-}
-
-.title {
-    a {
-        color: #0070f3;
-        text-decoration: none;
-
-        &:hover,
-        &:focus,
-        &:active {
-            text-decoration: underline;
-        }
-    }
-
-    margin: 0;
-    line-height: 1.15;
-    font-size: 4rem;
-}
-
-.description {
-    margin: 4rem 0;
-    line-height: 1.5;
-    font-size: 1.5rem;
-}
-
-.code {
-    background: #fafafa;
-    border-radius: 5px;
-    padding: 0.75rem;
-    font-size: 1.1rem;
-    font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-        Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-.grid {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    max-width: 800px;
-
-    @media (max-width: 600px) {
-        width: 100%;
-        flex-direction: column;
-    }
-}
-
-.card {
-    margin: 1rem;
-    padding: 1.5rem;
-    text-align: left;
-    color: inherit;
-    text-decoration: none;
-    border: 1px solid #eaeaea;
-    border-radius: 5px;
-    transition: color 0.15s ease, border-color 0.15s ease;
-    max-width: 300px;
-
-    &:hover,
-    &:focus,
-    &:active {
-        color: #0070f3;
-        border-color: #0070f3;
-    }
-
-    h2 {
-        margin: 0 0 1rem 0;
-        font-size: 1.5rem;
-    }
-
-    p {
-        margin: 0;
-        font-size: 1.25rem;
-        line-height: 1.5;
-    }
-}
-
-.logo {
-    height: 1em;
-    margin-left: 0.5rem;
 }

@@ -37,9 +37,9 @@ export default function Home() {
     }, [data, hasOwnNFT]) // Fügen Sie data und hasOwnNFT als Abhängigkeiten hinzu
 
     return (
-        <div className={styles.NFTContainer}>
+        <div className={styles.nftListWrapper}>
             <h1>My NFT</h1>
-            <div className={styles.NFTListed}>
+            <div className={styles.nftList}>
                 <div className="flex flex-wrap pb-4">
                     {isWeb3Enabled && chainId ? (
                         <>

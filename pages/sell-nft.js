@@ -142,9 +142,8 @@ export default function Home() {
     }, [proceeds, account, isWeb3Enabled, chainId])
 
     return (
-        <div className={styles.SELLContainer}>
+        <div className={styles.sellNftContainer}>
             <Form
-                className={styles.SELLForm}
                 onSubmit={approveAndList}
                 data={[
                     // !!!W add guides for the user, so they can not input letters where only a number makes sense, and that it has to have a specific length, and that the price field sees , and . both as the decimal point.
