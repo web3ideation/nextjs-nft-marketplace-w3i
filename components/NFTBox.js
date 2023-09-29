@@ -367,7 +367,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                     }}
                     cancelText="Close"
                     closeButton={<Button disabled text=""></Button>}
-                    width="325px"
+                    width="max-content"
                 >
                     <Image
                         className={styles.nftModalImage}
