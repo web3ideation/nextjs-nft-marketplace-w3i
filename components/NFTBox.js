@@ -127,6 +127,11 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
     const handleBuyClick = async () => {
         if (buying) return // Verhindere mehrfache Klicks, solange ein Kaufvorgang läuft
         setBuying(true)
+
+        if (!isWeb3Enabled) {
+            // Message to connect Wallet if you want to buy NFT
+            alert("Please connect your wallet.")
+        }
         try {
             if (isOwnedByUser) {
                 setShowInfoModal(true)
@@ -229,52 +234,59 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
     }
 
     return (
-        <div className={styles.NFTCardWrapper}>
+        <div className={styles.nftCardWrapper}>
             {imageURI ? (
                 <Card
-                    className={styles.NFTCard}
+                    className={styles.nftCard}
                     style={{
                         backgroundColor: "white",
                         transition: "background-color 0.5s",
                         borderRadius: "5px",
+                        padding: "0",
                     }}
-                    title={tokenName}
-                    description={tokenDescription || "..."}
                     onClick={handleCardClick}
                 >
                     <div>
-                        <div className={styles.NFTTextArea}>
-                            {imageURI ? (
-                                <Image
-                                    className={styles.NFTImage}
-                                    src={imageURI.src}
-                                    height={100}
-                                    width={100}
-                                    loading="eager"
-                                    alt={tokenDescription}
-                                />
-                            ) : (
-                                <div>
-                                    {loadingImage ? (
-                                        <div>Loading Image... </div>
-                                    ) : errorLoadingImage ? (
-                                        <div>Error loading image</div>
-                                    ) : (
-                                        <Image
-                                            className={styles.NFTImage}
-                                            src={imageURI.src}
-                                            height={100}
-                                            width={100}
-                                            alt={tokenDescription}
-                                        />
-                                    )}
-                                </div>
-                            )}
-                            <div className={styles.NFTOwner}>
+                        {imageURI ? (
+                            <Image
+                                className={styles.nftImage}
+                                src={imageURI.src}
+                                height={100}
+                                width={100}
+                                loading="eager"
+                                alt={tokenDescription}
+                            />
+                        ) : (
+                            <div>
+                                {loadingImage ? (
+                                    <div>Loading Image... </div>
+                                ) : errorLoadingImage ? (
+                                    <div>Error loading image</div>
+                                ) : (
+                                    <Image
+                                        className={styles.nftImage}
+                                        src={imageURI.src}
+                                        height={100}
+                                        width={100}
+                                        alt={tokenDescription}
+                                    />
+                                )}
+                            </div>
+                        )}
+                        <div className={styles.nftTextArea}>
+                            <div className={styles.nftOwner}>
                                 Owned by {formattedSellerAddress}
                             </div>
-                            <div className={styles.NFTPrice}>
+                            <div className={styles.nftPrice}>
                                 {ethers.utils.formatUnits(price, "ether")} ETH
+                            </div>
+                            <div className={styles.nftCardInformation}>
+                                <div className={styles.nftTitle}>
+                                    <h2>{tokenName}</h2>
+                                </div>
+                                <div className={styles.nftDescription}>
+                                    {tokenDescription || "..."}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -287,7 +299,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
             {/* NFT Info Modal */}
             {showInfoModal && (
                 <Modal
-                    className={styles.NFTInfoModal}
+                    className={styles.nftModalInfo}
                     onCancel={() => {
                         setShowInfoModal(false)
                     }}
@@ -295,16 +307,16 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                     closeButton={<Button disabled text=""></Button>}
                     cancelText="Close"
                     okText="BUY!"
-                    width="325px"
+                    width="max-content"
                 >
                     <Image
-                        className={styles.NFTImage}
+                        className={styles.nftModalImage}
                         src={imageURI.src}
                         alt={tokenDescription}
                         height={100}
                         width={100}
                     />
-                    <div className={styles.NFTInformation}>
+                    <div className={styles.nftModalInformation}>
                         <div>
                             <p>Owned by: </p>
                             <p>{formattedSellerAddress}</p>
@@ -347,7 +359,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
             {/* NFT Selling Modal */}
             {showSellModal && (
                 <Modal
-                    className={styles.NFTInfoModal}
+                    className={styles.nftModalInfo}
                     onOk={() => handleUpdatePriceButtonClick()}
                     okText="Update price"
                     onCancel={() => {
@@ -358,13 +370,13 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                     width="325px"
                 >
                     <Image
-                        className={styles.NFTImage}
+                        className={styles.nftModalImage}
                         src={imageURI.src}
                         alt={tokenDescription}
                         height={100}
                         width={100}
                     />
-                    <div className={styles.NFTInformation}>
+                    <div className={styles.nftModalInformation}>
                         <div>
                             <p>Owned by: </p>
                             <p>{formattedSellerAddress}</p>
