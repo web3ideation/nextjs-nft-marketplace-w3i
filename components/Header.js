@@ -11,14 +11,21 @@ export default function Header({}) {
             <nav>
                 <div className={styles.logoAndHeadlineWrapper}>
                     <Link className={styles.headerLogo} href="/">
-                        <img src="/media/w3i-in-line-crammed-e1690296984518.png" alt="Logo"></img>
+                        <img src="/media/only-lightbulb.png" alt="Logo"></img>
                     </Link>
                     <h1 className={styles.headerHeadline}>NFT Marketplace</h1>
                 </div>
                 <div className={styles.headerElementsWrapper}>
                     <SearchBar />
-                    <Link href="/my-nft" className={styles.headerButton}>
-                        <Button text="Create" />
+                    <Link
+                        href="https://web3ideation.com/"
+                        target="blank"
+                        className={styles.headerButton}
+                    >
+                        <img
+                            src="/media/Logo-insconsolata-straightened-e1690296964226.png"
+                            alt="Logo-Web3Ideation"
+                        ></img>
                     </Link>
                     <PopupMenu />
                     <ConnectButton className={styles.connectButton} moralisAuth={false} />
