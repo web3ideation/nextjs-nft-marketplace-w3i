@@ -142,7 +142,7 @@ export default function Home() {
     }, [proceeds, account, isWeb3Enabled, chainId])
 
     return (
-        <div className={styles.sellNftContainer}>
+        <div className={styles.nftSellContainer}>
             <Form
                 onSubmit={approveAndList}
                 data={[

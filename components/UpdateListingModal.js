@@ -77,7 +77,7 @@ export default function UpdateListingModal({
     }
 
     return (
-        <div className={styles.updateListingModal}>
+        <div className={styles.nftModalUpdateListing}>
             <Modal
                 onOk={handleUpdateButtonClick}
                 okText="Update"

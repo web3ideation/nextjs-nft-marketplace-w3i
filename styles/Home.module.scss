@@ -1518,6 +1518,7 @@ $background-color: rgb(255, 249, 226);
     width: 50px;
     height: 50px;
 }
+// Header
 .headerContainer {
     background-color: $background-color;
     position: sticky;
@@ -1557,145 +1558,143 @@ $background-color: rgb(255, 249, 226);
     display: flex;
     flex-direction: row;
     align-items: center;
-}
-.searchBarWrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    box-sizing: content-box;
-    padding: 20px 0;
-
-    .searchBar {
-        outline: none;
-        border: none;
-        border-radius: 5px;
-        padding: 0 5px;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    }
-
-    button {
-        font-family: "Poppins";
-        font-size: $font-size-small;
-        font-weight: 500;
+    .searchBarWrapper {
         display: flex;
+        flex-direction: row;
         justify-content: center;
-        align-items: center;
-        outline: none;
-        border: none;
-        color: $font-black;
-        padding: 0 18px;
+        box-sizing: content-box;
+        padding: 20px 0;
+
+        .searchBar {
+            outline: none;
+            border: none;
+            border-radius: 5px;
+            padding: 0 5px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+
+        button {
+            font-family: "Poppins";
+            font-size: $font-size-small;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            outline: none;
+            border: none;
+            color: $font-black;
+            padding: 0 18px;
+            &:hover {
+                color: $font-hover-blue;
+            }
+        }
+    }
+    .headerButton {
+        padding: 20px 18px;
+
+        img {
+            height: 24px;
+        }
+    }
+    .popupMenuWrapper {
+        padding-right: 18px;
         &:hover {
             color: $font-hover-blue;
         }
-    }
-}
-.headerButton {
-    padding: 20px 18px;
+        .menuButton {
+            display: flex;
+            flex-direction: row;
 
-    img {
-        height: 24px;
-
-        &:hover {
+            button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: none;
+                padding: 20px 5px 20px 18px;
+                font-family: $font-primary;
+                font-size: $font-size-small;
+                line-height: $line-heigth-small;
+                font-weight: 500;
+                color: $font-black;
+                &:hover {
+                    color: $font-hover-blue;
+                }
+            }
+        }
+        .menuIcon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 10px;
+            font-weight: 300;
+            font-family: $font-primary;
+            font-size: $font-size-small;
+            line-height: $line-heigth-small;
+            font-weight: 500;
+            color: $font-black;
+            cursor: pointer;
+        }
+        .menuIconMinus {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 10px;
+            font-weight: 300;
+            font-family: $font-primary;
+            font-size: $font-size-small;
+            line-height: $line-heigth-small;
+            font-weight: 500;
             color: $font-hover-blue;
+            cursor: pointer;
+        }
+        .popupMenuLinksWrapper {
+            background-color: $secondary-color;
+            border-radius: 0 0 5px 5px;
+            height: 0;
+            width: 250px;
+            opacity: 0;
+            position: absolute;
+            z-index: 10;
+            transition: height 5s linear 0;
+        }
+        .popupMenuLinksWrapperOpen {
+            background-color: $secondary-color;
+            border-radius: 0 0 5px 5px;
+            height: fit-content;
+            width: 250px;
+            opacity: 1;
+            position: absolute;
+            z-index: 10;
+            transition: height 5s linear 0;
+            box-shadow: inset 0px 5px 5px grey;
+        }
+        .popupMenuLinks {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 10px 40px;
+            text-decoration: none;
+
+            button {
+                color: $font-white;
+                font-family: $font-primary;
+                font-size: $font-size-small;
+                line-height: $line-heigth-small;
+                font-weight: 400;
+
+                &:hover {
+                    color: $font-hover-grey;
+                    background-color: transparent;
+                }
+            }
         }
     }
 }
 .connectButton {
     padding: 20px 18px;
 }
-.popupMenuWrapper {
-    padding-right: 18px;
-    &:hover {
-        color: $font-hover-blue;
-    }
-}
-.menuButton {
-    display: flex;
-    flex-direction: row;
-
-    button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        padding: 20px 5px 20px 18px;
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        line-height: $line-heigth-small;
-        font-weight: 500;
-        color: $font-black;
-        &:hover {
-            color: $font-hover-blue;
-        }
-    }
-}
-.menuIcon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 10px;
-    font-weight: 300;
-    font-family: $font-primary;
-    font-size: $font-size-small;
-    line-height: $line-heigth-small;
-    font-weight: 500;
-    color: $font-black;
-    cursor: pointer;
-}
-.menuIconMinus {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 10px;
-    font-weight: 300;
-    font-family: $font-primary;
-    font-size: $font-size-small;
-    line-height: $line-heigth-small;
-    font-weight: 500;
-    color: $font-hover-blue;
-    cursor: pointer;
-}
-.popupMenuLinksWrapper {
-    background-color: $secondary-color;
-    border-radius: 0 0 5px 5px;
-    height: 0;
-    width: 250px;
-    opacity: 0;
-    position: absolute;
-    z-index: 10;
-    transition: height 5s linear 0;
-}
-.popupMenuLinksWrapperOpen {
-    background-color: $secondary-color;
-    border-radius: 0 0 5px 5px;
-    height: fit-content;
-    width: 250px;
-    opacity: 1;
-    position: absolute;
-    z-index: 10;
-    transition: height 5s linear 0;
-    box-shadow: inset 0px 5px 5px grey;
-}
-.popupMenuLinks {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 10px 40px;
-    text-decoration: none;
-
-    button {
-        color: $font-white;
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        line-height: $line-heigth-small;
-        font-weight: 400;
-
-        &:hover {
-            color: $font-hover-grey;
-            background-color: transparent;
-        }
-    }
-}
+// Main
+// NFT Lists
 .nftListWrapper {
     width: 100%;
     margin-top: 40px;
@@ -1713,8 +1712,25 @@ $background-color: rgb(255, 249, 226);
         text-align: center;
     }
 }
+.nftList {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 16px;
+    width: 100%;
+    overflow-x: scroll;
+    scrollbar-width: none;
+    /* Verstecke die Scrollleiste für Firefox */
+    -ms-overflow-style: none;
+    /* Verstecke die Scrollleiste für IE und Edge */
+}
+/* Für Webkit-basierte Browser (Chrome, Safari) */
+.nftList::-webkit-scrollbar {
+    width: 0;
+}
 .nftCardWrapper {
-    margin: 7.5px;
+    margin: 10px;
 }
 .nftCard {
     box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
@@ -1753,8 +1769,19 @@ $background-color: rgb(255, 249, 226);
     .nftOwner {
         width: 192px;
     }
-    .nftPrice {
-        font-weight: 900;
+    .nftListedPrice {
+        display: flex;
+        justify-content: space-between;
+        .nftPrice {
+            font-weight: 900;
+        }
+        .nftListedStatus {
+            color: forestgreen;
+        }
+
+        .nftNotListedStatus {
+            color: firebrick;
+        }
     }
     .nftCardInformation {
         display: flex;
@@ -1767,23 +1794,35 @@ $background-color: rgb(255, 249, 226);
         }
     }
 }
-.nftList {
+.nftScroll {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    padding-top: 16px;
-    width: 100%;
-    overflow-x: scroll;
-    scrollbar-width: none;
-    /* Verstecke die Scrollleiste für Firefox */
-    -ms-overflow-style: none;
-    /* Verstecke die Scrollleiste für IE und Edge */
+    width: 30%;
+
+    button {
+        display: flex;
+        justify-content: center;
+        font-family: $font-secondary;
+        font-size: $font-size-small;
+        font-weight: 500;
+        color: $font-black;
+        border: none;
+
+        &:hover {
+            color: $font-hover-blue;
+        }
+    }
+    .arrows {
+        font-size: 35px;
+    }
+    .showMoreButton button {
+        padding: 0 18px;
+    }
 }
-/* Für Webkit-basierte Browser (Chrome, Safari) */
-.nftList::-webkit-scrollbar {
-    width: 0;
-}
+
+// Modals
 .nftModalInfo {
     border-radius: 5px;
     header {
@@ -1813,7 +1852,7 @@ $background-color: rgb(255, 249, 226);
         }
     }
 }
-.updateListingModal {
+.nftModalUpdateListing {
     footer {
         border: none;
     }
@@ -1824,7 +1863,9 @@ $background-color: rgb(255, 249, 226);
         margin: 0;
     }
 }
-.sellNftContainer {
+
+// Sell/Swap Nft page
+.nftSellContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1848,33 +1889,8 @@ $background-color: rgb(255, 249, 226);
         }
     }
 }
-.moreButton {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 30%;
 
-    button {
-        display: flex;
-        justify-content: center;
-        font-family: $font-secondary;
-        font-size: $font-size-small;
-        font-weight: 500;
-        color: $font-black;
-        border: none;
-
-        &:hover {
-            color: $font-hover-blue;
-        }
-    }
-}
-.showMoreButton button {
-    padding: 0 18px;
-}
-.arrows {
-    font-size: 35px;
-}
+// Search Result Page
 .searchResultPage {
     display: flex;
     flex-direction: row;
@@ -1916,7 +1932,7 @@ $background-color: rgb(255, 249, 226);
             color: $font-black;
             font-weight: 500;
             border: none;
-            padding: 18px 32px;
+            padding: 18px 40px;
             &:hover {
                 color: $font-hover-blue;
             }

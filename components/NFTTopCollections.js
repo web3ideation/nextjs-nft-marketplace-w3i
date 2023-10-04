@@ -67,7 +67,7 @@ function NFTTopCollections({ chainId }) {
                     })
                 )}
             </div>
-            <div className={styles.moreButton}>
+            <div className={styles.nftScroll}>
                 <Button
                     key="leftButton"
                     icon={<ArrowLeft className={styles.arrows} title="arrow left icon" />}

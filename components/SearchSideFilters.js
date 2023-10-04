@@ -25,7 +25,11 @@ const SearchSideFilters = ({ buttonText, options, onChange }) => {
             {isOpen && (
                 <div className={styles.searchSideFiltersItemsWrapper}>
                     {options.map((option) => (
-                        <Button key={option.id} text={option.label} onClick={onChange} />
+                        <Button
+                            key={option.id}
+                            text={option.label}
+                            onClick={() => onChange(event, option.id)}
+                        />
                     ))}
                 </div>
             )}
