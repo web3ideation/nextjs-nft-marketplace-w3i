@@ -28,7 +28,10 @@ const SearchSideFilters = ({ buttonText, options, onChange }) => {
                         <Button
                             key={option.id}
                             text={option.label}
-                            onClick={() => onChange(event, option.id)}
+                            onClick={() => {
+                                console.log("Clicked option in SearchSideFilters:", option.id)
+                                onChange(buttonText.toLowerCase(), option.id)
+                            }}
                         />
                     ))}
                 </div>
