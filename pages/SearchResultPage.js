@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import SearchSideFilters from "../components/SearchSideFilters"
 import styles from "../styles/Home.module.css"
 import NFTBox from "../components/NFTBox"
@@ -14,9 +14,13 @@ const SearchResultPage = ({}) => {
     const searchTermFromQuery = router.query.search || ""
     const activeSearchResultsFromQuery = JSON.parse(router.query.activeSearchResults || "[]")
     const inactiveSearchResultsFromQuery = JSON.parse(router.query.inactiveSearchResults || "[]")
+    const [combinedResults, setCombinedResults] = useState([])
 
-    console.log("Active Search results from query:", activeSearchResultsFromQuery)
-    console.log("Inactive search results from query:", inactiveSearchResultsFromQuery)
+    useEffect(() => {
+        // Hier kombinieren Sie die beiden Arrays und setzen das kombinierte Ergebnis
+        const combinedResults = activeSearchResultsFromQuery.concat(inactiveSearchResultsFromQuery)
+        setCombinedResults(combinedResults)
+    }, [activeSearchResultsFromQuery, inactiveSearchResultsFromQuery])
 
     const handleSortingChange = (event, sortingType) => {
         setSortingOption(sortingType)
@@ -138,30 +142,16 @@ const SearchResultPage = ({}) => {
             )}
             <div className={styles.searchResultsWrapper}>
                 <h1>Search results for: {searchTermFromQuery} </h1>
-                <h3>Active items: </h3>
                 <div className={styles.nftList}>
-                    {activeSearchResultsFromQuery.map((result) => (
-                        <div key={`${result.nftAddress}${result.tokenId}`}>
+                    {combinedResults.map((result) => (
+                        <div key={`${result.nftAddress}${result.tokenId}${result.price}`}>
                             <NFTBox
                                 price={result.price}
                                 nftAddress={result.nftAddress}
                                 tokenId={result.tokenId}
                                 marketplaceAddress={result.marketplaceAddress}
                                 seller={result.seller}
-                            ></NFTBox>
-                        </div>
-                    ))}
-                </div>
-                <h3>Inactive items: </h3>
-                <div className={styles.nftList}>
-                    {inactiveSearchResultsFromQuery.map((resultInactive) => (
-                        <div key={`${resultInactive.nftAddress}${resultInactive.tokenId}`}>
-                            <NFTBox
-                                price={resultInactive.price}
-                                nftAddress={resultInactive.nftAddress}
-                                tokenId={resultInactive.tokenId}
-                                marketplaceAddress={resultInactive.marketplaceAddress}
-                                seller={resultInactive.seller}
+                                isListed={result.isListed}
                             ></NFTBox>
                         </div>
                     ))}
