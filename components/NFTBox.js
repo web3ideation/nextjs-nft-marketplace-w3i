@@ -23,7 +23,14 @@ const truncateStr = (fullStr, strLen) => {
     )
 }
 
-export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress, seller }) {
+export default function NFTBox({
+    price,
+    nftAddress,
+    tokenId,
+    marketplaceAddress,
+    seller,
+    isListed,
+}) {
     const { isWeb3Enabled, account } = useMoralis()
     const [imageURI, setImageURI] = useState("")
     const [tokenName, setTokenName] = useState("")
@@ -243,6 +250,7 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                         transition: "background-color 0.5s",
                         borderRadius: "5px",
                         padding: "0",
+                        width: "300px",
                     }}
                     onClick={handleCardClick}
                 >
@@ -277,8 +285,17 @@ export default function NFTBox({ price, nftAddress, tokenId, marketplaceAddress,
                             <div className={styles.nftOwner}>
                                 Owned by {formattedSellerAddress}
                             </div>
-                            <div className={styles.nftPrice}>
-                                {ethers.utils.formatUnits(price, "ether")} ETH
+                            <div className={styles.nftListedPrice}>
+                                <div className={styles.nftPrice}>
+                                    {ethers.utils.formatUnits(price, "ether")} ETH
+                                </div>
+                                <div>
+                                    {isListed ? (
+                                        <div className={styles.nftListedStatus}>Listed</div>
+                                    ) : (
+                                        <div className={styles.nftNotListedStatus}>Not Listed</div>
+                                    )}
+                                </div>
                             </div>
                             <div className={styles.nftCardInformation}>
                                 <div className={styles.nftTitle}>
