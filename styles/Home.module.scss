@@ -1681,6 +1681,7 @@ $background-color: rgb(255, 249, 226);
                 font-size: $font-size-small;
                 line-height: $line-heigth-small;
                 font-weight: 400;
+                border: none;
 
                 &:hover {
                     color: $font-hover-grey;
