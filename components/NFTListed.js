@@ -11,15 +11,6 @@ import { Chart } from "@web3uikit/icons"
 
 const NFTBoxMemo = memo(NFTBox)
 
-const preloadImage = (url) => {
-    return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.onload = resolve
-        img.onerror = reject
-        img.src = url
-    })
-}
-
 function NFTListed({ chainId }) {
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
@@ -27,88 +18,97 @@ function NFTListed({ chainId }) {
     const { loading: loadingActive, data: dataActive } = useQuery(GET_ACTIVE_ITEMS)
     const { loading: loadingInactive, data: dataInactive } = useQuery(GET_INACTIVE_ITEMS)
 
-    const [allItems, setAllItems] = useState([]) // New state for all items
-
-    useEffect(() => {
-        console.log("allItems:", allItems)
-    }, [allItems])
+    const [allItems, setAllItems] = useState([])
+    const [filteredNFTs, setFilteredNFTs] = useState([])
 
     const [sortingOption, setSortingOption] = useState("default")
     const [selectedCategory, setSelectedCategory] = useState("default")
     const [selectedCollection, setSelectedCollection] = useState("default")
     const [selectedStatus, setSelectedStatus] = useState("default")
-    const [filteredNFTs, setFilteredNFTs] = useState([])
 
+    const [images, setImages] = useState({})
+    const [isOpen, setIsOpen] = useState(false)
+
+    // Merge and remove duplicates
     useEffect(() => {
         if (!loadingActive && dataActive && !loadingInactive && dataInactive) {
-            console.log("dataActive.items:", dataActive.items)
-            console.log("dataInactive.items:", dataInactive.items)
             const seenKeys = new Set() // Set to keep track of keys
-            const uniqueItems = []
-
-            ;[...dataActive.items, ...dataInactive.items].forEach((item) => {
-                const key = `${item.nftAddress}${item.tokenId}`
-                if (!seenKeys.has(key)) {
-                    // Check if the key has not been seen
-                    uniqueItems.push(item)
-                    seenKeys.add(key) // Mark the key as seen
-                }
-            })
+            const uniqueItems = [...dataActive.items, ...dataInactive.items].reduce(
+                (acc, item) => {
+                    const key = `${item.nftAddress}${item.tokenId}${item.listingId}`
+                    if (!seenKeys.has(key)) {
+                        // Check if the key has not been seen
+                        acc.push(item)
+                        seenKeys.add(key) // Mark the key as seen
+                    }
+                    return acc
+                },
+                []
+            )
 
             setAllItems(uniqueItems)
         }
     }, [loadingActive, dataActive, loadingInactive, dataInactive])
 
+    // Filtering and sorting NFTs
     useEffect(() => {
-        if (allItems.length) {
-            let filteredList = [...allItems]
-            console.log(filteredList)
-            if (selectedStatus === "active") {
-                filteredList = filteredList.filter((nft) => nft.isListed)
-                console.log("Active items:", filteredList)
-            } else if (selectedStatus === "inactive") {
-                filteredList = filteredList.filter((nft) => !nft.isListed)
-                console.log("Inactive items:", filteredList)
-            }
+        let filteredList = [...allItems]
+        // Status filter
+        if (selectedStatus === "active") {
+            filteredList = filteredList.filter((nft) => nft.isListed)
+        } else if (selectedStatus === "inactive") {
+            filteredList = filteredList.filter((nft) => !nft.isListed)
+        }
 
-            if (selectedCategory !== "default") {
-                // Beispielhafte Filterung (muss an das tatsächliche Datenmodell angepasst werden)
-                filteredList = filteredList.filter((nft) => nft.category === selectedCategory)
-            }
+        // Category filter
+        if (selectedCategory !== "default") {
+            // Example filtering (must be adapted to the actual data model)
+            filteredList = filteredList.filter((nft) => nft.category === selectedCategory)
+        }
 
-            if (selectedCollection !== "default") {
-                // Beispielhafte Filterung (muss an das tatsächliche Datenmodell angepasst werden)
-                filteredList = filteredList.filter((nft) => nft.nftAddress === selectedCollection)
-            }
+        // Collection filter
+        if (selectedCollection !== "default") {
+            // Example filtering (must be adapted to the actual data model)
+            filteredList = filteredList.filter((nft) => nft.nftAddress === selectedCollection)
+        }
 
+        // Sorting logic
+        filteredList.sort((a, b) => {
             switch (sortingOption) {
                 case "lowestId":
-                    // Sorting by tokenId in ascending order
-                    filteredList.sort((a, b) => a.tokenId - b.tokenId)
-                    break
+                    return a.tokenId - b.tokenId
                 case "highestId":
-                    // Sorting by tokenId in descending order
-                    filteredList.sort((a, b) => b.tokenId - a.tokenId)
-                    break
+                    return b.tokenId - a.tokenId
                 case "highestPrice":
-                    // Sorting by price in ascending order
-                    filteredList.sort((a, b) => b.price - a.price)
-                    break
+                    return b.price - a.price
                 case "lowestPrice":
-                    // Sorting by price in descending order
-                    filteredList.sort((a, b) => a.price - b.price)
-                    break
+                    return a.price - b.price
                 default:
-                    break
+                    return 0
             }
-            console.log("NFTs to render:", filteredNFTs)
-            setFilteredNFTs(filteredList)
-        }
-        console.log("filteredNFTs after filtering and sorting:", filteredNFTs)
+        })
+        setFilteredNFTs(filteredList)
     }, [allItems, selectedStatus, sortingOption, selectedCategory, selectedCollection])
 
+    useEffect(() => {
+        if (allItems.length) {
+            allItems.forEach((nft) => {
+                const { tokenId, imageIpfsUrl } = nft
+                const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`
+                const fallbackImage = `https://your-http-image-url/${tokenId}.png`
+
+                preloadImage(ipfsImage)
+                    .then(() =>
+                        setImages((prevImages) => ({ ...prevImages, [tokenId]: ipfsImage }))
+                    )
+                    .catch(() =>
+                        setImages((prevImages) => ({ ...prevImages, [tokenId]: fallbackImage }))
+                    )
+            })
+        }
+    }, [chainId, allItems])
+
     const handleFilterChange = (type, value) => {
-        console.log("Changing filter type:", type, "with value:", value)
         switch (type) {
             case "status":
                 setSelectedStatus(value)
@@ -126,28 +126,7 @@ function NFTListed({ chainId }) {
                 break
         }
     }
-    const [images, setImages] = useState({})
 
-    useEffect(() => {
-        if (chainId && allItems.length) {
-            setFilteredNFTs(allItems)
-            allItems.forEach((nft) => {
-                const { tokenId, imageIpfsUrl } = nft
-                const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`
-                const fallbackImage = `https://your-http-image-url/${tokenId}.png`
-
-                preloadImage(ipfsImage)
-                    .then(() => {
-                        setImages((prevImages) => ({ ...prevImages, [tokenId]: ipfsImage }))
-                    })
-                    .catch(() => {
-                        setImages((prevImages) => ({ ...prevImages, [tokenId]: fallbackImage }))
-                    })
-            })
-        }
-    }, [chainId, allItems])
-
-    const [isOpen, setIsOpen] = useState(false)
     const menuRef = useRef(null)
     const filterRef = useRef(null)
 
@@ -252,7 +231,7 @@ function NFTListed({ chainId }) {
                         <div>Loading...</div>
                     ) : (
                         filteredNFTs.map((nft) => {
-                            const { price, nftAddress, tokenId, seller, isListed } = nft
+                            const { price, nftAddress, tokenId, seller, isListed, listingId } = nft
                             const imgSrc = images[tokenId] || ""
                             return (
                                 <NFTBox
@@ -262,7 +241,7 @@ function NFTListed({ chainId }) {
                                     marketplaceAddress={marketplaceAddress}
                                     seller={seller}
                                     isListed={isListed}
-                                    key={`${nftAddress}${tokenId}`}
+                                    key={`${nftAddress}${tokenId}${listingId}`}
                                     imgSrc={imgSrc}
                                 />
                             )
@@ -305,3 +284,12 @@ function NFTListed({ chainId }) {
 }
 
 export default NFTListed
+
+const preloadImage = (url) => {
+    return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = resolve
+        img.onerror = reject
+        img.src = url
+    })
+}
