@@ -22,7 +22,10 @@ const NftModal = ({
 }) => {
     return (
         <Modal
-            className={styles.nftModalInfo}
+            customize={{
+                borderRadius: "5px",
+            }}
+            className={styles.nftModalInformation}
             onCancel={closeModal}
             onOk={type === "info" ? handleBuyClick : handleUpdatePriceButtonClick}
             okText={type === "info" ? "BUY!" : "Update price"}
@@ -37,7 +40,7 @@ const NftModal = ({
                 height={100}
                 width={100}
             />
-            <div className={styles.nftModalInformation}>
+            <div className={styles.nftModalText}>
                 <div>
                     <p>Owned by: </p>
                     <p>{formattedSellerAddress}</p>

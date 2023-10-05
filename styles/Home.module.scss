@@ -1510,13 +1510,13 @@ $background-color: rgb(255, 249, 226);
     width: 100%;
     height: 100vh;
     background-color: #ffffff;
-}
-.mainLoadingIcon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    height: 50px;
+    .mainLoadingIcon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+    }
 }
 .nftLoadingIconWrapper {
     display: flex;
@@ -1524,13 +1524,13 @@ $background-color: rgb(255, 249, 226);
     align-items: center;
     width: 100%;
     height: 100%;
-}
-.nftLoadingIcon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    height: 50px;
+    .nftLoadingIcon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: 50px;
+    }
 }
 // Header
 .headerContainer {
@@ -1827,15 +1827,10 @@ $background-color: rgb(255, 249, 226);
         padding: 0 18px;
     }
 }
-
 // Modals
-.nftModalInfo {
-    border-radius: 5px;
+.nftModalInformation {
     header {
         padding: 0;
-    }
-    footer {
-        border: none;
     }
     .nftModalImage {
         width: 300px;
@@ -1844,17 +1839,39 @@ $background-color: rgb(255, 249, 226);
         background-color: #ffffff;
         align-items: center;
     }
-    .nftModalInformation {
+    .nftModalText {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        font-weight: 500;
+        color: $font-black;
         div {
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             text-wrap: wrap;
             text-align: end;
+        }
+    }
+    footer {
+        display: flex;
+        justify-content: space-around;
+        border: none;
+        button {
+            width: 45%;
+            border: none;
+            border-radius: 5px;
+            background: $secondary-color;
+            span {
+                color: $font-white;
+                font-weight: 400;
+            }
+            &:hover {
+                background: $secondary-color;
+                color: $font-hover-grey;
+            }
         }
     }
 }
@@ -1869,36 +1886,55 @@ $background-color: rgb(255, 249, 226);
         margin: 0;
     }
 }
-
 // Sell/Swap Nft page
 .nftSellSwapContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
     margin: 40px 192px;
-    border-radius: 5px;
-    padding: 16px 32px;
-
-    form {
-        width: 50%;
-        height: 400px;
+    .nftSellSwapButton {
         display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: stretch;
-        padding: 16px 32px;
+        justify-content: center;
+        gap: 18px;
+        button {
+            background-color: $font-hover-blue;
+            width: 128px;
+            color: $font-white;
+            border-radius: 5px;
+            font-family: $font-primary;
+            font-size: $font-size-small;
+            font-weight: 400;
+            padding: 0 18px;
+            &:hover {
+                color: $font-hover-grey;
+            }
+        }
+    }
+    .nftSellSwapWrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+
         border-radius: 5px;
-        box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+        padding: 16px 32px;
+
+        form {
+            width: 50%;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: stretch;
+            padding: 16px 32px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
         }
     }
 }
-
 // Search Result Page
 .searchResultPage {
     display: flex;
