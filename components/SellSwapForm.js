@@ -1,13 +1,11 @@
 import { Form } from "web3uikit"
 
 function SellSwapForm({ title, id, onSubmit, buttonText, extraFields = [] }) {
-    // Define the common fields for both forms
     const commonFields = [
         {
             name: "NFT Address",
             type: "text",
             inputWidth: "100%",
-            value: "",
             key: "nftAddress",
             validation: {
                 regExp: /^0x[0-9a-fA-F]{40}$/,
@@ -19,7 +17,6 @@ function SellSwapForm({ title, id, onSubmit, buttonText, extraFields = [] }) {
             name: "Token ID",
             type: "number",
             inputWidth: "100%",
-            value: "number",
             key: "tokenId",
             validation: {
                 regExp: /^[0-9]\d*$/,

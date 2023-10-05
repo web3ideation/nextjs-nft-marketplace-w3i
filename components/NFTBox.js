@@ -173,11 +173,6 @@ export default function NFTBox({
         loadImage()
     }, [loadImage])
 
-    useEffect(() => {
-        modalListener()
-        preventScroll(anyModalIsOpen)
-    }, [anyModalIsOpen])
-
     const openUpdateListingModal = () => {
         setShowUpdateListingModal(true)
     }

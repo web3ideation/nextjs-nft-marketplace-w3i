@@ -46,6 +46,7 @@ export default function Home() {
     const { chainId, account, isWeb3Enabled } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
+    const [activeForm, setActiveForm] = useState(null)
     const dispatch = useNotification()
     const [proceeds, setProceeds] = useState("0")
 
@@ -141,52 +142,77 @@ export default function Home() {
     return (
         <>
             <div className={styles.nftSellSwapContainer}>
-                <SellSwapForm onSubmit={approveAndList} title="Sell your NFT!" id="Sell Form" />
-                <SellSwapForm
-                    onSubmit={approveAndList}
-                    title="Swap your NFT!"
-                    id="Swap Form"
-                    extraFields={[
-                        {
-                            name: "Desired NFT-Address",
-                            type: "text",
-                            inputWidth: "100%",
-                            value: "",
-                            key: "desiredNftAddress",
-                            validation: {
-                                regExp: /^0x[0-9a-fA-F]{40}$/,
-                                regExpInvalidMessage: "Please enter a valid Ethereum address.",
-                            },
-                        },
-                    ]}
-                />
-            </div>
-            <div>
-                <div className="flex flex-row justify-center">
-                    <div>Withdraw {proceeds} proceeds</div>
+                <div className={styles.nftSellSwapButton}>
+                    <Button onClick={() => setActiveForm("sell")} text="Sell" />
+                    <Button onClick={() => setActiveForm("swap")} text="Swap" />
                 </div>
-                {proceeds != "0" ? (
-                    <Button
-                        name="Withdraw"
-                        type="button"
-                        onClick={() => {
-                            runContractFunction({
-                                params: {
-                                    abi: nftMarketplaceAbi,
-                                    contractAddress: marketplaceAddress,
-                                    functionName: "withdrawProceeds",
-                                    params: {},
+                <div className={styles.nftSellSwapWrapper}>
+                    {activeForm === "sell" && (
+                        <SellSwapForm
+                            onSubmit={approveAndList}
+                            title="Sell your NFT!"
+                            id="Sell Form"
+                        />
+                    )}
+                    {activeForm === "swap" && (
+                        <SellSwapForm
+                            onSubmit={approveAndList}
+                            title="Swap your NFT!"
+                            id="Swap Form"
+                            extraFields={[
+                                {
+                                    name: "Desired NFT Address",
+                                    type: "text",
+                                    inputWidth: "100%",
+                                    key: "desiredNftAddress",
+                                    validation: {
+                                        regExp: /^0x[0-9a-fA-F]{40}$/,
+                                        regExpInvalidMessage:
+                                            "Please enter a valid Ethereum address.",
+                                    },
                                 },
-                                onError: (error) => console.log(error),
-                                onSuccess: () => handleWithdrawSuccess,
-                            })
-                        }}
-                    />
-                ) : (
+                                {
+                                    name: "Desired Token ID",
+                                    type: "number",
+                                    inputWidth: "100%",
+                                    key: "desiredTokenId",
+                                    validation: {
+                                        regExp: /^[0-9]\d*$/,
+                                        regExpInvalidMessage:
+                                            "Please enter a positive integer or zero.",
+                                    },
+                                },
+                            ]}
+                        />
+                    )}
+                </div>
+                <div>
                     <div className="flex flex-row justify-center">
-                        <div>No proceeds detected</div>
+                        <div>Withdraw {proceeds} proceeds</div>
                     </div>
-                )}
+                    {proceeds != "0" ? (
+                        <Button
+                            name="Withdraw"
+                            type="button"
+                            onClick={() => {
+                                runContractFunction({
+                                    params: {
+                                        abi: nftMarketplaceAbi,
+                                        contractAddress: marketplaceAddress,
+                                        functionName: "withdrawProceeds",
+                                        params: {},
+                                    },
+                                    onError: (error) => console.log(error),
+                                    onSuccess: () => handleWithdrawSuccess,
+                                })
+                            }}
+                        />
+                    ) : (
+                        <div className="flex flex-row justify-center">
+                            <div>No proceeds detected</div>
+                        </div>
+                    )}
+                </div>
             </div>
         </>
     )
