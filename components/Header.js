@@ -1,4 +1,4 @@
-import { Button, ConnectButton } from "web3uikit"
+import { ConnectButton } from "web3uikit"
 import Link from "next/link"
 import PopupMenu from "./PopupMenu"
 import SearchBar from "./SearchBar"

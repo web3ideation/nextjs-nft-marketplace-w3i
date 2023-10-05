@@ -1503,7 +1503,7 @@ $secondary-color: rgb(18, 115, 235);
 $highlight-color: rgb(9, 116, 241);
 $background-color: rgb(255, 249, 226);
 
-.loadingIconWrapper {
+.mainLoadingIconWrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1511,7 +1511,21 @@ $background-color: rgb(255, 249, 226);
     height: 100vh;
     background-color: #ffffff;
 }
-.loadingIcon {
+.mainLoadingIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+}
+.nftLoadingIconWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.nftLoadingIcon {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1724,8 +1738,6 @@ $background-color: rgb(255, 249, 226);
 }
 .nftCard {
     box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
-    border-radius: 5px;
-
     footer {
         h2 {
             font-family: $font-secondary;
@@ -1735,6 +1747,10 @@ $background-color: rgb(255, 249, 226);
             font-family: $font-secondary;
             color: $font-black;
         }
+    }
+
+    &:hover {
+        background-color: none;
     }
 }
 .nftImage {

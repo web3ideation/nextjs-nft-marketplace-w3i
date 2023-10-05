@@ -220,6 +220,7 @@ export default function NFTBox({
                         borderRadius: "5px",
                         padding: "0",
                         width: "300px",
+                        height: "300px",
                     }}
                     onClick={handleCardClick}
                 >
@@ -278,8 +279,10 @@ export default function NFTBox({
                     </div>
                 </Card>
             ) : (
-                <div className={styles.loadingIcon}>
-                    <LoadingIcon />
+                <div className={styles.nftLoadingIconWrapper}>
+                    <div className={styles.nftLoadingIcon}>
+                        <LoadingIcon />
+                    </div>
                 </div>
             )}
             {/* NFT Info Modal */}

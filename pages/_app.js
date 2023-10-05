@@ -38,8 +38,8 @@ function MyApp({ Component, pageProps }) {
                             {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
                             {isLoading ? (
                                 <div>
-                                    <div className={styles.loadingIconWrapper}>
-                                        <LoadingIcon className={styles.loadingIcon} />
+                                    <div className={styles.mainLoadingIconWrapper}>
+                                        <LoadingIcon className={styles.mainLoadingIcon} />
                                     </div>
                                 </div>
                             ) : (
