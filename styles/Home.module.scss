@@ -1713,21 +1713,10 @@ $background-color: rgb(255, 249, 226);
     }
 }
 .nftList {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 NFTs pro Reihe */
     padding-top: 16px;
     width: 100%;
-    overflow-x: scroll;
-    scrollbar-width: none;
-    /* Verstecke die Scrollleiste für Firefox */
-    -ms-overflow-style: none;
-    /* Verstecke die Scrollleiste für IE und Edge */
-}
-/* Für Webkit-basierte Browser (Chrome, Safari) */
-.nftList::-webkit-scrollbar {
-    width: 0;
 }
 .nftCardWrapper {
     margin: 10px;
@@ -1865,23 +1854,26 @@ $background-color: rgb(255, 249, 226);
 }
 
 // Sell/Swap Nft page
-.nftSellContainer {
+.nftSellSwapContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
+    gap: 16px;
     margin: 40px 192px;
-    background-color: $background-color;
     border-radius: 5px;
     padding: 16px 32px;
 
     form {
         width: 50%;
+        height: 400px;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-between;
         align-items: stretch;
         padding: 16px 32px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
