@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import Image from "next/image"
-import { Card, useNotification, Modal, Button } from "web3uikit"
+import { Card, useNotification } from "web3uikit"
 import { ethers } from "ethers"
 import UpdateListingModal from "./UpdateListingModal"
 import styles from "../styles/Home.module.css"
 import LoadingIcon from "../public/LoadingIcon"
+import NFTInfoModal from "../components/NFTInfoModal"
 
 const truncateStr = (fullStr, strLen) => {
     if (fullStr.length <= strLen) return fullStr
@@ -31,20 +32,25 @@ export default function NFTBox({
     seller,
     isListed,
 }) {
+    // State hooks
     const { isWeb3Enabled, account } = useMoralis()
     const [imageURI, setImageURI] = useState("")
     const [tokenName, setTokenName] = useState("")
     const [tokenDescription, setTokenDescription] = useState("")
-    const dispatch = useNotification()
-
+    const [loadingImage, setLoadingImage] = useState(false) // Added loading state
+    const [errorLoadingImage, setErrorLoadingImage] = useState(false) // Added error state
+    const [transactionError, setTransactionError] = useState(null)
+    const [buying, setBuying] = useState(false) // Added buying state
     const [showInfoModal, setShowInfoModal] = useState(false) // Modal for info NFT
     const [showSellModal, setShowSellModal] = useState(false) // Modal for selling NFT
     const [showUpdateListingModal, setShowUpdateListingModal] = useState(false) // Modal for updating Price
     const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
 
-    const [loadingImage, setLoadingImage] = useState(false) // Added loading state
-    const [errorLoadingImage, setErrorLoadingImage] = useState(false) // Added error state
-    const [transactionError, setTransactionError] = useState(null)
+    const dispatch = useNotification()
+
+    const isOwnedByUser = seller === account || seller === undefined
+    const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(seller || "", 15)
+    const formattedNftAddress = truncateStr(nftAddress || "", 15)
 
     function useRawTokenURI(nftAddress, tokenId) {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -86,65 +92,22 @@ export default function NFTBox({
         },
     })
 
-    async function updateUI() {
-        const tokenURI = await getRawTokenURI()
-        console.log(`The TokenURI is ${tokenURI}`)
-        // We are going to cheat a little here... !!!W what does he mean and how to do it the correct way?
-        if (tokenURI) {
-            try {
-                // IPFS Gateway: A server that will return IPFS files from a "normal" URL.
-                const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-                const tokenURIResponse = await (await fetch(requestURL)).json()
-                const imageURI = tokenURIResponse.image
-                const imageURIURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-
-                setImageURI(imageURIURL)
-                setTokenName(tokenURIResponse.name)
-                setTokenDescription(tokenURIResponse.description)
-                // Ways for decentralizantion
-                // We could render the Image on our sever, and just call our sever.
-                // For testnets & mainnet -> use moralis server hooks
-                // Have the world adopt IPFS
-                // Build our own IPFS gateway
-            } catch (error) {
-                console.error("Error loading image or token information:", error)
-                setErrorLoadingImage(true)
-            }
-        }
-    }
-
-    useEffect(() => {
-        updateUI()
-    }, [isWeb3Enabled])
-
-    const isOwnedByUser = seller === account || seller === undefined
-    const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(seller || "", 15)
-    const formattedNftAddress = truncateStr(nftAddress || "", 15)
-
+    // Handlers
     const handleCardClick = () => {
-        if (isOwnedByUser) {
-            setShowSellModal(true) // Open NFT sell modal
-        } else {
-            setShowInfoModal(true) // Open NFT info modal
-        }
+        isOwnedByUser ? setShowSellModal(true) : setShowInfoModal(true)
     }
-
-    const [buying, setBuying] = useState(false) // Added buying state
 
     const handleBuyClick = async () => {
-        if (buying) return // Verhindere mehrfache Klicks, solange ein Kaufvorgang läuft
-        setBuying(true)
+        if (buying) return
 
+        setBuying(true)
         if (!isWeb3Enabled) {
-            // Message to connect Wallet if you want to buy NFT
-            alert("Please connect your wallet.")
-        }
-        try {
+            dispatch({ type: "error", message: "Please connect your wallet to buy this NFT." })
+        } else {
             if (isOwnedByUser) {
                 setShowInfoModal(true)
             } else {
                 await buyItem({
-                    // !!!W here it should also have a modal coming up, which displays detailed infromation about the nft and on there there would be a button for the buy function
                     onError: (error) => {
                         console.error(error)
                         setBuying(false)
@@ -152,32 +115,8 @@ export default function NFTBox({
                     onSuccess: handleBuyItemSuccess,
                 })
             }
-        } finally {
-            setBuying(false)
         }
     }
-
-    const openUpdateListingModal = () => {
-        setShowUpdateListingModal(true)
-    }
-
-    const handleUpdatePriceButtonClick = () => {
-        openUpdateListingModal(true)
-        setShowSellModal(false) // Close NFT Selling Modal
-    }
-
-    const preventScroll = (shouldPrevent) => {
-        document.body.style.overflow = shouldPrevent ? "hidden" : "auto"
-    }
-
-    const modalListener = () => {
-        setAnyModalIsOpen(showUpdateListingModal || showInfoModal || showSellModal)
-    }
-
-    useEffect(() => {
-        modalListener()
-        preventScroll(anyModalIsOpen)
-    }, [anyModalIsOpen])
 
     const handleBuyItemSuccess = async (tx) => {
         try {
@@ -196,27 +135,57 @@ export default function NFTBox({
         }
     }
 
-    // Load the image from IPFS and fall back to HTTP if needed
-    const loadImage = async () => {
-        try {
-            setLoadingImage(true) // Set loading state to true
-            setErrorLoadingImage(false) // Reset error state
+    const handleUpdatePriceButtonClick = () => {
+        openUpdateListingModal(true)
+        setShowSellModal(false) // Close NFT Selling Modal
+    }
 
+    const modalListener = () => {
+        setAnyModalIsOpen(showUpdateListingModal || showInfoModal || showSellModal)
+    }
+
+    const preventScroll = (shouldPrevent) => {
+        document.body.style.overflow = shouldPrevent ? "hidden" : "auto"
+    }
+
+    // Load the image from IPFS and fall back to HTTP if needed
+    const loadImage = useCallback(async () => {
+        setLoadingImage(true) // Set loading state to true
+        try {
             const tokenURI = await getRawTokenURI()
-            if (tokenURI) {
-                const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-                const tokenURIResponse = await (await fetch(requestURL)).json()
-                const imageURI = tokenURIResponse.image
-                const imageURIURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-                setImageURI({ src: imageURIURL, width: 100 })
-            }
-            setLoadingImage(false) // Set loading state to false after image is loaded
+            const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
+            const tokenURIResponse = await (await fetch(requestURL)).json()
+            const imageURI = tokenURIResponse.image
+            const imageURIURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
+            setImageURI({ src: imageURIURL, width: 100 })
+            setTokenName(tokenURIResponse.name)
+            setTokenDescription(tokenURIResponse.description)
         } catch (error) {
             console.error("Error loading image:", error)
             setErrorLoadingImage(true) // Set error state to true
             setLoadingImage(false) // Set loading state to false in case of error
+        } finally {
+            setLoadingImage(false) // Set loading state to false after image is loaded
         }
+    }, [getRawTokenURI])
+
+    useEffect(() => {
+        loadImage()
+    }, [loadImage])
+
+    useEffect(() => {
+        modalListener()
+        preventScroll(anyModalIsOpen)
+    }, [anyModalIsOpen])
+
+    const openUpdateListingModal = () => {
+        setShowUpdateListingModal(true)
     }
+
+    useEffect(() => {
+        modalListener()
+        preventScroll(anyModalIsOpen)
+    }, [anyModalIsOpen])
 
     useEffect(() => {
         loadImage() // Load the image when the component mounts
@@ -315,124 +284,42 @@ export default function NFTBox({
             )}
             {/* NFT Info Modal */}
             {showInfoModal && (
-                <Modal
-                    className={styles.nftModalInfo}
-                    onCancel={() => {
-                        setShowInfoModal(false)
-                    }}
-                    onOk={handleBuyClick}
-                    closeButton={<Button disabled text=""></Button>}
-                    cancelText="Close"
-                    okText="BUY!"
-                    width="max-content"
-                >
-                    <Image
-                        className={styles.nftModalImage}
-                        src={imageURI.src}
-                        alt={tokenDescription}
-                        height={100}
-                        width={100}
-                    />
-                    <div className={styles.nftModalInformation}>
-                        <div>
-                            <p>Owned by: </p>
-                            <p>{formattedSellerAddress}</p>
-                        </div>
-                        <div>
-                            <p>Token-Adress: </p>
-                            <div
-                                onMouseEnter={() => handleMouseEnter}
-                                onMouseLeave={() => handleMouseLeave}
-                                onClick={copyNftAddressToClipboard}
-                                style={{
-                                    display: "inline-block",
-                                    position: "relative",
-                                    cursor: isCopying ? "text" : "copy", // different cursor???
-                                }}
-                            >
-                                <p>{formattedNftAddress}</p>
-                            </div>
-                        </div>
-                        <div>
-                            <p>Token-Id: </p>
-                            <p>{tokenId}</p>
-                        </div>
-                        <div>
-                            <p>Name: </p>
-                            <p>{tokenName}</p>
-                        </div>
-                        <div>
-                            <p>Description: </p>
-                            <p>{tokenDescription || "..."}</p>
-                        </div>
-                        <div>
-                            <p>Price: </p>
-                            <p>{ethers.utils.formatUnits(price, "ether")} ETH</p>
-                        </div>
-                    </div>
-                </Modal>
+                <NFTInfoModal
+                    show={showInfoModal}
+                    type="info"
+                    imageURI={imageURI.src}
+                    tokenDescription={tokenDescription}
+                    formattedNftAddress={formattedNftAddress}
+                    formattedSellerAddress={formattedSellerAddress}
+                    tokenId={tokenId}
+                    tokenName={tokenName}
+                    price={ethers.utils.formatUnits(price, "ether")}
+                    handleBuyClick={handleBuyClick}
+                    handleMouseEnter={handleMouseEnter}
+                    handleMouseLeave={handleMouseLeave}
+                    copyNftAddressToClipboard={copyNftAddressToClipboard}
+                    closeModal={() => setShowInfoModal(false)}
+                />
             )}
-
             {/* NFT Selling Modal */}
             {showSellModal && (
-                <Modal
-                    className={styles.nftModalInfo}
-                    onOk={() => handleUpdatePriceButtonClick()}
-                    okText="Update price"
-                    onCancel={() => {
-                        setShowSellModal(false)
-                    }}
-                    cancelText="Close"
-                    closeButton={<Button disabled text=""></Button>}
-                    width="max-content"
-                >
-                    <Image
-                        className={styles.nftModalImage}
-                        src={imageURI.src}
-                        alt={tokenDescription}
-                        height={100}
-                        width={100}
-                    />
-                    <div className={styles.nftModalInformation}>
-                        <div>
-                            <p>Owned by: </p>
-                            <p>{formattedSellerAddress}</p>
-                        </div>
-                        <div>
-                            <p>Token-Adress: </p>
-                            <div
-                                onMouseEnter={() => handleMouseEnter}
-                                onMouseLeave={() => handleMouseLeave}
-                                onClick={copyNftAddressToClipboard}
-                                style={{
-                                    display: "inline-block",
-                                    position: "relative",
-                                    cursor: isCopying ? "text" : "copy", // different cursor???
-                                }}
-                            >
-                                <p>{formattedNftAddress}</p>
-                            </div>
-                        </div>
-                        <div>
-                            <p>Token-Id: </p>
-                            <p>{tokenId}</p>
-                        </div>
-                        <div>
-                            <p>Name: </p>
-                            <p>{tokenName}</p>
-                        </div>
-                        <div>
-                            <p>Description: </p>
-                            <p>{tokenDescription || "..."}</p>
-                        </div>
-                        <div>
-                            <p>Price: </p>
-                            <p>{ethers.utils.formatUnits(price, "ether")} ETH</p>
-                        </div>
-                    </div>
-                </Modal>
+                <NFTInfoModal
+                    show={showSellModal}
+                    type="sell"
+                    imageURI={imageURI.src}
+                    tokenDescription={tokenDescription}
+                    formattedNftAddress={formattedNftAddress}
+                    formattedSellerAddress={formattedSellerAddress}
+                    tokenId={tokenId}
+                    tokenName={tokenName}
+                    price={ethers.utils.formatUnits(price, "ether")}
+                    handleUpdatePriceButtonClick={handleUpdatePriceButtonClick}
+                    handleMouseEnter={handleMouseEnter}
+                    handleMouseLeave={handleMouseLeave}
+                    copyNftAddressToClipboard={copyNftAddressToClipboard}
+                    closeModal={() => setShowSellModal(false)}
+                />
             )}
-
             {/*Price Updating Modal*/}
             {showUpdateListingModal && (
                 <UpdateListingModal
