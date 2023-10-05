@@ -39,7 +39,7 @@ const PopupMenu = () => {
                     <Link className={styles.popupMenuLinks} href="/">
                         <Button text="Home" />
                     </Link>
-                    <Link className={styles.popupMenuLinks} href="/sell-nft">
+                    <Link className={styles.popupMenuLinks} href="/sell-swap-nft">
                         <Button text="Sell / Swap NFT" />
                     </Link>
                     <Link className={styles.popupMenuLinks} href="/my-nft">
