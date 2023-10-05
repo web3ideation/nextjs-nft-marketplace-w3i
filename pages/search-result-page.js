@@ -210,7 +210,7 @@ const SearchResultPage = () => {
                 <h1>Search results for: {searchTermFromQuery} </h1>
                 <div className={styles.nftList}>
                     {filteredNFTs.map((result) => (
-                        <div key={`${result.nftAddress}${result.tokenId}`}>
+                        <div key={`${result.nftAddress}${result.tokenId}${result.listingId}`}>
                             <NFTBox
                                 price={result.price}
                                 nftAddress={result.nftAddress}
