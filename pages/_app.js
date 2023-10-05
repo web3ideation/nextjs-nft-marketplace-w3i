@@ -2,9 +2,9 @@ import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
 import Head from "next/head"
 import { MoralisProvider } from "react-moralis"
 import { NotificationProvider } from "web3uikit"
+import { SearchResultsProvider } from "../components/SearchResultsContext"
 import Header from "../components/Header"
 import "../styles/globals.css"
-import SearchResultPage from "./SearchResultPage"
 import React, { useEffect, useState } from "react"
 import LoadingIcon from "../public/LoadingIcon"
 import styles from "../styles/Home.module.css"
@@ -15,7 +15,6 @@ const client = new ApolloClient({
 })
 
 function MyApp({ Component, pageProps }) {
-    const [searchResults, setSearchResults] = useState([]) // Responsible for the search results
     const [isLoading, setIsLoading] = useState(true) // Responsible for loading
 
     useEffect(() => {
@@ -34,24 +33,21 @@ function MyApp({ Component, pageProps }) {
             <MoralisProvider initializeOnMount={false}>
                 <ApolloProvider client={client}>
                     <NotificationProvider>
-                        <Header />
-                        {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
-                        {isLoading ? (
-                            <div>
-                                <div className={styles.loadingIconWrapper}>
-                                    <LoadingIcon className={styles.loadingIcon} />
+                        <SearchResultsProvider>
+                            <Header />
+                            {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
+                            {isLoading ? (
+                                <div>
+                                    <div className={styles.loadingIconWrapper}>
+                                        <LoadingIcon className={styles.loadingIcon} />
+                                    </div>
                                 </div>
-                            </div>
-                        ) : (
-                            <>
-                                <Component
-                                    {...pageProps}
-                                    searchResults={searchResults}
-                                    setSearchResults={setSearchResults}
-                                />
-                                {searchResults.length > 0 && <SearchResultPage />}
-                            </>
-                        )}
+                            ) : (
+                                <>
+                                    <Component {...pageProps} />
+                                </>
+                            )}
+                        </SearchResultsProvider>
                     </NotificationProvider>
                 </ApolloProvider>
             </MoralisProvider>

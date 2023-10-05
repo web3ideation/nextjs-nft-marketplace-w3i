@@ -4,12 +4,19 @@ import { Button } from "web3uikit"
 import { useRouter } from "next/router"
 import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
+import { useSearchResults } from "../components/SearchResultsContext"
 
-const SearchBar = ({}) => {
+const SearchBar = () => {
     const router = useRouter()
-    const [activeSearchResults, setActiveSearchResults] = useState([])
-    const [inactiveSearchResults, setInactiveSearchResults] = useState([]) // State for the results of the second querys
+
     const [searchTerm, setSearchTerm] = useState("")
+
+    const {
+        activeSearchResults,
+        setActiveSearchResults,
+        inactiveSearchResults,
+        setInactiveSearchResults,
+    } = useSearchResults()
 
     const {
         loading: activeLoading,
@@ -36,7 +43,7 @@ const SearchBar = ({}) => {
                 return
             }
             if (!activeLoading && !activeError && activeData && activeData.items) {
-                const activeSearchResults = activeData.items.filter((item) => {
+                const filteredActiveResults = activeData.items.filter((item) => {
                     const concatenatedFields = [
                         item.listingId,
                         item.nftAddress,
@@ -50,14 +57,14 @@ const SearchBar = ({}) => {
                 })
                 console.log("Search term:", searchTerm, "Results:", activeSearchResults)
 
-                setActiveSearchResults(activeSearchResults)
+                setActiveSearchResults(filteredActiveResults)
             } else {
                 console.log("No results found.")
             }
 
             // Process the results of the second query for inactive elements
             if (!inactiveLoading && !inactiveError && inactiveData && inactiveData.items) {
-                const inactiveSearchResults = inactiveData.items.filter((item) => {
+                const filteredInactiveResults = inactiveData.items.filter((item) => {
                     const concatenatedFields = [
                         item.listingId,
                         item.nftAddress,
@@ -71,26 +78,20 @@ const SearchBar = ({}) => {
                 })
                 console.log("Inactive Search term:", searchTerm, "Results:", inactiveSearchResults)
 
-                setInactiveSearchResults(inactiveSearchResults)
+                setInactiveSearchResults(filteredInactiveResults)
             } else {
                 console.log("No inactive results found.")
             }
 
             await refetchInactiveItems()
-            await navigateToSearchResultPage()
         } catch (error) {
             console.error("Error fetching data:", error.message)
             console.error("Error fetching data:", error)
         }
-    }
-
-    const navigateToSearchResultPage = async () => {
         router.push({
-            pathname: "/SearchResultPage",
+            pathname: "/search-result-page",
             query: {
                 search: searchTerm,
-                activeSearchResults: JSON.stringify(activeSearchResults),
-                inactiveSearchResults: JSON.stringify(inactiveSearchResults), // Add the results of the second query
             },
         })
     }
@@ -99,14 +100,12 @@ const SearchBar = ({}) => {
         if (event.key === "Enter") {
             const termToSearch = searchTerm || ""
             handleSearch(termToSearch)
-            navigateToSearchResultPage(searchTerm)
         }
     }
 
     const handleOnClick = () => {
         const termToSearch = searchTerm || ""
         handleSearch(termToSearch)
-        navigateToSearchResultPage(searchTerm)
     }
 
     return (
