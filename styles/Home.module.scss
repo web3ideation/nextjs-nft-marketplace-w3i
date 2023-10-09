@@ -1738,6 +1738,11 @@ $background-color: rgb(255, 249, 226);
 }
 .nftCard {
     box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
+    border-radius: 5px;
+    width: 300px;
+    height: 300px;
+    cursor: pointer;
+
     footer {
         h2 {
             font-family: $font-secondary;
@@ -1750,7 +1755,7 @@ $background-color: rgb(255, 249, 226);
     }
 
     &:hover {
-        background-color: none;
+        box-shadow: 0 0 5px 5px rgb(0 0 0/0.4), 0 1px 2px -1px rgb(0 0 0/0.4);
     }
 }
 .nftImage {
@@ -1804,13 +1809,12 @@ $background-color: rgb(255, 249, 226);
         }
     }
 }
-.nftScroll {
+.showMoreButton {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    width: 30%;
-
+    width: 100%;
     button {
         display: flex;
         justify-content: center;
@@ -1819,16 +1823,10 @@ $background-color: rgb(255, 249, 226);
         font-weight: 500;
         color: $font-black;
         border: none;
-
+        padding: 0 18px;
         &:hover {
             color: $font-hover-blue;
         }
-    }
-    .arrows {
-        font-size: 35px;
-    }
-    .showMoreButton button {
-        padding: 0 18px;
     }
 }
 // Modals

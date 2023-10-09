@@ -98,15 +98,14 @@ function NFTListed({ chainId }) {
                         })
                     )}
                 </div>
-                <div className={styles.nftScroll}>
-                    <div className={styles.showMoreButton}>
-                        <Button
-                            text="Show More"
-                            onClick={() => {
-                                window.location.href = "/sell-nft"
-                            }}
-                        />
-                    </div>
+
+                <div className={styles.showMoreButton}>
+                    <Button
+                        text="Show More"
+                        onClick={() => {
+                            window.location.href = "/sell-nft"
+                        }}
+                    />
                 </div>
             </div>
         </div>

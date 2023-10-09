@@ -207,18 +207,7 @@ export default function NFTBox({
     return (
         <div className={styles.nftCardWrapper}>
             {imageURI ? (
-                <Card
-                    className={styles.nftCard}
-                    style={{
-                        backgroundColor: "white",
-                        transition: "background-color 0.5s",
-                        borderRadius: "5px",
-                        padding: "0",
-                        width: "300px",
-                        height: "300px",
-                    }}
-                    onClick={handleCardClick}
-                >
+                <div className={styles.nftCard} onClick={handleCardClick}>
                     <div>
                         {imageURI ? (
                             <Image
@@ -275,7 +264,7 @@ export default function NFTBox({
                             </div>
                         </div>
                     </div>
-                </Card>
+                </div>
             ) : (
                 <div className={styles.nftLoadingIconWrapper}>
                     <div className={styles.nftLoadingIcon}>
