@@ -1771,10 +1771,14 @@ $background-color: rgb(255, 249, 226);
     font-weight: 500;
     color: $font-black;
     padding: 0 5px 5px 5px;
-
-    .nftOwner {
-        width: 192px;
+    .nftOwnerAndId {
+        display: flex;
+        justify-content: space-between;
+        .nftOwner {
+            width: 192px;
+        }
     }
+
     .nftListedPrice {
         display: flex;
         justify-content: space-between;

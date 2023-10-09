@@ -247,8 +247,11 @@ export default function NFTBox({
                             </div>
                         )}
                         <div className={styles.nftTextArea}>
-                            <div className={styles.nftOwner}>
-                                Owned by {formattedSellerAddress}
+                            <div className={styles.nftOwnerAndId}>
+                                <div className={styles.nftOwner}>
+                                    Owned by {formattedSellerAddress}
+                                </div>
+                                <div>#{tokenId}</div>
                             </div>
                             <div className={styles.nftListedPrice}>
                                 <div className={styles.nftPrice}>
