@@ -1964,19 +1964,10 @@ $background-color: rgb(255, 249, 226);
         box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
         z-index: 100;
 
-        p {
+        h4 {
             font-family: $font-primary;
             font-size: $font-size-small;
             font-weight: 500;
-            border-bottom: solid 1px $font-black;
-        }
-
-        button {
-            font-family: $font-primary;
-            font-size: $font-size-small;
-            color: $font-black;
-            font-weight: 500;
-            border: none;
             padding: 18px 40px;
             &:hover {
                 color: $font-hover-blue;
@@ -1989,6 +1980,7 @@ $background-color: rgb(255, 249, 226);
     flex-direction: row;
     justify-content: flex-start;
     flex-wrap: wrap;
+
     .searchSideFiltersItemsWrapper {
         background-color: $secondary-color;
         position: absolute;
@@ -2001,14 +1993,15 @@ $background-color: rgb(255, 249, 226);
         border-radius: 0 5px 5px 0;
         z-index: 10;
         box-shadow: inset 5px 0px 5px grey;
+
         button {
             border: none;
             font-family: $font-primary;
             color: $font-white;
             font-weight: 400;
+            padding: 18px 40px;
 
             &:hover {
-                background-color: transparent;
                 color: $font-hover-grey;
             }
         }
