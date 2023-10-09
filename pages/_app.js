@@ -35,7 +35,6 @@ function MyApp({ Component, pageProps }) {
                     <NotificationProvider>
                         <SearchResultsProvider>
                             <Header />
-                            {/* Zeige das Ladezeitsymbol, bis isLoading auf false gesetzt wird */}
                             {isLoading ? (
                                 <div>
                                     <div className={styles.mainLoadingIconWrapper}>
