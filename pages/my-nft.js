@@ -2,7 +2,7 @@ import { useMoralis } from "react-moralis"
 import { useState, useEffect } from "react"
 import NFTBox from "../components/NFTBox"
 import networkMapping from "../constants/networkMapping.json"
-import { GET_ACTIVE_ITEMS } from "../constants/subgraphQueries"
+import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
 import styles from "../styles/Home.module.css"
 import { ConnectButton } from "web3uikit"
@@ -12,29 +12,56 @@ export default function Home() {
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
 
-    const { loading, data, error } = useQuery(GET_ACTIVE_ITEMS)
+    const {
+        loading: loadingActive,
+        data: dataActive,
+        error: activeError,
+    } = useQuery(GET_ACTIVE_ITEMS)
+    const {
+        loading: loadingInactive,
+        data: dataInactive,
+        error: inactiveError,
+    } = useQuery(GET_INACTIVE_ITEMS)
+    const [allItems, setAllItems] = useState([])
+
     const [hasOwnNFT, setHasOwnNFT] = useState(false)
 
-    if (loading || !data) {
-        return <div>Loading...</div>
-    }
+    // Merge and remove duplicates
+    useEffect(() => {
+        if (!loadingActive && dataActive && !loadingInactive && dataInactive) {
+            const seenKeys = new Set() // Set to keep track of keys
+            const uniqueItems = [...dataActive.items, ...dataInactive.items].reduce(
+                (acc, item) => {
+                    const key = `${item.nftAddress}${item.tokenId}${item.listingId}`
+                    if (!seenKeys.has(key)) {
+                        // Check if the key has not been seen
+                        acc.push(item)
+                        seenKeys.add(key) // Mark the key as seen
+                    }
+                    return acc
+                },
+                []
+            )
 
-    if (error) {
-        return <div>Error loading NFTs</div>
-    }
+            setAllItems(uniqueItems)
+        }
+    }, [loadingActive, dataActive, loadingInactive, dataInactive])
 
     const isOwnedByUser = (seller) => seller === account || seller === undefined
 
-    // Verwenden Sie useEffect, um setHasOwnNFT einmalig oder bei Änderungen auszuführen
     useEffect(() => {
-        // Überprüfen Sie, ob der Benutzer mindestens ein NFT besitzt
-        const hasNFT = data.items.some((nft) => isOwnedByUser(nft.seller))
-
-        // Aktualisieren Sie den Zustand nur, wenn sich der Wert geändert hat
+        const hasNFT = allItems.some((nft) => isOwnedByUser(nft.seller))
         if (hasNFT !== hasOwnNFT) {
             setHasOwnNFT(hasNFT)
         }
-    }, [data, hasOwnNFT]) // Fügen Sie data und hasOwnNFT als Abhängigkeiten hinzu
+    }, [allItems])
+
+    if (loadingActive || !dataActive || loadingInactive || !dataInactive) {
+        return <div>Loading...</div>
+    }
+    if (activeError || inactiveError) {
+        return <div>Error loading NFTs: {activeError?.message || inactiveError?.message}</div>
+    }
 
     return (
         <div className={styles.nftListWrapper}>
@@ -45,7 +72,7 @@ export default function Home() {
                         !hasOwnNFT ? (
                             <div>Go get some NFTs for yourself!!!</div>
                         ) : (
-                            data.items.map((nft) =>
+                            allItems.map((nft) =>
                                 isOwnedByUser(nft.seller) ? (
                                     <NFTBox
                                         price={nft.price}
@@ -53,7 +80,8 @@ export default function Home() {
                                         tokenId={nft.tokenId}
                                         marketplaceAddress={marketplaceAddress}
                                         seller={nft.seller}
-                                        key={`${nft.nftAddress}${nft.tokenId}`}
+                                        isListed={nft.isListed}
+                                        key={`${nft.nftAddress}${nft.tokenId}${nft.listingId}`}
                                     />
                                 ) : null
                             )
@@ -61,7 +89,7 @@ export default function Home() {
                     ) : (
                         <div>
                             <h2>Web3 is currently not enabled - Connect your Wallet here</h2>
-                            <ConnectButton></ConnectButton>
+                            <ConnectButton />
                         </div>
                     )}
                 </div>
