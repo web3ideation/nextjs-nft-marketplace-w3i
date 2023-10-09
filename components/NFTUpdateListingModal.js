@@ -5,7 +5,7 @@ import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import { ethers } from "ethers"
 import styles from "../styles/Home.module.css"
 
-export default function UpdateListingModal({
+export default function NFTUpdateListingModal({
     nftAddress,
     tokenId,
     showUpdateListingModal,

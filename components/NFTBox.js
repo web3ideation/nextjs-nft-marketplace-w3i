@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from "react"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import Image from "next/image"
-import { Card, useNotification } from "web3uikit"
+import { useNotification } from "web3uikit"
 import { ethers } from "ethers"
-import UpdateListingModal from "./UpdateListingModal"
+import NFTUpdateListingModal from "./NFTUpdateListingModal"
 import styles from "../styles/Home.module.css"
 import LoadingIcon from "../public/LoadingIcon"
 import NFTInfoModal from "../components/NFTInfoModal"
@@ -312,7 +312,7 @@ export default function NFTBox({
             )}
             {/*Price Updating Modal*/}
             {showUpdateListingModal && (
-                <UpdateListingModal
+                <NFTUpdateListingModal
                     tokenId={tokenId}
                     marketplaceAddress={marketplaceAddress}
                     nftAddress={nftAddress}
