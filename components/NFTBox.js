@@ -140,13 +140,17 @@ export default function NFTBox({
         setShowSellModal(false) // Close NFT Selling Modal
     }
 
-    const modalListener = () => {
+    const modalListener = useCallback(() => {
         setAnyModalIsOpen(showUpdateListingModal || showInfoModal || showSellModal)
-    }
+    }, [showUpdateListingModal, showInfoModal, showSellModal])
 
-    const preventScroll = (shouldPrevent) => {
-        document.body.style.overflow = shouldPrevent ? "hidden" : "auto"
-    }
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow
+        document.body.style.overflow = anyModalIsOpen ? "hidden" : "auto"
+        return () => {
+            document.body.style.overflow = previousOverflow
+        }
+    }, [anyModalIsOpen])
 
     // Load the image from IPFS and fall back to HTTP if needed
     const loadImage = useCallback(async () => {
@@ -162,16 +166,12 @@ export default function NFTBox({
             setTokenDescription(tokenURIResponse.description)
         } catch (error) {
             console.error("Error loading image:", error)
-            setErrorLoadingImage(true) // Set error state to true
+            setErrorLoadingImage(true)
             setLoadingImage(false) // Set loading state to false in case of error
         } finally {
             setLoadingImage(false) // Set loading state to false after image is loaded
         }
     }, [getRawTokenURI])
-
-    useEffect(() => {
-        loadImage()
-    }, [loadImage])
 
     const openUpdateListingModal = () => {
         setShowUpdateListingModal(true)
@@ -179,12 +179,14 @@ export default function NFTBox({
 
     useEffect(() => {
         modalListener()
-        preventScroll(anyModalIsOpen)
-    }, [anyModalIsOpen])
+    }, [modalListener])
 
     useEffect(() => {
-        loadImage() // Load the image when the component mounts
-    }, [isWeb3Enabled])
+        if (isWeb3Enabled) {
+            loadImage()
+        }
+    }, [isWeb3Enabled, loadImage])
+
     const [isCopying, setIsCopying] = useState(false)
     const handleMouseEnter = () => {
         setIsCopying(true)
@@ -195,10 +197,8 @@ export default function NFTBox({
     }
 
     const copyNftAddressToClipboard = async () => {
-        // Kopieren Sie die NFT-Adresse in die Zwischenablage
         try {
             await navigator.clipboard.writeText(nftAddress)
-            // Benachrichtigung oder Feedback hier hinzufügen
         } catch (error) {
             console.error("Error copying to clipboard:", error)
         }
