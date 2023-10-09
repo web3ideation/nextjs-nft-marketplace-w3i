@@ -42,8 +42,10 @@ export default function Home() {
             <div className={styles.nftList}>
                 <div className="flex flex-wrap pb-4">
                     {isWeb3Enabled && chainId ? (
-                        <>
-                            {data.items.map((nft) =>
+                        !hasOwnNFT ? (
+                            <div>Go get some NFTs for yourself!!!</div>
+                        ) : (
+                            data.items.map((nft) =>
                                 isOwnedByUser(nft.seller) ? (
                                     <NFTBox
                                         price={nft.price}
@@ -54,9 +56,8 @@ export default function Home() {
                                         key={`${nft.nftAddress}${nft.tokenId}`}
                                     />
                                 ) : null
-                            )}
-                            {!hasOwnNFT && <div>Go get some NFTs for yourself!!!</div>}
-                        </>
+                            )
+                        )
                     ) : (
                         <div>
                             <h2>Web3 is currently not enabled - Connect your Wallet here</h2>
