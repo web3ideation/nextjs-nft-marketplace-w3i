@@ -1536,7 +1536,7 @@ $background-color: rgb(255, 249, 226);
 .headerContainer {
     background-color: $background-color;
     position: sticky;
-    z-index: 1000;
+    z-index: 10;
     top: 0;
     width: 100%;
     box-shadow: 0 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -1572,6 +1572,7 @@ $background-color: rgb(255, 249, 226);
     display: flex;
     flex-direction: row;
     align-items: center;
+    background-color: $background-color;
     .searchBarWrapper {
         display: flex;
         flex-direction: row;
@@ -1612,12 +1613,14 @@ $background-color: rgb(255, 249, 226);
     }
     .popupMenuWrapper {
         padding-right: 18px;
+        background-color: $background-color;
         &:hover {
             color: $font-hover-blue;
         }
         .menuButton {
             display: flex;
             flex-direction: row;
+            background-color: $background-color;
 
             button {
                 display: flex;
@@ -1662,25 +1665,18 @@ $background-color: rgb(255, 249, 226);
             cursor: pointer;
         }
         .popupMenuLinksWrapper {
+            transform: translateY(-100%);
             background-color: $secondary-color;
+            opacity: 90%;
+            transition: 0.5s ease-out;
             border-radius: 0 0 5px 5px;
-            height: 0;
             width: 250px;
-            opacity: 0;
             position: absolute;
-            z-index: 10;
-            transition: height 5s linear 0;
+            z-index: -1;
         }
         .popupMenuLinksWrapperOpen {
-            background-color: $secondary-color;
-            border-radius: 0 0 5px 5px;
-            height: fit-content;
-            width: 250px;
-            opacity: 1;
-            position: absolute;
-            z-index: 10;
-            transition: height 5s linear 0;
-            box-shadow: inset 0px 5px 5px grey;
+            transform: translateY(0);
+            box-shadow: inset 0 5px 5px rgb(0 0 0 / 0.1), inset 0 1px 2px -1px rgb(0 0 0 / 0.1);
         }
         .popupMenuLinks {
             display: flex;
@@ -1738,6 +1734,7 @@ $background-color: rgb(255, 249, 226);
 }
 .nftCard {
     box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
+    transition: 0.2s;
     border-radius: 5px;
     width: 300px;
     height: 300px;
@@ -1756,6 +1753,7 @@ $background-color: rgb(255, 249, 226);
 
     &:hover {
         box-shadow: 0 0 5px 5px rgb(0 0 0/0.4), 0 1px 2px -1px rgb(0 0 0/0.4);
+        transition: 0.2s;
     }
 }
 .nftImage {
@@ -1942,21 +1940,29 @@ $background-color: rgb(255, 249, 226);
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    .filterButton {
-        position: absolute;
-        display: flex;
-        top: 120px;
-        padding: 5px;
+
+    .searchSideFiltersOptionWrapper {
         background-color: $background-color;
-        border-radius: 0 5px 5px 0;
-        &:hover {
-            color: $font-hover-blue;
+        width: 128px;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        h4 {
+            font-family: $font-primary;
+            font-size: $font-size-small;
+            font-weight: 500;
+            &:hover {
+                color: $font-hover-blue;
+            }
         }
     }
     .searchSideFiltersWrapper {
+        transform: translateX(-100%);
+        transition: transform 0.5s ease-out;
         background-color: $background-color;
         height: 100%;
-        width: 128px;
         position: absolute;
         display: flex;
         flex-direction: column;
@@ -1964,50 +1970,81 @@ $background-color: rgb(255, 249, 226);
         justify-content: flex-start;
         padding: 70px 0 0 0;
         box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-        z-index: 100;
-
-        h4 {
-            font-family: $font-primary;
-            font-size: $font-size-small;
-            font-weight: 500;
-            padding: 18px 40px;
-            &:hover {
-                color: $font-hover-blue;
-            }
+    }
+    .searchSideFiltersWrapperOpen {
+        transform: translateX(0);
+    }
+    .filterText {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .filterOpenButton {
+        transition: 0s;
+        position: absolute;
+        left: 128px;
+        background-color: $background-color;
+        border-radius: 0 5px 5px 0;
+        &:hover {
+            color: $font-hover-blue;
         }
     }
+    .filterOpenButtonOpen {
+        color: $font-hover-blue;
+    }
+    .filterButton {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+.backgroundPlaceholder {
+    height: 100%;
+    width: 100%;
+    background-color: $background-color;
+    z-index: 1;
 }
 .searchSideFilters {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     flex-wrap: wrap;
+    background-color: $background-color;
+}
+.searchSideFiltersItemsWrapper {
+    transform: translateX(-100%);
+    transition: transform 0.5s ease-out;
+    opacity: 90%;
+    background-color: $secondary-color;
+    position: absolute;
+    left: 128px;
+    z-index: -2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 200px;
+    padding: 0 30px;
+    border-radius: 0 5px 5px 0;
+    box-shadow: inset 5px 0px 5px grey;
 
-    .searchSideFiltersItemsWrapper {
-        background-color: $secondary-color;
-        position: absolute;
-        left: 128px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        width: 250px;
-        border-radius: 0 5px 5px 0;
-        z-index: 10;
-        box-shadow: inset 5px 0px 5px grey;
+    button {
+        border: none;
+        font-family: $font-primary;
+        color: $font-white;
+        font-weight: 400;
+        padding: 18px 0;
+        width: 100%;
 
-        button {
-            border: none;
-            font-family: $font-primary;
-            color: $font-white;
-            font-weight: 400;
-            padding: 18px 40px;
-
-            &:hover {
-                color: $font-hover-grey;
-            }
+        &:hover {
+            color: $font-hover-grey;
         }
     }
+}
+.searchSideFiltersItemsWrapperOpen {
+    transform: translateX(0);
 }
 .searchResultsWrapper {
     width: 100%;

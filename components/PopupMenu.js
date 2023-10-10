@@ -30,23 +30,21 @@ const PopupMenu = () => {
                     <span className={styles.menuIcon}>+</span>
                 )}
             </div>
-            {isOpen && (
-                <div
-                    className={`${styles.popupMenuLinksWrapper} ${
-                        isOpen ? styles.popupMenuLinksWrapperOpen : ""
-                    }`}
-                >
-                    <Link className={styles.popupMenuLinks} href="/">
-                        <Button text="Home" />
-                    </Link>
-                    <Link className={styles.popupMenuLinks} href="/sell-swap-nft">
-                        <Button text="Sell / Swap NFT" />
-                    </Link>
-                    <Link className={styles.popupMenuLinks} href="/my-nft">
-                        <Button text="My NFT" />{" "}
-                    </Link>
-                </div>
-            )}
+            <div
+                className={`${styles.popupMenuLinksWrapper} ${
+                    isOpen ? styles.popupMenuLinksWrapperOpen : ""
+                }`}
+            >
+                <Link className={styles.popupMenuLinks} href="/">
+                    <Button text="Home" />
+                </Link>
+                <Link className={styles.popupMenuLinks} href="/sell-swap-nft">
+                    <Button text="Sell / Swap NFT" />
+                </Link>
+                <Link className={styles.popupMenuLinks} href="/my-nft">
+                    <Button text="My NFT" />
+                </Link>
+            </div>
         </div>
     )
 }

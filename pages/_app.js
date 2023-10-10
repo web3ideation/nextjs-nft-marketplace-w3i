@@ -28,7 +28,11 @@ function MyApp({ Component, pageProps }) {
             <Head>
                 <title>NFT Marketplace</title>
                 <meta name="description" content="NFT Marketplace" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta name="author" content="Web3Ideation" />
+                <meta name="copyright" content="Web3Ideation" />
                 <link rel="icon" href="/media/only-lightbulb-favicone.ico" />
+                <link rel="canonical" href="https://w3i-marketplace.com" />
             </Head>
             <MoralisProvider initializeOnMount={false}>
                 <ApolloProvider client={client}>

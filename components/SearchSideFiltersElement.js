@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react"
 import styles from "../styles/Home.module.css"
-
+import { CheckCircle } from "@web3uikit/icons"
+import { CrossCircle } from "@web3uikit/icons"
 const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) => {
     const menuRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
@@ -13,6 +14,17 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
         setIsOpen(false)
     }
 
+    const handleButtonClick = (value) => {
+        onOptionChange(value)
+    }
+
+    const renderIcon = (optionValue) => {
+        if (selected === optionValue || (selected === "default" && optionValue === "default")) {
+            return <CheckCircle fontSize="30px" />
+        }
+        return <CrossCircle fontSize="30px" />
+    }
+
     return (
         <div
             className={styles.searchSideFilters}
@@ -20,22 +32,26 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <h4>{label}</h4>
-            {isOpen && (
-                <div>
-                    <div
-                        className={styles.searchSideFiltersItemsWrapper}
-                        value={selected}
-                        onClick={(e) => onOptionChange(e.target.value)}
+            <div className={styles.searchSideFiltersOptionWrapper}>
+                <h4>{label}</h4>
+            </div>
+            <div
+                className={`${styles.searchSideFiltersItemsWrapper} ${
+                    isOpen ? styles.searchSideFiltersItemsWrapperOpen : ""
+                }`}
+            >
+                {options.map((option, index) => (
+                    <button
+                        className={styles.filterButton}
+                        key={index}
+                        value={option.value}
+                        onClick={() => handleButtonClick(option.value)}
                     >
-                        {options.map((option, index) => (
-                            <button key={index} value={option.value}>
-                                {option.label}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            )}
+                        {option.label}
+                        {renderIcon(option.value)}
+                    </button>
+                ))}
+            </div>
         </div>
     )
 }

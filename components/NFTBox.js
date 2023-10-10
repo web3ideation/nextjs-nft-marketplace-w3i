@@ -52,34 +52,27 @@ export default function NFTBox({
     const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(seller || "", 15)
     const formattedNftAddress = truncateStr(nftAddress || "", 15)
 
-    function useRawTokenURI(nftAddress, tokenId) {
+    const getRawTokenURI = useCallback(async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
+        try {
+            const functionSignature = ethers.utils.id("tokenURI(uint256)").slice(0, 10)
+            const tokenIdHex = ethers.utils
+                .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
+                .slice(2)
+            const data = functionSignature + tokenIdHex
 
-        const getRawTokenURI = async () => {
-            try {
-                const functionSignature = ethers.utils.id("tokenURI(uint256)").slice(0, 10)
-                const tokenIdHex = ethers.utils
-                    .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
-                    .slice(2)
-                const data = functionSignature + tokenIdHex
-
-                const result = await provider.call({
-                    to: nftAddress,
-                    data: data,
-                })
-                const decodedData = ethers.utils.defaultAbiCoder.decode(["string"], result)
-                const tokenUri = decodedData[0]
-                return tokenUri
-            } catch (error) {
-                console.error("Error fetching raw tokenURI:", error)
-                throw error
-            }
+            const result = await provider.call({
+                to: nftAddress,
+                data: data,
+            })
+            const decodedData = ethers.utils.defaultAbiCoder.decode(["string"], result)
+            const tokenUri = decodedData[0]
+            return tokenUri
+        } catch (error) {
+            console.error("Error fetching raw tokenURI:", error)
+            throw error
         }
-
-        return getRawTokenURI
-    }
-
-    const getRawTokenURI = useRawTokenURI(nftAddress, tokenId)
+    }, [nftAddress, tokenId])
 
     const { runContractFunction: buyItem } = useWeb3Contract({
         abi: nftMarketplaceAbi,
@@ -154,11 +147,11 @@ export default function NFTBox({
 
     // Load the image from IPFS and fall back to HTTP if needed
     const loadImage = useCallback(async () => {
-        setLoadingImage(true) // Set loading state to true
+        setLoadingImage(true)
         try {
             const tokenURI = await getRawTokenURI()
             const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-            const tokenURIResponse = await (await fetch(requestURL)).json()
+            const tokenURIResponse = await fetch(requestURL).then((res) => res.json())
             const imageURI = tokenURIResponse.image
             const imageURIURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
             setImageURI({ src: imageURIURL, width: 100 })
@@ -167,9 +160,8 @@ export default function NFTBox({
         } catch (error) {
             console.error("Error loading image:", error)
             setErrorLoadingImage(true)
-            setLoadingImage(false) // Set loading state to false in case of error
         } finally {
-            setLoadingImage(false) // Set loading state to false after image is loaded
+            setLoadingImage(false)
         }
     }, [getRawTokenURI])
 
@@ -202,67 +194,65 @@ export default function NFTBox({
         }
     }
 
+    const renderNFTCard = () => (
+        <div className={styles.nftCard} onClick={handleCardClick}>
+            {imageURI ? (
+                <Image
+                    className={styles.nftImage}
+                    src={imageURI.src}
+                    height={100}
+                    width={100}
+                    loading="eager"
+                    alt={tokenDescription}
+                />
+            ) : (
+                <div>
+                    {loadingImage ? (
+                        <div>Loading Image... </div>
+                    ) : errorLoadingImage ? (
+                        <div>Error loading image</div>
+                    ) : (
+                        <Image
+                            className={styles.nftImage}
+                            src={imageURI.src}
+                            height={100}
+                            width={100}
+                            alt={tokenDescription}
+                        />
+                    )}
+                </div>
+            )}
+            <div className={styles.nftTextArea}>
+                <div className={styles.nftOwnerAndId}>
+                    <div className={styles.nftOwner}>Owned by {formattedSellerAddress}</div>
+                    <div>#{tokenId}</div>
+                </div>
+                <div className={styles.nftListedPrice}>
+                    <div className={styles.nftPrice}>
+                        {ethers.utils.formatUnits(price, "ether")} ETH
+                    </div>
+                    <div>
+                        {isListed ? (
+                            <div className={styles.nftListedStatus}>Listed</div>
+                        ) : (
+                            <div className={styles.nftNotListedStatus}>Not Listed</div>
+                        )}
+                    </div>
+                </div>
+                <div className={styles.nftCardInformation}>
+                    <div className={styles.nftTitle}>
+                        <h2>{tokenName}</h2>
+                    </div>
+                    <div className={styles.nftDescription}>{tokenDescription || "..."}</div>
+                </div>
+            </div>
+        </div>
+    )
+
     return (
         <div className={styles.nftCardWrapper}>
             {imageURI ? (
-                <div className={styles.nftCard} onClick={handleCardClick}>
-                    <div>
-                        {imageURI ? (
-                            <Image
-                                className={styles.nftImage}
-                                src={imageURI.src}
-                                height={100}
-                                width={100}
-                                loading="eager"
-                                alt={tokenDescription}
-                            />
-                        ) : (
-                            <div>
-                                {loadingImage ? (
-                                    <div>Loading Image... </div>
-                                ) : errorLoadingImage ? (
-                                    <div>Error loading image</div>
-                                ) : (
-                                    <Image
-                                        className={styles.nftImage}
-                                        src={imageURI.src}
-                                        height={100}
-                                        width={100}
-                                        alt={tokenDescription}
-                                    />
-                                )}
-                            </div>
-                        )}
-                        <div className={styles.nftTextArea}>
-                            <div className={styles.nftOwnerAndId}>
-                                <div className={styles.nftOwner}>
-                                    Owned by {formattedSellerAddress}
-                                </div>
-                                <div>#{tokenId}</div>
-                            </div>
-                            <div className={styles.nftListedPrice}>
-                                <div className={styles.nftPrice}>
-                                    {ethers.utils.formatUnits(price, "ether")} ETH
-                                </div>
-                                <div>
-                                    {isListed ? (
-                                        <div className={styles.nftListedStatus}>Listed</div>
-                                    ) : (
-                                        <div className={styles.nftNotListedStatus}>Not Listed</div>
-                                    )}
-                                </div>
-                            </div>
-                            <div className={styles.nftCardInformation}>
-                                <div className={styles.nftTitle}>
-                                    <h2>{tokenName}</h2>
-                                </div>
-                                <div className={styles.nftDescription}>
-                                    {tokenDescription || "..."}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                renderNFTCard()
             ) : (
                 <div className={styles.nftLoadingIconWrapper}>
                     <div className={styles.nftLoadingIcon}>

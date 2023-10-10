@@ -7,19 +7,44 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     const menuRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
 
-    const [selectedSorting, setSelectedSorting] = useState("default")
-    const [selectedStatus, setSelectedStatus] = useState("default")
-    const [selectedCategory, setSelectedCategory] = useState("default")
-    const [selectedCollection, setSelectedCollection] = useState("default")
+    const [filters, setFilters] = useState({
+        selectedSorting: "default",
+        selectedStatus: "default",
+        selectedCategory: "default",
+        selectedCollection: "default",
+    })
+
+    const OPTIONS_MAP = {
+        Status: [
+            { value: "default", label: "All" },
+            { value: "active", label: "Active" },
+            { value: "inactive", label: "Inactive" },
+        ],
+        Sorting: [
+            { value: "default", label: "By Default" },
+            { value: "highestId", label: "Highest ID" },
+            { value: "lowestId", label: "Lowest ID" },
+            { value: "highestPrice", label: "Highest Price" },
+            { value: "lowestPrice", label: "Lowest Price" },
+        ],
+        Categories: [
+            { value: "wearables", label: "Wearables" },
+            { value: "utillities", label: "Utillities" },
+        ],
+        Collections: [
+            { value: "pug", label: "Pug" },
+            { value: "moon", label: "Moon" },
+        ],
+    }
 
     const filterItems = () => {
         let filteredList = [...initialItems]
 
         // Status filter
-        if (selectedStatus === "active") {
+        if (filters.selectedStatus === "active") {
             console.log("Filtering active items")
             filteredList = filteredList.filter((nft) => nft.isListed)
-        } else if (selectedStatus === "inactive") {
+        } else if (filters.selectedStatus === "inactive") {
             console.log("Filtering inactive items")
             filteredList = filteredList.filter((nft) => !nft.isListed)
         } else {
@@ -27,18 +52,20 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
         }
 
         // Category filter
-        if (selectedCategory !== "default") {
-            filteredList = filteredList.filter((nft) => nft.category === selectedCategory)
+        if (filters.selectedCategory !== "default") {
+            filteredList = filteredList.filter((nft) => nft.category === filters.selectedCategory)
         }
 
         // Collection filter
-        if (selectedCollection !== "default") {
-            filteredList = filteredList.filter((nft) => nft.nftAddress === selectedCollection)
+        if (filters.selectedCollection !== "default") {
+            filteredList = filteredList.filter(
+                (nft) => nft.nftAddress === filters.selectedCollection
+            )
         }
 
         // Sorting logic
         filteredList.sort((a, b) => {
-            switch (selectedSorting) {
+            switch (filters.selectedSorting) {
                 case "lowestId":
                     return a.tokenId - b.tokenId
                 case "highestId":
@@ -57,88 +84,45 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     }
 
     const handleOptionChange = (type, value) => {
-        switch (type) {
-            case "status":
-                setSelectedStatus(value)
-                break
-            case "sorting":
-                setSelectedSorting(value)
-                break
-            case "category":
-                setSelectedCategory(value)
-                break
-            case "collection":
-                setSelectedCollection(value)
-                break
-            default:
-                break
-        }
-        filterItems()
+        setFilters((prevFilters) => ({ ...prevFilters, [type]: value }))
     }
 
-    const handleMouseEnter = () => {
-        setIsOpen(true)
-    }
-
-    const handleMouseLeave = () => {
-        setIsOpen(false)
+    const toggleMenu = () => {
+        setIsOpen((prevIsOpen) => !prevIsOpen)
     }
 
     useEffect(() => {
         filterItems()
-    }, [selectedSorting, selectedStatus, selectedCategory, selectedCollection])
+    }, [filters])
 
     return (
-        <div ref={menuRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <div className={styles.filterButton}>
-                <Chart fontSize="35px" />
-            </div>
-            <div>
-                {isOpen && (
-                    <div className={styles.searchSideFiltersWrapper}>
-                        <SearchSideFiltersElement
-                            label="Status"
-                            options={[
-                                { value: "default", label: "Default" },
-                                { value: "active", label: "Active" },
-                                { value: "inactive", label: "Inactive" },
-                            ]}
-                            selected={selectedStatus}
-                            onOptionChange={(value) => handleOptionChange("status", value)}
-                        />
-                        <SearchSideFiltersElement
-                            label="Sorting"
-                            options={[
-                                { value: "default", label: "Default" },
-                                { value: "highestId", label: "Highest ID" },
-                                { value: "lowestId", label: "Lowest ID" },
-                                { value: "highestPrice", label: "Highest Price" },
-                                { value: "lowestPrice", label: "Lowest Price" },
-                            ]}
-                            selected={selectedSorting}
-                            onOptionChange={(value) => handleOptionChange("sorting", value)}
-                        />
-                        <SearchSideFiltersElement
-                            label="Categories"
-                            options={[
-                                { value: "wearables", label: "Wearables" },
-                                { value: "utillities", label: "Utillities" },
-                            ]}
-                            selected={selectedCategory}
-                            onOptionChange={(value) => handleOptionChange("category", value)}
-                        />
-
-                        <SearchSideFiltersElement
-                            label="Collections"
-                            options={[
-                                { value: "pug", label: "Pug" },
-                                { value: "moon", label: "Moon" },
-                            ]}
-                            selected={selectedCollection}
-                            onOptionChange={(value) => handleOptionChange("collection", value)}
-                        />
+        <div ref={menuRef}>
+            <div
+                className={`${styles.searchSideFiltersWrapper} ${
+                    isOpen ? styles.searchSideFiltersWrapperOpen : ""
+                }`}
+            >
+                <div className={styles.filterText}>
+                    <h3>Filter</h3>
+                    <div
+                        className={`${styles.filterOpenButton} ${
+                            isOpen ? styles.filterOpenButtonOpen : ""
+                        }`}
+                        onClick={toggleMenu}
+                    >
+                        <Chart fontSize="35px" />
                     </div>
-                )}
+                </div>
+                {["Status", "Sorting", "Categories", "Collections"].map((label) => (
+                    <SearchSideFiltersElement
+                        key={label}
+                        label={label}
+                        options={OPTIONS_MAP[label]}
+                        selected={filters[`selected${label}`]}
+                        onOptionChange={(value) => handleOptionChange(`selected${label}`, value)}
+                    />
+                ))}
+                <div className={styles.backgroundPlaceholder}></div>
             </div>
         </div>
     )
