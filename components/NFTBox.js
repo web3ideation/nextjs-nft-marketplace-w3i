@@ -182,10 +182,8 @@ export default function NFTBox({
     }, [modalListener])
 
     useEffect(() => {
-        if (isWeb3Enabled) {
-            loadImage()
-        }
-    }, [isWeb3Enabled, loadImage])
+        loadImage()
+    }, [loadImage])
 
     const [isCopying, setIsCopying] = useState(false)
     const handleMouseEnter = () => {
