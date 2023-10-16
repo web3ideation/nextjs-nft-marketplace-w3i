@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css"
 const NftModal = (props) => {
     const {
         show,
-        type, // 'info' oder 'sell'
+        type, // 'info', 'list' oder 'sell'
         imageURI,
         tokenDescription,
         formattedSellerAddress,
@@ -34,9 +34,6 @@ const NftModal = (props) => {
 
     return (
         <Modal
-            customize={{
-                borderRadius: "5px",
-            }}
             className={styles.nftModalInformation}
             onCancel={closeModal}
             onOk={onOkHandler}
