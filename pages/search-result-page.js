@@ -66,6 +66,7 @@ const SearchResultPage = () => {
                                 tokenId={result.tokenId}
                                 marketplaceAddress={result.marketplaceAddress}
                                 seller={result.seller}
+                                buyer={result.buyer}
                                 isListed={result.isListed}
                             ></NFTBox>
                         </div>
