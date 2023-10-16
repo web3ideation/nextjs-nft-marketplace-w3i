@@ -31,6 +31,7 @@ export default function NFTBox({
     marketplaceAddress,
     seller,
     isListed,
+    buyer,
 }) {
     // State hooks
     const { isWeb3Enabled, account } = useMoralis()
@@ -45,10 +46,15 @@ export default function NFTBox({
     const [showSellModal, setShowSellModal] = useState(false) // Modal for selling NFT
     const [showUpdateListingModal, setShowUpdateListingModal] = useState(false) // Modal for updating Price
     const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
+    const [showPurchaseMessage, setShowPurchaseMessage] = useState(false)
 
     const dispatch = useNotification()
 
-    const isOwnedByUser = seller === account || seller === undefined
+    const isOwnedBySeller = seller === account
+    const isOwnedByBuyer = buyer === account
+    const isOwnedByUser =
+        isOwnedBySeller || (!isOwnedBySeller && isOwnedByBuyer) || seller === undefined
+
     const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(seller || "", 15)
     const formattedNftAddress = truncateStr(nftAddress || "", 15)
 
@@ -94,6 +100,7 @@ export default function NFTBox({
         if (buying) return
 
         setBuying(true)
+        setShowPurchaseMessage(true)
         if (!isWeb3Enabled) {
             dispatch({ type: "error", message: "Please connect your wallet to buy this NFT." })
         } else {
@@ -125,6 +132,7 @@ export default function NFTBox({
             setTransactionError("An error occurred while processing the transaction.")
         } finally {
             setBuying(false) // Reset buying state
+            setShowPurchaseMessage(false)
         }
     }
 
@@ -277,6 +285,7 @@ export default function NFTBox({
                     handleMouseLeave={handleMouseLeave}
                     copyNftAddressToClipboard={copyNftAddressToClipboard}
                     closeModal={() => setShowInfoModal(false)}
+                    showPurchaseMessage={showPurchaseMessage}
                 />
             )}
             {/* NFT Selling Modal */}

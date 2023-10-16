@@ -47,10 +47,15 @@ export default function Home() {
         }
     }, [loadingActive, dataActive, loadingInactive, dataInactive])
 
-    const isOwnedByUser = (seller) => seller === account || seller === undefined
+    const isOwnedByUser = (seller, buyer) => {
+        if (seller === account) return true // Wenn der Verkäufer dem Account entspricht.
+        if (seller !== account && buyer === account) return true // Wenn der Verkäufer nicht dem Account entspricht, aber der Käufer es tut.
+        if (seller === undefined) return true // Wenn der Verkäufer undefiniert ist.
+        return false
+    }
 
     useEffect(() => {
-        const hasNFT = allItems.some((nft) => isOwnedByUser(nft.seller))
+        const hasNFT = allItems.some((nft) => isOwnedByUser(nft.seller, nft.buyer))
         if (hasNFT !== hasOwnNFT) {
             setHasOwnNFT(hasNFT)
         }
@@ -67,32 +72,31 @@ export default function Home() {
         <div className={styles.nftListWrapper}>
             <h1>My NFT</h1>
             <div className={styles.nftList}>
-                <div className="flex flex-wrap pb-4">
-                    {isWeb3Enabled && chainId ? (
-                        !hasOwnNFT ? (
-                            <div>Go get some NFTs for yourself!!!</div>
-                        ) : (
-                            allItems.map((nft) =>
-                                isOwnedByUser(nft.seller) ? (
-                                    <NFTBox
-                                        price={nft.price}
-                                        nftAddress={nft.nftAddress}
-                                        tokenId={nft.tokenId}
-                                        marketplaceAddress={marketplaceAddress}
-                                        seller={nft.seller}
-                                        isListed={nft.isListed}
-                                        key={`${nft.nftAddress}${nft.tokenId}${nft.listingId}`}
-                                    />
-                                ) : null
-                            )
-                        )
+                {isWeb3Enabled && chainId ? (
+                    !hasOwnNFT ? (
+                        <div>Go get some NFTs for yourself!!!</div>
                     ) : (
-                        <div>
-                            <h2>Web3 is currently not enabled - Connect your Wallet here</h2>
-                            <ConnectButton />
-                        </div>
-                    )}
-                </div>
+                        allItems.map((nft) =>
+                            isOwnedByUser(nft.seller, nft.buyer) ? (
+                                <NFTBox
+                                    price={nft.price}
+                                    nftAddress={nft.nftAddress}
+                                    tokenId={nft.tokenId}
+                                    marketplaceAddress={marketplaceAddress}
+                                    seller={nft.seller}
+                                    buyer={nft.buyer}
+                                    isListed={nft.isListed}
+                                    key={`${nft.nftAddress}${nft.tokenId}${nft.listingId}`}
+                                />
+                            ) : null
+                        )
+                    )
+                ) : (
+                    <div>
+                        <h2>Web3 is currently not enabled - Connect your Wallet here</h2>
+                        <ConnectButton />
+                    </div>
+                )}
             </div>
         </div>
     )
