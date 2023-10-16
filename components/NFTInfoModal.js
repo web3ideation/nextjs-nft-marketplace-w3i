@@ -2,24 +2,30 @@ import { Modal, Button } from "web3uikit" // Importiere benötigte Komponenten
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
 
-const NftModal = ({
-    show,
-    type, // 'info' oder 'sell'
-    imageURI,
-    tokenDescription,
-    formattedSellerAddress,
-    formattedNftAddress,
-    tokenId,
-    tokenName,
-    price,
-    handleBuyClick,
-    handleUpdatePriceButtonClick,
-    handleMouseEnter,
-    handleMouseLeave,
-    copyNftAddressToClipboard,
-    isCopying,
-    closeModal,
-}) => {
+const NftModal = (props) => {
+    const {
+        show,
+        type, // 'info' oder 'sell'
+        imageURI,
+        tokenDescription,
+        formattedSellerAddress,
+        formattedNftAddress,
+        tokenId,
+        tokenName,
+        price,
+        handleBuyClick,
+        handleUpdatePriceButtonClick,
+        handleMouseEnter,
+        handleMouseLeave,
+        copyNftAddressToClipboard,
+        isCopying,
+        closeModal,
+        showPurchaseMessage,
+    } = props
+
+    const okText = type === "info" ? "BUY!" : "Update price"
+    const onOkHandler = type === "info" ? handleBuyClick : handleUpdatePriceButtonClick
+
     return (
         <Modal
             customize={{
@@ -27,8 +33,8 @@ const NftModal = ({
             }}
             className={styles.nftModalInformation}
             onCancel={closeModal}
-            onOk={type === "info" ? handleBuyClick : handleUpdatePriceButtonClick}
-            okText={type === "info" ? "BUY!" : "Update price"}
+            onOk={onOkHandler}
+            okText={okText}
             cancelText="Close"
             closeButton={<Button disabled text=""></Button>}
             width="max-content"
@@ -62,11 +68,11 @@ const NftModal = ({
                 </div>
                 <div>
                     <p>Token-Id: </p>
-                    <p>{tokenId}</p>
+                    <strong>{tokenId}</strong>
                 </div>
                 <div>
                     <p>Name: </p>
-                    <p>{tokenName}</p>
+                    <strong>{tokenName}</strong>
                 </div>
                 <div>
                     <p>Description: </p>
@@ -74,9 +80,15 @@ const NftModal = ({
                 </div>
                 <div>
                     <p>Price: </p>
-                    <p>{price} ETH</p>
+                    <strong>{price} ETH</strong>
                 </div>
             </div>
+            {showPurchaseMessage && (
+                <div>
+                    Der Kauf ist im Gange. Bitte überprüfen Sie Ihre Wallet und bestätigen Sie den
+                    Kaufvorgang.
+                </div>
+            )}
         </Modal>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from "react"
+import React, { useEffect, useState, memo, useCallback } from "react"
 import NFTBox from "../components/NFTBox"
 import networkMapping from "../constants/networkMapping.json"
 import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
@@ -16,72 +16,85 @@ function NFTListed({ chainId }) {
     const { loading: loadingActive, data: dataActive } = useQuery(GET_ACTIVE_ITEMS)
     const { loading: loadingInactive, data: dataInactive } = useQuery(GET_INACTIVE_ITEMS)
 
-    const [allItems, setAllItems] = useState([])
-    const [filteredNFTs, setFilteredNFTs] = useState([])
+    console.log(dataActive)
+    console.log(dataInactive)
 
+    const [items, setItems] = useState([])
+    const [filteredItems, setFilteredItems] = useState([])
     const [images, setImages] = useState({})
 
     // Merge and remove duplicates
-    useEffect(() => {
+    const mergeAndFilterItems = useCallback(() => {
         if (!loadingActive && dataActive && !loadingInactive && dataInactive) {
-            const seenKeys = new Set() // Set to keep track of keys
+            const seenKeys = new Set()
             const uniqueItems = [...dataActive.items, ...dataInactive.items].reduce(
                 (acc, item) => {
                     const key = `${item.nftAddress}${item.tokenId}${item.listingId}`
                     if (!seenKeys.has(key)) {
-                        // Check if the key has not been seen
                         acc.push(item)
-                        seenKeys.add(key) // Mark the key as seen
+                        seenKeys.add(key)
                     }
                     return acc
                 },
                 []
             )
 
-            setAllItems(uniqueItems)
+            setItems(uniqueItems)
+            setFilteredItems(uniqueItems)
         }
     }, [loadingActive, dataActive, loadingInactive, dataInactive])
 
-    useEffect(() => {
-        if (allItems.length) {
-            allItems.forEach((nft) => {
-                const { tokenId, imageIpfsUrl } = nft
-                const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`
-                const fallbackImage = `https://your-http-image-url/${tokenId}.png`
+    useEffect(mergeAndFilterItems, [mergeAndFilterItems])
 
-                preloadImage(ipfsImage)
-                    .then(() =>
-                        setImages((prevImages) => ({ ...prevImages, [tokenId]: ipfsImage }))
-                    )
-                    .catch(() =>
-                        setImages((prevImages) => ({ ...prevImages, [tokenId]: fallbackImage }))
-                    )
-            })
-        }
-    }, [chainId, allItems])
+    const preloadImage = useCallback((url) => {
+        return new Promise((resolve, reject) => {
+            const img = new Image()
+            img.onload = resolve
+            img.onerror = reject
+            img.src = url
+        })
+    }, [])
 
     useEffect(() => {
-        setFilteredNFTs(allItems)
-    }, [allItems])
+        items.forEach((nft) => {
+            const { tokenId, imageIpfsUrl } = nft
+            const ipfsImage = `https://ipfs.io/ipfs/${imageIpfsUrl}`
+            const fallbackImage = `https://your-http-image-url/${tokenId}.png`
 
-    const handleFilteredItemsChange = (newFilteredItems) => {
-        setFilteredNFTs(newFilteredItems)
-    }
+            preloadImage(ipfsImage)
+                .then(() => setImages((prevImages) => ({ ...prevImages, [tokenId]: ipfsImage })))
+                .catch(() =>
+                    setImages((prevImages) => ({ ...prevImages, [tokenId]: fallbackImage }))
+                )
+        })
+    }, [chainId, items, preloadImage])
+
+    const handleFilteredItemsChange = useCallback((newFilteredItems) => {
+        setFilteredItems(newFilteredItems)
+    }, [])
 
     return (
-        <div className={styles.searchResultPage}>
+        <div className={styles.nftListingContainer}>
             <SearchSideFilters
-                initialItems={allItems}
+                initialItems={items}
                 onFilteredItemsChange={handleFilteredItemsChange}
             />
             <div className={styles.nftListWrapper}>
                 <h1>Recently Listed</h1>
                 <div id="NFTListed" className={styles.nftList}>
-                    {!allItems || !filteredNFTs ? (
+                    {!items.length || !filteredItems.length ? (
                         <div>Loading...</div>
                     ) : (
-                        filteredNFTs.map((nft) => {
-                            const { price, nftAddress, tokenId, seller, isListed, listingId } = nft
+                        filteredItems.map((nft) => {
+                            const {
+                                price,
+                                nftAddress,
+                                tokenId,
+                                seller,
+                                isListed,
+                                listingId,
+                                buyer,
+                            } = nft
                             const imgSrc = images[tokenId] || ""
                             return (
                                 <NFTBox
@@ -90,6 +103,7 @@ function NFTListed({ chainId }) {
                                     tokenId={tokenId}
                                     marketplaceAddress={marketplaceAddress}
                                     seller={seller}
+                                    buyer={buyer}
                                     isListed={isListed}
                                     key={`${nftAddress}${tokenId}${listingId}`}
                                     imgSrc={imgSrc}
@@ -103,7 +117,7 @@ function NFTListed({ chainId }) {
                     <Button
                         text="Show More"
                         onClick={() => {
-                            window.location.href = "/sell-nft"
+                            window.location.href = "/sell-swap-nft"
                         }}
                     />
                 </div>
@@ -113,12 +127,3 @@ function NFTListed({ chainId }) {
 }
 
 export default NFTListed
-
-const preloadImage = (url) => {
-    return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.onload = resolve
-        img.onerror = reject
-        img.src = url
-    })
-}
