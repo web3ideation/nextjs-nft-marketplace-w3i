@@ -1,53 +1,53 @@
-//Schriftimport
+//Schriftimportfont-black
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
-$font-primary: "Poppins";
-$font-secondary: "Roboto";
-$font-black: rgb(0, 0, 0);
-$font-white: rgb(255, 255, 255);
-$font-hover-blue: rgb(18, 115, 235);
-$font-hover-grey: rgb(204, 204, 204);
+// Variables
+$font-primary: "Poppins", sans-serif;
+$font-secondary: "Roboto", sans-serif;
+$black: rgb(0, 0, 0);
+$white: rgb(255, 255, 255);
+$hover-blue: rgb(18, 115, 235);
+$hover-grey: rgb(204, 204, 204);
+$background-color: rgb(255, 249, 226);
+$secondary-color: rgb(18, 115, 235);
 $font-size-small: 15px;
 $font-size-medium: 35px;
 $font-size-large: 70px;
 $line-heigth-small: 24px;
 
-//Farb-Variablen
-$primary-color: rgb(9, 116, 241);
-$secondary-color: rgb(18, 115, 235);
-$highlight-color: rgb(9, 116, 241);
-$background-color: rgb(255, 249, 226);
-
-.mainLoadingIconWrapper {
+/* Global Styles */
+.flex-center {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100vh;
-    background-color: #ffffff;
-    .mainLoadingIcon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50px;
-        height: 50px;
-    }
 }
+
+.hover-invert:hover {
+    filter: invert(28%) sepia(50%) saturate(4473%) hue-rotate(205deg) brightness(100%)
+        contrast(86%);
+}
+
+/* Loading Icon Styles */
+.mainLoadingIconWrapper,
 .nftLoadingIconWrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
-    .nftLoadingIcon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50px;
-        height: 50px;
-    }
+    background-color: #ffffff;
 }
+
+.mainLoadingIcon,
+.nftLoadingIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+}
+
 // Header
 .headerContainer {
     background-color: $background-color;
@@ -71,12 +71,11 @@ $background-color: rgb(255, 249, 226);
 
     .headerLogo {
         padding: 0 9px 0 18px;
+        &:hover {
+            @extend .hover-invert;
+        }
         img {
             height: 30px;
-        }
-        &:hover {
-            filter: invert(28%) sepia(50%) saturate(4473%) hue-rotate(205deg) brightness(100%)
-                contrast(86%);
         }
     }
 
@@ -109,7 +108,7 @@ $background-color: rgb(255, 249, 226);
         }
 
         button {
-            font-family: "Poppins";
+            font-family: $font-primary;
             font-size: $font-size-small;
             font-weight: 500;
             display: flex;
@@ -117,10 +116,10 @@ $background-color: rgb(255, 249, 226);
             align-items: center;
             outline: none;
             border: none;
-            color: $font-black;
+            color: $black;
             padding: 0 18px;
             &:hover {
-                color: $font-hover-blue;
+                color: $hover-blue;
             }
         }
     }
@@ -131,15 +130,14 @@ $background-color: rgb(255, 249, 226);
             height: 24px;
         }
         &:hover {
-            filter: invert(28%) sepia(50%) saturate(4473%) hue-rotate(205deg) brightness(100%)
-                contrast(86%);
+            @extend .hover-invert;
         }
     }
     .popupMenuWrapper {
         padding-right: 18px;
         background-color: $background-color;
         &:hover {
-            color: $font-hover-blue;
+            color: $hover-blue;
         }
         .menuButton {
             display: flex;
@@ -156,25 +154,13 @@ $background-color: rgb(255, 249, 226);
                 font-size: $font-size-small;
                 line-height: $line-heigth-small;
                 font-weight: 500;
-                color: $font-black;
+                color: $black;
                 &:hover {
-                    color: $font-hover-blue;
+                    color: $hover-blue;
                 }
             }
         }
-        .menuIcon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 10px;
-            font-weight: 300;
-            font-family: $font-primary;
-            font-size: $font-size-small;
-            line-height: $line-heigth-small;
-            font-weight: 500;
-            color: $font-black;
-            cursor: pointer;
-        }
+        .menuIcon,
         .menuIconMinus {
             display: flex;
             justify-content: center;
@@ -185,9 +171,13 @@ $background-color: rgb(255, 249, 226);
             font-size: $font-size-small;
             line-height: $line-heigth-small;
             font-weight: 500;
-            color: $font-hover-blue;
+            color: $black;
             cursor: pointer;
         }
+        .menuIconMinus {
+            color: $hover-blue;
+        }
+
         .popupMenuLinksWrapper {
             transform: translateY(-100%);
             background-color: $secondary-color;
@@ -210,7 +200,7 @@ $background-color: rgb(255, 249, 226);
             text-decoration: none;
 
             button {
-                color: $font-white;
+                color: $white;
                 font-family: $font-primary;
                 font-size: $font-size-small;
                 line-height: $line-heigth-small;
@@ -218,7 +208,7 @@ $background-color: rgb(255, 249, 226);
                 border: none;
 
                 &:hover {
-                    color: $font-hover-grey;
+                    color: $hover-grey;
                     background-color: transparent;
                 }
             }
@@ -267,11 +257,11 @@ $background-color: rgb(255, 249, 226);
     footer {
         h2 {
             font-family: $font-secondary;
-            color: $font-black;
+            color: $black;
         }
         span {
             font-family: $font-secondary;
-            color: $font-black;
+            color: $black;
         }
     }
 
@@ -296,35 +286,26 @@ $background-color: rgb(255, 249, 226);
     font-family: $font-secondary;
     font-size: $font-size-small;
     font-weight: 500;
-    color: $font-black;
+    color: $black;
     padding: 0 5px 5px 5px;
-    .nftOwnerAndId {
+
+    .nftOwnerAndId,
+    .nftListedPrice,
+    .nftCardInformation {
         display: flex;
         justify-content: space-between;
         .nftOwner {
             width: 192px;
         }
-    }
-
-    .nftListedPrice {
-        display: flex;
-        justify-content: space-between;
-        .nftPrice {
+        .nftPrice,
+        .nftTitle {
             font-weight: 900;
         }
         .nftListedStatus {
             color: forestgreen;
         }
-
         .nftNotListedStatus {
             color: firebrick;
-        }
-    }
-    .nftCardInformation {
-        display: flex;
-        justify-content: space-between;
-        .nftTitle {
-            font-weight: 900;
         }
         .nftDescription {
             font-weight: 300;
@@ -343,11 +324,11 @@ $background-color: rgb(255, 249, 226);
         font-family: $font-secondary;
         font-size: $font-size-small;
         font-weight: 500;
-        color: $font-black;
+        color: $black;
         border: none;
         padding: 0 18px;
         &:hover {
-            color: $font-hover-blue;
+            color: $hover-blue;
         }
     }
 }
@@ -360,7 +341,7 @@ $background-color: rgb(255, 249, 226);
         width: 300px;
         height: 300px;
         display: block;
-        background-color: #ffffff;
+        background-color: $white;
         align-items: center;
     }
     .nftModalText {
@@ -370,7 +351,7 @@ $background-color: rgb(255, 249, 226);
         font-family: $font-primary;
         font-size: $font-size-small;
         font-weight: 500;
-        color: $font-black;
+        color: $black;
         div {
             display: flex;
             flex-direction: row;
@@ -389,12 +370,12 @@ $background-color: rgb(255, 249, 226);
             border-radius: 5px;
             background: $secondary-color;
             span {
-                color: $font-white;
+                color: $white;
                 font-weight: 400;
             }
             &:hover {
-                background: $secondary-color;
-                color: $font-hover-grey;
+                background: $hover-blue;
+                color: $hover-grey;
             }
         }
     }
@@ -418,16 +399,16 @@ $background-color: rgb(255, 249, 226);
         justify-content: center;
         gap: 18px;
         button {
-            background-color: $font-hover-blue;
+            background-color: $hover-blue;
             width: 128px;
-            color: $font-white;
+            color: $white;
             border-radius: 5px;
             font-family: $font-primary;
             font-size: $font-size-small;
             font-weight: 400;
             padding: 0 18px;
             &:hover {
-                color: $font-hover-grey;
+                color: $hover-grey;
             }
         }
     }
@@ -473,12 +454,14 @@ $background-color: rgb(255, 249, 226);
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
+
         h4 {
             font-family: $font-primary;
             font-size: $font-size-small;
             font-weight: 500;
+
             &:hover {
-                color: $font-hover-blue;
+                color: $hover-blue;
             }
         }
     }
@@ -511,11 +494,11 @@ $background-color: rgb(255, 249, 226);
         background-color: $background-color;
         border-radius: 0 5px 5px 0;
         &:hover {
-            color: $font-hover-blue;
+            color: $hover-blue;
         }
     }
     .filterOpenButtonOpen {
-        color: $font-hover-blue;
+        color: $hover-blue;
     }
     .filterButton {
         display: flex;
@@ -538,17 +521,17 @@ $background-color: rgb(255, 249, 226);
     background-color: $background-color;
 }
 .searchSideFiltersItemsWrapper {
-    transform: translateX(-100%);
-    transition: transform 0.5s ease-out;
-    opacity: 90%;
-    background-color: $secondary-color;
     position: absolute;
-    left: 128px;
-    z-index: -2;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    left: 128px;
+    z-index: -2;
+    transform: translateX(-100%);
+    transition: transform 0.5s ease-out;
+    opacity: 90%;
+    background-color: $secondary-color;
     width: 200px;
     padding: 0 30px;
     border-radius: 0 5px 5px 0;
@@ -557,13 +540,13 @@ $background-color: rgb(255, 249, 226);
     button {
         border: none;
         font-family: $font-primary;
-        color: $font-white;
+        color: $white;
         font-weight: 400;
         padding: 18px 0;
         width: 100%;
 
         &:hover {
-            color: $font-hover-grey;
+            color: $hover-grey;
         }
     }
 }
@@ -571,26 +554,23 @@ $background-color: rgb(255, 249, 226);
     transform: translateX(0);
 }
 .searchResultsWrapper {
-    width: 100%;
-    margin-top: 40px;
-    padding: 16px 150px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    margin-top: 40px;
+    padding: 16px 150px;
 
-    h1 {
+    h1,
+    h3 {
         font-family: $font-primary;
         font-size: $font-size-medium;
-        font-weight: bolder;
+        font-weight: 700;
         line-height: 35px;
-        text-align: center;
         padding: 0 18px;
     }
     h3 {
         font-size: $font-size-small;
-        font-weight: 700;
-        line-height: 35px;
-        padding: 0 18px;
     }
 }
