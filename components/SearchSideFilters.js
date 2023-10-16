@@ -17,8 +17,8 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     const OPTIONS_MAP = {
         Status: [
             { value: "default", label: "All" },
-            { value: "active", label: "Active" },
-            { value: "inactive", label: "Inactive" },
+            { value: "listed", label: "Listed" },
+            { value: "not listed", label: "Not listed" },
         ],
         Sorting: [
             { value: "default", label: "By Default" },
@@ -41,11 +41,11 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
         let filteredList = [...initialItems]
 
         // Status filter
-        if (filters.selectedStatus === "active") {
-            console.log("Filtering active items")
+        if (filters.selectedStatus === "listed") {
+            console.log("Filtering listed items")
             filteredList = filteredList.filter((nft) => nft.isListed)
-        } else if (filters.selectedStatus === "inactive") {
-            console.log("Filtering inactive items")
+        } else if (filters.selectedStatus === "not listed") {
+            console.log("Filtering not listed items")
             filteredList = filteredList.filter((nft) => !nft.isListed)
         } else {
             console.log("No status filter applied")
