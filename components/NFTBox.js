@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
+import { useRouter } from "next/router"
 import Image from "next/image"
 import { useNotification } from "web3uikit"
 import { ethers } from "ethers"
@@ -35,6 +36,7 @@ export default function NFTBox({
 }) {
     // State hooks
     const { isWeb3Enabled, account } = useMoralis()
+    const router = useRouter()
     const [imageURI, setImageURI] = useState("")
     const [tokenName, setTokenName] = useState("")
     const [tokenDescription, setTokenDescription] = useState("")
@@ -44,6 +46,7 @@ export default function NFTBox({
     const [buying, setBuying] = useState(false) // Added buying state
     const [showInfoModal, setShowInfoModal] = useState(false) // Modal for info NFT
     const [showSellModal, setShowSellModal] = useState(false) // Modal for selling NFT
+    const [showListModal, setShowListModal] = useState(false) // Modal for List NFT
     const [showUpdateListingModal, setShowUpdateListingModal] = useState(false) // Modal for updating Price
     const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
     const [showPurchaseMessage, setShowPurchaseMessage] = useState(false)
@@ -93,7 +96,15 @@ export default function NFTBox({
 
     // Handlers
     const handleCardClick = () => {
-        isOwnedByUser ? setShowSellModal(true) : setShowInfoModal(true)
+        if (isOwnedByUser) {
+            if (isListed) {
+                setShowSellModal(true)
+            } else {
+                setShowListModal(true)
+            }
+        } else {
+            setShowInfoModal(true)
+        }
     }
 
     const handleBuyClick = async () => {
@@ -141,9 +152,15 @@ export default function NFTBox({
         setShowSellModal(false) // Close NFT Selling Modal
     }
 
+    const handleListClick = () => {
+        router.push("/sell-swap-nft")
+    }
+
     const modalListener = useCallback(() => {
-        setAnyModalIsOpen(showUpdateListingModal || showInfoModal || showSellModal)
-    }, [showUpdateListingModal, showInfoModal, showSellModal])
+        setAnyModalIsOpen(
+            showUpdateListingModal || showInfoModal || showSellModal || showListModal
+        )
+    }, [showUpdateListingModal, showInfoModal, showSellModal, showListModal])
 
     useEffect(() => {
         const previousOverflow = document.body.style.overflow
@@ -305,6 +322,25 @@ export default function NFTBox({
                     handleMouseLeave={handleMouseLeave}
                     copyNftAddressToClipboard={copyNftAddressToClipboard}
                     closeModal={() => setShowSellModal(false)}
+                />
+            )}
+            {/* NFT Listing Modal */}
+            {showListModal && (
+                <NFTInfoModal
+                    show={showListModal}
+                    type="list"
+                    imageURI={imageURI.src}
+                    tokenDescription={tokenDescription}
+                    formattedNftAddress={formattedNftAddress}
+                    formattedSellerAddress={formattedSellerAddress}
+                    tokenId={tokenId}
+                    tokenName={tokenName}
+                    price={ethers.utils.formatUnits(price, "ether")}
+                    handleListClick={handleListClick}
+                    handleMouseEnter={handleMouseEnter}
+                    handleMouseLeave={handleMouseLeave}
+                    copyNftAddressToClipboard={copyNftAddressToClipboard}
+                    closeModal={() => setShowListModal(false)}
                 />
             )}
             {/*Price Updating Modal*/}

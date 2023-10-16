@@ -14,6 +14,7 @@ const NftModal = (props) => {
         tokenName,
         price,
         handleBuyClick,
+        handleListClick,
         handleUpdatePriceButtonClick,
         handleMouseEnter,
         handleMouseLeave,
@@ -23,8 +24,13 @@ const NftModal = (props) => {
         showPurchaseMessage,
     } = props
 
-    const okText = type === "info" ? "BUY!" : "Update price"
-    const onOkHandler = type === "info" ? handleBuyClick : handleUpdatePriceButtonClick
+    const okText = type === "info" ? "BUY!" : type === "list" ? "List" : "Update price"
+    const onOkHandler =
+        type === "info"
+            ? handleBuyClick
+            : type === "list"
+            ? handleListClick
+            : handleUpdatePriceButtonClick
 
     return (
         <Modal
