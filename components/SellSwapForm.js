@@ -1,6 +1,7 @@
 import { Form } from "web3uikit"
+import React from "react"
 
-function SellSwapForm({ title, id, onSubmit, buttonText, extraFields = [] }) {
+function SellSwapForm({ title, id, onSubmit, extraFields = [] }) {
     const commonFields = [
         {
             name: "NFT Address",
@@ -11,8 +12,10 @@ function SellSwapForm({ title, id, onSubmit, buttonText, extraFields = [] }) {
                 regExp: /^0x[0-9a-fA-F]{40}$/,
                 regExpInvalidMessage:
                     "Please enter a valid Ethereum address in the format 0x1234...",
+                required: true,
             },
         },
+
         {
             name: "Token ID",
             type: "number",
@@ -21,6 +24,7 @@ function SellSwapForm({ title, id, onSubmit, buttonText, extraFields = [] }) {
             validation: {
                 regExp: /^[0-9]\d*$/,
                 regExpInvalidMessage: "Please enter a positive integer or zero.",
+                required: true,
             },
         },
         {
@@ -28,9 +32,11 @@ function SellSwapForm({ title, id, onSubmit, buttonText, extraFields = [] }) {
             type: "number",
             inputWidth: "100%",
             key: "price",
+            step: "0,000000000000000001",
             validation: {
                 regExp: /^\d{1,18}(\.\d{1,18})?$/,
                 regExpInvalidMessage: "Please enter a positive amount in ETH.",
+                required: true,
             },
         },
     ]

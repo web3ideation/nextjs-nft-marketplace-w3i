@@ -4,43 +4,8 @@ import { useMoralis, useWeb3Contract } from "react-moralis"
 import { ethers } from "ethers"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import networkMapping from "../constants/networkMapping.json"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import SellSwapForm from "../components/SellSwapForm"
-
-function useRawApprove() {
-    // !!!W this function shouldnt be in a function!
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-
-    return async (to, tokenId) => {
-        try {
-            // Calculate the function signature for "approve(address,uint256)"
-            const functionSignature = ethers.utils.id("approve(address,uint256)").slice(0, 10)
-
-            // Convert the parameters to the required format
-            const addressPadded = ethers.utils.hexZeroPad(to, 32).slice(2)
-            const tokenIdHex = ethers.utils
-                .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
-                .slice(2)
-
-            // Construct the data for the raw call
-            const data = functionSignature + addressPadded + tokenIdHex
-
-            // Get the signer from the provider
-            const signer = provider.getSigner()
-
-            // Send the transaction using the signer
-            const tx = await signer.sendTransaction({
-                to: nftAddress,
-                data: data,
-            })
-
-            return tx
-        } catch (error) {
-            console.error("Error sending raw approve transaction:", error)
-            throw error
-        }
-    }
-}
 
 export default function Home() {
     const { chainId, account, isWeb3Enabled } = useMoralis()
@@ -52,21 +17,60 @@ export default function Home() {
 
     const { runContractFunction } = useWeb3Contract()
 
-    const rawApprove = useRawApprove()
+    function useRawApprove(nftAddress) {
+        // !!!W this function shouldnt be in a function!
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+
+        const rawApprove = async (to, tokenId) => {
+            try {
+                // Calculate the function signature for "approve(address,uint256)"
+                const functionSignature = ethers.utils.id("approve(address,uint256)").slice(0, 10)
+
+                // Convert the parameters to the required format
+                const addressPadded = ethers.utils.hexZeroPad(to, 32).slice(2)
+                const tokenIdHex = ethers.utils
+                    .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
+                    .slice(2)
+
+                // Construct the data for the raw call
+                const data = functionSignature + addressPadded + tokenIdHex
+
+                // Get the signer from the provider
+                const signer = provider.getSigner()
+
+                // Send the transaction using the signer
+                const tx = await signer.sendTransaction({
+                    to: nftAddress,
+                    data: data,
+                })
+
+                return tx
+            } catch (error) {
+                console.error("Error sending raw approve transaction:", error)
+                throw error
+            }
+        }
+
+        return rawApprove
+    }
 
     // !!! when the user wants to sell an nft that is not theirs, example: entering a wrong tokenId and klick submit, nothing happens. But when you check the browser console, you see that actually an error has been thrown, that the user is not approved. So this error message should also be visible to the user in the frontend.
 
     async function approveAndList(data) {
         console.log("Approving...")
-        const { nftAddress, tokenId, price } = data.data
+        const nftAddress = data.data[0].inputResult
+        const tokenId = data.data[1].inputResult
+        const price = ethers.utils.parseUnits(data.data[2].inputResult, "ether").toString()
+
+        const rawApprove = useRawApprove(nftAddress)
 
         try {
             const tx = await rawApprove(marketplaceAddress, tokenId)
+
             // If rawApprove completes without errors, call handleApproveSuccess
             handleApproveSuccess(tx, nftAddress, tokenId, price)
         } catch (error) {
             console.error("Error in approveAndList:", error) // !!!W does this error has to have a different format? like "NftMarketplace__blablabla" ?
-            dispatch({ type: "error", message: error.message, position: "topR" }) // Display the error to the user
         }
     }
 
@@ -169,6 +173,7 @@ export default function Home() {
                                         regExp: /^0x[0-9a-fA-F]{40}$/,
                                         regExpInvalidMessage:
                                             "Please enter a valid Ethereum address.",
+                                        required: true,
                                     },
                                 },
                                 {
@@ -180,6 +185,7 @@ export default function Home() {
                                         regExp: /^[0-9]\d*$/,
                                         regExpInvalidMessage:
                                             "Please enter a positive integer or zero.",
+                                        required: true,
                                     },
                                 },
                             ]}
