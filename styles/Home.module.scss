@@ -1,4 +1,4 @@
-//Schriftimportfont-black
+//Schriftimport
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
@@ -14,26 +14,45 @@ $secondary-color: rgb(18, 115, 235);
 $font-size-small: 15px;
 $font-size-medium: 35px;
 $font-size-large: 70px;
-$line-heigth-small: 24px;
+$line-height-small: 24px;
 
-/* Global Styles */
-.flex-center {
+@mixin flex-center {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.hover-invert:hover {
-    filter: invert(28%) sepia(50%) saturate(4473%) hue-rotate(205deg) brightness(100%)
-        contrast(86%);
+@mixin hover-invert {
+    &:hover {
+        filter: invert(28%) sepia(50%) saturate(4473%) hue-rotate(205deg) brightness(100%)
+            contrast(86%);
+    }
+}
+
+@mixin boxShadow {
+    box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
+    transition: 0.2s;
+}
+
+/* Global Styles */
+@include flex-center;
+@include hover-invert;
+
+// Generic Styles
+.btn {
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    font-weight: 500;
+    border: none;
+    &:hover {
+        color: $hover-blue;
+    }
 }
 
 /* Loading Icon Styles */
 .mainLoadingIconWrapper,
 .nftLoadingIconWrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include flex-center;
     background-color: $white;
 }
 .mainLoadingIconWrapper {
@@ -48,9 +67,7 @@ $line-heigth-small: 24px;
 
 .mainLoadingIcon,
 .nftLoadingIcon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include flex-center;
     width: 50px;
     height: 50px;
 }
@@ -78,9 +95,7 @@ $line-heigth-small: 24px;
 
     .headerLogo {
         padding: 0 9px 0 18px;
-        &:hover {
-            @extend .hover-invert;
-        }
+        @include hover-invert;
         img {
             height: 30px;
         }
@@ -115,12 +130,10 @@ $line-heigth-small: 24px;
         }
 
         button {
+            @include flex-center;
             font-family: $font-primary;
             font-size: $font-size-small;
             font-weight: 500;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             outline: none;
             border: none;
             color: $black;
@@ -132,17 +145,14 @@ $line-heigth-small: 24px;
     }
     .headerButton {
         padding: 20px 18px;
-
+        @include hover-invert;
         img {
             height: 24px;
-        }
-        &:hover {
-            @extend .hover-invert;
         }
     }
     .popupMenuWrapper {
         padding-right: 18px;
-        background-color: $background-color;
+
         &:hover {
             color: $hover-blue;
         }
@@ -152,15 +162,13 @@ $line-heigth-small: 24px;
             background-color: $background-color;
 
             button {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: none;
-                padding: 20px 5px 20px 18px;
+                @include flex-center;
                 font-family: $font-primary;
                 font-size: $font-size-small;
-                line-height: $line-heigth-small;
+                line-height: $line-height-small;
                 font-weight: 500;
+                border: none;
+                padding: 20px 5px 20px 18px;
                 color: $black;
                 &:hover {
                     color: $hover-blue;
@@ -169,14 +177,12 @@ $line-heigth-small: 24px;
         }
         .menuIcon,
         .menuIconMinus {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            @include flex-center;
             width: 10px;
             font-weight: 300;
             font-family: $font-primary;
             font-size: $font-size-small;
-            line-height: $line-heigth-small;
+            line-height: $line-height-small;
             font-weight: 500;
             color: $black;
             cursor: pointer;
@@ -200,20 +206,17 @@ $line-heigth-small: 24px;
             box-shadow: inset 0 5px 5px rgb(0 0 0 / 0.1), inset 0 1px 2px -1px rgb(0 0 0 / 0.1);
         }
         .popupMenuLinks {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
+            @include flex-center;
             padding: 10px 40px;
             text-decoration: none;
 
             button {
-                color: $white;
                 font-family: $font-primary;
                 font-size: $font-size-small;
-                line-height: $line-heigth-small;
+                line-height: $line-height-small;
                 font-weight: 400;
                 border: none;
-
+                color: $white;
                 &:hover {
                     color: $hover-grey;
                     background-color: transparent;
@@ -228,18 +231,15 @@ $line-heigth-small: 24px;
 // Main
 // NFT Lists
 .nftListWrapper {
+    @include flex-center;
+    flex-direction: column;
     width: 100%;
     margin-top: 40px;
     padding: 16px 150px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 
     h1 {
         font-family: $font-primary;
         font-size: $font-size-medium;
-        line-height: 35px;
         font-weight: bolder;
         text-align: center;
     }
@@ -254,18 +254,14 @@ $line-heigth-small: 24px;
     margin: 10px;
 }
 .nftCard {
-    box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
-    transition: 0.2s;
+    @include boxShadow;
     border-radius: 5px;
     width: 300px;
     height: 300px;
     cursor: pointer;
 
     footer {
-        h2 {
-            font-family: $font-secondary;
-            color: $black;
-        }
+        h2,
         span {
             font-family: $font-secondary;
             color: $black;
@@ -320,10 +316,8 @@ $line-heigth-small: 24px;
     }
 }
 .showMoreButton {
-    display: flex;
+    @include flex-center;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
     width: 100%;
     button {
         display: flex;
@@ -420,12 +414,9 @@ $line-heigth-small: 24px;
         }
     }
     .nftSellSwapWrapper {
-        display: flex;
+        @include flex-center;
         flex-direction: row;
-        justify-content: center;
-        align-items: center;
         gap: 16px;
-
         border-radius: 5px;
         padding: 16px 32px;
 
@@ -561,10 +552,8 @@ $line-heigth-small: 24px;
     transform: translateX(0);
 }
 .searchResultsWrapper {
-    display: flex;
+    @include flex-center;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     width: 100%;
     margin-top: 40px;
     padding: 16px 150px;
