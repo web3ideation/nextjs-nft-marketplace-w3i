@@ -50,7 +50,7 @@ const SearchResultPage = () => {
     }
 
     return (
-        <div className={styles.searchResultPage}>
+        <div className={styles.nftListingContainer}>
             <SearchSideFilters
                 initialItems={allItems}
                 onFilteredItemsChange={handleFilteredItemsChange}

@@ -1558,6 +1558,10 @@ $background-color: rgb(255, 249, 226);
         img {
             height: 30px;
         }
+        &:hover {
+            filter: invert(28%) sepia(50%) saturate(4473%) hue-rotate(205deg) brightness(100%)
+                contrast(86%);
+        }
     }
 
     .headerHeadline {
@@ -1609,6 +1613,10 @@ $background-color: rgb(255, 249, 226);
 
         img {
             height: 24px;
+        }
+        &:hover {
+            filter: invert(28%) sepia(50%) saturate(4473%) hue-rotate(205deg) brightness(100%)
+                contrast(86%);
         }
     }
     .popupMenuWrapper {
@@ -1936,7 +1944,7 @@ $background-color: rgb(255, 249, 226);
     }
 }
 // Search Result Page
-.searchResultPage {
+.nftListingContainer {
     display: flex;
     flex-direction: row;
     align-items: flex-start;

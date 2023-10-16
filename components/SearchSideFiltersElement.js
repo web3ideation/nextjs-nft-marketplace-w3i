@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react"
 import styles from "../styles/Home.module.css"
 import { CheckCircle } from "@web3uikit/icons"
-import { CrossCircle } from "@web3uikit/icons"
+
 const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) => {
     const menuRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
@@ -22,7 +22,6 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
         if (selected === optionValue || (selected === "default" && optionValue === "default")) {
             return <CheckCircle fontSize="30px" />
         }
-        return <CrossCircle fontSize="30px" />
     }
 
     return (
