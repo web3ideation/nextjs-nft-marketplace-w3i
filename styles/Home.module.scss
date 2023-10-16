@@ -1,4 +1,4 @@
-//Schriftimport
+// Schriftimportfont-black
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
@@ -34,27 +34,13 @@ $line-height-small: 24px;
     transition: 0.2s;
 }
 
-/* Global Styles */
-@include flex-center;
-@include hover-invert;
-
-// Generic Styles
-.btn {
-    font-family: $font-primary;
-    font-size: $font-size-small;
-    font-weight: 500;
-    border: none;
-    &:hover {
-        color: $hover-blue;
-    }
-}
-
 /* Loading Icon Styles */
 .mainLoadingIconWrapper,
 .nftLoadingIconWrapper {
     @include flex-center;
     background-color: $white;
 }
+
 .mainLoadingIconWrapper {
     width: 100%;
     height: 100%;
@@ -83,12 +69,12 @@ $line-height-small: 24px;
 
     nav {
         display: flex;
-        flex-direction: row;
         justify-content: space-between;
         align-items: center;
         margin: 0 16px;
     }
 }
+
 .logoAndHeadlineWrapper {
     display: flex;
     align-items: center;
@@ -96,6 +82,7 @@ $line-height-small: 24px;
     .headerLogo {
         padding: 0 9px 0 18px;
         @include hover-invert;
+
         img {
             height: 30px;
         }
@@ -109,16 +96,14 @@ $line-height-small: 24px;
         padding: 0 18px 0 0;
     }
 }
+
 .headerElementsWrapper {
     display: flex;
-    flex-direction: row;
     align-items: center;
     background-color: $background-color;
+
     .searchBarWrapper {
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        box-sizing: content-box;
         padding: 20px 0;
 
         .searchBar {
@@ -138,27 +123,31 @@ $line-height-small: 24px;
             border: none;
             color: $black;
             padding: 0 18px;
+
             &:hover {
                 color: $hover-blue;
             }
         }
     }
+
     .headerButton {
         padding: 20px 18px;
         @include hover-invert;
+
         img {
             height: 24px;
         }
     }
+
     .popupMenuWrapper {
         padding-right: 18px;
 
         &:hover {
             color: $hover-blue;
         }
+
         .menuButton {
             display: flex;
-            flex-direction: row;
             background-color: $background-color;
 
             button {
@@ -170,11 +159,13 @@ $line-height-small: 24px;
                 border: none;
                 padding: 20px 5px 20px 18px;
                 color: $black;
+
                 &:hover {
                     color: $hover-blue;
                 }
             }
         }
+
         .menuIcon,
         .menuIconMinus {
             @include flex-center;
@@ -187,6 +178,7 @@ $line-height-small: 24px;
             color: $black;
             cursor: pointer;
         }
+
         .menuIconMinus {
             color: $hover-blue;
         }
@@ -201,10 +193,12 @@ $line-height-small: 24px;
             position: absolute;
             z-index: -1;
         }
+
         .popupMenuLinksWrapperOpen {
             transform: translateY(0);
             box-shadow: inset 0 5px 5px rgb(0 0 0 / 0.1), inset 0 1px 2px -1px rgb(0 0 0 / 0.1);
         }
+
         .popupMenuLinks {
             @include flex-center;
             padding: 10px 40px;
@@ -217,6 +211,7 @@ $line-height-small: 24px;
                 font-weight: 400;
                 border: none;
                 color: $white;
+
                 &:hover {
                     color: $hover-grey;
                     background-color: transparent;
@@ -225,11 +220,12 @@ $line-height-small: 24px;
         }
     }
 }
+
 .connectButton {
     padding: 20px 18px;
 }
+
 // Main
-// NFT Lists
 .nftListWrapper {
     @include flex-center;
     flex-direction: column;
@@ -244,15 +240,18 @@ $line-height-small: 24px;
         text-align: center;
     }
 }
+
 .nftList {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 NFTs pro Reihe */
+    grid-template-columns: repeat(5, 1fr); // 5 NFTs pro Reihe
     padding-top: 16px;
     width: 100%;
 }
+
 .nftCardWrapper {
     margin: 10px;
 }
+
 .nftCard {
     @include boxShadow;
     border-radius: 5px;
@@ -273,6 +272,7 @@ $line-height-small: 24px;
         transition: 0.2s;
     }
 }
+
 .nftImage {
     width: 300px;
     height: 225px;
@@ -282,6 +282,7 @@ $line-height-small: 24px;
     background-color: #ffffff;
     align-items: center;
 }
+
 .nftTextArea {
     display: flex;
     flex-direction: column;
@@ -297,47 +298,56 @@ $line-height-small: 24px;
     .nftCardInformation {
         display: flex;
         justify-content: space-between;
+
         .nftOwner {
             width: 192px;
         }
+
         .nftPrice,
         .nftTitle {
             font-weight: 900;
         }
+
         .nftListedStatus {
             color: forestgreen;
         }
+
         .nftNotListedStatus {
             color: firebrick;
         }
+
         .nftDescription {
             font-weight: 300;
         }
     }
 }
+
 .showMoreButton {
     @include flex-center;
     flex-direction: row;
     width: 100%;
+
     button {
-        display: flex;
-        justify-content: center;
+        @include flex-center;
         font-family: $font-secondary;
         font-size: $font-size-small;
         font-weight: 500;
         color: $black;
         border: none;
         padding: 0 18px;
+
         &:hover {
             color: $hover-blue;
         }
     }
 }
+
 // Modals
 .nftModalInformation {
     header {
         padding: 0;
     }
+
     .nftModalImage {
         width: 300px;
         height: 300px;
@@ -345,6 +355,7 @@ $line-height-small: 24px;
         background-color: $white;
         align-items: center;
     }
+
     .nftModalText {
         display: flex;
         flex-direction: column;
@@ -353,27 +364,31 @@ $line-height-small: 24px;
         font-size: $font-size-small;
         font-weight: 500;
         color: $black;
+
         div {
             display: flex;
-            flex-direction: row;
             justify-content: space-between;
-            text-wrap: wrap;
+            flex-wrap: wrap;
             text-align: end;
         }
     }
+
     footer {
         display: flex;
         justify-content: space-around;
         border: none;
+
         button {
             width: 45%;
             border: none;
             border-radius: 5px;
             background: $secondary-color;
+
             span {
                 color: $white;
                 font-weight: 400;
             }
+
             &:hover {
                 background: $hover-blue;
                 color: $hover-grey;
@@ -381,6 +396,7 @@ $line-height-small: 24px;
         }
     }
 }
+
 .nftModalUpdateListing {
     footer {
         border: none;
@@ -392,13 +408,16 @@ $line-height-small: 24px;
         margin: 0;
     }
 }
+
 // Sell/Swap Nft page
 .nftSellSwapContainer {
     margin: 40px 192px;
+
     .nftSellSwapButton {
         display: flex;
         justify-content: center;
         gap: 18px;
+
         button {
             background-color: $hover-blue;
             width: 128px;
@@ -408,11 +427,13 @@ $line-height-small: 24px;
             font-size: $font-size-small;
             font-weight: 400;
             padding: 0 18px;
+
             &:hover {
                 color: $hover-grey;
             }
         }
     }
+
     .nftSellSwapWrapper {
         @include flex-center;
         flex-direction: row;
@@ -438,6 +459,7 @@ $line-height-small: 24px;
         }
     }
 }
+
 // Search Result Page
 .nftListingContainer {
     display: flex;
@@ -463,6 +485,7 @@ $line-height-small: 24px;
             }
         }
     }
+
     .searchSideFiltersWrapper {
         transform: translateX(-100%);
         transition: transform 0.5s ease-out;
@@ -476,28 +499,34 @@ $line-height-small: 24px;
         padding: 70px 0 0 0;
         box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     }
+
     .searchSideFiltersWrapperOpen {
         transform: translateX(0);
     }
+
     .filterText {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }
+
     .filterOpenButton {
         transition: 0s;
         position: absolute;
         left: 128px;
         background-color: $background-color;
         border-radius: 0 5px 5px 0;
+
         &:hover {
             color: $hover-blue;
         }
     }
+
     .filterOpenButtonOpen {
         color: $hover-blue;
     }
+
     .filterButton {
         display: flex;
         flex-direction: row;
@@ -505,12 +534,14 @@ $line-height-small: 24px;
         align-items: center;
     }
 }
+
 .backgroundPlaceholder {
     height: 100%;
     width: 100%;
     background-color: $background-color;
     z-index: 1;
 }
+
 .searchSideFilters {
     display: flex;
     flex-direction: row;
@@ -518,6 +549,7 @@ $line-height-small: 24px;
     flex-wrap: wrap;
     background-color: $background-color;
 }
+
 .searchSideFiltersItemsWrapper {
     position: absolute;
     display: flex;
@@ -548,9 +580,11 @@ $line-height-small: 24px;
         }
     }
 }
+
 .searchSideFiltersItemsWrapperOpen {
     transform: translateX(0);
 }
+
 .searchResultsWrapper {
     @include flex-center;
     flex-direction: column;
@@ -566,6 +600,7 @@ $line-height-small: 24px;
         line-height: 35px;
         padding: 0 18px;
     }
+
     h3 {
         font-size: $font-size-small;
     }
