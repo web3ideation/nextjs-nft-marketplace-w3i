@@ -4,16 +4,29 @@ import { useMoralis, useWeb3Contract } from "react-moralis"
 import { ethers } from "ethers"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import networkMapping from "../constants/networkMapping.json"
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState } from "react"
 import SellSwapForm from "../components/SellSwapForm"
+import { useRouter } from "next/router"
 
 export default function Home() {
+    const router = useRouter()
+    const [nftAddressFromQuery, setNftAddressFromQuery] = useState("")
+    const [tokenIdFromQuery, setTokenIdFromQuery] = useState("")
     const { chainId, account, isWeb3Enabled } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
     const [activeForm, setActiveForm] = useState(null)
     const dispatch = useNotification()
     const [proceeds, setProceeds] = useState("0")
+
+    useEffect(() => {
+        if (router.query.nftAddress) {
+            setNftAddressFromQuery(router.query.nftAddress)
+        }
+        if (router.query.tokenId) {
+            setTokenIdFromQuery(router.query.tokenId)
+        }
+    }, [router.query])
 
     const { runContractFunction } = useWeb3Contract()
 
@@ -156,6 +169,8 @@ export default function Home() {
                             onSubmit={approveAndList}
                             title="Sell your NFT!"
                             id="Sell Form"
+                            defaultNftAddress={nftAddressFromQuery}
+                            defaultTokenId={tokenIdFromQuery}
                         />
                     )}
                     {activeForm === "swap" && (
@@ -163,6 +178,8 @@ export default function Home() {
                             onSubmit={approveAndList}
                             title="Swap your NFT!"
                             id="Swap Form"
+                            defaultNftAddress={nftAddressFromQuery}
+                            defaultTokenId={tokenIdFromQuery}
                             extraFields={[
                                 {
                                     name: "Desired NFT Address",

@@ -1,11 +1,19 @@
 import { Form } from "web3uikit"
 import React from "react"
 
-function SellSwapForm({ title, id, onSubmit, extraFields = [] }) {
+function SellSwapForm({
+    title,
+    id,
+    onSubmit,
+    defaultNftAddress,
+    defaultTokenId,
+    extraFields = [],
+}) {
     const commonFields = [
         {
             name: "NFT Address",
             type: "text",
+            value: defaultNftAddress,
             inputWidth: "100%",
             key: "nftAddress",
             validation: {
@@ -19,6 +27,7 @@ function SellSwapForm({ title, id, onSubmit, extraFields = [] }) {
         {
             name: "Token ID",
             type: "number",
+            value: defaultTokenId,
             inputWidth: "100%",
             key: "tokenId",
             validation: {

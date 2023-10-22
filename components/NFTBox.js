@@ -152,7 +152,7 @@ export default function NFTBox({
     }
 
     const handleListClick = () => {
-        router.push("/sell-swap-nft")
+        router.push(`/sell-swap-nft?nftAddress=${nftAddress}&tokenId=${tokenId}`)
     }
 
     const modalListener = useCallback(() => {
