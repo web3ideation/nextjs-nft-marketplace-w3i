@@ -55,8 +55,8 @@ export default function NFTBox({
 
     const isOwnedBySeller = seller === account
     const isOwnedByBuyer = buyer === account
-    const isOwnedByUser =
-        isOwnedBySeller || (!isOwnedBySeller && isOwnedByBuyer) || seller === undefined
+    const isLogged = isWeb3Enabled // oder ein anderer Mechanismus, um den Anmeldestatus zu überprüfen
+    const isOwnedByUser = isLogged && (isOwnedBySeller || isOwnedByBuyer)
 
     const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(seller || "", 15)
     const formattedNftAddress = truncateStr(nftAddress || "", 15)
