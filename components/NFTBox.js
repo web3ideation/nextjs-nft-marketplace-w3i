@@ -36,6 +36,7 @@ export default function NFTBox({
 }) {
     // State hooks
     const { isWeb3Enabled, account } = useMoralis()
+    const [isConnected, setIsConnected] = useState(isWeb3Enabled)
     const router = useRouter()
     const [imageURI, setImageURI] = useState("")
     const [tokenName, setTokenName] = useState("")
@@ -56,7 +57,7 @@ export default function NFTBox({
 
     const isOwnedBySeller = seller === account
     const isOwnedByBuyer = buyer === account
-    const isOwnedByUser = isWeb3Enabled && (isOwnedBySeller || isOwnedByBuyer)
+    const isOwnedByUser = isConnected && (isOwnedBySeller || isOwnedByBuyer)
 
     const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(seller || "", 15)
     const formattedNftAddress = truncateStr(nftAddress || "", 15)
@@ -108,8 +109,8 @@ export default function NFTBox({
     }
 
     const handleBuyClick = async () => {
-        if (!isWeb3Enabled) setShowConnectMessage(true)
-        if (isWeb3Enabled) setShowConnectMessage(false)
+        if (!isConnected) setShowConnectMessage(true)
+        if (isConnected) setShowConnectMessage(false)
         if (buying) return
         setBuying(true)
         setShowPurchaseMessage(true)
@@ -193,12 +194,16 @@ export default function NFTBox({
     }
 
     useEffect(() => {
+        setIsConnected(isWeb3Enabled)
+        loadImage()
         modalListener()
-    }, [modalListener])
+    }, [isWeb3Enabled, loadImage, modalListener])
 
     useEffect(() => {
-        loadImage()
-    }, [loadImage])
+        if (isConnected) {
+            setShowConnectMessage(false)
+        }
+    }, [isConnected])
 
     const [isCopying, setIsCopying] = useState(false)
     const handleMouseEnter = () => {
