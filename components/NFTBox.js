@@ -50,13 +50,13 @@ export default function NFTBox({
     const [showUpdateListingModal, setShowUpdateListingModal] = useState(false) // Modal for updating Price
     const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
     const [showPurchaseMessage, setShowPurchaseMessage] = useState(false)
+    const [showConnectMessage, setShowConnectMessage] = useState(false)
 
     const dispatch = useNotification()
 
     const isOwnedBySeller = seller === account
     const isOwnedByBuyer = buyer === account
-    const isLogged = isWeb3Enabled // oder ein anderer Mechanismus, um den Anmeldestatus zu überprüfen
-    const isOwnedByUser = isLogged && (isOwnedBySeller || isOwnedByBuyer)
+    const isOwnedByUser = isWeb3Enabled && (isOwnedBySeller || isOwnedByBuyer)
 
     const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(seller || "", 15)
     const formattedNftAddress = truncateStr(nftAddress || "", 15)
@@ -108,24 +108,22 @@ export default function NFTBox({
     }
 
     const handleBuyClick = async () => {
+        if (!isWeb3Enabled) setShowConnectMessage(true)
+        if (isWeb3Enabled) setShowConnectMessage(false)
         if (buying) return
-
         setBuying(true)
         setShowPurchaseMessage(true)
-        if (!isWeb3Enabled) {
-            dispatch({ type: "error", message: "Please connect your wallet to buy this NFT." })
+        if (isOwnedByUser) {
+            setShowInfoModal(true)
         } else {
-            if (isOwnedByUser) {
-                setShowInfoModal(true)
-            } else {
-                await buyItem({
-                    onError: (error) => {
-                        console.error(error)
-                        setBuying(false)
-                    },
-                    onSuccess: handleBuyItemSuccess,
-                })
-            }
+            await buyItem({
+                onError: (error) => {
+                    console.error(error)
+                    setBuying(false)
+                    setShowPurchaseMessage(false)
+                },
+                onSuccess: handleBuyItemSuccess,
+            })
         }
     }
 
@@ -303,6 +301,7 @@ export default function NFTBox({
                     copyNftAddressToClipboard={copyNftAddressToClipboard}
                     closeModal={() => setShowInfoModal(false)}
                     showPurchaseMessage={showPurchaseMessage}
+                    showConnectMessage={showConnectMessage}
                 />
             )}
             {/* NFT Selling Modal */}

@@ -396,6 +396,14 @@ $line-height-small: 24px;
             }
         }
     }
+
+    .nftModalMessage {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        width: 300px;
+        color: red;
+    }
 }
 
 .nftModalUpdateListing {

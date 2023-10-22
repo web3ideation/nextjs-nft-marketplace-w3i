@@ -22,6 +22,7 @@ const NftModal = (props) => {
         isCopying,
         closeModal,
         showPurchaseMessage,
+        showConnectMessage,
     } = props
 
     const okText = type === "info" ? "BUY!" : type === "list" ? "List" : "Update price"
@@ -87,9 +88,14 @@ const NftModal = (props) => {
                 </div>
             </div>
             {showPurchaseMessage && (
-                <div>
-                    Der Kauf ist im Gange. Bitte überprüfen Sie Ihre Wallet und bestätigen Sie den
-                    Kaufvorgang.
+                <div className={styles.nftModalMessage}>
+                    The purchase is in progress. Please check your wallet and confirm the purchase
+                    process.
+                </div>
+            )}
+            {showConnectMessage && (
+                <div className={styles.nftModalMessage}>
+                    Please connect your Wallet to buy NFT's!
                 </div>
             )}
         </Modal>
