@@ -67,13 +67,17 @@ export default function Home() {
         return rawApprove
     }
 
-    // !!! when the user wants to sell an nft that is not theirs, example: entering a wrong tokenId and klick submit, nothing happens. But when you check the browser console, you see that actually an error has been thrown, that the user is not approved. So this error message should also be visible to the user in the frontend.
+    // !!! when the user wants to sell an nft that is not theirs, example: entering a wrong tokenId and klick submit, nothing happens.
+    // But when you check the browser console, you see that actually an error has been thrown, that the user is not approved.
+    // So this error message should also be visible to the user in the frontend.
 
     async function approveAndList(data) {
         console.log("Approving...")
         const nftAddress = data.nftAddress
         const tokenId = data.tokenId
         const price = ethers.utils.parseUnits(data.price, "ether").toString()
+
+        console.log(nftAddress, tokenId, price)
 
         const rawApprove = useRawApprove(nftAddress)
 
@@ -83,7 +87,13 @@ export default function Home() {
             // If rawApprove completes without errors, call handleApproveSuccess
             handleApproveSuccess(tx, nftAddress, tokenId, price)
         } catch (error) {
-            console.error("Error in approveAndList:", error) // !!!W does this error has to have a different format? like "NftMarketplace__blablabla" ?
+            console.error("Error in approveAndList:", JSON.stringify(error)) // !!!W does this error has to have a different format? like "NftMarketplace__blablabla" ?
+            dispatch({
+                type: "error",
+                message: "Failed to approve and list the NFT.",
+                title: "Error",
+                position: "topR",
+            })
         }
     }
 
@@ -214,7 +224,7 @@ export default function Home() {
                                         params: {},
                                     },
                                     onError: (error) => console.log(error),
-                                    onSuccess: () => handleWithdrawSuccess,
+                                    onSuccess: handleWithdrawSuccess,
                                 })
                             }}
                         />

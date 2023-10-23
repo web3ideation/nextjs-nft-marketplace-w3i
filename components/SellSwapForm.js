@@ -30,7 +30,7 @@ function SellSwapForm({
         price: "",
     })
 
-    function valkeyateField(name, value) {
+    function validateField(name, value) {
         let errorMessage = ""
 
         switch (name) {
@@ -68,12 +68,12 @@ function SellSwapForm({
         }))
     }
 
-    function valkeyateForm(data) {
+    function validateForm(data) {
         let isValkey = true
 
         // Valkeyate each field and update the isValkey status
         Object.keys(data).forEach((key) => {
-            if (!valkeyateField(key, data[key])) {
+            if (!validateField(key, data[key])) {
                 isValkey = false
             }
         })
@@ -83,7 +83,7 @@ function SellSwapForm({
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (valkeyateForm(formData)) {
+        if (validateForm(formData)) {
             onSubmit(formData)
         }
     }
@@ -128,7 +128,7 @@ function SellSwapForm({
                             value={formData.tokenId}
                             onChange={handleChange}
                             onBlur={(e) => {
-                                valkeyateField(e.target.name, e.target.value)
+                                validateField(e.target.name, e.target.value)
                                 setFocusedField(null)
                             }}
                             onFocus={() => {
@@ -150,11 +150,10 @@ function SellSwapForm({
                             id="price"
                             name="price"
                             placeholder="min. amount: 0.000000000000000001"
-                            step="0.000000000000000001"
                             value={formData.price}
                             onChange={handleChange}
                             onBlur={(e) => {
-                                valkeyateField(e.target.name, e.target.value)
+                                validateField(e.target.name, e.target.value)
                                 setFocusedField(null)
                             }}
                             onFocus={() => {
@@ -180,7 +179,7 @@ function SellSwapForm({
                                 value={formData[field.key]}
                                 onChange={handleChange}
                                 onBlur={(e) => {
-                                    valkeyateField(e.target.name, e.target.value)
+                                    validateField(e.target.name, e.target.value)
                                     setFocusedField(null)
                                 }}
                                 onFocus={() => {
