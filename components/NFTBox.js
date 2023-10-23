@@ -231,7 +231,7 @@ export default function NFTBox({
                     height={100}
                     width={100}
                     loading="eager"
-                    alt={tokenDescription}
+                    alt={tokenDescription || "..."}
                 />
             ) : (
                 <div>
@@ -245,7 +245,7 @@ export default function NFTBox({
                             src={imageURI.src}
                             height={100}
                             width={100}
-                            alt={tokenDescription}
+                            alt={tokenDescription || "..."}
                         />
                     )}
                 </div>
