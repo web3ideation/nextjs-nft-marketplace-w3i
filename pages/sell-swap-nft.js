@@ -71,9 +71,9 @@ export default function Home() {
 
     async function approveAndList(data) {
         console.log("Approving...")
-        const nftAddress = data.data[0].inputResult
-        const tokenId = data.data[1].inputResult
-        const price = ethers.utils.parseUnits(data.data[2].inputResult, "ether").toString()
+        const nftAddress = data.nftAddress
+        const tokenId = data.tokenId
+        const price = ethers.utils.parseUnits(data.price, "ether").toString()
 
         const rawApprove = useRawApprove(nftAddress)
 
@@ -184,26 +184,14 @@ export default function Home() {
                                 {
                                     name: "Desired NFT Address",
                                     type: "text",
-                                    inputWidth: "100%",
                                     key: "desiredNftAddress",
-                                    validation: {
-                                        regExp: /^0x[0-9a-fA-F]{40}$/,
-                                        regExpInvalidMessage:
-                                            "Please enter a valid Ethereum address.",
-                                        required: true,
-                                    },
+                                    placeholder: "0x0000000000000000000000000000000000000000",
                                 },
                                 {
                                     name: "Desired Token ID",
                                     type: "number",
-                                    inputWidth: "100%",
                                     key: "desiredTokenId",
-                                    validation: {
-                                        regExp: /^[0-9]\d*$/,
-                                        regExpInvalidMessage:
-                                            "Please enter a positive integer or zero.",
-                                        required: true,
-                                    },
+                                    placeholder: "1",
                                 },
                             ]}
                         />
