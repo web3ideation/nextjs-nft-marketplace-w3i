@@ -16,8 +16,8 @@ function NFTListed({ chainId }) {
     const { loading: loadingActive, data: dataActive } = useQuery(GET_ACTIVE_ITEMS)
     const { loading: loadingInactive, data: dataInactive } = useQuery(GET_INACTIVE_ITEMS)
 
-    console.log(dataActive)
-    console.log(dataInactive)
+    console.log("Data Active", dataActive)
+    console.log("Data Inactive", dataInactive)
 
     const [items, setItems] = useState([])
     const [filteredItems, setFilteredItems] = useState([])
@@ -27,22 +27,26 @@ function NFTListed({ chainId }) {
     const mergeAndFilterItems = useCallback(() => {
         if (!loadingActive && dataActive && !loadingInactive && dataInactive) {
             const seenKeys = new Set()
-            const uniqueItems = [...dataActive.items, ...dataInactive.items].reduce(
-                (acc, item) => {
-                    const key = `${item.nftAddress}${item.tokenId}${item.listingId}`
-                    if (!seenKeys.has(key)) {
-                        acc.push(item)
-                        seenKeys.add(key)
-                    }
-                    return acc
-                },
-                []
-            )
+            const combinedItems = [...dataActive.items, ...dataInactive.items]
+
+            // Sortieren Sie die Elemente nach listingId in absteigender Reihenfolge
+            combinedItems.sort((a, b) => b.listingId - a.listingId)
+
+            const uniqueItems = combinedItems.reduce((acc, item) => {
+                const key = `${item.nftAddress}${item.tokenId}`
+                if (!seenKeys.has(key)) {
+                    acc.push(item)
+                    seenKeys.add(key)
+                }
+                return acc
+            }, [])
 
             setItems(uniqueItems)
             setFilteredItems(uniqueItems)
         }
     }, [loadingActive, dataActive, loadingInactive, dataInactive])
+
+    console.log("Unique items", items)
 
     useEffect(mergeAndFilterItems, [mergeAndFilterItems])
 

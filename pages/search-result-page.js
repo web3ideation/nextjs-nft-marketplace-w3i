@@ -17,29 +17,25 @@ const SearchResultPage = () => {
     const [combinedResults, setCombinedResults] = useState([])
 
     useEffect(() => {
-        // Hier kombinieren Sie die beiden Arrays und setzen das kombinierte Ergebnis
+        // This is where you combine the two arrays
         const combined = activeSearchResults.concat(inactiveSearchResults)
-        setCombinedResults(combined)
-        setAllItems(combined)
-    }, [activeSearchResults, inactiveSearchResults])
 
-    useEffect(() => {
-        const uniqueNFTs = []
+        // Sort the elements by listingId in descending order
+        combined.sort((a, b) => b.listingId - a.listingId)
 
-        // Ein Set, um bereits gesehene NFTs zu verfolgen
         const seenNFTs = new Set()
-
-        filteredNFTs.forEach((nft) => {
-            const uniqueId = `${nft.nftAddress}-${nft.tokenId}${nft.listingId}`
-            if (!seenNFTs.has(uniqueId)) {
-                seenNFTs.add(uniqueId)
-                uniqueNFTs.push(nft)
+        const uniqueItems = combined.reduce((acc, item) => {
+            const key = `${item.nftAddress}${item.tokenId}`
+            if (!seenNFTs.has(key)) {
+                acc.push(item)
+                seenNFTs.add(key)
             }
-        })
-        if (uniqueNFTs.length !== filteredNFTs.length) {
-            setFilteredNFTs(uniqueNFTs)
-        }
-    }, [filteredNFTs])
+            return acc
+        }, [])
+
+        setCombinedResults(uniqueItems)
+        setAllItems(uniqueItems)
+    }, [activeSearchResults, inactiveSearchResults])
 
     useEffect(() => {
         setFilteredNFTs(allItems)

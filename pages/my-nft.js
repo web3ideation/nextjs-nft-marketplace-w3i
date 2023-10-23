@@ -1,5 +1,5 @@
 import { useMoralis } from "react-moralis"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import NFTBox from "../components/NFTBox"
 import networkMapping from "../constants/networkMapping.json"
 import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
@@ -29,20 +29,20 @@ export default function Home() {
     // Merge and remove duplicates
     useEffect(() => {
         if (!loadingActive && dataActive && !loadingInactive && dataInactive) {
-            const seenKeys = new Set() // Set to keep track of keys
-            const uniqueItems = [...dataActive.items, ...dataInactive.items].reduce(
-                (acc, item) => {
-                    const key = `${item.nftAddress}${item.tokenId}${item.listingId}`
-                    if (!seenKeys.has(key)) {
-                        // Check if the key has not been seen
-                        acc.push(item)
-                        seenKeys.add(key) // Mark the key as seen
-                    }
-                    return acc
-                },
-                []
-            )
+            const seenKeys = new Set()
+            const combinedItems = [...dataActive.items, ...dataInactive.items]
 
+            // Sortieren Sie die Elemente nach listingId in absteigender Reihenfolge
+            combinedItems.sort((a, b) => b.listingId - a.listingId)
+
+            const uniqueItems = combinedItems.reduce((acc, item) => {
+                const key = `${item.nftAddress}${item.tokenId}`
+                if (!seenKeys.has(key)) {
+                    acc.push(item)
+                    seenKeys.add(key)
+                }
+                return acc
+            }, [])
             setAllItems(uniqueItems)
         }
     }, [loadingActive, dataActive, loadingInactive, dataInactive])
