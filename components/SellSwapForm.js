@@ -69,16 +69,16 @@ function SellSwapForm({
     }
 
     function validateForm(data) {
-        let isValkey = true
+        let isValid = true
 
-        // Valkeyate each field and update the isValkey status
+        // validate each field and update the isvalid status
         Object.keys(data).forEach((key) => {
             if (!validateField(key, data[key])) {
-                isValkey = false
+                isValid = false
             }
         })
 
-        return isValkey
+        return isValid
     }
 
     const handleSubmit = (e) => {
