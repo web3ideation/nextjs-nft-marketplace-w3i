@@ -1,15 +1,12 @@
-import React, { useEffect, useState, memo, useCallback } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import NFTBox from "../components/NFTBox"
 import networkMapping from "../constants/networkMapping.json"
 import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
 import { useQuery } from "@apollo/client"
 import styles from "../styles/Home.module.css"
 import { Button } from "web3uikit"
-import SearchSideFilters from "../components/SearchSideFilters"
 
-const NFTBoxMemo = memo(NFTBox)
-
-function NFTListed({ chainId }) {
+function NFTListed({ chainId, items, setItems, filteredItems, setFilteredItems }) {
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
 
@@ -19,8 +16,6 @@ function NFTListed({ chainId }) {
     console.log("Data Active", dataActive)
     console.log("Data Inactive", dataInactive)
 
-    const [items, setItems] = useState([])
-    const [filteredItems, setFilteredItems] = useState([])
     const [images, setImages] = useState({})
 
     // Merge and remove duplicates
@@ -29,7 +24,6 @@ function NFTListed({ chainId }) {
             const seenKeys = new Set()
             const combinedItems = [...dataActive.items, ...dataInactive.items]
 
-            // Sortieren Sie die Elemente nach listingId in absteigender Reihenfolge
             combinedItems.sort((a, b) => b.listingId - a.listingId)
 
             const uniqueItems = combinedItems.reduce((acc, item) => {
@@ -44,7 +38,7 @@ function NFTListed({ chainId }) {
             setItems(uniqueItems)
             setFilteredItems(uniqueItems)
         }
-    }, [loadingActive, dataActive, loadingInactive, dataInactive])
+    }, [loadingActive, dataActive, loadingInactive, dataInactive, setItems, setFilteredItems])
 
     console.log("Unique items", items)
 
@@ -73,16 +67,8 @@ function NFTListed({ chainId }) {
         })
     }, [chainId, items, preloadImage])
 
-    const handleFilteredItemsChange = useCallback((newFilteredItems) => {
-        setFilteredItems(newFilteredItems)
-    }, [])
-
     return (
         <div className={styles.nftListingContainer}>
-            <SearchSideFilters
-                initialItems={items}
-                onFilteredItemsChange={handleFilteredItemsChange}
-            />
             <div className={styles.nftListWrapper}>
                 <h1>Recently Listed</h1>
                 <div id="NFTListed" className={styles.nftList}>

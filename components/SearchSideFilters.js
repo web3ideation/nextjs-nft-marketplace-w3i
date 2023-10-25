@@ -51,18 +51,6 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
             console.log("No status filter applied")
         }
 
-        // Category filter
-        if (filters.selectedCategory !== "default") {
-            filteredList = filteredList.filter((nft) => nft.category === filters.selectedCategory)
-        }
-
-        // Collection filter
-        if (filters.selectedCollection !== "default") {
-            filteredList = filteredList.filter(
-                (nft) => nft.nftAddress === filters.selectedCollection
-            )
-        }
-
         // Sorting logic
         filteredList.sort((a, b) => {
             switch (filters.selectedSorting) {
@@ -78,6 +66,18 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                     return 0
             }
         })
+
+        // Category filter
+        if (filters.selectedCategory !== "default") {
+            filteredList = filteredList.filter((nft) => nft.category === filters.selectedCategory)
+        }
+
+        // Collection filter
+        if (filters.selectedCollection !== "default") {
+            filteredList = filteredList.filter(
+                (nft) => nft.nftAddress === filters.selectedCollection
+            )
+        }
 
         // Informieren Sie die übergeordnete Komponente über die gefilterten Elemente
         onFilteredItemsChange(filteredList)
