@@ -59,7 +59,7 @@ export default function NFTBox({
     const isOwnedByBuyer = buyer === account
     const isOwnedByUser = isConnected && (isOwnedBySeller || isOwnedByBuyer)
 
-    const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(seller || "", 15)
+    const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(buyer || seller || "", 15)
     const formattedNftAddress = truncateStr(nftAddress || "", 15)
 
     const getRawTokenURI = useCallback(async () => {
