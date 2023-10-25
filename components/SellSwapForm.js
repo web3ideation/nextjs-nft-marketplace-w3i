@@ -37,7 +37,7 @@ function SellSwapForm({
             case "nftAddress":
             case "desiredNftAddress":
                 if (!/^0x[0-9a-fA-F]{40}$/.test(value)) {
-                    errorMessage = "Please enter a valkey Ethereum address in the format 0x1234..."
+                    errorMessage = "Please enter a valid Ethereum address in the format 0x1234..."
                 }
                 break
             case "tokenId":
@@ -103,7 +103,7 @@ function SellSwapForm({
                             value={formData.nftAddress}
                             onChange={handleChange}
                             onBlur={(e) => {
-                                valkeyateField(e.target.name, e.target.value)
+                                validateField(e.target.name, e.target.value)
                                 setFocusedField(null)
                             }}
                             onFocus={() => {
