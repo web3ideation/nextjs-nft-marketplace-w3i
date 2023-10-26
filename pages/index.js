@@ -1,5 +1,5 @@
 import { useMoralis } from "react-moralis"
-import React, { useEffect, useState, useCallback } from "react"
+import React, { useState, useCallback } from "react"
 import NFTListed from "../components/NFTListed"
 import SearchSideFilters from "../components/SearchSideFilters"
 import styles from "../styles/Home.module.css"

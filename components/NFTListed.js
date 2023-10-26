@@ -21,19 +21,21 @@ function NFTListed({ chainId, items, setItems, filteredItems, setFilteredItems }
     // Merge and remove duplicates
     const mergeAndFilterItems = useCallback(() => {
         if (!loadingActive && dataActive && !loadingInactive && dataInactive) {
-            const seenKeys = new Set()
             const combinedItems = [...dataActive.items, ...dataInactive.items]
-
             combinedItems.sort((a, b) => b.listingId - a.listingId)
 
-            const uniqueItems = combinedItems.reduce((acc, item) => {
+            const highestListingIdMap = {}
+            combinedItems.forEach((item) => {
                 const key = `${item.nftAddress}${item.tokenId}`
-                if (!seenKeys.has(key)) {
-                    acc.push(item)
-                    seenKeys.add(key)
+                if (!highestListingIdMap[key] || item.listingId > highestListingIdMap[key]) {
+                    highestListingIdMap[key] = item.listingId
                 }
-                return acc
-            }, [])
+            })
+
+            const uniqueItems = combinedItems.filter((item) => {
+                const key = `${item.nftAddress}${item.tokenId}`
+                return item.listingId === highestListingIdMap[key]
+            })
 
             setItems(uniqueItems)
             setFilteredItems(uniqueItems)
