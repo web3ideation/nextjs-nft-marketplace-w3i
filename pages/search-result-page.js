@@ -3,68 +3,61 @@ import SearchSideFilters from "../components/SearchSideFilters"
 import styles from "../styles/Home.module.css"
 import NFTBox from "../components/NFTBox"
 import { useRouter } from "next/router"
-
-import { useSearchResults } from "../components/SearchResultsContext"
+import { useNFT } from "../components/NFTContextProvider"
 
 const SearchResultPage = () => {
     const router = useRouter()
-    const { activeSearchResults, inactiveSearchResults } = useSearchResults()
+    const { nftsData, loadingImage } = useNFT()
 
-    const [allItems, setAllItems] = useState([])
+    const [searchResults, setSearchResults] = useState([])
     const [filteredNFTs, setFilteredNFTs] = useState([])
 
+    // Retrieve search term from the URL query
     const searchTermFromQuery = router.query.search || ""
-    const [combinedResults, setCombinedResults] = useState([])
 
+    // ------------------ Effects ------------------
+
+    // Filter NFTs based on the search term when data or query changes
     useEffect(() => {
-        // This is where you combine the two arrays
-        const combined = activeSearchResults.concat(inactiveSearchResults)
+        const filteredResults = nftsData.filter((item) => {
+            const concatenatedFields = [
+                item.listingId,
+                item.nftAddress,
+                item.tokenId,
+                item.seller,
+                item.tokenName,
+                item.tokenDescription,
+            ].join(" ")
+            const lowerCaseConcatenated = concatenatedFields.toLowerCase()
 
-        // Sort the elements by listingId in descending order
-        combined.sort((a, b) => b.listingId - a.listingId)
+            return lowerCaseConcatenated.includes(searchTermFromQuery.toLowerCase())
+        })
 
-        const seenNFTs = new Set()
-        const uniqueItems = combined.reduce((acc, item) => {
-            const key = `${item.nftAddress}${item.tokenId}`
-            if (!seenNFTs.has(key)) {
-                acc.push(item)
-                seenNFTs.add(key)
-            }
-            return acc
-        }, [])
+        setSearchResults(filteredResults)
+        setFilteredNFTs(filteredResults)
+    }, [nftsData, searchTermFromQuery])
 
-        setCombinedResults(uniqueItems)
-        setAllItems(uniqueItems)
-    }, [activeSearchResults, inactiveSearchResults])
+    // ------------------ Handlers ------------------
 
-    useEffect(() => {
-        setFilteredNFTs(allItems)
-    }, [allItems])
-
+    // Update the filtered NFTs based on side filter changes
     const handleFilteredItemsChange = (newFilteredItems) => {
         setFilteredNFTs(newFilteredItems)
     }
-
+    if (loadingImage) {
+        return <div>Loading...</div>
+    }
     return (
         <div className={styles.nftListingContainer}>
             <SearchSideFilters
-                initialItems={allItems}
+                initialItems={searchResults}
                 onFilteredItemsChange={handleFilteredItemsChange}
             />
-            <div className={styles.searchResultsWrapper}>
+            <div className={styles.nftListWrapper}>
                 <h1>Search results for: {searchTermFromQuery} </h1>
                 <div className={styles.nftList}>
                     {filteredNFTs.map((result) => (
-                        <div key={`${result.nftAddress}${result.tokenId}${result.listingId}`}>
-                            <NFTBox
-                                price={result.price}
-                                nftAddress={result.nftAddress}
-                                tokenId={result.tokenId}
-                                marketplaceAddress={result.marketplaceAddress}
-                                seller={result.seller}
-                                buyer={result.buyer}
-                                isListed={result.isListed}
-                            ></NFTBox>
+                        <div key={`${result.nftAddress}${result.tokenId}`}>
+                            <NFTBox nftData={result} />
                         </div>
                     ))}
                 </div>
