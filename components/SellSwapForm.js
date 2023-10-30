@@ -11,9 +11,10 @@ function SellSwapForm({
     defaultTokenId,
     extraFields = [],
 }) {
-    const [focusedField, setFocusedField] = useState(null)
     const formRef = useRef(null)
+    const [focusedField, setFocusedField] = useState(null)
 
+    // Initial state for form data
     const [formData, setFormData] = useState({
         nftAddress: defaultNftAddress,
         tokenId: defaultTokenId,
@@ -24,12 +25,16 @@ function SellSwapForm({
         }, {}),
     })
 
+    // Initial state for form errors
     const [errors, setErrors] = useState({
         nftAddress: "",
         tokenId: "",
         price: "",
     })
 
+    // ------------------ Validation Logic ------------------
+
+    // Validate individual form fields
     function validateField(name, value) {
         let errorMessage = ""
 
@@ -54,24 +59,18 @@ function SellSwapForm({
             default:
                 break
         }
-        // Set the current error
+
+        // Update error state for the specific field
         setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }))
 
         return errorMessage === ""
     }
 
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }))
-    }
-
+    // Validate the entire form
     function validateForm(data) {
         let isValid = true
 
-        // validate each field and update the isvalid status
+        // Validate each field and update the isValid status
         Object.keys(data).forEach((key) => {
             if (!validateField(key, data[key])) {
                 isValid = false
@@ -81,6 +80,18 @@ function SellSwapForm({
         return isValid
     }
 
+    // ------------------ Handlers ------------------
+
+    // Handle form input changes
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }))
+    }
+
+    // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault()
         if (validateForm(formData)) {
@@ -91,81 +102,43 @@ function SellSwapForm({
     return (
         <form className={styles.sellSwapForm} onSubmit={handleSubmit} key={key} ref={formRef}>
             <h2>{title}</h2>
-            <div className={styles.formInputWrapper}>
-                <div className={styles.formInput}>
-                    <label htmlFor="nftAddress">NFT Address</label>
-                    <div className={styles.inputWrapper}>
-                        <input
-                            type="text"
-                            key="nftAddress"
-                            name="nftAddress"
-                            placeholder="0x0000000000000000000000000000000000000000"
-                            value={formData.nftAddress}
-                            onChange={handleChange}
-                            onBlur={(e) => {
-                                validateField(e.target.name, e.target.value)
-                                setFocusedField(null)
-                            }}
-                            onFocus={() => {
-                                setFocusedField("nftAddress")
-                                setErrors("")
-                            }}
-                            className={focusedField === "nftAddress" ? styles.inputFocused : ""}
-                        />{" "}
-                        {errors.nftAddress && <Tooltip message={errors.nftAddress} />}
+            {/* Render form fields for NFT Address, Token ID, and Price */}
+            {["nftAddress", "tokenId", "price"].map((fieldKey) => (
+                <div key={fieldKey} className={styles.formInputWrapper}>
+                    <div className={styles.formInput}>
+                        <label htmlFor={fieldKey}>
+                            {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)}
+                        </label>
+                        <div className={styles.inputWrapper}>
+                            <input
+                                type={fieldKey === "price" ? "number" : "text"}
+                                id={fieldKey}
+                                name={fieldKey}
+                                placeholder={
+                                    fieldKey === "nftAddress"
+                                        ? "0x0000000000000000000000000000000000000000"
+                                        : fieldKey === "tokenId"
+                                        ? "0"
+                                        : "min. amount: 0.000000000000000001"
+                                }
+                                value={formData[fieldKey]}
+                                onChange={handleChange}
+                                onBlur={(e) => {
+                                    validateField(e.target.name, e.target.value)
+                                    setFocusedField(null)
+                                }}
+                                onFocus={() => {
+                                    setFocusedField(fieldKey)
+                                    setErrors("")
+                                }}
+                                className={focusedField === fieldKey ? styles.inputFocused : ""}
+                            />
+                            {errors[fieldKey] && <Tooltip message={errors[fieldKey]} />}
+                        </div>
                     </div>
-                </div>{" "}
-            </div>
-            <div className={styles.formInputWrapper}>
-                <div className={styles.formInput}>
-                    <label htmlFor="tokenId">Token Id</label>
-                    <div className={styles.inputWrapper}>
-                        <input
-                            type="number"
-                            id="tokenId"
-                            name="tokenId"
-                            placeholder="0"
-                            value={formData.tokenId}
-                            onChange={handleChange}
-                            onBlur={(e) => {
-                                validateField(e.target.name, e.target.value)
-                                setFocusedField(null)
-                            }}
-                            onFocus={() => {
-                                setFocusedField("tokenId")
-                                setErrors("")
-                            }}
-                            className={focusedField === "tokenId" ? styles.inputFocused : ""}
-                        />{" "}
-                        {errors.tokenId && <Tooltip message={errors.tokenId} />}
-                    </div>
-                </div>{" "}
-            </div>
-            <div className={styles.formInputWrapper}>
-                <div className={styles.formInput}>
-                    <label htmlFor="price">Price (in ETH)</label>
-                    <div className={styles.inputWrapper}>
-                        <input
-                            type="number"
-                            id="price"
-                            name="price"
-                            placeholder="min. amount: 0.000000000000000001"
-                            value={formData.price}
-                            onChange={handleChange}
-                            onBlur={(e) => {
-                                validateField(e.target.name, e.target.value)
-                                setFocusedField(null)
-                            }}
-                            onFocus={() => {
-                                setFocusedField("tokenId")
-                                setErrors("")
-                            }}
-                            className={focusedField === "price" ? styles.inputFocused : ""}
-                        />
-                        {errors.price && <Tooltip message={errors.price} />}
-                    </div>{" "}
                 </div>
-            </div>
+            ))}
+            {/* Render extra fields if provided */}
             {extraFields.map((field) => (
                 <div key={field.key} className={styles.formInputWrapper}>
                     <div className={styles.formInput}>
@@ -174,7 +147,7 @@ function SellSwapForm({
                             <input
                                 type={field.type}
                                 key={field.key}
-                                name={field.name}
+                                name={field.key}
                                 placeholder={field.placeholder}
                                 value={formData[field.key]}
                                 onChange={handleChange}

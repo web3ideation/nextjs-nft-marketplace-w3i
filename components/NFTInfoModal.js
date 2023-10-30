@@ -1,11 +1,12 @@
-import { Modal, Button } from "web3uikit" // Importiere benötigte Komponenten
+import { Modal, Button } from "web3uikit"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
 
 const NftModal = (props) => {
+    // Destructuring the passed properties
     const {
         show,
-        type, // 'info', 'list' oder 'sell'
+        type, // 'info', 'list', or 'sell'
         imageURI,
         tokenDescription,
         formattedSellerAddress,
@@ -25,13 +26,25 @@ const NftModal = (props) => {
         showConnectMessage,
     } = props
 
-    const okText = type === "info" ? "BUY!" : type === "list" ? "List" : "Update price"
-    const onOkHandler =
-        type === "info"
-            ? handleBuyClick
-            : type === "list"
-            ? handleListClick
-            : handleUpdatePriceButtonClick
+    // Determine the text and handler for the OK button based on the type
+    let okText, onOkHandler
+    switch (type) {
+        case "info":
+            okText = "BUY!"
+            onOkHandler = handleBuyClick
+            break
+        case "list":
+            okText = "List"
+            onOkHandler = handleListClick
+            break
+        case "sell":
+            okText = "Update price"
+            onOkHandler = handleUpdatePriceButtonClick
+            break
+        default:
+            okText = ""
+            onOkHandler = () => {}
+    }
 
     return (
         <Modal

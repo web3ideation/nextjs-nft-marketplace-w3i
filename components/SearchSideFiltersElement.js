@@ -6,18 +6,24 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
     const menuRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
 
+    // ------------------ Handlers ------------------
+
+    // Open the filter menu when the mouse enters
     const handleMouseEnter = () => {
         setIsOpen(true)
     }
 
+    // Close the filter menu when the mouse leaves
     const handleMouseLeave = () => {
         setIsOpen(false)
     }
 
+    // Handle the filter option click
     const handleButtonClick = (value) => {
         onOptionChange(value)
     }
 
+    // Render the check icon if the option is selected
     const renderIcon = (optionValue) => {
         if (selected === optionValue || (selected === "default" && optionValue === "default")) {
             return <CheckCircle fontSize="30px" />

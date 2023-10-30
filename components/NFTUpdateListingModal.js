@@ -22,8 +22,10 @@ export default function NFTUpdateListingModal(props) {
     const [transactionError, setTransactionError] = useState(null) // Error state if something with wallet is wrong
     const [updating, setUpdating] = useState(false)
 
+    // Reset the price input to its initial state
     const resetPrice = () => setPriceToUpdateListingWith("")
 
+    // Handle successful listing update
     const handleUpdateListingSuccess = async (tx) => {
         await tx.wait(1)
         dispatch({
@@ -36,6 +38,7 @@ export default function NFTUpdateListingModal(props) {
         resetPrice() // !!!W this has to be done in the error case, right? so add it at line 48? Bc if an error happens it will not be reset to 0...
     }
 
+    // Define the contract function to update the listing
     const { runContractFunction: updateListing } = useWeb3Contract({
         abi: nftMarketplaceAbi,
         contractAddress: marketplaceAddress,
@@ -45,10 +48,11 @@ export default function NFTUpdateListingModal(props) {
             tokenId: tokenId,
             newDesiredNftAddress: nftAddress,
             newdesiredTokenId: tokenId,
-            newPrice: ethers.utils.parseEther(priceToUpdateListingWith || "0"), //!!!W this means that if i just open the modal and klick OK without entering a number the nfts price will be set to 0. which is a problem! tho there should be an error from the marketplace smartcontract that the price can not be zero, i think.
+            newPrice: ethers.utils.parseEther(priceToUpdateListingWith || "0"),
         },
     })
 
+    // Handle the button click to update the listing
     const handleUpdateButtonClick = async () => {
         if (!priceToUpdateListingWith.trim()) {
             setError("Add your new price")
