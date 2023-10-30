@@ -10,15 +10,19 @@ import { useRouter } from "next/router"
 
 export default function Home() {
     const router = useRouter()
-    const [nftAddressFromQuery, setNftAddressFromQuery] = useState("")
-    const [tokenIdFromQuery, setTokenIdFromQuery] = useState("")
     const { chainId, account, isWeb3Enabled } = useMoralis()
+    const { runContractFunction } = useWeb3Contract()
+    const dispatch = useNotification()
+
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
+
+    const [nftAddressFromQuery, setNftAddressFromQuery] = useState("")
+    const [tokenIdFromQuery, setTokenIdFromQuery] = useState("")
     const [activeForm, setActiveForm] = useState(null)
-    const dispatch = useNotification()
     const [proceeds, setProceeds] = useState("0")
 
+    // Update NFT address and token ID from the router query
     useEffect(() => {
         if (router.query.nftAddress) {
             setNftAddressFromQuery(router.query.nftAddress)
@@ -28,66 +32,17 @@ export default function Home() {
         }
     }, [router.query])
 
-    const { runContractFunction } = useWeb3Contract()
-
-    function useRawApprove(nftAddress) {
-        // !!!W this function shouldnt be in a function!
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-
-        const rawApprove = async (to, tokenId) => {
-            try {
-                // Calculate the function signature for "approve(address,uint256)"
-                const functionSignature = ethers.utils.id("approve(address,uint256)").slice(0, 10)
-
-                // Convert the parameters to the required format
-                const addressPadded = ethers.utils.hexZeroPad(to, 32).slice(2)
-                const tokenIdHex = ethers.utils
-                    .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
-                    .slice(2)
-
-                // Construct the data for the raw call
-                const data = functionSignature + addressPadded + tokenIdHex
-
-                // Get the signer from the provider
-                const signer = provider.getSigner()
-
-                // Send the transaction using the signer
-                const tx = await signer.sendTransaction({
-                    to: nftAddress,
-                    data: data,
-                })
-
-                return tx
-            } catch (error) {
-                console.error("Error sending raw approve transaction:", error)
-                throw error
-            }
-        }
-
-        return rawApprove
-    }
-
-    // !!! when the user wants to sell an nft that is not theirs, example: entering a wrong tokenId and klick submit, nothing happens.
-    // But when you check the browser console, you see that actually an error has been thrown, that the user is not approved.
-    // So this error message should also be visible to the user in the frontend.
-
-    async function approveAndList(data) {
-        console.log("Approving...")
+    // Function to approve the NFT for sale or swap
+    const approveAndList = async (data) => {
         const nftAddress = data.nftAddress
         const tokenId = data.tokenId
         const price = ethers.utils.parseUnits(data.price, "ether").toString()
 
-        console.log(nftAddress, tokenId, price)
-
-        const rawApprove = useRawApprove(nftAddress)
-
         try {
-            const tx = await rawApprove(marketplaceAddress, tokenId)
-
-            // If rawApprove completes without errors, call handleApproveSuccess
-            handleApproveSuccess(tx, nftAddress, tokenId, price)
+            const tx = await useRawApprove(nftAddress)(marketplaceAddress, tokenId)
+            await handleApproveSuccess(tx, nftAddress, tokenId, price)
         } catch (error) {
-            console.error("Error in approveAndList:", JSON.stringify(error)) // !!!W does this error has to have a different format? like "NftMarketplace__blablabla" ?
+            console.error("Error in approveAndList:", error)
             dispatch({
                 type: "error",
                 message: "Failed to approve and list the NFT.",
@@ -97,17 +52,28 @@ export default function Home() {
         }
     }
 
-    async function handleApproveSuccess(tx, nftAddress, tokenId, price) {
-        // !!!W also dispatch a notification here like:
-        // dispatch({
-        //   type: "success",
-        //   message: "Approval",
-        //   title: "Marketplace approved",
-        //   position: "topR",
-        // })
+    // Raw approve function to allow the marketplace to manage the NFT
+    const useRawApprove = (nftAddress) => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
 
+        return async (to, tokenId) => {
+            const functionSignature = ethers.utils.id("approve(address,uint256)").slice(0, 10)
+            const addressPadded = ethers.utils.hexZeroPad(to, 32).slice(2)
+            const tokenIdHex = ethers.utils
+                .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
+                .slice(2)
+            const data = functionSignature + addressPadded + tokenIdHex
+            const signer = provider.getSigner()
+            return signer.sendTransaction({
+                to: nftAddress,
+                data: data,
+            })
+        }
+    }
+
+    // Handle the approval success and list the NFT for sale or swap
+    const handleApproveSuccess = async (tx, nftAddress, tokenId, price) => {
         await tx.wait()
-        console.log("Ok! Now time to list")
         const listOptions = {
             abi: nftMarketplaceAbi,
             contractAddress: marketplaceAddress,
@@ -123,12 +89,13 @@ export default function Home() {
 
         await runContractFunction({
             params: listOptions,
-            onSuccess: () => handleListSuccess(), // !!!W this gets triggert before the tx is mined, so the notification is a bit early
+            onSuccess: handleListSuccess,
             onError: (error) => console.log(error),
         })
     }
 
-    async function handleListSuccess() {
+    // Notify the user when the NFT is successfully listed
+    const handleListSuccess = () => {
         dispatch({
             type: "success",
             message: "NFT listing",
@@ -137,6 +104,7 @@ export default function Home() {
         })
     }
 
+    // Notify the user when proceeds are successfully withdrawn
     const handleWithdrawSuccess = () => {
         dispatch({
             type: "success",
@@ -145,7 +113,8 @@ export default function Home() {
         })
     }
 
-    async function setupUI() {
+    // Setup the UI, checking for any proceeds the user can withdraw
+    const setupUI = async () => {
         const returnedProceeds = await runContractFunction({
             params: {
                 abi: nftMarketplaceAbi,
@@ -167,74 +136,72 @@ export default function Home() {
     }, [proceeds, account, isWeb3Enabled, chainId])
 
     return (
-        <>
-            <div className={styles.nftSellSwapContainer}>
-                <div className={styles.nftSellSwapButton}>
-                    <Button onClick={() => setActiveForm("sell")} text="Sell" />
-                    <Button onClick={() => setActiveForm("swap")} text="Swap" />
-                </div>
-                <div className={styles.nftSellSwapWrapper}>
-                    {activeForm === "sell" && (
-                        <SellSwapForm
-                            onSubmit={approveAndList}
-                            title="Sell your NFT!"
-                            id="Sell Form"
-                            defaultNftAddress={nftAddressFromQuery}
-                            defaultTokenId={tokenIdFromQuery}
-                        />
-                    )}
-                    {activeForm === "swap" && (
-                        <SellSwapForm
-                            onSubmit={approveAndList}
-                            title="Swap your NFT!"
-                            id="Swap Form"
-                            defaultNftAddress={nftAddressFromQuery}
-                            defaultTokenId={tokenIdFromQuery}
-                            extraFields={[
-                                {
-                                    name: "Desired NFT Address",
-                                    type: "text",
-                                    key: "desiredNftAddress",
-                                    placeholder: "0x0000000000000000000000000000000000000000",
-                                },
-                                {
-                                    name: "Desired Token ID",
-                                    type: "number",
-                                    key: "desiredTokenId",
-                                    placeholder: "1",
-                                },
-                            ]}
-                        />
-                    )}
-                </div>
-                <div>
-                    <div className="flex flex-row justify-center">
-                        <div>Withdraw {proceeds} proceeds</div>
-                    </div>
-                    {proceeds != "0" ? (
-                        <Button
-                            name="Withdraw"
-                            type="button"
-                            onClick={() => {
-                                runContractFunction({
-                                    params: {
-                                        abi: nftMarketplaceAbi,
-                                        contractAddress: marketplaceAddress,
-                                        functionName: "withdrawProceeds",
-                                        params: {},
-                                    },
-                                    onError: (error) => console.log(error),
-                                    onSuccess: handleWithdrawSuccess,
-                                })
-                            }}
-                        />
-                    ) : (
-                        <div className="flex flex-row justify-center">
-                            <div>No proceeds detected</div>
-                        </div>
-                    )}
-                </div>
+        <div className={styles.nftSellSwapContainer}>
+            <div className={styles.nftSellSwapButton}>
+                <Button onClick={() => setActiveForm("sell")} text="Sell" />
+                <Button onClick={() => setActiveForm("swap")} text="Swap" />
             </div>
-        </>
+            <div className={styles.nftSellSwapWrapper}>
+                {activeForm === "sell" && (
+                    <SellSwapForm
+                        onSubmit={approveAndList}
+                        title="Sell your NFT!"
+                        id="Sell Form"
+                        defaultNftAddress={nftAddressFromQuery}
+                        defaultTokenId={tokenIdFromQuery}
+                    />
+                )}
+                {activeForm === "swap" && (
+                    <SellSwapForm
+                        onSubmit={approveAndList}
+                        title="Swap your NFT!"
+                        id="Swap Form"
+                        defaultNftAddress={nftAddressFromQuery}
+                        defaultTokenId={tokenIdFromQuery}
+                        extraFields={[
+                            {
+                                name: "Desired NFT Address",
+                                type: "text",
+                                key: "desiredNftAddress",
+                                placeholder: "0x0000000000000000000000000000000000000000",
+                            },
+                            {
+                                name: "Desired Token ID",
+                                type: "number",
+                                key: "desiredTokenId",
+                                placeholder: "1",
+                            },
+                        ]}
+                    />
+                )}
+            </div>
+            <div>
+                <div className="flex flex-row justify-center">
+                    <div>Withdraw {proceeds} proceeds</div>
+                </div>
+                {proceeds !== "0" ? (
+                    <Button
+                        name="Withdraw"
+                        type="button"
+                        onClick={() => {
+                            runContractFunction({
+                                params: {
+                                    abi: nftMarketplaceAbi,
+                                    contractAddress: marketplaceAddress,
+                                    functionName: "withdrawProceeds",
+                                    params: {},
+                                },
+                                onError: (error) => console.log(error),
+                                onSuccess: handleWithdrawSuccess,
+                            })
+                        }}
+                    />
+                ) : (
+                    <div className="flex flex-row justify-center">
+                        <div>No proceeds detected</div>
+                    </div>
+                )}
+            </div>
+        </div>
     )
 }
