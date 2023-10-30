@@ -245,12 +245,10 @@ $line-height-small: 24px;
 .nftList {
     display: grid;
     grid-template-columns: repeat(5, 1fr); // 5 NFTs pro Reihe
-    padding-top: 16px;
+    justify-items: center;
+    row-gap: 15px;
+    padding: 16px;
     width: 100%;
-}
-
-.nftCardWrapper {
-    margin: 10px;
 }
 
 .nftCard {
@@ -325,20 +323,88 @@ $line-height-small: 24px;
 
 .showMoreButton {
     @include flex-center;
-    flex-direction: row;
-    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 18px;
 
     button {
-        @include flex-center;
-        font-family: $font-secondary;
+        background-color: $hover-blue;
+        width: 128px;
+        color: $white;
+        border-radius: 5px;
+        font-family: $font-primary;
         font-size: $font-size-small;
-        font-weight: 500;
-        color: $black;
-        border: none;
+        font-weight: 400;
         padding: 0 18px;
+        border: none;
 
         &:hover {
-            color: $hover-blue;
+            background-color: $hover-blue;
+            color: $hover-grey;
+        }
+    }
+}
+.nftCollection {
+    padding: 16px;
+}
+
+.nftTableContainer {
+    @include flex-center();
+    width: 100%;
+}
+
+.nftTableWrapper {
+    @include flex-center();
+    flex-direction: column;
+    width: 100%;
+    margin-top: 40px;
+    padding: 16px 150px;
+
+    h1 {
+        font-family: $font-primary;
+        font-size: $font-size-medium;
+        font-weight: bolder;
+        text-align: center;
+    }
+}
+
+.nftTable {
+    width: 100%;
+    table-layout: fixed;
+    border-radius: 5px;
+    @include boxShadow;
+    thead {
+        border-radius: 5px 5px 0 0;
+        background-color: $background-color;
+        box-shadow: 0 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    }
+}
+.nftTable tbody {
+    display: block; /* Damit max-height und overflow-y angewendet werden können */
+    max-height: 250px; /* Beispielhöhe, passen Sie diese an die tatsächliche Höhe von 5 Zeilen an */
+    overflow-y: auto; /* Aktiviert das vertikale Scrollen */
+}
+
+.nftTable thead,
+.nftTable tbody tr {
+    display: table; /* Stellt sicher, dass die Zeilen und Überschriften die volle Tabellenbreite einnehmen */
+    width: 100%; /* Stellt sicher, dass die Zeilen und Überschriften die volle Tabellenbreite einnehmen */
+    table-layout: fixed; /* Stellt sicher, dass die Zellen gleichmäßig verteilt sind */
+}
+
+.nftTableRow {
+    padding: 0 20px;
+    th {
+        text-align: center; /* Zentriert den Text */
+        padding: 8px 12px; /* Fügt etwas Polsterung hinzu */
+    }
+    td {
+        text-align: center; /* Zentriert den Text */
+        padding: 8px 12px; /* Fügt etwas Polsterung hinzu */
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
     }
 }
@@ -541,8 +607,8 @@ $line-height-small: 24px;
 // Search Result Page
 .nftListingContainer {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+    flex-direction: column;
+    width: 100%;
 
     .searchSideFiltersOptionWrapper {
         background-color: $background-color;
@@ -569,7 +635,7 @@ $line-height-small: 24px;
         transition: transform 0.5s ease-out;
         background-color: $background-color;
         height: 100%;
-        position: absolute;
+        position: fixed;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -662,25 +728,4 @@ $line-height-small: 24px;
 
 .searchSideFiltersItemsWrapperOpen {
     transform: translateX(0);
-}
-
-.searchResultsWrapper {
-    @include flex-center;
-    flex-direction: column;
-    width: 100%;
-    margin-top: 40px;
-    padding: 16px 150px;
-
-    h1,
-    h3 {
-        font-family: $font-primary;
-        font-size: $font-size-medium;
-        font-weight: 700;
-        line-height: 35px;
-        padding: 0 18px;
-    }
-
-    h3 {
-        font-size: $font-size-small;
-    }
 }
