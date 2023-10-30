@@ -6,52 +6,76 @@ import { Chart } from "@web3uikit/icons"
 const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     const menuRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
+    const [optionsMap, setOptionsMap] = useState({
+        Status: [],
+        Sorting: [],
+        Categories: [],
+        Collections: [],
+    })
 
+    // 1. Erstellen Sie eine Funktion, um die Sammlungen und ihre Namen zu extrahieren
+    const getUniqueCollections = () => {
+        const collections = { default: "Default" }
+
+        initialItems.forEach((nft) => {
+            if (!collections[nft.nftAddress]) {
+                collections[nft.nftAddress] = nft.tokenName
+            }
+        })
+
+        const collectionsArray = Object.entries(collections).map(([address, name]) => ({
+            value: address,
+            label: name,
+        }))
+        console.log("Unique collections:", collectionsArray)
+        return collectionsArray
+    }
+
+    // Initial filter states
     const [filters, setFilters] = useState({
         selectedSorting: "default",
         selectedStatus: "default",
         selectedCategory: "default",
-        selectedCollection: "default",
+        selectedCollections: "default",
     })
 
-    const OPTIONS_MAP = {
-        Status: [
-            { value: "default", label: "All" },
-            { value: "listed", label: "Listed" },
-            { value: "not listed", label: "Not listed" },
-        ],
-        Sorting: [
-            { value: "default", label: "By Default" },
-            { value: "highestId", label: "Highest ID" },
-            { value: "lowestId", label: "Lowest ID" },
-            { value: "highestPrice", label: "Highest Price" },
-            { value: "lowestPrice", label: "Lowest Price" },
-        ],
-        Categories: [
-            { value: "wearables", label: "Wearables" },
-            { value: "utillities", label: "Utillities" },
-        ],
-        Collections: [
-            { value: "pug", label: "Pug" },
-            { value: "moon", label: "Moon" },
-        ],
-    }
+    // Filter options for each category
+    useEffect(() => {
+        setOptionsMap({
+            Status: [
+                { value: "default", label: "All" },
+                { value: "listed", label: "Listed" },
+                { value: "not listed", label: "Not listed" },
+            ],
+            Sorting: [
+                { value: "default", label: "By Default" },
+                { value: "highestId", label: "Highest ID" },
+                { value: "lowestId", label: "Lowest ID" },
+                { value: "highestPrice", label: "Highest Price" },
+                { value: "lowestPrice", label: "Lowest Price" },
+            ],
+            Categories: [
+                { value: "wearables", label: "Wearables" },
+                { value: "utillities", label: "Utillities" },
+            ],
+            Collections: getUniqueCollections(),
+        })
+    }, [initialItems])
 
+    // ------------------ Filtering Logic ------------------
+
+    // Apply filters to the initial items and update the filtered list
     const filterItems = () => {
         let filteredList = [...initialItems]
 
-        // Status filter
+        // Apply status filter
         if (filters.selectedStatus === "listed") {
-            console.log("Filtering listed items")
             filteredList = filteredList.filter((nft) => nft.isListed)
         } else if (filters.selectedStatus === "not listed") {
-            console.log("Filtering not listed items")
             filteredList = filteredList.filter((nft) => !nft.isListed)
-        } else {
-            console.log("No status filter applied")
         }
 
-        // Sorting logic
+        // Apply sorting logic
         filteredList.sort((a, b) => {
             switch (filters.selectedSorting) {
                 case "lowestId":
@@ -67,30 +91,35 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
             }
         })
 
-        // Category filter
+        // Apply category filter
         if (filters.selectedCategory !== "default") {
             filteredList = filteredList.filter((nft) => nft.category === filters.selectedCategory)
         }
-
-        // Collection filter
-        if (filters.selectedCollection !== "default") {
-            filteredList = filteredList.filter(
-                (nft) => nft.nftAddress === filters.selectedCollection
-            )
+        // Apply collection filter
+        if (filters.selectedCollections != "default") {
+            filteredList = filteredList.filter((nft) => {
+                return nft.nftAddress === filters.selectedCollections
+            })
         }
 
-        // Informieren Sie die übergeordnete Komponente über die gefilterten Elemente
+        // Inform parent component about the filtered items
         onFilteredItemsChange(filteredList)
     }
 
+    // ------------------ Handlers ------------------
+
+    // Update filter states when an option is selected
     const handleOptionChange = (type, value) => {
+        console.log("handleOptionChange:", type, value)
         setFilters((prevFilters) => ({ ...prevFilters, [type]: value }))
     }
 
+    // Toggle the filter menu open/close
     const toggleMenu = () => {
         setIsOpen((prevIsOpen) => !prevIsOpen)
     }
 
+    // Re-filter items whenever filter states change
     useEffect(() => {
         filterItems()
     }, [filters])
@@ -117,7 +146,7 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                     <SearchSideFiltersElement
                         key={label}
                         label={label}
-                        options={OPTIONS_MAP[label]}
+                        options={optionsMap[label]}
                         selected={filters[`selected${label}`]}
                         onOptionChange={(value) => handleOptionChange(`selected${label}`, value)}
                     />
