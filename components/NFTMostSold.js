@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react"
 import NFTBox from "../components/NFTBox"
 import styles from "../styles/Home.module.css"
 import { Button } from "web3uikit"
-import { useNFT } from "../components/NFTContextProvider"
+import { useNFT } from "../context/NFTContextProvider"
 import LoadingWave from "../components/LoadingWave"
 
 function NFTMostSold() {

@@ -1,7 +1,7 @@
 import React from "react"
 import NFTTable from "./NFTTable.js" // Import the NFTTable component
 import styles from "../styles/Home.module.css"
-import { useNFT } from "../components/NFTContextProvider"
+import { useNFT } from "../context/NFTContextProvider.js"
 
 function NFTCollection() {
     // ------------------ Hooks & Data Retrieval ------------------
