@@ -1,30 +1,32 @@
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
 import Head from "next/head"
 import { MoralisProvider } from "react-moralis"
-import { NotificationProvider } from "web3uikit"
-import { NFTProvider } from "../components/NFTContextProvider"
-import { SearchResultsProvider } from "../components/SearchResultsContext"
+import { NftNotificationProvider } from "../context/NFTNotificationContext"
+import NftNotification from "../components/NFTNotification"
+import { SearchResultsProvider } from "../context/SearchResultsContext"
 import Header from "../components/Header"
 import "../styles/globals.css"
 import React, { useEffect, useState } from "react"
 import LoadingWave from "../components/LoadingWave"
 import Footer from "../components/Footer"
+import { NFTProvider } from "../context/NFTContextProvider"
 
-// Initialize Apollo Client
+// Initialize Apollo Client with the GraphQL endpoint
 const client = new ApolloClient({
     cache: new InMemoryCache(),
-    uri: process.env.NEXT_PUBLIC_SUBGRAPH_URL, // !!!W Note: This is centralized!
+    uri: process.env.NEXT_PUBLIC_SUBGRAPH_URL, // Ensure this environment variable is set
 })
 
 function MyApp({ Component, pageProps }) {
-    // State for loading indication
+    // State to control the loading indicator
     const [isLoading, setIsLoading] = useState(true)
 
-    // Set a timeout to simulate loading
+    // Simulate loading for a better user experience
     useEffect(() => {
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 2000) // Duration for loading symbol
+        const timer = setTimeout(() => {
+            setIsLoading(false) // Hide loading after 2 seconds
+        }, 2000)
+        return () => clearTimeout(timer) // Clear the timeout if the component unmounts
     }, [])
 
     return (
@@ -38,22 +40,19 @@ function MyApp({ Component, pageProps }) {
                 <link rel="icon" href="/media/only-lightbulb-favicone.ico" />
                 <link rel="canonical" href="https://w3i-marketplace.com" />
             </Head>
-            {/* Wrap the app with necessary providers */}
+            {/* Wrap the entire application with context providers to manage global state */}
             <MoralisProvider initializeOnMount={false}>
                 <ApolloProvider client={client}>
-                    <NotificationProvider>
-                        <NFTProvider>
+                    {" "}
+                    <NFTProvider>
+                        <NftNotificationProvider>
+                            <NftNotification />
                             <SearchResultsProvider>
                                 <Header />
-                                {/* Display loading icon or the component based on isLoading state */}
-                                {isLoading ? (
-                                    <LoadingWave></LoadingWave>
-                                ) : (
-                                    <Component {...pageProps} />
-                                )}
+                                {isLoading ? <LoadingWave /> : <Component {...pageProps} />}
                             </SearchResultsProvider>
-                        </NFTProvider>
-                    </NotificationProvider>
+                        </NftNotificationProvider>
+                    </NFTProvider>
                 </ApolloProvider>
             </MoralisProvider>
             <Footer />
