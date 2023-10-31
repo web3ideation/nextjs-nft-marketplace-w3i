@@ -53,6 +53,8 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 { value: "lowestId", label: "Lowest ID" },
                 { value: "highestPrice", label: "Highest Price" },
                 { value: "lowestPrice", label: "Lowest Price" },
+                { value: "mostSold", label: "Most Sold" },
+                { value: "lessSold", label: "Less Sold" },
             ],
             Categories: [
                 { value: "wearables", label: "Wearables" },
@@ -86,6 +88,10 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                     return b.price - a.price
                 case "lowestPrice":
                     return a.price - b.price
+                case "mostSold":
+                    return b.buyerCount - a.buyerCount
+                case "mostSold":
+                    return a.buyerCount - b.buyerCount
                 default:
                     return 0
             }
