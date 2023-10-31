@@ -91,14 +91,30 @@ export const NFTProvider = ({ children }) => {
 
         arr.forEach((item) => {
             const key = `${item.nftAddress}-${item.tokenId}`
-            const existingItem = map.get(key)
+            let existingItem = map.get(key)
 
-            // Compare the listingId values ​​as numbers
-            if (!existingItem || Number(item.listingId) > Number(existingItem.listingId)) {
-                map.set(key, item)
+            // Wenn das NFT noch nicht in der Map ist, initialisiere es mit dem aktuellen Item
+            if (!existingItem) {
+                existingItem = {
+                    ...item,
+                    highestListingId: item.listingId,
+                    buyerCount: item.buyer ? 1 : 0, // Initialisiere buyerCount
+                }
+                map.set(key, existingItem)
+            } else {
+                // Wenn ein Käufer vorhanden ist und die listingId kleiner als die höchste ist, erhöhe den buyerCount
+                if (item.buyer && Number(item.listingId) < Number(existingItem.highestListingId)) {
+                    existingItem.buyerCount += 1
+                }
+
+                // Aktualisiere die höchste listingId, falls nötig
+                if (Number(item.listingId) > Number(existingItem.highestListingId)) {
+                    existingItem.highestListingId = item.listingId
+                }
             }
         })
 
+        // Erstelle ein neues Array aus den Werten der Map
         return Array.from(map.values())
     }
 

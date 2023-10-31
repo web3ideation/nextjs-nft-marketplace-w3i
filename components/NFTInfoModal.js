@@ -14,6 +14,7 @@ const NftModal = (props) => {
         tokenId,
         tokenName,
         price,
+        buyerCount,
         handleBuyClick,
         handleListClick,
         handleUpdatePriceButtonClick,
@@ -98,6 +99,10 @@ const NftModal = (props) => {
                 <div>
                     <p>Price: </p>
                     <strong>{price} ETH</strong>
+                </div>
+                <div>
+                    <p>Switched Owner:</p>
+                    <strong>{buyerCount}x</strong>
                 </div>
             </div>
             {showPurchaseMessage && (
