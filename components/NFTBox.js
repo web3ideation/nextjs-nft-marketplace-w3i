@@ -4,7 +4,7 @@ import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import networkMapping from "../constants/networkMapping.json"
 import { useRouter } from "next/router"
 import Image from "next/image"
-import { useNotification } from "web3uikit"
+import { useNftNotification } from "../context/NFTNotificationContext"
 import { ethers } from "ethers"
 import LoadingWave from "../components/LoadingWave"
 import NFTInfoModal from "../components/NFTInfoModal"
@@ -57,7 +57,6 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Router and Notification hooks
     const router = useRouter()
-    const dispatch = useNotification()
 
     // ------------------ State Management ------------------
 
@@ -76,6 +75,8 @@ export default function NFTBox({ nftData, loadingImage }) {
     // Message states
     const [showPurchaseMessage, setShowPurchaseMessage] = useState(false)
     const [showConnectMessage, setShowConnectMessage] = useState(false)
+
+    const { nftNotification, showNftNotification, clearNftNotification } = useNftNotification()
 
     // Clipboard state
     const [isCopying, setIsCopying] = useState(false)
@@ -130,7 +131,10 @@ export default function NFTBox({ nftData, loadingImage }) {
             return
         }
 
-        if (buying) return
+        if (buying) {
+            showNftNotification("Buying", "Buying in progress!", "info")
+            return
+        }
 
         setBuying(true)
         setShowPurchaseMessage(true)
@@ -143,6 +147,12 @@ export default function NFTBox({ nftData, loadingImage }) {
                     console.error(error)
                     setBuying(false)
                     setShowPurchaseMessage(false)
+                    showNftNotification(
+                        "Error",
+                        "Could not complete the purchase.",
+                        "error",
+                        10000
+                    )
                 },
                 onSuccess: handleBuyItemSuccess,
             })
@@ -153,15 +163,16 @@ export default function NFTBox({ nftData, loadingImage }) {
     const handleBuyItemSuccess = async (tx) => {
         try {
             await tx.wait(1)
-            dispatch({
-                type: "success",
-                message: "Item bought!",
-                title: "Item Bought",
-                position: "topR",
-            })
+            showNftNotification("Success", "Item bought successfully!", "success", 10000)
         } catch (error) {
             console.error("Error processing transaction success:", error)
             setTransactionError("An error occurred while processing the transaction.")
+            showNftNotification(
+                "Transaction Error",
+                "An error occurred while processing the transaction.",
+                "error",
+                10000
+            )
         } finally {
             setBuying(false)
             setShowPurchaseMessage(false)
@@ -206,8 +217,12 @@ export default function NFTBox({ nftData, loadingImage }) {
     const copyNftAddressToClipboard = async () => {
         try {
             await navigator.clipboard.writeText(nftAddress)
+            // Zeigen Sie hier die Erfolgsbenachrichtigung an
+            showNftNotification("Success", "Address copied!", "success", 3000) // Annahme, dass die Funktion so definiert ist
         } catch (error) {
             console.error("Error copying to clipboard:", error)
+            // Zeigen Sie hier eine Fehlerbenachrichtigung an, falls gewünscht
+            showNftNotification("Error", "Error copying!", "error", 3000)
         }
     }
 
