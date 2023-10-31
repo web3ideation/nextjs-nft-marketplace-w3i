@@ -3,7 +3,7 @@ import SearchSideFilters from "../components/SearchSideFilters"
 import styles from "../styles/Home.module.css"
 import NFTBox from "../components/NFTBox"
 import { useRouter } from "next/router"
-import { useNFT } from "../components/NFTContextProvider"
+import { useNFT } from "../context/NFTContextProvider"
 
 const SearchResultPage = () => {
     const router = useRouter()

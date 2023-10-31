@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import NFTBox from "../components/NFTBox"
 import styles from "../styles/Home.module.css"
 import { ConnectButton } from "web3uikit"
-import { useNFT } from "../components/NFTContextProvider"
+import { useNFT } from "../context/NFTContextProvider"
 
 export default function Home() {
     const { isWeb3Enabled, chainId, account } = useMoralis()
