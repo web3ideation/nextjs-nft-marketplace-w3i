@@ -6,7 +6,7 @@ import { useRouter } from "next/router"
 import Image from "next/image"
 import { useNotification } from "web3uikit"
 import { ethers } from "ethers"
-import LoadingIcon from "../public/LoadingIcon"
+import LoadingWave from "../components/LoadingWave"
 import NFTInfoModal from "../components/NFTInfoModal"
 import NFTUpdateListingModal from "./NFTUpdateListingModal"
 import styles from "../styles/Home.module.css"
@@ -28,7 +28,7 @@ const truncateStr = (fullStr, strLen) => {
     )
 }
 
-export default function NFTBox({ nftData }) {
+export default function NFTBox({ nftData, loadingImage }) {
     // ------------------ Hooks & Data Retrieval ------------------
 
     // Destructure NFT details directly from the prop
@@ -43,6 +43,7 @@ export default function NFTBox({ nftData }) {
         imageURI,
         tokenName,
         tokenDescription,
+        buyerCount,
     } = nftData
 
     // Retrieve blockchain and user data using Moralis hook
@@ -244,15 +245,25 @@ export default function NFTBox({ nftData }) {
         <>
             {imageURI ? (
                 <div className={styles.nftCard} onClick={handleCardClick}>
+                    {" "}
+                    <div className={styles.nftTextArea}>
+                        <div className={styles.nftCardInformation}>
+                            <div className={styles.nftTitle}>
+                                <h2>{tokenName}</h2>
+                            </div>
+                            <div className={styles.nftDescription}>
+                                {tokenDescription || "..."}
+                            </div>
+                        </div>
+                    </div>
                     <Image
                         className={styles.nftImage}
                         src={imageURI.src}
-                        height={100}
-                        width={100}
+                        height={300}
+                        width={300}
                         loading="eager"
                         alt={tokenDescription || "..."}
                     />
-
                     <div className={styles.nftTextArea}>
                         <div className={styles.nftOwnerAndId}>
                             <div className={styles.nftOwner}>
@@ -276,20 +287,12 @@ export default function NFTBox({ nftData }) {
                                 )}
                             </div>
                         </div>
-                        <div className={styles.nftCardInformation}>
-                            <div className={styles.nftTitle}>
-                                <h2>{tokenName}</h2>
-                            </div>
-                            <div className={styles.nftDescription}>
-                                {tokenDescription || "..."}
-                            </div>
-                        </div>
                     </div>
                 </div>
             ) : (
                 <div className={styles.nftLoadingIconWrapper}>
                     <div className={styles.nftLoadingIcon}>
-                        <LoadingIcon />
+                        <LoadingWave />
                     </div>
                 </div>
             )}
@@ -305,6 +308,7 @@ export default function NFTBox({ nftData }) {
                     tokenId={tokenId}
                     tokenName={tokenName}
                     price={ethers.utils.formatUnits(price, "ether")}
+                    buyerCount={buyerCount}
                     handleBuyClick={handleBuyClick}
                     handleMouseEnter={handleMouseEnter}
                     handleMouseLeave={handleMouseLeave}

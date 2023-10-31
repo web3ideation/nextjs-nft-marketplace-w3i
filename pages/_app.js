@@ -7,8 +7,7 @@ import { SearchResultsProvider } from "../components/SearchResultsContext"
 import Header from "../components/Header"
 import "../styles/globals.css"
 import React, { useEffect, useState } from "react"
-import LoadingIcon from "../public/LoadingIcon"
-import styles from "../styles/Home.module.css"
+import LoadingWave from "../components/LoadingWave"
 import Footer from "../components/Footer"
 
 // Initialize Apollo Client
@@ -25,7 +24,7 @@ function MyApp({ Component, pageProps }) {
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
-        }, 400) // Duration for loading symbol
+        }, 2000) // Duration for loading symbol
     }, [])
 
     return (
@@ -48,9 +47,7 @@ function MyApp({ Component, pageProps }) {
                                 <Header />
                                 {/* Display loading icon or the component based on isLoading state */}
                                 {isLoading ? (
-                                    <div className={styles.mainLoadingIconWrapper}>
-                                        <LoadingIcon className={styles.mainLoadingIcon} />
-                                    </div>
+                                    <LoadingWave></LoadingWave>
                                 ) : (
                                     <Component {...pageProps} />
                                 )}
