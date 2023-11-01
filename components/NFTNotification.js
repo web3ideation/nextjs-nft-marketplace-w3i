@@ -13,20 +13,23 @@ const NftNotification = () => {
                 setAnimation(styles.enter) // Starten Sie mit der Eingangsklasse
             })
 
-            const exitTimer = setTimeout(() => {
-                requestAnimationFrame(() => {
-                    setAnimation(styles.exit) // Beginnen Sie mit der Ausgangsklasse
-                })
-            }, (nftNotification.duration || 5000) - 1000) // Starten Sie die Ausblendanimation 1 Sekunde vor dem Ende
+            // Wenn die Benachrichtigung nicht sticky ist, planen Sie ihre Entfernung
+            if (!nftNotification.isSticky) {
+                const exitTimer = setTimeout(() => {
+                    requestAnimationFrame(() => {
+                        setAnimation(styles.exit) // Beginnen Sie mit der Ausgangsklasse
+                    })
+                }, (nftNotification.duration || 5000) - 1000) // Starten Sie die Ausblendanimation 1 Sekunde vor dem Ende
 
-            const clearTimer = setTimeout(() => {
-                clearNftNotification()
-                setAnimation("") // Setzen Sie die Animation zurück
-            }, nftNotification.duration || 5000)
+                const clearTimer = setTimeout(() => {
+                    clearNftNotification()
+                    setAnimation("") // Setzen Sie die Animation zurück
+                }, nftNotification.duration || 5000)
 
-            return () => {
-                clearTimeout(exitTimer)
-                clearTimeout(clearTimer)
+                return () => {
+                    clearTimeout(exitTimer)
+                    clearTimeout(clearTimer)
+                }
             }
         }
     }, [nftNotification, clearNftNotification, styles])
@@ -39,9 +42,15 @@ const NftNotification = () => {
     } ${animation}`
 
     return (
-        <div className={notificationClass}>
+        <div
+            className={notificationClass}
+            onClick={!nftNotification.isSticky ? clearNftNotification : undefined}
+        >
             <strong>{nftNotification.title}</strong>
             <p>{nftNotification.message}</p>
+            {nftNotification.isSticky && (
+                <button onClick={clearNftNotification}>Close</button> // Fügen Sie eine Schaltfläche hinzu, um klebrige Benachrichtigungen zu schließen
+            )}
         </div>
     )
 }

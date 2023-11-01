@@ -137,24 +137,24 @@ export default function NFTBox({ nftData, loadingImage }) {
         }
 
         setBuying(true)
-        showNftNotification("Buying", "Initiating purchase...", "info")
+        showNftNotification("Buying", "Initiating purchase...", "info", 0, true)
 
         if (isOwnedByUser) {
             setShowInfoModal(true)
             setBuying(false) // Stellen Sie sicher, dass Sie den Kaufstatus zurücksetzen.
+            clearNftNotification()
         } else {
             await buyItem({
                 onError: (error) => {
                     console.error(error)
                     setBuying(false)
-                    showNftNotification(
-                        "Error",
-                        "Could not complete the purchase.",
-                        "error",
-                        10000
-                    )
+                    clearNftNotification()
+                    showNftNotification("Error", "Could not complete the purchase.", "error", 6000)
                 },
-                onSuccess: handleBuyItemSuccess,
+                onSuccess: () => {
+                    handleBuyItemSuccess()
+                    clearNftNotification()
+                },
             })
         }
     }

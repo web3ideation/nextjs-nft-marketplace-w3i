@@ -6,9 +6,12 @@ const NftNotificationContext = createContext({
         title: "",
         message: "",
         type: "",
+        duration: 0,
         isVisible: false, // Default to not visible
+        isSticky: false,
     },
     showNftNotification: () => {}, // A no-op function for the default value
+    clearNftNotification: () => {},
 })
 
 export const useNftNotification = () => {
@@ -28,8 +31,9 @@ export const NftNotificationProvider = ({ children }) => {
         title: "",
         message: "",
         type: "",
-        isVisible: false,
         duration: 0,
+        isVisible: false,
+        isSticky: false,
     })
 
     // State to store the timeout ID for clearing the notification
@@ -44,17 +48,27 @@ export const NftNotificationProvider = ({ children }) => {
 
     // Function to show a new notification
     const showNftNotification = useCallback(
-        (title, message, type, duration = 5000) => {
-            console.log(`Showing notification for ${duration}ms`) // Debug log
+        (title, message, type, duration = 5000, isSticky = false) => {
+            console.log(`Showing notification ${isSticky ? "indefinitely" : `for ${duration}ms`}`) // Debug log
             if (timeoutId) {
                 clearTimeout(timeoutId) // Löschen Sie den vorhandenen Timeout, wenn einer vorhanden ist
             }
-            const id = setTimeout(() => {
-                console.log("Clearing notification after timeout") // Debug log
-                clearNftNotification() // Verwenden Sie eine Funktion, um den vorherigen Zustand zu erhalten und zu aktualisieren
-            }, duration)
-            setTimeoutId(id) // Speichern Sie die neue Timeout-ID
-            setNftNotification({ title, message, type, isVisible: true, duration }) // Fügen Sie die Dauer zum Zustand hinzu
+            let id = null
+            if (!isSticky) {
+                id = setTimeout(() => {
+                    console.log("Clearing notification after timeout")
+                    clearNftNotification()
+                }, duration)
+            }
+            setTimeoutId(id)
+            setNftNotification({
+                title,
+                message,
+                type,
+                duration,
+                isVisible: true,
+                isSticky,
+            })
         },
         [timeoutId, clearNftNotification]
     )
