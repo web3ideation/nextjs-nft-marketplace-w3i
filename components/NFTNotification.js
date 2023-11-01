@@ -1,33 +1,42 @@
 import React, { useEffect, useState } from "react"
 import { useNftNotification } from "../context/NFTNotificationContext"
-import styles from "../styles/Home.module.css"
+import styles from "../styles/Home.module.css" // Stellen Sie sicher, dass dies auf Ihre SCSS-Datei verweist
 
 const NftNotification = () => {
     const { nftNotification, clearNftNotification } = useNftNotification()
+    const [animation, setAnimation] = useState("")
 
     useEffect(() => {
-        console.log(`Notification visibility: ${nftNotification.isVisible}`)
-        console.log(`Notification duration: ${nftNotification.duration}`)
         if (nftNotification.isVisible) {
-            const timer = setTimeout(() => {
+            // Verwenden Sie requestAnimationFrame, um sicherzustellen, dass die Animationen im nächsten Frame beginnen
+            requestAnimationFrame(() => {
+                setAnimation(styles.enter) // Starten Sie mit der Eingangsklasse
+            })
+
+            const exitTimer = setTimeout(() => {
+                requestAnimationFrame(() => {
+                    setAnimation(styles.exit) // Beginnen Sie mit der Ausgangsklasse
+                })
+            }, (nftNotification.duration || 5000) - 1000) // Starten Sie die Ausblendanimation 1 Sekunde vor dem Ende
+
+            const clearTimer = setTimeout(() => {
                 clearNftNotification()
-            }, nftNotification.duration || 5000) // Fallback to 5000ms if duration is not set
+                setAnimation("") // Setzen Sie die Animation zurück
+            }, nftNotification.duration || 5000)
 
-            return () => clearTimeout(timer)
+            return () => {
+                clearTimeout(exitTimer)
+                clearTimeout(clearTimer)
+            }
         }
-    }, [nftNotification, clearNftNotification])
-
-    // Log to check if the component is rendering
-    console.log("Rendering notification component", { isVisible: nftNotification.isVisible })
+    }, [nftNotification, clearNftNotification, styles])
 
     if (!nftNotification.isVisible) return null
 
     // Bestimmen Sie die Klasse basierend auf dem Typ der Nachricht
     const notificationClass = `${styles.nftNotification} ${
-        nftNotification.type === "error"
-            ? styles.nftNotificationError
-            : styles.nftNotificationSuccess
-    }`
+        nftNotification.type === "error" ? styles.error : styles.success
+    } ${animation}`
 
     return (
         <div className={notificationClass}>
