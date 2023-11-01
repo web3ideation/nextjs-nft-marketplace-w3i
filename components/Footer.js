@@ -4,7 +4,7 @@ export default function Header({}) {
     return (
         <footer id="rs-footer" className={styles.Footer}>
             <div className={styles.FooterTop}>
-                <div className={styles.FooterContainer}>
+                <div className={styles.footerContainer}>
                     <div className="row">
                         <div className="col-lg-4 footer-0">
                             <div className="footer-logo-wrap">
@@ -20,8 +20,7 @@ export default function Header({}) {
                                 className="widget_text widget widget_custom_html"
                             >
                                 <div className="textwidget custom-html-widget">
-                                    Wir bringen Sie und Ihr Unternehmen in das Web 3. Profitieren
-                                    Sie von unserer langjährigen Erfahrung!
+                                    Marketplace @ web3ideation
                                     <p className="footer-btn-wrap">
                                         <a
                                             href="https://web3ideation.com/contact"

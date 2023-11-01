@@ -1,4 +1,4 @@
-// Schriftimportfont-black
+// Font imports
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
@@ -16,6 +16,7 @@ $font-size-medium: 35px;
 $font-size-large: 70px;
 $line-height-small: 24px;
 
+// Mixins
 @mixin flex-center {
     display: flex;
     justify-content: center;
@@ -33,6 +34,7 @@ $line-height-small: 24px;
     box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
 }
 
+// Notification styles
 .nftNotification {
     position: fixed;
     width: 300px;
@@ -68,7 +70,7 @@ $line-height-small: 24px;
     }
 }
 
-/* Loading Icon Styles */
+// Loading Icon Styles
 .mainLoadingIconWrapper,
 .nftLoadingIconWrapper {
     @include flex-center;
@@ -77,7 +79,6 @@ $line-height-small: 24px;
 }
 
 .mainLoadingIconWrapper {
-    width: 100%;
     height: 100%;
 }
 
@@ -119,26 +120,24 @@ $line-height-small: 24px;
     animation: wave 1.5s linear infinite;
 }
 
+// Wave animation delay
 .wave:nth-child(1) {
     animation-delay: 0.15s;
 }
-
 .wave:nth-child(2) {
     animation-delay: 0.3s;
 }
-
 .wave:nth-child(3) {
     animation-delay: 0.45s;
 }
-
 .wave:nth-child(4) {
     animation-delay: 0.6s;
 }
-
 .wave:nth-child(5) {
     animation-delay: 0.75s;
 }
 
+// Keyframes for wave animation
 @keyframes wave {
     0% {
         transform: scale(0.5);
@@ -152,8 +151,7 @@ $line-height-small: 24px;
     }
 }
 
-// Notification
-
+// Notification info styles
 .nftNotificationinfo {
     position: absolute;
     width: 200px;
@@ -161,7 +159,7 @@ $line-height-small: 24px;
     border: solid 1px black;
 }
 
-// Header
+// Header styles
 .headerContainer {
     background-color: $background-color;
     position: sticky;
@@ -178,6 +176,7 @@ $line-height-small: 24px;
     }
 }
 
+// Logo and headline wrapper within the header
 .logoAndHeadlineWrapper {
     display: flex;
     align-items: center;
@@ -200,11 +199,13 @@ $line-height-small: 24px;
     }
 }
 
+// Header elements wrapper
 .headerElementsWrapper {
     display: flex;
     align-items: center;
     background-color: $background-color;
 
+    // Search bar wrapper
     .searchBarWrapper {
         display: flex;
         padding: 20px 0;
@@ -235,6 +236,7 @@ $line-height-small: 24px;
         }
     }
 
+    // Header button styles
     .headerButton {
         padding: 20px 18px;
         @include hover-invert;
@@ -244,6 +246,7 @@ $line-height-small: 24px;
         }
     }
 
+    // Popup menu wrapper
     .popupMenuWrapper {
         padding-right: 18px;
 
@@ -251,6 +254,7 @@ $line-height-small: 24px;
             color: $hover-blue;
         }
 
+        // Menu button styles
         .menuButton {
             display: flex;
             background-color: $background-color;
@@ -271,6 +275,7 @@ $line-height-small: 24px;
             }
         }
 
+        // Menu icon styles
         .menuIcon,
         .menuIconMinus {
             @include flex-center;
@@ -288,6 +293,7 @@ $line-height-small: 24px;
             color: $hover-blue;
         }
 
+        // Popup menu links wrapper
         .popupMenuLinksWrapper {
             transform: translateY(-100%);
             background-color: $secondary-color;
@@ -300,10 +306,12 @@ $line-height-small: 24px;
             box-shadow: inset 0 5px 5px rgb(0 0 0 / 0.1), inset 0 1px 2px -1px rgb(0 0 0 / 0.1);
         }
 
+        // Popup menu links wrapper open state
         .popupMenuLinksWrapperOpen {
             transform: translateY(0);
         }
 
+        // Popup menu links styles
         .popupMenuLinks {
             @include flex-center;
             padding: 10px 40px;
@@ -326,11 +334,12 @@ $line-height-small: 24px;
     }
 }
 
+// Connect button styles
 .connectButton {
     padding: 20px 18px;
 }
 
-// Main
+// Main content styles
 .nftListWrapper {
     @include flex-center;
     flex-direction: column;
@@ -346,6 +355,7 @@ $line-height-small: 24px;
     }
 }
 
+// NFT list grid styles
 .nftList {
     display: grid;
     grid-template-columns: repeat(5, 1fr); // 5 NFTs pro Reihe
@@ -355,6 +365,7 @@ $line-height-small: 24px;
     width: 100%;
 }
 
+// NFT card styles
 .nftCard {
     @include boxShadow;
     border-radius: 5px;
@@ -375,6 +386,7 @@ $line-height-small: 24px;
     }
 }
 
+// NFT image styles
 .nftImage {
     object-fit: cover;
     display: block;
@@ -383,6 +395,7 @@ $line-height-small: 24px;
     align-items: center;
 }
 
+// NFT text area styles
 .nftTextArea {
     display: flex;
     flex-direction: column;
@@ -393,6 +406,7 @@ $line-height-small: 24px;
     color: $black;
     padding: 0 5px 5px 5px;
 
+    // Owner, price, and card information styles
     .nftOwnerAndId,
     .nftListedPrice,
     .nftCardInformation {
@@ -422,6 +436,7 @@ $line-height-small: 24px;
     }
 }
 
+// Show more button styles
 .showMoreButton {
     @include flex-center;
     display: flex;
@@ -445,15 +460,19 @@ $line-height-small: 24px;
         }
     }
 }
+
+// NFT Collection styles
 .nftCollection {
     padding: 16px;
 }
 
+// NFT Table Container styles
 .nftTableContainer {
     @include flex-center();
     width: 100%;
 }
 
+// NFT Table Wrapper styles
 .nftTableWrapper {
     @include flex-center();
     flex-direction: column;
@@ -469,39 +488,45 @@ $line-height-small: 24px;
     }
 }
 
+// NFT Table styles
 .nftTable {
     width: 100%;
     table-layout: fixed;
     border-radius: 5px;
     @include boxShadow;
+
     thead {
         border-radius: 5px 5px 0 0;
         background-color: $background-color;
         box-shadow: 0 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     }
 }
+
+// NFT Table body styles for scrollable content
 .nftTable tbody {
-    display: block; /* Damit max-height und overflow-y angewendet werden können */
-    max-height: 250px; /* Beispielhöhe, passen Sie diese an die tatsächliche Höhe von 5 Zeilen an */
-    overflow-y: auto; /* Aktiviert das vertikale Scrollen */
+    display: block; // Enables max-height and overflow-y
+    max-height: 250px; // Example height, adjust to the actual height of 5 rows
+    overflow-y: auto; // Enables vertical scrolling
 }
 
+// Ensures table rows and headers span the full width
 .nftTable thead,
 .nftTable tbody tr {
-    display: table; /* Stellt sicher, dass die Zeilen und Überschriften die volle Tabellenbreite einnehmen */
-    width: 100%; /* Stellt sicher, dass die Zeilen und Überschriften die volle Tabellenbreite einnehmen */
-    table-layout: fixed; /* Stellt sicher, dass die Zellen gleichmäßig verteilt sind */
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
 
+// NFT Table row styles
 .nftTableRow {
     padding: 0 20px;
     th {
-        text-align: center; /* Zentriert den Text */
-        padding: 8px 12px; /* Fügt etwas Polsterung hinzu */
+        text-align: center;
+        padding: 8px 12px;
     }
     td {
-        text-align: center; /* Zentriert den Text */
-        padding: 8px 12px; /* Fügt etwas Polsterung hinzu */
+        text-align: center;
+        padding: 8px 12px;
         img {
             display: block;
             margin-left: auto;
@@ -513,10 +538,12 @@ $line-height-small: 24px;
 // Modals
 .nftModalInformation {
     position: absolute;
+    // Header styles within the modal
     header {
         padding: 0;
     }
 
+    // NFT Modal Image styles
     .nftModalImage {
         width: 300px;
         height: 300px;
@@ -525,6 +552,7 @@ $line-height-small: 24px;
         align-items: center;
     }
 
+    // NFT Modal Text styles
     .nftModalText {
         display: flex;
         flex-direction: column;
@@ -542,6 +570,7 @@ $line-height-small: 24px;
         }
     }
 
+    // Footer styles within the modal
     footer {
         display: flex;
         justify-content: space-around;
@@ -565,6 +594,7 @@ $line-height-small: 24px;
         }
     }
 
+    // NFT Modal Message styles
     .nftModalMessage {
         display: flex;
         flex-direction: column;
@@ -574,12 +604,14 @@ $line-height-small: 24px;
     }
 }
 
+// NFT Modal Update Listing styles
 .nftModalUpdateListing {
     position: absolute;
     footer {
         border: none;
     }
 
+    // Styles to remove spinner from number inputs
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -587,10 +619,11 @@ $line-height-small: 24px;
     }
 }
 
-// Sell/Swap Nft page
+// Sell/Swap Nft page styles
 .nftSellSwapContainer {
     margin: 40px 192px;
 
+    // Sell/Swap button styles
     .nftSellSwapButton {
         display: flex;
         justify-content: center;
@@ -612,6 +645,7 @@ $line-height-small: 24px;
         }
     }
 
+    // Sell/Swap wrapper styles
     .nftSellSwapWrapper {
         font-family: "Poppins";
         @include flex-center;
@@ -620,6 +654,7 @@ $line-height-small: 24px;
         border-radius: 5px;
         padding: 16px 32px;
 
+        // Form styles within the sell/swap wrapper
         .sellSwapForm {
             @include boxShadow;
             width: 50%;
@@ -630,32 +665,42 @@ $line-height-small: 24px;
             align-items: center;
             padding: 16px 32px;
             border-radius: 5px;
+
+            // Styles to remove spinner from number inputs
             input::-webkit-outer-spin-button,
             input::-webkit-inner-spin-button {
                 -webkit-appearance: none;
                 margin: 0;
             }
+
             h2 {
                 font-size: $font-size-medium;
                 font-weight: 600;
             }
+
+            // Input wrapper styles
             .formInputWrapper {
                 @include flex-center;
 
                 width: 100%;
             }
+
+            // Input styles
             .formInput {
                 width: 100%;
+
                 .inputWrapper {
                     display: flex;
                     flex-direction: row;
                     align-items: center;
                 }
+
                 label {
                     width: 50%;
                     padding: 0 18px;
                     font-weight: 500;
                 }
+
                 input {
                     outline: none;
                     border-radius: 5px;
@@ -665,14 +710,19 @@ $line-height-small: 24px;
                     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
                     background-color: #ffffff;
                 }
+
+                // Focused input styles
                 .inputFocused {
                     border: 1px solid blue;
                 }
+
+                // Tooltip styles
                 .tooltip {
                     position: relative;
                     display: inline-block;
                 }
 
+                // Tooltip text styles
                 .tooltip .tooltipText {
                     width: 200px;
                     background-color: $hover-grey;
@@ -689,6 +739,8 @@ $line-height-small: 24px;
                     transition: opacity 1s;
                 }
             }
+
+            // Button styles within the form
             button {
                 background-color: $hover-blue;
                 width: 128px;
@@ -713,6 +765,7 @@ $line-height-small: 24px;
     flex-direction: column;
     width: 100%;
 
+    // Side filter option wrapper styles
     .searchSideFiltersOptionWrapper {
         background-color: $background-color;
         width: 128px;
@@ -733,6 +786,7 @@ $line-height-small: 24px;
         }
     }
 
+    // Side filter wrapper styles
     .searchSideFiltersWrapper {
         transform: translateX(-100%);
         transition: transform 0.5s ease-out;
@@ -747,10 +801,12 @@ $line-height-small: 24px;
         box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     }
 
+    // Side filter wrapper open styles
     .searchSideFiltersWrapperOpen {
         transform: translateX(0);
     }
 
+    // Filter text styles
     .filterText {
         display: flex;
         flex-direction: row;
@@ -758,6 +814,7 @@ $line-height-small: 24px;
         align-items: center;
     }
 
+    // Filter open button styles
     .filterOpenButton {
         transition: 0s;
         position: absolute;
@@ -771,10 +828,12 @@ $line-height-small: 24px;
         }
     }
 
+    // Filter open button open styles
     .filterOpenButtonOpen {
         color: $hover-blue;
     }
 
+    // Filter button styles
     .filterButton {
         display: flex;
         flex-direction: row;
@@ -783,6 +842,7 @@ $line-height-small: 24px;
     }
 }
 
+// Background placeholder styles
 .backgroundPlaceholder {
     height: 100%;
     width: 100%;
@@ -790,6 +850,7 @@ $line-height-small: 24px;
     z-index: 1;
 }
 
+// Search side filters styles
 .searchSideFilters {
     display: flex;
     flex-direction: row;
@@ -798,6 +859,7 @@ $line-height-small: 24px;
     background-color: $background-color;
 }
 
+// Search side filter items wrapper styles
 .searchSideFiltersItemsWrapper {
     position: absolute;
     display: flex;
@@ -828,7 +890,57 @@ $line-height-small: 24px;
         }
     }
 }
-
+// Search side filter items wrapper open styles
 .searchSideFiltersItemsWrapperOpen {
     transform: translateX(0);
+}
+
+// Footer styles
+.footerContainer {
+    background-color: $background-color;
+    padding: 20px 0;
+    text-align: center;
+    font-family: $font-secondary;
+    font-size: $font-size-small;
+    color: $black;
+}
+
+// Responsive design breakpoints
+@media (max-width: 1200px) {
+    .nftList {
+        grid-template-columns: repeat(4, 1fr); // 4 NFTs per row
+    }
+}
+
+@media (max-width: 992px) {
+    .nftList {
+        grid-template-columns: repeat(3, 1fr); // 3 NFTs per row
+    }
+}
+
+@media (max-width: 768px) {
+    .nftList {
+        grid-template-columns: repeat(2, 1fr); // 2 NFTs per row
+    }
+
+    .headerElementsWrapper {
+        .searchBarWrapper {
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width: 576px) {
+    .nftList {
+        grid-template-columns: 1fr; // 1 NFT per row
+    }
+
+    .headerElementsWrapper {
+        flex-direction: column;
+
+        .searchBarWrapper {
+            width: auto;
+            padding: 10px;
+        }
+    }
 }
