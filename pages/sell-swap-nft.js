@@ -1,9 +1,10 @@
 import styles from "../styles/Home.module.css"
-import { useNotification, Button } from "web3uikit"
+import { Button } from "web3uikit"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { ethers } from "ethers"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import networkMapping from "../constants/networkMapping.json"
+import { useNftNotification } from "../context/NFTNotificationContext"
 import { useEffect, useState } from "react"
 import SellSwapForm from "../components/SellSwapForm"
 import { useRouter } from "next/router"
@@ -12,7 +13,6 @@ export default function Home() {
     const router = useRouter()
     const { chainId, account, isWeb3Enabled } = useMoralis()
     const { runContractFunction } = useWeb3Contract()
-    const dispatch = useNotification()
 
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
@@ -21,6 +21,8 @@ export default function Home() {
     const [tokenIdFromQuery, setTokenIdFromQuery] = useState("")
     const [activeForm, setActiveForm] = useState(null)
     const [proceeds, setProceeds] = useState("0")
+
+    const { nftNotifications, showNftNotification, clearNftNotification } = useNftNotification()
 
     // Update NFT address and token ID from the router query
     useEffect(() => {
@@ -43,12 +45,7 @@ export default function Home() {
             await handleApproveSuccess(tx, nftAddress, tokenId, price)
         } catch (error) {
             console.error("Error in approveAndList:", error)
-            dispatch({
-                type: "error",
-                message: "Failed to approve and list the NFT.",
-                title: "Error",
-                position: "topR",
-            })
+            showNftNotification("Error", "Failed to approve and list the NFT.", "error", 6000)
         }
     }
 
@@ -96,21 +93,12 @@ export default function Home() {
 
     // Notify the user when the NFT is successfully listed
     const handleListSuccess = () => {
-        dispatch({
-            type: "success",
-            message: "NFT listing",
-            title: "NFT listed",
-            position: "topR",
-        })
+        showNftNotification("NFT listed", "NFT listing", "success", 6000)
     }
 
     // Notify the user when proceeds are successfully withdrawn
     const handleWithdrawSuccess = () => {
-        dispatch({
-            type: "success",
-            message: "Withdrawing proceeds",
-            position: "topR",
-        })
+        showNftNotification("Withdrawl", "Withdrawing proceeds", "success", 6000)
     }
 
     // Setup the UI, checking for any proceeds the user can withdraw
