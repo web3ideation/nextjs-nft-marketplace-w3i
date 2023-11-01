@@ -132,21 +132,21 @@ export default function NFTBox({ nftData, loadingImage }) {
         }
 
         if (buying) {
-            showNftNotification("Buying", "Buying in progress!", "info")
+            showNftNotification("Buying", "A purchase is already in progress!", "info", 3000)
             return
         }
 
         setBuying(true)
-        setShowPurchaseMessage(true)
+        showNftNotification("Buying", "Initiating purchase...", "info")
 
         if (isOwnedByUser) {
             setShowInfoModal(true)
+            setBuying(false) // Stellen Sie sicher, dass Sie den Kaufstatus zurücksetzen.
         } else {
             await buyItem({
                 onError: (error) => {
                     console.error(error)
                     setBuying(false)
-                    setShowPurchaseMessage(false)
                     showNftNotification(
                         "Error",
                         "Could not complete the purchase.",
@@ -163,13 +163,12 @@ export default function NFTBox({ nftData, loadingImage }) {
     const handleBuyItemSuccess = async (tx) => {
         try {
             await tx.wait(1)
-            showNftNotification("Success", "Item bought successfully!", "success", 10000)
+            showNftNotification("Success", "Purchase successful!", "success", 10000)
         } catch (error) {
             console.error("Error processing transaction success:", error)
-            setTransactionError("An error occurred while processing the transaction.")
             showNftNotification(
                 "Transaction Error",
-                "An error occurred while processing the transaction.",
+                "An error occurred while purchasing.",
                 "error",
                 10000
             )
@@ -218,7 +217,7 @@ export default function NFTBox({ nftData, loadingImage }) {
         try {
             await navigator.clipboard.writeText(nftAddress)
             // Zeigen Sie hier die Erfolgsbenachrichtigung an
-            showNftNotification("Success", "Address copied!", "success", 3000) // Annahme, dass die Funktion so definiert ist
+            showNftNotification("Success", "Address copied!", "success", 6000) // Annahme, dass die Funktion so definiert ist
         } catch (error) {
             console.error("Error copying to clipboard:", error)
             // Zeigen Sie hier eine Fehlerbenachrichtigung an, falls gewünscht
