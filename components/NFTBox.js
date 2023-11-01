@@ -62,7 +62,6 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Web3 and User related states
     const [isConnected, setIsConnected] = useState(isWeb3Enabled)
-    const [transactionError, setTransactionError] = useState(null)
     const [buying, setBuying] = useState(false)
 
     // Modal states
@@ -73,10 +72,9 @@ export default function NFTBox({ nftData, loadingImage }) {
     const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
 
     // Message states
-    const [showPurchaseMessage, setShowPurchaseMessage] = useState(false)
     const [showConnectMessage, setShowConnectMessage] = useState(false)
 
-    const { nftNotification, showNftNotification, clearNftNotification } = useNftNotification()
+    const { nftNotifications, showNftNotification, clearNftNotification } = useNftNotification()
 
     // Clipboard state
     const [isCopying, setIsCopying] = useState(false)
@@ -127,54 +125,65 @@ export default function NFTBox({ nftData, loadingImage }) {
     // Handler for buy click
     const handleBuyClick = async () => {
         if (!isConnected) {
-            setShowConnectMessage(true)
+            showNftNotification("Connect", "Connect your wallet to buy items!", "error", 6000)
             return
         }
 
         if (buying) {
-            showNftNotification("Buying", "A purchase is already in progress!", "info", 3000)
+            showNftNotification(
+                "Buying",
+                "A purchase is already in progress! Please check your wallet!",
+                "error",
+                6000
+            )
             return
         }
 
         setBuying(true)
-        showNftNotification("Buying", "Initiating purchase...", "info", 0, true)
+        const notificationId = showNftNotification(
+            "Buying",
+            "Initiating purchase...",
+            "info",
+            0,
+            true
+        )
 
         if (isOwnedByUser) {
             setShowInfoModal(true)
             setBuying(false) // Stellen Sie sicher, dass Sie den Kaufstatus zurücksetzen.
-            clearNftNotification()
+            clearNftNotification(notificationId)
         } else {
             await buyItem({
                 onError: (error) => {
                     console.error(error)
+                    clearNftNotification(notificationId)
                     setBuying(false)
-                    clearNftNotification()
                     showNftNotification("Error", "Could not complete the purchase.", "error", 6000)
                 },
                 onSuccess: () => {
-                    handleBuyItemSuccess()
-                    clearNftNotification()
+                    handleBuyItemSuccess(notificationId)
                 },
             })
         }
     }
 
     // Handler for successful item purchase
-    const handleBuyItemSuccess = async (tx) => {
+    const handleBuyItemSuccess = async (notificationId) => {
         try {
             await tx.wait(1)
-            showNftNotification("Success", "Purchase successful!", "success", 10000)
+            clearNftNotification(notificationId) // Clear the sticky notification using its ID
+            showNftNotification("Success", "Purchase successful!", "success", 6000)
         } catch (error) {
             console.error("Error processing transaction success:", error)
+            clearNftNotification(notificationId)
             showNftNotification(
                 "Transaction Error",
                 "An error occurred while purchasing.",
                 "error",
-                10000
+                6000
             )
         } finally {
             setBuying(false)
-            setShowPurchaseMessage(false)
         }
     }
 
@@ -328,7 +337,6 @@ export default function NFTBox({ nftData, loadingImage }) {
                     handleMouseLeave={handleMouseLeave}
                     copyNftAddressToClipboard={copyNftAddressToClipboard}
                     closeModal={() => setShowInfoModal(false)}
-                    showPurchaseMessage={showPurchaseMessage}
                     showConnectMessage={showConnectMessage}
                 />
             )}
