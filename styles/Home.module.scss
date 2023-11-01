@@ -33,31 +33,39 @@ $line-height-small: 24px;
     box-shadow: 0 0 5px 5px rgb(0 0 0/0.2), 0 1px 2px -1px rgb(0 0 0/0.2);
 }
 
-.nftNotificationError {
+.nftNotification {
     position: fixed;
     width: 300px;
     z-index: 100;
-    background-color: rgb(255, 255, 255, 0.9);
-    color: firebrick;
+    opacity: 0;
+    right: -300px;
+    background-color: rgba(255, 255, 255, 0.9);
     top: 80px;
-    right: 0;
-    border: solid 2px firebrick;
-    border-right: none;
     border-radius: 5px 0 0 5px;
     padding: 18px;
-}
-.nftNotificationSuccess {
-    position: fixed;
-    width: 300px;
-    z-index: 100;
-    background-color: rgb(255, 255, 255, 0.9);
-    color: forestgreen;
-    top: 80px;
-    right: 0;
-    border: solid 2px forestgreen;
-    border-right: none;
-    border-radius: 5px 0 0 5px;
-    padding: 18px;
+    transition: 1s;
+
+    &.enter {
+        right: 0;
+        opacity: 1;
+    }
+
+    &.exit {
+        right: -300px;
+        opacity: 0;
+    }
+
+    &.error {
+        color: firebrick;
+        border: solid 2px firebrick;
+        border-right: none;
+    }
+
+    &.success {
+        color: forestgreen;
+        border: solid 2px forestgreen;
+        border-right: none;
+    }
 }
 
 /* Loading Icon Styles */
@@ -504,6 +512,7 @@ $line-height-small: 24px;
 
 // Modals
 .nftModalInformation {
+    position: absolute;
     header {
         padding: 0;
     }
@@ -566,6 +575,7 @@ $line-height-small: 24px;
 }
 
 .nftModalUpdateListing {
+    position: absolute;
     footer {
         border: none;
     }
