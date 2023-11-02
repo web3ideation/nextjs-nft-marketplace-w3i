@@ -124,6 +124,7 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Handler for buy click
     const handleBuyClick = async () => {
+        console.log("Item clicked", nftAddress, tokenId, marketplaceAddress, price)
         if (!isConnected) {
             showNftNotification("Connect", "Connect your wallet to buy items!", "error", 6000)
             return
@@ -148,43 +149,34 @@ export default function NFTBox({ nftData, loadingImage }) {
             true
         )
 
-        if (isOwnedByUser) {
-            setShowInfoModal(true)
-            setBuying(false) // Stellen Sie sicher, dass Sie den Kaufstatus zurücksetzen.
-            clearNftNotification(notificationId)
-        } else {
-            await buyItem({
-                onError: (error) => {
-                    console.error(error)
+        buyItem({
+            onError: (error) => {
+                console.error(error)
+                clearNftNotification(notificationId)
+                setBuying(false)
+                showNftNotification("Error", "Could not complete the purchase.", "error", 6000)
+            },
+            onSuccess: async (tx) => {
+                console.log(tx)
+                // Achten Sie darauf, das Transaktionsobjekt zu erfassen
+                try {
+                    await tx.wait(1) // Warten Sie auf die Bestätigung der Transaktion
+                    clearNftNotification(notificationId) // Benachrichtigung löschen
+                    showNftNotification("Success", "Purchase successful!", "success", 6000)
+                } catch (error) {
+                    console.error("Error processing transaction success:", error)
                     clearNftNotification(notificationId)
+                    showNftNotification(
+                        "Transaction Error",
+                        "An error occurred while purchasing.",
+                        "error",
+                        6000
+                    )
+                } finally {
                     setBuying(false)
-                    showNftNotification("Error", "Could not complete the purchase.", "error", 6000)
-                },
-                onSuccess: () => {
-                    handleBuyItemSuccess(notificationId)
-                },
-            })
-        }
-    }
-
-    // Handler for successful item purchase
-    const handleBuyItemSuccess = async (notificationId) => {
-        try {
-            await tx.wait(1)
-            clearNftNotification(notificationId) // Clear the sticky notification using its ID
-            showNftNotification("Success", "Purchase successful!", "success", 6000)
-        } catch (error) {
-            console.error("Error processing transaction success:", error)
-            clearNftNotification(notificationId)
-            showNftNotification(
-                "Transaction Error",
-                "An error occurred while purchasing.",
-                "error",
-                6000
-            )
-        } finally {
-            setBuying(false)
-        }
+                }
+            },
+        })
     }
 
     // Handler for updating price button click
