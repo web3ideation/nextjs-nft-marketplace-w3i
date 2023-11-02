@@ -18,8 +18,6 @@ const NftModal = (props) => {
         handleBuyClick,
         handleListClick,
         handleUpdatePriceButtonClick,
-        handleMouseEnter,
-        handleMouseLeave,
         copyNftAddressToClipboard,
         isCopying,
         closeModal,
@@ -72,14 +70,8 @@ const NftModal = (props) => {
                 <div>
                     <p>Token-Adress: </p>
                     <div
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
+                        className={styles.nftNftAddressToCopy}
                         onClick={copyNftAddressToClipboard}
-                        style={{
-                            display: "inline-block",
-                            position: "relative",
-                            cursor: isCopying ? "text" : "copy",
-                        }}
                     >
                         <p>{formattedNftAddress}</p>
                     </div>
