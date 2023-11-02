@@ -36,70 +36,78 @@ $line-height-small: 24px;
 
 // Notification styles
 @keyframes slideIn {
-    from {
+    0% {
         opacity: 0;
-        transform: translateX(100%);
+        padding: 0;
     }
-    to {
+    35% {
+        padding: 18px;
+        opacity: 0;
+        transform: translate3D(100%, 0, 0);
+    }
+
+    100% {
         opacity: 1;
-        transform: translateX(0);
+        padding: 18px;
+        transform: translate3D(0, 0, 0);
     }
 }
 
 @keyframes slideOut {
     from {
         opacity: 1;
-        transform: translateX(0);
+        padding: 18px;
+        transform: translate3D(0, 0, 0);
     }
     to {
         opacity: 0;
-        transform: translateX(100%);
+        padding: 18px;
+        transform: translate3D(100%, 0, 0);
     }
 }
 
 .notificationsContainer {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: flex-end;
     gap: 10px;
     position: fixed;
     right: 0;
     top: 80px;
     z-index: 100;
-    transition: transform 1s;
 }
 
 .nftNotification {
     width: 300px;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 5px 0 0 5px;
-    padding: 18px;
-    transition: transform 1s ease, opacity 1s ease;
-    opacity: 0;
-    transform: translateX(100%);
 
     &.enter {
-        animation: slideIn 1s forwards; // Use forwards to persist the end state of the animation
+        animation: slideIn 1.5s forwards ease-out;
     }
 
     &.exit {
-        animation: slideOut 1s forwards;
+        animation: slideOut 1.5s forwards;
     }
 
     &.error {
         color: firebrick;
-        border: solid 2px firebrick;
+        border: solid 3px firebrick;
         border-right: none;
     }
 
     &.success {
-        color: forestgreen;
-        border: solid 2px forestgreen;
+        color: $hover-blue;
+        border: solid 3px $hover-blue;
         border-right: none;
     }
+    .nftNotificationInnerWrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
 }
-
-// Dynamische Klasse für die Positionierung basierend auf dem Index
 
 // Loading Icon Styles
 .mainLoadingIconWrapper,
@@ -592,7 +600,11 @@ $line-height-small: 24px;
         font-size: $font-size-small;
         font-weight: 500;
         color: $black;
-
+        .nftNftAddressToCopy {
+            display: "inline-block";
+            position: "relative";
+            cursor: url(../public/media/copy-icon.png), copy;
+        }
         div {
             display: flex;
             justify-content: space-between;
