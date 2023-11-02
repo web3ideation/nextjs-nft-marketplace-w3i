@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import styles from "../styles/Home.module.css"
+import { CrossCircle } from "web3uikit"
 
 const SingleNotification = ({
     className,
@@ -51,12 +52,18 @@ const SingleNotification = ({
             data-index={dataIndex}
             style={{ display: notification.isVisible ? "block" : "none" }} // Control the visibility of the notification
         >
-            <strong>{notification.title}</strong>
-            <p>{notification.message}</p>
-            {notification.isSticky && (
-                // Provide a button to clear sticky notifications
-                <button onClick={() => clearNftNotification(notification.id)}>Close</button>
-            )}
+            <div className={styles.nftNotificationInnerWrapper}>
+                <div>
+                    <strong>{notification.title}</strong>
+                    <p>{notification.message}</p>
+                </div>
+                {notification.isSticky && (
+                    // Provide a button to clear sticky notifications
+                    <button onClick={() => clearNftNotification(notification.id)}>
+                        <CrossCircle fontSize={35} />
+                    </button>
+                )}
+            </div>
         </div>
     )
 }
