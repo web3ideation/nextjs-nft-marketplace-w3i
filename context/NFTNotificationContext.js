@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from "react"
+import React, { createContext, useContext, useState, useCallback } from "react"
 
 const NftNotificationContext = createContext({
     nftNotifications: [],
@@ -14,7 +14,7 @@ export const useNftNotification = () => {
     return context
 }
 
-export const NftNotificationProvider = ({ children }) => {
+export const NftNotificationProvider = ({ children, maxNotifications = 7 }) => {
     const [nftNotifications, setNftNotifications] = useState([])
 
     const clearNftNotification = useCallback((id) => {
@@ -36,7 +36,15 @@ export const NftNotificationProvider = ({ children }) => {
                 className: "enter", // Start with the 'enter' class
             }
 
-            setNftNotifications((prevNotifications) => [newNotification, ...prevNotifications])
+            setNftNotifications((prevNotifications) => {
+                // Wenn die maximale Anzahl erreicht ist, entfernen Sie die älteste Benachrichtigung
+                const notifications = [newNotification, ...prevNotifications]
+                if (notifications.length > maxNotifications) {
+                    // Entfernen Sie die letzte Benachrichtigung im Array
+                    notifications.pop()
+                }
+                return notifications
+            })
 
             if (!isSticky) {
                 setTimeout(() => {
@@ -50,11 +58,11 @@ export const NftNotificationProvider = ({ children }) => {
                     })
 
                     // After the exit animation, remove the notification from state
-                    setTimeout(() => clearNftNotification(id), 1000) // Match the animation duration
+                    setTimeout(() => clearNftNotification(id), 1500) // Match the animation duration
                 }, duration)
             }
         },
-        [clearNftNotification]
+        [clearNftNotification, maxNotifications]
     )
 
     return (
