@@ -3,14 +3,14 @@ import { ethers } from "ethers"
 import { useQuery } from "@apollo/client"
 import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
 
+// Create a context for the NFT data
 const NFTContext = createContext()
 
 // Custom hook to use the NFT context
-export const useNFT = () => {
-    return useContext(NFTContext)
-}
+export const useNFT = () => useContext(NFTContext)
 
 export const NFTProvider = ({ children }) => {
+    // Fetch active and inactive NFT items using GraphQL queries
     const {
         data: activeItemsData,
         loading: activeLoading,
@@ -22,20 +22,12 @@ export const NFTProvider = ({ children }) => {
         error: inactiveError,
     } = useQuery(GET_INACTIVE_ITEMS)
 
-    console.log("Active Loading:", activeLoading)
-    console.log("Active Error:", activeError)
-    console.log("Inactive Loading:", inactiveLoading)
-    console.log("Inactive Error:", inactiveError)
-
+    // State for storing NFT data and collections
     const [nftsData, setNftsData] = useState([])
     const [nftCollections, setNftCollections] = useState([])
-
     const [loadingAllImages, setLoadingAllImages] = useState(true)
 
-    console.log("NFTContext data", nftsData)
-    console.log("NFTCollections data", nftCollections)
-
-    // Function to get the raw token URI
+    // Function to get the raw token URI from the blockchain
     const getRawTokenURI = useCallback(async (nftAddress, tokenId) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         try {
@@ -45,10 +37,7 @@ export const NFTProvider = ({ children }) => {
                 .slice(2)
             const data = functionSignature + tokenIdHex
 
-            const result = await provider.call({
-                to: nftAddress,
-                data: data,
-            })
+            const result = await provider.call({ to: nftAddress, data })
             const decodedData = ethers.utils.defaultAbiCoder.decode(["string"], result)
             return decodedData[0]
         } catch (error) {
@@ -57,7 +46,7 @@ export const NFTProvider = ({ children }) => {
         }
     }, [])
 
-    // Function to load the image for a given NFT
+    // Function to load the image metadata for a given NFT
     const loadImage = useCallback(
         async (nft) => {
             try {
@@ -74,18 +63,13 @@ export const NFTProvider = ({ children }) => {
                 }
             } catch (error) {
                 console.error("Error loading image for NFT:", nft, error)
-                return {
-                    ...nft,
-                    error: true,
-                }
+                return { ...nft, error: true }
             }
         },
         [getRawTokenURI]
     )
 
-    // Function to get the highest listing ID for each NFT,
-    // means the nft which is the last time listed,
-    // !!!W works only with orderBy listingId subgraphQueries
+    // Function to get the highest listing ID for each NFT
     const getHighestListingIdPerNFT = (arr) => {
         const map = new Map()
 
@@ -93,35 +77,29 @@ export const NFTProvider = ({ children }) => {
             const key = `${item.nftAddress}-${item.tokenId}`
             let existingItem = map.get(key)
 
-            // Wenn das NFT noch nicht in der Map ist, initialisiere es mit dem aktuellen Item
             if (!existingItem) {
                 existingItem = {
                     ...item,
                     highestListingId: item.listingId,
-                    buyerCount: item.buyer ? 1 : 0, // Initialisiere buyerCount
+                    buyerCount: item.buyer ? 1 : 0,
                 }
                 map.set(key, existingItem)
             } else {
-                // Wenn ein Käufer vorhanden ist und die listingId kleiner als die höchste ist, erhöhe den buyerCount
                 if (item.buyer && Number(item.listingId) < Number(existingItem.highestListingId)) {
                     existingItem.buyerCount += 1
                 }
-
-                // Aktualisiere die höchste listingId, falls nötig
                 if (Number(item.listingId) > Number(existingItem.highestListingId)) {
                     existingItem.highestListingId = item.listingId
                 }
             }
         })
 
-        // Erstelle ein neues Array aus den Werten der Map
         return Array.from(map.values())
     }
 
+    // Load images for all NFTs when active or inactive data changes
     useEffect(() => {
-        const loadAllImages = async (items) => {
-            return await Promise.all(items.map((nft) => loadImage(nft)))
-        }
+        const loadAllImages = async (items) => Promise.all(items.map(loadImage))
 
         if (activeItemsData && inactiveItemsData) {
             setLoadingAllImages(true)
@@ -131,22 +109,20 @@ export const NFTProvider = ({ children }) => {
                 loadAllImages(inactiveItemsData.items),
             ]).then(([activeData, inactiveData]) => {
                 const combinedData = [...activeData, ...inactiveData]
-                console.log("Combined Data", combinedData)
                 const highestListingData = getHighestListingIdPerNFT(combinedData)
-                console.log("Highest Listing Data", highestListingData)
                 setNftsData(highestListingData)
                 setLoadingAllImages(false)
             })
         }
     }, [activeItemsData, inactiveItemsData, loadImage])
 
+    // Create collections from NFT data
     const createCollections = (nfts) => {
         const collectionsMap = new Map()
 
         nfts.forEach((nft) => {
             const { nftAddress, tokenId, imageURI, tokenName } = nft
 
-            // Wenn die Sammlung noch nicht existiert, erstelle eine neue
             if (!collectionsMap.has(nftAddress)) {
                 collectionsMap.set(nftAddress, {
                     nftAddress,
@@ -158,8 +134,6 @@ export const NFTProvider = ({ children }) => {
             }
 
             const collection = collectionsMap.get(nftAddress)
-
-            // Überprüfe, ob das tokenId bereits in der Sammlung existiert
             if (!collection.items.some((item) => item.tokenId === tokenId)) {
                 collection.items.push(nft)
                 collection.count += 1
@@ -169,11 +143,13 @@ export const NFTProvider = ({ children }) => {
         return Array.from(collectionsMap.values())
     }
 
+    // Update collections when NFT data changes
     useEffect(() => {
         const collections = createCollections(nftsData)
         setNftCollections(collections)
     }, [nftsData])
 
+    // Provide the NFT data and state through context
     return (
         <NFTContext.Provider
             value={{
