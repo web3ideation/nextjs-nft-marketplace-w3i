@@ -352,6 +352,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     tokenId={tokenId}
                     tokenName={tokenName}
                     price={ethers.utils.formatUnits(price, "ether")}
+                    buyerCount={buyerCount}
                     handleUpdatePriceButtonClick={handleUpdatePriceButtonClick}
                     handleMouseEnter={handleMouseEnter}
                     handleMouseLeave={handleMouseLeave}
@@ -371,6 +372,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     tokenId={tokenId}
                     tokenName={tokenName}
                     price={ethers.utils.formatUnits(price, "ether")}
+                    buyerCount={buyerCount}
                     handleListClick={handleListClick}
                     handleMouseEnter={handleMouseEnter}
                     handleMouseLeave={handleMouseLeave}
