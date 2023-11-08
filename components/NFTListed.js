@@ -15,9 +15,10 @@ function NFTListed() {
     const [visibleNFTs, setVisibleNFTs] = useState(5)
 
     // Sort NFTs by listingId using useMemo for performance optimization
-    const sortedNFTs = useMemo(() => {
-        // Make sure to copy the array before sorting to avoid mutating the original state
-        return [...nftsData].sort((a, b) => Number(b.listingId) - Number(a.listingId))
+    const sortedAndFilteredNFTs = useMemo(() => {
+        return [...nftsData]
+            .filter((nft) => nft.isListed) // Filter out NFTs where isListed is not true
+            .sort((a, b) => Number(b.listingId) - Number(a.listingId))
     }, [nftsData])
 
     // ------------------ Render Functions ------------------
@@ -35,12 +36,12 @@ function NFTListed() {
         }
 
         // Check if there are no NFTs to display
-        if (sortedNFTs.length === 0) {
+        if (sortedAndFilteredNFTs.length === 0) {
             return <p>No NFTs available</p>
         }
 
         // Use the slice method to display only the desired number of NFTs
-        return sortedNFTs
+        return sortedAndFilteredNFTs
             .slice(0, visibleNFTs)
             .map((nft) => (
                 <NFTBox nftData={nft} key={`${nft.nftAddress}${nft.tokenId}${nft.listingId}`} />
