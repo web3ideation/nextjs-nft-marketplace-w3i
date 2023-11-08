@@ -27,6 +27,9 @@ export const NFTProvider = ({ children }) => {
     const [nftCollections, setNftCollections] = useState([])
     const [loadingAllImages, setLoadingAllImages] = useState(true)
 
+    console.log("Nfts Data", nftsData)
+    console.log("Nft Collection", nftCollections)
+
     // Function to get the raw token URI from the blockchain
     const getRawTokenURI = useCallback(async (nftAddress, tokenId) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
