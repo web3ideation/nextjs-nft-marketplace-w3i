@@ -84,6 +84,10 @@ $line-height-small: 24px;
     border-radius: 5px 0 0 5px;
 
     &.enter {
+        animation: slideIn 1.5s forwards ease-out, slideOut 1.5s 4s forwards;
+    }
+
+    &.sticky {
         animation: slideIn 1.5s forwards ease-out;
     }
 
@@ -106,6 +110,12 @@ $line-height-small: 24px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+    }
+    .nftNotificationBtnWrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: end;
     }
 }
 
