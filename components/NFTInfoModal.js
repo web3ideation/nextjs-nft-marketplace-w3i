@@ -21,8 +21,7 @@ const NftModal = (props) => {
         copyNftAddressToClipboard,
         isCopying,
         closeModal,
-        showPurchaseMessage,
-        showConnectMessage,
+        showNftNotification,
     } = props
 
     // Determine the text and handler for the OK button based on the type
@@ -97,17 +96,6 @@ const NftModal = (props) => {
                     <strong>{buyerCount}x</strong>
                 </div>
             </div>
-            {showPurchaseMessage && (
-                <div className={styles.nftModalMessage}>
-                    The purchase is in progress. Please check your wallet and confirm the purchase
-                    process.
-                </div>
-            )}
-            {showConnectMessage && (
-                <div className={styles.nftModalMessage}>
-                    Please connect your Wallet to buy NFT's!
-                </div>
-            )}
         </Modal>
     )
 }

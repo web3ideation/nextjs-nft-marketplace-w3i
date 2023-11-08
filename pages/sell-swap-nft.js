@@ -39,7 +39,7 @@ export default function Home() {
         const nftAddress = data.nftAddress
         const tokenId = data.tokenId
         const price = ethers.utils.parseUnits(data.price, "ether").toString()
-
+        showNftNotification("Listing", "Aprove and List NFT...", "info", 0, true)
         try {
             const tx = await useRawApprove(nftAddress)(marketplaceAddress, tokenId)
             await handleApproveSuccess(tx, nftAddress, tokenId, price)
@@ -93,7 +93,11 @@ export default function Home() {
 
     // Notify the user when the NFT is successfully listed
     const handleListSuccess = () => {
-        showNftNotification("NFT listed", "NFT listing", "success", 6000)
+        showNftNotification("NFT listing", "NFT listing process...", "info", 0, true)
+        // Reload the page after a short delay to show the notification
+        setTimeout(() => {
+            router.reload()
+        }, 6000)
     }
 
     // Notify the user when proceeds are successfully withdrawn
