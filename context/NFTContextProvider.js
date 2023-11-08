@@ -27,6 +27,8 @@ export const NFTProvider = ({ children }) => {
     const [nftCollections, setNftCollections] = useState([])
     const [loadingAllImages, setLoadingAllImages] = useState(true)
 
+    console.log("Active Data", activeItemsData)
+    console.log("Inactive Data", inactiveItemsData)
     console.log("Nfts Data", nftsData)
     console.log("Nft Collection", nftCollections)
 
