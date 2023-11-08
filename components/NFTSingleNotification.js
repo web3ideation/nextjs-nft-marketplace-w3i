@@ -12,11 +12,25 @@ const SingleNotification = ({ notification, clearNftNotification }) => {
         }
     }
 
+    // Function to get the appropriate style based on notification type
+    const getNotificationTypeStyle = (type) => {
+        switch (type) {
+            case "error":
+                return styles.error
+            case "success":
+                return styles.success
+            case "info":
+                return styles.info
+            default:
+                return ""
+        }
+    }
+
     // Combine the classes for the notification element
     const notificationClasses = [
         styles.nftNotification,
-        notification.isSticky ? styles.sticky : styles.enter, // Verwenden Sie 'sticky' für dauerhafte Benachrichtigungen
-        notification.type === "error" ? styles.error : styles.success,
+        notification.isSticky ? styles.sticky : styles.enter,
+        getNotificationTypeStyle(notification.type),
         notification.closing ? styles.exit : "",
     ].join(" ")
 

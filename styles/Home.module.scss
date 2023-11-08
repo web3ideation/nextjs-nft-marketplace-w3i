@@ -95,6 +95,12 @@ $line-height-small: 24px;
         animation: slideOut 1.5s forwards;
     }
 
+    &.info {
+        color: $hover-blue;
+        border: solid 3px $hover-blue;
+        border-right: none;
+    }
+
     &.error {
         color: firebrick;
         border: solid 3px firebrick;
@@ -102,8 +108,8 @@ $line-height-small: 24px;
     }
 
     &.success {
-        color: $hover-blue;
-        border: solid 3px $hover-blue;
+        color: forestgreen;
+        border: solid 3px forestgreen;
         border-right: none;
     }
     .nftNotificationInnerWrapper {
