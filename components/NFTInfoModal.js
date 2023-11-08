@@ -5,7 +5,6 @@ import styles from "../styles/Home.module.css"
 const NftModal = (props) => {
     // Destructuring the passed properties
     const {
-        show,
         type, // 'info', 'list', or 'sell'
         imageURI,
         tokenDescription,
@@ -13,23 +12,29 @@ const NftModal = (props) => {
         formattedNftAddress,
         tokenId,
         tokenName,
+        isListed,
         price,
         buyerCount,
         handleBuyClick,
         handleListClick,
         handleUpdatePriceButtonClick,
         copyNftAddressToClipboard,
-        isCopying,
         closeModal,
-        showNftNotification,
     } = props
 
     // Determine the text and handler for the OK button based on the type
-    let okText, onOkHandler
+    let okText, onOkHandler, showOkButton
     switch (type) {
         case "info":
-            okText = "BUY!"
-            onOkHandler = handleBuyClick
+            if (isListed) {
+                okText = "BUY!"
+                onOkHandler = handleBuyClick
+                showOkButton = true
+            } else {
+                okText = ""
+                onOkHandler = () => {}
+                showOkButton = false
+            }
             break
         case "list":
             okText = "List"
@@ -44,13 +49,17 @@ const NftModal = (props) => {
             onOkHandler = () => {}
     }
 
+    // Überprüfe, ob isListed true ist, um den "Buy"-Button anzuzeigen
+    const shouldShowBuyButton = isListed
+
     return (
         <Modal
             className={styles.nftModalInformation}
-            onCancel={closeModal}
-            onOk={onOkHandler}
-            okText={okText}
             cancelText="Close"
+            onCancel={closeModal}
+            isOkDisabled={!showOkButton}
+            okText={showOkButton ? okText : undefined}
+            onOk={showOkButton ? onOkHandler : undefined}
             closeButton={<Button disabled text=""></Button>}
             width="max-content"
         >
