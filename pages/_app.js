@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react"
 import LoadingWave from "../components/LoadingWave"
 import Footer from "../components/Footer"
 import { NFTProvider } from "../context/NFTContextProvider"
+import styles from "../styles/Home.module.css"
 
 // Initialize Apollo Client with the GraphQL endpoint
 const client = new ApolloClient({
@@ -49,7 +50,15 @@ function MyApp({ Component, pageProps }) {
                             <NftNotification />
                             <SearchResultsProvider>
                                 <Header />
-                                {isLoading ? <LoadingWave /> : <Component {...pageProps} />}
+                                {isLoading ? (
+                                    <div className={styles.loadingContainerMain}>
+                                        <div className={styles.loadingWrapperMain}>
+                                            <LoadingWave />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <Component {...pageProps} />
+                                )}
                             </SearchResultsProvider>
                         </NftNotificationProvider>
                     </NFTProvider>

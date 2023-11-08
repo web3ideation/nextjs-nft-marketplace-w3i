@@ -3,14 +3,12 @@ import styles from "../styles/Home.module.css" // Importieren Sie Ihre CSS-Datei
 
 const LoadingWave = () => {
     return (
-        <div className={styles.loadingContainer}>
-            <div className={styles.loadingWave}>
-                <div className={styles.wave}></div>
-                <div className={styles.wave}></div>
-                <div className={styles.wave}></div>
-                <div className={styles.wave}></div>
-                <div className={styles.wave}></div>
-            </div>
+        <div className={styles.loadingWave}>
+            <div className={styles.wave}></div>
+            <div className={styles.wave}></div>
+            <div className={styles.wave}></div>
+            <div className={styles.wave}></div>
+            <div className={styles.wave}></div>
         </div>
     )
 }
