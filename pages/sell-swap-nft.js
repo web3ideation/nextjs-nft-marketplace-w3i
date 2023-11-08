@@ -22,7 +22,7 @@ export default function Home() {
     const [activeForm, setActiveForm] = useState(null)
     const [proceeds, setProceeds] = useState("0")
 
-    const { nftNotifications, showNftNotification, clearNftNotification } = useNftNotification()
+    const { nftNotifications, showNftNotification, closeNftNotification } = useNftNotification()
 
     // Update NFT address and token ID from the router query
     useEffect(() => {
@@ -39,13 +39,25 @@ export default function Home() {
         const nftAddress = data.nftAddress
         const tokenId = data.tokenId
         const price = ethers.utils.parseUnits(data.price, "ether").toString()
-        showNftNotification("Listing", "Aprove and List NFT...", "info", 0, true)
+        let listAndApproveNotificationId
+
         try {
+            listAndApproveNotificationId = showNftNotification(
+                "Listing",
+                "Aprove and List NFT...",
+                "info",
+                true
+            )
             const tx = await useRawApprove(nftAddress)(marketplaceAddress, tokenId)
             await handleApproveSuccess(tx, nftAddress, tokenId, price)
         } catch (error) {
             console.error("Error in approveAndList:", error)
-            showNftNotification("Error", "Failed to approve and list the NFT.", "error", 6000)
+            closeNftNotification(listAndApproveNotificationId)
+            showNftNotification("Error", "Failed to approve and list the NFT.", "error")
+        } finally {
+            setTimeout(() => {
+                router.reload("/my-nft")
+            }, 6000)
         }
     }
 
@@ -93,16 +105,12 @@ export default function Home() {
 
     // Notify the user when the NFT is successfully listed
     const handleListSuccess = () => {
-        showNftNotification("NFT listing", "NFT listing process...", "info", 0, true)
-        // Reload the page after a short delay to show the notification
-        setTimeout(() => {
-            router.reload()
-        }, 6000)
+        showNftNotification("NFT listing", "NFT listing process...", "info", true)
     }
 
     // Notify the user when proceeds are successfully withdrawn
     const handleWithdrawSuccess = () => {
-        showNftNotification("Withdrawl", "Withdrawing proceeds", "success", 6000)
+        showNftNotification("Withdrawl", "Withdrawing proceeds", "success")
     }
 
     // Setup the UI, checking for any proceeds the user can withdraw
