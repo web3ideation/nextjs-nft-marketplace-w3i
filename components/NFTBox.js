@@ -166,7 +166,7 @@ export default function NFTBox({ nftData, loadingImage }) {
             console.error("Error buying item:", error)
             closeNftNotification(initiatingPurchaseNotificationId)
         } finally {
-            router.reload()
+            // router.reload()
             setBuying(false)
             setTransactionError(false)
         }
