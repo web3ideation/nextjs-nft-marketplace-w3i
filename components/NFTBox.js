@@ -75,7 +75,9 @@ export default function NFTBox({ nftData, loadingImage }) {
     const [showUpdateListingModal, setShowUpdateListingModal] = useState(false)
 
     // Message states
-    const { nftNotifications, showNftNotification, clearNftNotification } = useNftNotification()
+    const { nftNotifications, showNftNotification, clearNftNotification, closeNftNotification } =
+        useNftNotification()
+    const [transactionError, setTransactionError] = useState(false)
 
     // ------------------ Derived States & Utilities ------------------
 
@@ -120,25 +122,25 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Handler for buy click
     const handleBuyClick = async () => {
+        let initiatingPurchaseNotificationId
         console.log("Item clicked", nftAddress, tokenId, marketplaceAddress, price)
         if (!isWeb3Enabled) {
-            showNftNotification("Connect", "Connect your wallet to buy items!", "error", 6000)
+            showNftNotification("Connect", "Connect your wallet to buy items!", "error")
             return
         }
 
         if (buying) {
             showNftNotification(
                 "Buying",
-                "A purchase is already in progress! Please check your wallet!",
-                "error",
-                6000
+                "A purchase is already in progress! Check your wallet!",
+                "error"
             )
             return
         }
         setBuying(true)
-        const notificationId = showNftNotification(
+        initiatingPurchaseNotificationId = showNftNotification(
             "Buying",
-            "Initiating purchase... Check your wallet!",
+            "Initiating purchase... Check wallet!",
             "info",
             true
         )
@@ -146,37 +148,51 @@ export default function NFTBox({ nftData, loadingImage }) {
         try {
             const tx = await buyItem({
                 onError: (error) => {
-                    console.error(error)
-                    showNftNotification("Error", "Could not complete the purchase.", "error")
+                    console.error("buyItem", error)
+                    setTransactionError(true)
+                    showNftNotification(
+                        "Error",
+                        "Could not complete the purchase.",
+                        "error",
+                        false
+                    )
+                    closeNftNotification(initiatingPurchaseNotificationId)
                 },
             })
+            closeNftNotification(initiatingPurchaseNotificationId)
             await handleBuyItemSuccess(tx)
         } catch (error) {
+            setTransactionError(true)
             console.error("Error buying item:", error)
-            showNftNotification("Error", "Transaction failed.", "error")
+            closeNftNotification(initiatingPurchaseNotificationId)
         } finally {
+            router.reload()
             setBuying(false)
+            setTransactionError(false)
         }
     }
 
     // Handler for successful item purchase
     const handleBuyItemSuccess = async (tx) => {
+        let purchaseInProgressNotificationId
+        if (transactionError) {
+            return
+        }
         try {
-            const notificationId = showNftNotification(
+            purchaseInProgressNotificationId = showNftNotification(
                 "Buying",
-                "Purchase in progress... Wait for more!",
+                "Purchase in progress...",
                 "info",
                 true
             )
             await tx.wait(1)
             showNftNotification("Success", "Purchase successful!", "success")
-            clearNftNotification()
+            closeNftNotification(purchaseInProgressNotificationId)
         } catch (error) {
             console.error("Error processing transaction success:", error)
-            showNftNotification("Error", "An error occurred while purchasing.", "error")
-            clearNftNotification()
+            showNftNotification("Error", "Error while purchasing!", "error")
+            closeNftNotification(purchaseInProgressNotificationId)
         } finally {
-            clearNftNotification(notificationId)
         }
     }
 
@@ -209,8 +225,8 @@ export default function NFTBox({ nftData, loadingImage }) {
         try {
             await navigator.clipboard.writeText(nftAddress)
             // Zeigen Sie hier die Erfolgsbenachrichtigung an
+            console.log("copy")
             showNftNotification("Success", "Address copied!", "success")
-            clearNftNotification()
         } catch (error) {
             console.error("Error copying to clipboard:", error)
             // Zeigen Sie hier eine Fehlerbenachrichtigung an, falls gewünscht
@@ -312,6 +328,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     formattedSellerAddress={formattedSeller}
                     tokenId={tokenId}
                     tokenName={tokenName}
+                    isListed={isListed}
                     price={ethers.utils.formatUnits(price, "ether")}
                     buyerCount={buyerCount}
                     handleBuyClick={handleBuyClick}

@@ -5,7 +5,8 @@ import SingleNotification from "../components/NFTSingleNotification"
 
 const NftNotification = () => {
     // Access the notification context to get notifications and functions to manipulate them
-    const { nftNotifications, showNftNotification, clearNftNotification } = useNftNotification()
+    const { nftNotifications, showNftNotification, clearNftNotification, closeNftNotification } =
+        useNftNotification()
 
     return (
         <div className={styles.notificationsContainer}>
@@ -16,7 +17,8 @@ const NftNotification = () => {
                     className={`${styles.nftNotification} ${styles[notification.type]}`}
                     notification={notification}
                     clearNftNotification={clearNftNotification} // Pass the function directly
-                    showNftNotifications={showNftNotification} // Pass the function to manage notifications
+                    showNftNotification={showNftNotification} // Pass the function to manage notifications
+                    closeNftNotification={closeNftNotification}
                 />
             ))}
         </div>
