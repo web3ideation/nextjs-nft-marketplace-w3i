@@ -61,41 +61,37 @@ export default function NFTBox({ nftData, loadingImage }) {
     // ------------------ State Management ------------------
 
     // Web3 and User related states
-    const [isConnected, setIsConnected] = useState(isWeb3Enabled)
     const [buying, setBuying] = useState(false)
 
+    // State for truncated strings
+    const [formattedSeller, setFormattedSeller] = useState("")
+    const [formattedNftAddress, setFormattedNftAddress] = useState("")
+
     // Modal states
+    const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
     const [showInfoModal, setShowInfoModal] = useState(false)
     const [showSellModal, setShowSellModal] = useState(false)
     const [showListModal, setShowListModal] = useState(false)
     const [showUpdateListingModal, setShowUpdateListingModal] = useState(false)
-    const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
 
     // Message states
-    const [showConnectMessage, setShowConnectMessage] = useState(false)
-
     const { nftNotifications, showNftNotification, clearNftNotification } = useNftNotification()
-
-    // Clipboard state
-    const [isCopying, setIsCopying] = useState(false)
 
     // ------------------ Derived States & Utilities ------------------
 
     // Check ownership of the NFT
     const isOwnedBySeller = seller === account && !buyer
     const isOwnedByBuyer = buyer === account
-    const isOwnedByUser = isConnected && (isOwnedBySeller || isOwnedByBuyer)
+    const isOwnedByUser = isWeb3Enabled && (isOwnedBySeller || isOwnedByBuyer)
 
     // Determine the current owner of the NFT
     const currentOwner = buyer || seller || ""
 
     // Format addresses for display
-    const formattedSellerAddress = isOwnedByUser ? "You" : truncateStr(currentOwner, 15)
-    const formattedNftAddress = truncateStr(nftAddress || "", 15)
 
     // ------------------ Contract Functions ------------------
 
-    // Contract function to buy an item !!! warum ist die hier???
+    // Contract function to buy an item
     const { runContractFunction: buyItem } = useWeb3Contract({
         abi: nftMarketplaceAbi,
         contractAddress: marketplaceAddress,
@@ -125,7 +121,7 @@ export default function NFTBox({ nftData, loadingImage }) {
     // Handler for buy click
     const handleBuyClick = async () => {
         console.log("Item clicked", nftAddress, tokenId, marketplaceAddress, price)
-        if (!isConnected) {
+        if (!isWeb3Enabled) {
             showNftNotification("Connect", "Connect your wallet to buy items!", "error", 6000)
             return
         }
@@ -139,52 +135,48 @@ export default function NFTBox({ nftData, loadingImage }) {
             )
             return
         }
-
         setBuying(true)
         const notificationId = showNftNotification(
             "Buying",
-            "Initiating purchase...",
+            "Initiating purchase... Check your wallet!",
             "info",
-            0,
             true
         )
 
-        if (isOwnedByUser) {
-            setShowInfoModal(true)
-            setBuying(false) // Stellen Sie sicher, dass Sie den Kaufstatus zurücksetzen.
-            clearNftNotification(notificationId)
-        } else {
-            await buyItem({
+        try {
+            const tx = await buyItem({
                 onError: (error) => {
                     console.error(error)
-                    clearNftNotification(notificationId)
-                    setBuying(false)
-                    showNftNotification("Error", "Could not complete the purchase.", "error", 6000)
-                },
-                onSuccess: () => {
-                    handleBuyItemSuccess(notificationId)
+                    showNftNotification("Error", "Could not complete the purchase.", "error")
                 },
             })
+            await handleBuyItemSuccess(tx)
+        } catch (error) {
+            console.error("Error buying item:", error)
+            showNftNotification("Error", "Transaction failed.", "error")
+        } finally {
+            setBuying(false)
         }
     }
 
     // Handler for successful item purchase
-    const handleBuyItemSuccess = async (notificationId) => {
+    const handleBuyItemSuccess = async (tx) => {
         try {
+            const notificationId = showNftNotification(
+                "Buying",
+                "Purchase in progress... Wait for more!",
+                "info",
+                true
+            )
             await tx.wait(1)
-            clearNftNotification(notificationId) // Clear the sticky notification using its ID
-            showNftNotification("Success", "Purchase successful!", "success", 6000)
+            showNftNotification("Success", "Purchase successful!", "success")
+            clearNftNotification()
         } catch (error) {
             console.error("Error processing transaction success:", error)
-            clearNftNotification(notificationId)
-            showNftNotification(
-                "Transaction Error",
-                "An error occurred while purchasing.",
-                "error",
-                6000
-            )
+            showNftNotification("Error", "An error occurred while purchasing.", "error")
+            clearNftNotification()
         } finally {
-            setBuying(false)
+            clearNftNotification(notificationId)
         }
     }
 
@@ -204,11 +196,11 @@ export default function NFTBox({ nftData, loadingImage }) {
     }
 
     // Listener for modals' state
-    const modalListener = useCallback(() => {
+    function modalListener() {
         setAnyModalIsOpen(
             showUpdateListingModal || showInfoModal || showSellModal || showListModal
         )
-    }, [showUpdateListingModal, showInfoModal, showSellModal, showListModal])
+    }
 
     //------------------ Handler for nftAddress to copy ------------------
 
@@ -217,11 +209,12 @@ export default function NFTBox({ nftData, loadingImage }) {
         try {
             await navigator.clipboard.writeText(nftAddress)
             // Zeigen Sie hier die Erfolgsbenachrichtigung an
-            showNftNotification("Success", "Address copied!", "success", 6000) // Annahme, dass die Funktion so definiert ist
+            showNftNotification("Success", "Address copied!", "success")
+            clearNftNotification()
         } catch (error) {
             console.error("Error copying to clipboard:", error)
             // Zeigen Sie hier eine Fehlerbenachrichtigung an, falls gewünscht
-            showNftNotification("Error", "Error copying!", "error", 3000)
+            showNftNotification("Error", "Error copying!", "error")
         }
     }
 
@@ -240,18 +233,16 @@ export default function NFTBox({ nftData, loadingImage }) {
         }
     }, [anyModalIsOpen])
 
+    // Effect to update truncated strings when currentOwner or nftAddress change
+    useEffect(() => {
+        setFormattedSeller(truncateStr(currentOwner, 15))
+        setFormattedNftAddress(truncateStr(nftAddress, 15))
+    }, [currentOwner, nftAddress])
+
     // Update connection state and listen to modal changes
     useEffect(() => {
-        setIsConnected(isWeb3Enabled)
         modalListener()
-    }, [isWeb3Enabled, modalListener])
-
-    // Handle connection state changes
-    useEffect(() => {
-        if (isConnected) {
-            setShowConnectMessage(false)
-        }
-    }, [isConnected])
+    }, [showUpdateListingModal, showInfoModal, showSellModal, showListModal])
 
     // ------------------ Component Return ------------------
 
@@ -281,7 +272,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     <div className={styles.nftTextArea}>
                         <div className={styles.nftOwnerAndId}>
                             <div className={styles.nftOwner}>
-                                Owned by {formattedSellerAddress}
+                                Owned by {isOwnedByUser ? "You" : formattedSeller}
                             </div>
                             <div>#{tokenId}</div>
                         </div>
@@ -318,7 +309,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     imageURI={imageURI.src}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
-                    formattedSellerAddress={formattedSellerAddress}
+                    formattedSellerAddress={formattedSeller}
                     tokenId={tokenId}
                     tokenName={tokenName}
                     price={ethers.utils.formatUnits(price, "ether")}
@@ -326,7 +317,6 @@ export default function NFTBox({ nftData, loadingImage }) {
                     handleBuyClick={handleBuyClick}
                     copyNftAddressToClipboard={copyNftAddressToClipboard}
                     closeModal={() => setShowInfoModal(false)}
-                    showConnectMessage={showConnectMessage}
                 />
             )}
             {/* NFT Selling Modal */}
@@ -337,7 +327,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     imageURI={imageURI.src}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
-                    formattedSellerAddress={formattedSellerAddress}
+                    formattedSellerAddress={formattedSeller}
                     tokenId={tokenId}
                     tokenName={tokenName}
                     price={ethers.utils.formatUnits(price, "ether")}
@@ -355,7 +345,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     imageURI={imageURI.src}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
-                    formattedSellerAddress={formattedSellerAddress}
+                    formattedSellerAddress={formattedSeller}
                     tokenId={tokenId}
                     tokenName={tokenName}
                     price={ethers.utils.formatUnits(price, "ether")}
