@@ -110,49 +110,35 @@ $line-height-small: 24px;
 }
 
 // Loading Icon Styles
-.mainLoadingIconWrapper,
-.nftLoadingIconWrapper {
-    @include flex-center;
-
-    width: 100%;
-}
-
-.mainLoadingIconWrapper {
-    height: 100%;
-}
-
-.nftLoadingIconWrapper {
-    width: 300px;
-    height: 300px;
-}
-
-.mainLoadingIcon,
-.nftLoadingIcon {
-    @include flex-center;
-    width: 100%;
-}
-
-.loadingIcon {
-    width: 300px;
-}
-
-.loadingContainer {
+.loadingContainerMain {
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
     height: 100vh;
 }
 
+.loadingWrapperMain {
+    zoom: 2;
+}
+.loadingContainerNotification {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loadingWrapperNotification {
+    zoom: 0.5;
+}
+
 .loadingWave {
     display: flex;
     justify-content: space-between;
-    width: 200px;
+    width: 100px;
 }
 
 .wave {
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
     margin: 1px;
     background-color: $hover-blue;
     border-radius: 50%;
