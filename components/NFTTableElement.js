@@ -33,19 +33,25 @@ export default function NFTTableElement({ collection, loadingImage }) {
         nftAddress,
         firstImageURI: imageURI,
         firstTokenName: collectionName,
+        firstTokenDescription: tokenDescription,
         count: itemCount, // dies ist die neue Eigenschaft, die die Anzahl der Items in der Sammlung darstellt
     } = collection
 
     console.log(collection)
 
-    // Format addresses for display
+    // Format address for display
     const formattedNftAddress = truncateStr(nftAddress || "", 15)
 
     return (
         <>
             <tr className={styles.nftTableRow}>
                 <td>
-                    <Image src={imageURI.src} height={50} width={50} />
+                    <Image
+                        src={imageURI.src}
+                        height={50}
+                        width={50}
+                        alt={tokenDescription || "..."}
+                    />
                 </td>
                 <td>{formattedNftAddress}</td>
                 <td>{collectionName}'s</td>
