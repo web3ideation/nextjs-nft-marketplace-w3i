@@ -57,8 +57,13 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 { value: "lessSold", label: "Less Sold" },
             ],
             Categories: [
+                { value: "default", label: "Default" },
                 { value: "wearables", label: "Wearables" },
-                { value: "utillities", label: "Utillities" },
+                { value: "membership", label: "Membership" },
+                { value: "music", label: "Music" },
+                { value: "staking", label: "Staking" },
+                { value: "gaming", label: "Gaming" },
+                { value: "dao", label: "Dao" },
             ],
             Collections: getUniqueCollections(),
         })
