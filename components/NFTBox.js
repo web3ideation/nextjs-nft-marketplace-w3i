@@ -42,6 +42,8 @@ export default function NFTBox({ nftData, loadingImage }) {
         buyer,
         imageURI,
         tokenName,
+        Background,
+        description,
         tokenDescription,
         buyerCount,
     } = nftData
@@ -273,7 +275,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                                 <h2>{tokenName}</h2>
                             </div>
                             <div className={styles.nftDescription}>
-                                {tokenDescription || "..."}
+                                {tokenDescription || Background || "..."}
                             </div>
                         </div>
                     </div>
@@ -323,6 +325,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     show={showInfoModal}
                     type="info"
                     imageURI={imageURI.src}
+                    description={description}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
                     formattedSellerAddress={formattedSeller}
@@ -342,11 +345,13 @@ export default function NFTBox({ nftData, loadingImage }) {
                     show={showSellModal}
                     type="sell"
                     imageURI={imageURI.src}
+                    description={description}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
                     formattedSellerAddress={formattedSeller}
                     tokenId={tokenId}
                     tokenName={tokenName}
+                    isListed={isListed}
                     price={ethers.utils.formatUnits(price, "ether")}
                     buyerCount={buyerCount}
                     handleUpdatePriceButtonClick={handleUpdatePriceButtonClick}
@@ -360,11 +365,13 @@ export default function NFTBox({ nftData, loadingImage }) {
                     show={showListModal}
                     type="list"
                     imageURI={imageURI.src}
+                    description={description}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
                     formattedSellerAddress={formattedSeller}
                     tokenId={tokenId}
                     tokenName={tokenName}
+                    isListed={isListed}
                     price={ethers.utils.formatUnits(price, "ether")}
                     buyerCount={buyerCount}
                     handleListClick={handleListClick}
