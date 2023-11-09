@@ -1,0 +1,44 @@
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        padding: 0;
+    }
+    35% {
+        padding: 18px;
+        opacity: 0;
+        transform: translate3D(100%, 0, 0);
+    }
+
+    100% {
+        opacity: 1;
+        padding: 18px;
+        transform: translate3D(0, 0, 0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        padding: 18px;
+        transform: translate3D(0, 0, 0);
+    }
+    to {
+        opacity: 0;
+        padding: 18px;
+        transform: translate3D(100%, 0, 0);
+    }
+}
+
+// Keyframes for wave animation
+@keyframes wave {
+    0% {
+        transform: scale(0.5);
+    }
+    40%,
+    60% {
+        transform: scale(2);
+    }
+    100% {
+        transform: scale(0);
+    }
+}

@@ -1,0 +1,73 @@
+@use "../helpers/variables" as *;
+@use "../helpers/mixins" as *;
+
+// NFT card styles
+.nftCard {
+    @include boxShadow;
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    footer {
+        h2,
+        span {
+            font-family: $font-secondary;
+            color: $black;
+        }
+    }
+
+    &:hover {
+        box-shadow: 0 0 5px 5px rgb(0 0 0/0.4), 0 1px 2px -1px rgb(0 0 0/0.4);
+        transition: 0.2s;
+    }
+}
+
+// NFT image styles
+.nftImage {
+    object-fit: cover;
+    display: block;
+    height: 225px;
+    background-color: #ffffff;
+    align-items: center;
+}
+
+// NFT text area styles
+.nftTextArea {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: $font-secondary;
+    font-size: $font-size-small;
+    font-weight: 500;
+    color: $black;
+    padding: 0 5px 5px 5px;
+
+    // Owner, price, and card information styles
+    .nftOwnerAndId,
+    .nftListedPrice,
+    .nftCardInformation {
+        display: flex;
+        justify-content: space-between;
+
+        .nftOwner {
+            width: 192px;
+        }
+
+        .nftPrice,
+        .nftTitle {
+            font-weight: 900;
+        }
+
+        .nftListedStatus {
+            color: forestgreen;
+        }
+
+        .nftNotListedStatus {
+            color: firebrick;
+        }
+
+        .nftDescription {
+            font-weight: 300;
+        }
+    }
+}

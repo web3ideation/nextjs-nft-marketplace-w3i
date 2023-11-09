@@ -1,0 +1,62 @@
+@use "../helpers/variables" as *;
+@use "../helpers/keyframes" as *;
+
+// Notification styles
+.notificationsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 10px;
+    position: fixed;
+    right: 0;
+    top: 80px;
+    z-index: 100;
+}
+
+.nftNotification {
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 5px 0 0 5px;
+
+    &.enter {
+        animation: slideIn 1.5s forwards ease-out, slideOut 1.5s 4s forwards;
+    }
+
+    &.sticky {
+        animation: slideIn 1.5s forwards ease-out;
+    }
+
+    &.exit {
+        animation: slideOut 1.5s forwards;
+    }
+
+    &.info {
+        color: $hover-blue;
+        border: solid 3px $hover-blue;
+        border-right: none;
+    }
+
+    &.error {
+        color: firebrick;
+        border: solid 3px firebrick;
+        border-right: none;
+    }
+
+    &.success {
+        color: forestgreen;
+        border: solid 3px forestgreen;
+        border-right: none;
+    }
+    .nftNotificationInnerWrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .nftNotificationBtnWrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: end;
+    }
+}

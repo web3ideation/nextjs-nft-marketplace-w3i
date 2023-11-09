@@ -1,0 +1,33 @@
+@use "../helpers/variables" as *;
+@use "../helpers/mixins" as *;
+
+// Search bar wrapper
+.searchBarWrapper {
+    display: flex;
+    padding: 20px 0;
+    width: 400px;
+
+    .searchBar {
+        outline: none;
+        border: none;
+        width: 100%;
+        border-radius: 5px;
+        padding: 0 5px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+    }
+
+    button {
+        @include flex-center;
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        font-weight: 500;
+        outline: none;
+        border: none;
+        color: $black;
+        padding: 0 18px;
+
+        &:hover {
+            color: $hover-blue;
+        }
+    }
+}

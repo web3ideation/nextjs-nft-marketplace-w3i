@@ -1,0 +1,89 @@
+@use "../helpers/variables" as *;
+@use "../helpers/mixins" as *;
+
+// Popup menu wrapper
+.popupMenuWrapper {
+    padding-right: 18px;
+
+    &:hover {
+        color: $hover-blue;
+    }
+}
+// Menu button styles
+.menuButton {
+    display: flex;
+    background-color: $background-color;
+
+    button {
+        @include flex-center;
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        line-height: $line-height-small;
+        font-weight: 500;
+        border: none;
+        padding: 20px 5px 20px 18px;
+        color: $black;
+
+        &:hover {
+            color: $hover-blue;
+        }
+    }
+}
+
+// Menu icon styles
+.menuIcon,
+.menuIconMinus {
+    @include flex-center;
+    width: 10px;
+    font-weight: 300;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    line-height: $line-height-small;
+    font-weight: 500;
+    color: $black;
+    cursor: pointer;
+}
+
+.menuIconMinus {
+    color: $hover-blue;
+}
+
+// Popup menu links wrapper
+.popupMenuLinksWrapper {
+    transform: translateY(-100%);
+    background-color: $secondary-color;
+    opacity: 0;
+    transition: 0.5s ease-out;
+    border-radius: 0 0 5px 5px;
+    width: 250px;
+    position: absolute;
+    z-index: -1;
+    box-shadow: inset 0 5px 5px rgb(0 0 0 / 0.1), inset 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+// Popup menu links wrapper open state
+.popupMenuLinksWrapperOpen {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+// Popup menu links styles
+.popupMenuLinks {
+    @include flex-center;
+    padding: 10px 40px;
+    text-decoration: none;
+
+    button {
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        line-height: $line-height-small;
+        font-weight: 400;
+        border: none;
+        color: $white;
+
+        &:hover {
+            color: $hover-grey;
+            background-color: transparent;
+        }
+    }
+}
