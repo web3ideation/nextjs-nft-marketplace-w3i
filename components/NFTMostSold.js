@@ -6,21 +6,36 @@ import { useNFT } from "../context/NFTContextProvider"
 import LoadingWave from "../components/LoadingWave"
 
 function NFTMostSold() {
-    // ------------------ Hooks & Data Retrieval ------------------
-
     // Retrieve NFT data and loading state using custom hook
     const { nftsData, loadingImage } = useNFT()
 
     // State for the number of visible NFTs
     const [visibleNFTs, setVisibleNFTs] = useState(5)
 
-    // Sort NFTs by buyerCount using useMemo for performance optimization
-    const sortedNFTs = useMemo(() => {
-        // Make sure to copy the array before sorting to avoid mutating the original state
-        return [...nftsData].sort((a, b) => b.buyerCount - a.buyerCount)
-    }, [nftsData])
+    // State to keep track of how many NFTs per address have been shown
+    const [nftAddressCount, setNftAddressCount] = useState({})
 
-    // ------------------ Render Functions ------------------
+    // Filter and sort NFTs by buyerCount and ensure that no more than 3 NFTs per address are shown
+    const sortedAndFilteredNFTs = useMemo(() => {
+        const addressCount = {} // Local tracker for addresses
+        const filteredNFTs = []
+
+        // Sort the NFTs by buyerCount
+        const sortedNFTs = [...nftsData].sort((a, b) => b.buyerCount - a.buyerCount)
+
+        for (const nft of sortedNFTs) {
+            // Check if the address has been encountered less than 3 times
+            if ((addressCount[nft.nftAddress] || 0) < 3) {
+                filteredNFTs.push(nft)
+                addressCount[nft.nftAddress] = (addressCount[nft.nftAddress] || 0) + 1
+            }
+        }
+
+        // Update the state with the new counts
+        setNftAddressCount(addressCount)
+
+        return filteredNFTs
+    }, [nftsData])
 
     // Render the list of NFTs or a loading state
     const renderNFTList = () => {
@@ -35,16 +50,14 @@ function NFTMostSold() {
         }
 
         // Check if there are no NFTs to display
-        if (sortedNFTs.length === 0) {
+        if (sortedAndFilteredNFTs.length === 0) {
             return <p>No NFTs available</p>
         }
 
         // Use the slice method to display only the desired number of NFTs
-        return sortedNFTs
+        return sortedAndFilteredNFTs
             .slice(0, visibleNFTs)
-            .map((nft) => (
-                <NFTBox nftData={nft} key={`${nft.nftAddress}${nft.tokenId}${nft.listingId}`} />
-            ))
+            .map((nft) => <NFTBox nftData={nft} key={`${nft.nftAddress}${nft.tokenId}`} />)
     }
 
     return (
