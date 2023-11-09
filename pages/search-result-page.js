@@ -27,6 +27,15 @@ const SearchResultPage = () => {
                 item.seller,
                 item.tokenName,
                 item.tokenDescription,
+                item.description,
+                item.utility,
+                item.creator,
+                item.Type,
+                item.Text1,
+                item.Text2,
+                item.Text3,
+                item.Text4,
+                item.Background,
             ].join(" ")
             const lowerCaseConcatenated = concatenatedFields.toLowerCase()
 

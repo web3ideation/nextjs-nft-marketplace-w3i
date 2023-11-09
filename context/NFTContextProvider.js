@@ -25,7 +25,7 @@ export const NFTProvider = ({ children }) => {
     // State for storing NFT data and collections
     const [nftsData, setNftsData] = useState([])
     const [nftCollections, setNftCollections] = useState([])
-    const [loadingAllImages, setLoadingAllImages] = useState(true)
+    const [loadingAllAttributes, setLoadingAllAttributes] = useState(true)
 
     console.log("Active Data", activeItemsData)
     console.log("Inactive Data", inactiveItemsData)
@@ -52,19 +52,30 @@ export const NFTProvider = ({ children }) => {
     }, [])
 
     // Function to load the image metadata for a given NFT
-    const loadImage = useCallback(
+    const loadAttributes = useCallback(
         async (nft) => {
             try {
                 const tokenURI = await getRawTokenURI(nft.nftAddress, nft.tokenId)
+                console.log("Token URI:", tokenURI)
                 const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
                 const tokenURIResponse = await fetch(requestURL).then((res) => res.json())
-                const imageURI = tokenURIResponse.image
-                const imageURIURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
+
+                // Sie können hier die Attribute extrahieren und hinzufügen
+                const attributes = tokenURIResponse.attributes.reduce((acc, attribute) => {
+                    acc[attribute.trait_type] = attribute.value
+                    return acc
+                }, {})
+
+                // Jetzt werden die Attribute zusammen mit imageURI, tokenName und tokenDescription zurückgegeben
                 return {
                     ...nft,
-                    imageURI: { src: imageURIURL, width: 100 },
+                    imageURI: {
+                        src: tokenURIResponse.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
+                        width: 100,
+                    },
                     tokenName: tokenURIResponse.name,
                     tokenDescription: tokenURIResponse.description,
+                    ...attributes, // Spread-Operator fügt alle Attribute zum Objekt hinzu
                 }
             } catch (error) {
                 console.error("Error loading image for NFT:", nft, error)
@@ -104,22 +115,22 @@ export const NFTProvider = ({ children }) => {
 
     // Load images for all NFTs when active or inactive data changes
     useEffect(() => {
-        const loadAllImages = async (items) => Promise.all(items.map(loadImage))
+        const loadAllAttributes = async (items) => Promise.all(items.map(loadAttributes))
 
         if (activeItemsData && inactiveItemsData) {
-            setLoadingAllImages(true)
+            setLoadingAllAttributes(true)
 
             Promise.all([
-                loadAllImages(activeItemsData.items),
-                loadAllImages(inactiveItemsData.items),
+                loadAllAttributes(activeItemsData.items),
+                loadAllAttributes(inactiveItemsData.items),
             ]).then(([activeData, inactiveData]) => {
                 const combinedData = [...activeData, ...inactiveData]
                 const highestListingData = getHighestListingIdPerNFT(combinedData)
                 setNftsData(highestListingData)
-                setLoadingAllImages(false)
+                setLoadingAllAttributes(false)
             })
         }
-    }, [activeItemsData, inactiveItemsData, loadImage])
+    }, [activeItemsData, inactiveItemsData, loadAttributes])
 
     // Create collections from NFT data
     const createCollections = (nfts) => {
@@ -160,7 +171,7 @@ export const NFTProvider = ({ children }) => {
             value={{
                 nftsData,
                 nftCollections,
-                loadingImage: loadingAllImages,
+                loadingAttributes: loadingAllAttributes,
             }}
         >
             {children}
