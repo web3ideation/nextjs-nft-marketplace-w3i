@@ -7,6 +7,7 @@ const NftModal = (props) => {
     const {
         type, // 'info', 'list', or 'sell'
         imageURI,
+        description,
         tokenDescription,
         formattedSellerAddress,
         formattedNftAddress,
@@ -23,18 +24,11 @@ const NftModal = (props) => {
     } = props
 
     // Determine the text and handler for the OK button based on the type
-    let okText, onOkHandler, showOkButton
+    let okText, onOkHandler
     switch (type) {
         case "info":
-            if (isListed) {
-                okText = "BUY!"
-                onOkHandler = handleBuyClick
-                showOkButton = true
-            } else {
-                okText = ""
-                onOkHandler = () => {}
-                showOkButton = false
-            }
+            okText = "BUY!"
+            onOkHandler = handleBuyClick
             break
         case "list":
             okText = "List"
@@ -49,60 +43,58 @@ const NftModal = (props) => {
             onOkHandler = () => {}
     }
 
-    // Überprüfe, ob isListed true ist, um den "Buy"-Button anzuzeigen
-    const shouldShowBuyButton = isListed
-
     return (
         <Modal
             className={styles.nftModalInformation}
             cancelText="Close"
             onCancel={closeModal}
-            isOkDisabled={!showOkButton}
-            okText={showOkButton ? okText : undefined}
-            onOk={showOkButton ? onOkHandler : undefined}
+            okText={okText}
+            onOk={onOkHandler}
             closeButton={<Button disabled text=""></Button>}
             width="max-content"
         >
-            <Image
-                className={styles.nftModalImage}
-                src={imageURI}
-                alt={tokenDescription}
-                height={100}
-                width={100}
-            />
-            <div className={styles.nftModalText}>
-                <div>
-                    <p>Owned by: </p>
-                    <p>{formattedSellerAddress}</p>
-                </div>
-                <div>
-                    <p>Token-Adress: </p>
-                    <div
-                        className={styles.nftNftAddressToCopy}
-                        onClick={copyNftAddressToClipboard}
-                    >
-                        <p>{formattedNftAddress}</p>
+            <div className={styles.nftModalContent}>
+                <Image
+                    className={styles.nftModalImage}
+                    src={imageURI}
+                    alt={tokenDescription}
+                    height={100}
+                    width={100}
+                />
+                <div className={styles.nftModalText}>
+                    <div>
+                        <p>Owned by: </p>
+                        <p>{formattedSellerAddress}</p>
                     </div>
-                </div>
-                <div>
-                    <p>Token-Id: </p>
-                    <strong>{tokenId}</strong>
-                </div>
-                <div>
-                    <p>Name: </p>
-                    <strong>{tokenName}</strong>
-                </div>
-                <div>
-                    <p>Description: </p>
-                    <p>{tokenDescription || "..."}</p>
-                </div>
-                <div>
-                    <p>Price: </p>
-                    <strong>{price} ETH</strong>
-                </div>
-                <div>
-                    <p>Switched Owner:</p>
-                    <strong>{buyerCount}x</strong>
+                    <div>
+                        <p>Token-Adress: </p>
+                        <div
+                            className={styles.nftNftAddressToCopy}
+                            onClick={copyNftAddressToClipboard}
+                        >
+                            <p>{formattedNftAddress}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Token-Id: </p>
+                        <strong>{tokenId}</strong>
+                    </div>
+                    <div>
+                        <p>Name: </p>
+                        <strong>{tokenName}</strong>
+                    </div>
+                    <div className={styles.nftModalDescription}>
+                        <p>Description: </p>
+                        <p>{tokenDescription || description || "..."}</p>
+                    </div>
+                    <div>
+                        <p>Price: </p>
+                        <strong>{price} ETH</strong>
+                    </div>
+                    <div>
+                        <p>Switched Owner:</p>
+                        <strong>{buyerCount}x</strong>
+                    </div>
                 </div>
             </div>
         </Modal>
