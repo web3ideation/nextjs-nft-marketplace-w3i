@@ -10,7 +10,7 @@
 @use "components/popupMenu";
 
 @use "components/nftBox";
-@use "components/modals";
+@use "components/modal";
 
 @use "components/searchSideFilters.scss";
 
@@ -141,21 +141,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-    }
-}
-
-// NFT Modal Update Listing styles
-.nftModalUpdateListing {
-    position: absolute;
-    footer {
-        border: none;
-    }
-
-    // Styles to remove spinner from number inputs
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
     }
 }
 

@@ -1,0 +1,156 @@
+@use "../helpers/variables" as *;
+@use "../helpers/mixins" as *;
+
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.modalContentWrapper {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 11;
+    width: 400px;
+    max-width: 100%;
+}
+
+// Modals
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+// NFT Modal Image styles
+.modalImage {
+    width: 300px;
+    height: 300px;
+    display: block;
+    border-radius: 5px;
+}
+
+// NFT Modal Text styles
+.modalText {
+    padding-top: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    font-weight: 500;
+    color: $black;
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        text-align: flex-end;
+    }
+}
+
+.nftNftAddressToCopy {
+    display: "inline-block";
+    position: "relative";
+    cursor: url(../public/media/copy-icon.png), copy;
+}
+.modalDescription {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+    h3,
+    h4,
+    p {
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        font-weight: 700;
+        color: $black;
+    }
+    h4 {
+        font-weight: 600;
+    }
+    p {
+        font-weight: 500;
+    }
+    /* Stile für die Scrollbar */
+    &::-webkit-scrollbar {
+        width: 10px; /* Breite der Scrollbar */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Hintergrundfarbe des Tracks */
+        border-radius: 10px; /* Rundung der Ecken */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $secondary-color; /* Farbe des Scrollbar-Thumb */
+        border: solid 2px $secondary-color;
+        border-radius: 10px; /* Rundung der Ecken */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: $hover-grey; /* Farbe des Thumb beim Hover */
+    }
+}
+
+.modalInputWrapper {
+    // Styles to remove spinner from number inputs
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    label {
+        width: 50%;
+        padding: 0 18px;
+        font-weight: 500;
+    }
+}
+
+.modalInput {
+    padding: 20px 5px;
+    input {
+        outline: none;
+        border-radius: 5px;
+        width: 100%;
+        height: 40px;
+        padding: 0 5px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+        background-color: #ffffff;
+    }
+    .inputFocused {
+        border: 1px solid blue;
+    }
+}
+
+// Footer styles within the modal
+.modalFooter {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 20px;
+
+    button {
+        width: 128px;
+        border-radius: 5px;
+        background: $secondary-color;
+        color: $white;
+        font-weight: 400;
+
+        &:hover {
+            background: $hover-blue;
+            color: $hover-grey;
+        }
+    }
+}
