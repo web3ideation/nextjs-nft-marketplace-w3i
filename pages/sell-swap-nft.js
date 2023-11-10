@@ -55,9 +55,6 @@ export default function Home() {
             closeNftNotification(listAndApproveNotificationId)
             showNftNotification("Error", "Failed to approve and list the NFT.", "error")
         } finally {
-            setTimeout(() => {
-                router.reload("/my-nft")
-            }, 6000)
         }
     }
 
@@ -106,6 +103,9 @@ export default function Home() {
     // Notify the user when the NFT is successfully listed
     const handleListSuccess = () => {
         showNftNotification("NFT listing", "NFT listing process...", "info", true)
+        setTimeout(() => {
+            router.push("/my-nft")
+        }, 6000)
     }
 
     // Notify the user when proceeds are successfully withdrawn
@@ -127,7 +127,9 @@ export default function Home() {
             onError: (error) => console.log(error),
         })
         if (returnedProceeds) {
-            setProceeds(returnedProceeds.toString())
+            // Convert the proceeds from Wei to Ether
+            const proceedsInEther = ethers.utils.formatUnits(returnedProceeds.toString(), "ether")
+            setProceeds(proceedsInEther)
         }
     }
 
@@ -177,7 +179,7 @@ export default function Home() {
             </div>
             <div>
                 <div className="flex flex-row justify-center">
-                    <div>Withdraw {proceeds} proceeds</div>
+                    <div>Withdraw {proceeds} Ether proceeds</div>
                 </div>
                 {proceeds !== "0" ? (
                     <Button
