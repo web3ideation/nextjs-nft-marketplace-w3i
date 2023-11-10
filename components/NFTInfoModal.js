@@ -1,4 +1,4 @@
-import { Modal, Button } from "web3uikit"
+import Modal from "../components/Modal"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
 
@@ -45,23 +45,21 @@ const NftModal = (props) => {
 
     return (
         <Modal
-            className={styles.nftModalInformation}
+            isVisible={type}
             cancelText="Close"
             onCancel={closeModal}
             okText={okText}
             onOk={onOkHandler}
-            closeButton={<Button disabled text=""></Button>}
-            width="max-content"
         >
-            <div className={styles.nftModalContent}>
+            <div className={styles.modalContent}>
                 <Image
-                    className={styles.nftModalImage}
+                    className={styles.modalImage}
                     src={imageURI}
                     alt={tokenDescription}
                     height={100}
                     width={100}
                 />
-                <div className={styles.nftModalText}>
+                <div className={styles.modalText}>
                     <div>
                         <p>Owned by: </p>
                         <p>{formattedSellerAddress}</p>
@@ -83,10 +81,6 @@ const NftModal = (props) => {
                         <p>Name: </p>
                         <strong>{tokenName}</strong>
                     </div>
-                    <div className={styles.nftModalDescription}>
-                        <p>Description: </p>
-                        <p>{tokenDescription || description || "..."}</p>
-                    </div>
                     <div>
                         <p>Price: </p>
                         <strong>{price} ETH</strong>
@@ -94,6 +88,10 @@ const NftModal = (props) => {
                     <div>
                         <p>Switched Owner:</p>
                         <strong>{buyerCount}x</strong>
+                    </div>
+                    <div className={styles.modalDescription}>
+                        <p>Description: </p>
+                        <p>{tokenDescription || description || "..."}</p>
                     </div>
                 </div>
             </div>

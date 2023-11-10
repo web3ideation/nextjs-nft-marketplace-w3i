@@ -224,21 +224,22 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Handler to copy NFT address to clipboard
     const copyNftAddressToClipboard = async () => {
+        let copyNftAddressNotificationId
         try {
             await navigator.clipboard.writeText(nftAddress)
             // Zeigen Sie hier die Erfolgsbenachrichtigung an
             console.log("copy")
-            showNftNotification("Success", "Address copied!", "success")
+            copyNftAddressNotificationId = showNftNotification(
+                "Success",
+                "Address copied!",
+                "success"
+            )
         } catch (error) {
             console.error("Error copying to clipboard:", error)
             // Zeigen Sie hier eine Fehlerbenachrichtigung an, falls gewünscht
             showNftNotification("Error", "Error copying!", "error")
         }
     }
-
-    // ------------------ Render Functions ------------------
-
-    // Render the NFT card
 
     // ------------------ useEffect Hooks ------------------
 
@@ -385,6 +386,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     tokenId={tokenId}
                     marketplaceAddress={marketplaceAddress}
                     nftAddress={nftAddress}
+                    showUpdateListingModal={showUpdateListingModal}
                     onCancel={() => {
                         setShowUpdateListingModal(false)
                     }}
