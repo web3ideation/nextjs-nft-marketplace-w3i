@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import networkMapping from "../constants/networkMapping.json"
@@ -77,8 +77,7 @@ export default function NFTBox({ nftData, loadingImage }) {
     const [showUpdateListingModal, setShowUpdateListingModal] = useState(false)
 
     // Message states
-    const { nftNotifications, showNftNotification, clearNftNotification, closeNftNotification } =
-        useNftNotification()
+    const { showNftNotification, closeNftNotification } = useNftNotification()
     const [transactionError, setTransactionError] = useState(false)
 
     // ------------------ Derived States & Utilities ------------------
@@ -270,45 +269,36 @@ export default function NFTBox({ nftData, loadingImage }) {
             {imageURI ? (
                 <div className={styles.nftCard} onClick={handleCardClick}>
                     {" "}
-                    <div className={styles.nftTextArea}>
-                        <div className={styles.nftCardInformation}>
-                            <div className={styles.nftTitle}>
-                                <h2>{tokenName}</h2>
-                            </div>
-                            <div className={styles.nftDescription}>
-                                {tokenDescription || Background || "..."}
-                            </div>
+                    <div className={styles.cardTitleWrapper}>
+                        <div className={styles.cardTitle}>
+                            <h2>{tokenName}</h2>
+                        </div>
+                        <div>
+                            {isListed ? (
+                                <div className={styles.cardListedStatus}>Listed #{listingId}</div>
+                            ) : (
+                                <div className={styles.cardNotListedStatus}>
+                                    Not Listed #{listingId}
+                                </div>
+                            )}
                         </div>
                     </div>
                     <Image
-                        className={styles.nftImage}
+                        className={styles.cardImage}
                         src={imageURI.src}
                         height={300}
                         width={300}
                         loading="eager"
                         alt={tokenDescription || "..."}
                     />
-                    <div className={styles.nftTextArea}>
-                        <div className={styles.nftOwnerAndId}>
-                            <div className={styles.nftOwner}>
-                                Owned by {isOwnedByUser ? "You" : formattedSeller}
-                            </div>
-                            <div>#{tokenId}</div>
+                    <div className={styles.cardTextArea}>
+                        <div className={styles.cardOwnerAndId}>
+                            <div>Owned by {isOwnedByUser ? "You" : formattedSeller}</div>
+                            <div>Token #{tokenId}</div>
                         </div>
-                        <div className={styles.nftListedPrice}>
-                            <div className={styles.nftPrice}>
+                        <div className={styles.cardListedPrice}>
+                            <div className={styles.cardPrice}>
                                 {ethers.utils.formatUnits(price, "ether")} ETH
-                            </div>
-                            <div>
-                                {isListed ? (
-                                    <div className={styles.nftListedStatus}>
-                                        Listed #{listingId}
-                                    </div>
-                                ) : (
-                                    <div className={styles.nftNotListedStatus}>
-                                        Not Listed #{listingId}
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>

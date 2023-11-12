@@ -17,7 +17,7 @@ export default function Header() {
                     <h1 className={styles.headerHeadline}>NFT Marketplace</h1>
                 </div>
                 <div className={styles.headerElementsWrapper}>
-                    {/* Other header elements: search bar, link, popup menu and connection button */}
+                    {/* Other header elements: search bar, link, popup menu and connect button */}
                     <SearchBar />
                     <Link
                         href="https://web3ideation.com/"

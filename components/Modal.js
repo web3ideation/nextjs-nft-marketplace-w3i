@@ -1,5 +1,6 @@
 // Modal.js
 import React from "react"
+import { Button } from "web3uikit"
 import ReactDOM from "react-dom"
 import styles from "../styles/Home.module.css"
 
@@ -14,8 +15,8 @@ const Modal = ({ isVisible, onCancel, children, okText, onOk, cancelText }) => {
             <div className={styles.modalContentWrapper} onClick={handleModalContentClick}>
                 {children}
                 <div className={styles.modalFooter}>
-                    {cancelText && <button onClick={onCancel}>{cancelText}</button>}
-                    {okText && <button onClick={onOk}>{okText}</button>}
+                    {cancelText && <Button onClick={onCancel} text={cancelText} />}
+                    {okText && <Button onClick={onOk} text={okText} />}
                 </div>
             </div>
         </div>
