@@ -2,6 +2,27 @@
 @use "../helpers/mixins" as *;
 @use "../helpers/keyframes" as *;
 
+// Side filter wrapper styles
+.searchSideFiltersWrapper {
+    transform: translateX(-100%);
+    transition: transform 0.5s ease-out;
+    background-color: $background-color;
+    font-family: $font-primary;
+    height: 100%;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 70px 0 0 0;
+    box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+// Side filter wrapper open styles
+.searchSideFiltersWrapperOpen {
+    transform: translateX(0);
+}
+
 // Side filter option wrapper styles
 .searchSideFiltersOptionWrapper {
     background-color: $background-color;
@@ -21,26 +42,6 @@
             color: $hover-blue;
         }
     }
-}
-
-// Side filter wrapper styles
-.searchSideFiltersWrapper {
-    transform: translateX(-100%);
-    transition: transform 0.5s ease-out;
-    background-color: $background-color;
-    height: 100%;
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 70px 0 0 0;
-    box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-}
-
-// Side filter wrapper open styles
-.searchSideFiltersWrapperOpen {
-    transform: translateX(0);
 }
 
 // Filter text styles
@@ -113,12 +114,13 @@
     box-shadow: inset 5px 0 5px rgb(0 0 0 / 0.1), inset 1px 0 2px -1px rgb(0 0 0 / 0.1);
 
     button {
-        border: none;
         font-family: $font-primary;
         color: $white;
         font-weight: 400;
         padding: 18px 0;
         width: 100%;
+        border: none;
+        background-color: transparent;
 
         &:hover {
             color: $hover-grey;

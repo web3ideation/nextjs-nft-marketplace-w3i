@@ -4,70 +4,59 @@
 // NFT card styles
 .nftCard {
     @include boxShadow;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     border-radius: 5px;
-
+    height: 300px;
+    width: 300px;
+    padding: 3px 0;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    color: $black;
+    font-weight: 500;
     cursor: pointer;
 
-    footer {
-        h2,
-        span {
-            font-family: $font-secondary;
-            color: $black;
-        }
-    }
-
     &:hover {
-        box-shadow: 0 0 5px 5px rgb(0 0 0/0.4), 0 1px 2px -1px rgb(0 0 0/0.4);
+        @include boxShadow-hover;
         transition: 0.2s;
     }
 }
 
 // NFT image styles
-.nftImage {
-    object-fit: cover;
+.cardImage {
     display: block;
-    height: 225px;
-    background-color: #ffffff;
-    align-items: center;
+    object-fit: cover;
+    height: 220px;
+    width: auto;
 }
 
 // NFT text area styles
-.nftTextArea {
+.cardTextArea {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-family: $font-secondary;
-    font-size: $font-size-small;
-    font-weight: 500;
-    color: $black;
-    padding: 0 5px 5px 5px;
+}
+// Owner, price, and card information styles
+.cardTitleWrapper,
+.cardOwnerAndId,
+.cardListedPrice {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px;
 
-    // Owner, price, and card information styles
-    .nftOwnerAndId,
-    .nftListedPrice,
-    .nftCardInformation {
-        display: flex;
-        justify-content: space-between;
+    .cardPrice,
+    .cardTitle h2 {
+        font-size: $font-size-small;
+        font-weight: 700;
+    }
 
-        .nftOwner {
-            width: 192px;
-        }
+    .cardListedStatus {
+        color: forestgreen;
+    }
 
-        .nftPrice,
-        .nftTitle {
-            font-weight: 900;
-        }
-
-        .nftListedStatus {
-            color: forestgreen;
-        }
-
-        .nftNotListedStatus {
-            color: firebrick;
-        }
-
-        .nftDescription {
-            font-weight: 300;
-        }
+    .cardNotListedStatus {
+        color: firebrick;
     }
 }

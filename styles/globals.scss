@@ -1,0 +1,43 @@
+@use "helpers/variables" as *;
+
+html {
+    /* Stile für die Scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px; /* Breite der Scrollbar */
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Hintergrundfarbe des Tracks */
+        border-radius: 10px; /* Rundung der Ecken */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: $hover-grey; /* Farbe des Scrollbar-Thumb */
+        border: solid 2px $secondary-color;
+        border-radius: 10px; /* Rundung der Ecken */
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: $secondary-color; /* Farbe des Thumb beim Hover */
+    }
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-block-start: 0;
+    padding-block-end: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+    border: none;
+    outline: 0;
+}
+
+body {
+    transition: 2s;
+}

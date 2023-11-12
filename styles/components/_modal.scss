@@ -21,6 +21,7 @@
     z-index: 11;
     width: 400px;
     max-width: 100%;
+    font-family: $font-primary;
 }
 
 // Modals
@@ -46,7 +47,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-family: $font-primary;
     font-size: $font-size-small;
     font-weight: 500;
     color: $black;
@@ -64,12 +64,47 @@
     position: "relative";
     cursor: url(../public/media/copy-icon.png), copy;
 }
+
+.modalInputWrapper {
+    // Styles to remove spinner from number inputs
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    label {
+        padding: 0 18px;
+        font-weight: 600;
+    }
+}
+
+.modalInput {
+    padding: 20px 0;
+    input {
+        @include boxShadowFields;
+        outline: none;
+        border-radius: 5px;
+        width: 100%;
+        height: 40px;
+        padding: 0 5px;
+        background-color: #ffffff;
+    }
+    .inputFocused {
+        border: 1px solid blue;
+    }
+}
+
+.modalDescriptionWrapper {
+    padding: 20px 0;
+}
+
 .modalDescription {
-    max-height: 300px;
+    @include boxShadowFields;
     overflow-y: auto;
+    width: 100%;
+    max-height: 300px;
     padding: 5px;
     border-radius: 5px;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
     h3,
     h4,
     p {
@@ -84,69 +119,23 @@
     p {
         font-weight: 500;
     }
-    /* Stile für die Scrollbar */
-    &::-webkit-scrollbar {
-        width: 10px; /* Breite der Scrollbar */
-    }
-
-    &::-webkit-scrollbar-track {
-        background: #f1f1f1; /* Hintergrundfarbe des Tracks */
-        border-radius: 10px; /* Rundung der Ecken */
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: $secondary-color; /* Farbe des Scrollbar-Thumb */
-        border: solid 2px $secondary-color;
-        border-radius: 10px; /* Rundung der Ecken */
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-        background: $hover-grey; /* Farbe des Thumb beim Hover */
-    }
-}
-
-.modalInputWrapper {
-    // Styles to remove spinner from number inputs
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    label {
-        width: 50%;
-        padding: 0 18px;
-        font-weight: 500;
-    }
-}
-
-.modalInput {
-    padding: 20px 5px;
-    input {
-        outline: none;
-        border-radius: 5px;
-        width: 100%;
-        height: 40px;
-        padding: 0 5px;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
-        background-color: #ffffff;
-    }
-    .inputFocused {
-        border: 1px solid blue;
-    }
 }
 
 // Footer styles within the modal
 .modalFooter {
     display: flex;
     justify-content: space-around;
-    padding-top: 20px;
 
     button {
+        background-color: $secondary-color;
         width: 128px;
-        border-radius: 5px;
-        background: $secondary-color;
         color: $white;
+        border-radius: 5px;
+        font-family: $font-primary;
+        font-size: $font-size-small;
         font-weight: 400;
+        padding: 0 5px;
+        border: none;
 
         &:hover {
             background: $hover-blue;

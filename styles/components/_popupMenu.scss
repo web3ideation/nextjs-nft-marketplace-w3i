@@ -12,7 +12,6 @@
 // Menu button styles
 .menuButton {
     display: flex;
-    background-color: $background-color;
 
     button {
         @include flex-center;
@@ -23,6 +22,7 @@
         border: none;
         padding: 20px 5px 20px 18px;
         color: $black;
+        background-color: $background-color;
 
         &:hover {
             color: $hover-blue;
@@ -74,11 +74,12 @@
     text-decoration: none;
 
     button {
+        border: none;
+        background-color: $secondary-color;
         font-family: $font-primary;
         font-size: $font-size-small;
         line-height: $line-height-small;
         font-weight: 400;
-        border: none;
         color: $white;
 
         &:hover {

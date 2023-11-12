@@ -4,45 +4,71 @@
 
 @use "components/loadingWave";
 @use "components/notification";
+@use "components/tooltip";
+@use "components/modal";
 
 @use "components/header";
 @use "components/searchBar";
 @use "components/popupMenu";
 
 @use "components/nftBox";
-@use "components/modal";
+@use "components/nftTable";
 
 @use "components/searchSideFilters.scss";
 
 @use "components/sellSwapNft";
-@use "components/tooltip";
 
 @use "components/footer";
 
-// Main content styles
-.nftListWrapper {
-    @include flex-center;
+// NFT boxes container styles
+.nftListingContainer {
+    display: flex;
     flex-direction: column;
     width: 100%;
+}
+
+// NFT table container styles
+.nftTableContainer {
+    @include flex-center();
+    width: 100%;
+}
+
+// NFT boxes wrapper styles
+// NFT table wrapper styles
+.nftListWrapper,
+.nftTableWrapper {
+    @include flex-center;
+    flex-direction: column;
     margin-top: 40px;
     padding: 16px 150px;
+    font-family: $font-primary;
 
     h1 {
-        font-family: $font-primary;
         font-size: $font-size-medium;
-        font-weight: bolder;
+        font-weight: 700;
         text-align: center;
     }
 }
 
-// NFT list grid styles
+// NFT boxes grid styles
 .nftList {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); // 5 NFTs pro Reihe
-    justify-items: center;
-    gap: 15px;
-    padding: 16px;
+    grid-template-columns: repeat(5, 1fr); // 5 NFTs / row
+    justify-items: stretch;
     width: 100%;
+    padding: 16px;
+    gap: 16px;
+    &:first-child {
+        justify-self: start;
+    }
+    &:last-child {
+        justify-self: end;
+    }
+}
+
+// NFT collection styles
+.nftCollection {
+    padding: 16px;
 }
 
 // Show more button styles
@@ -53,7 +79,7 @@
     gap: 18px;
 
     button {
-        background-color: $hover-blue;
+        background-color: $secondary-color;
         width: 128px;
         color: $white;
         border-radius: 5px;
@@ -66,127 +92,6 @@
         &:hover {
             background-color: $hover-blue;
             color: $hover-grey;
-        }
-    }
-}
-
-// NFT Collection styles
-.nftCollection {
-    padding: 16px;
-}
-
-// NFT Table Container styles
-.nftTableContainer {
-    @include flex-center();
-    width: 100%;
-}
-
-// NFT Table Wrapper styles
-.nftTableWrapper {
-    @include flex-center();
-    flex-direction: column;
-    width: 100%;
-    margin-top: 40px;
-    padding: 16px 150px;
-
-    h1 {
-        font-family: $font-primary;
-        font-size: $font-size-medium;
-        font-weight: bolder;
-        text-align: center;
-    }
-}
-
-// NFT Table styles
-.nftTable {
-    width: 100%;
-    table-layout: fixed;
-    border-radius: 5px;
-    @include boxShadow;
-
-    thead {
-        border-radius: 5px 5px 0 0;
-        background-color: $background-color;
-        box-shadow: 0 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    }
-}
-
-// NFT Table body styles for scrollable content
-.nftTable tbody {
-    display: block; // Enables max-height and overflow-y
-    max-height: 250px; // Example height, adjust to the actual height of 5 rows
-    overflow-y: auto; // Enables vertical scrolling
-}
-
-// Ensures table rows and headers span the full width
-.nftTable thead,
-.nftTable tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
-
-// NFT Table row styles
-.nftTableRow {
-    padding: 0 20px;
-    th {
-        text-align: center;
-        padding: 8px 12px;
-    }
-    td {
-        text-align: center;
-        padding: 8px 12px;
-        img {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    }
-}
-
-// Search Result Page
-.nftListingContainer {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-// Responsive design breakpoints
-@media (max-width: 1200px) {
-    .nftList {
-        grid-template-columns: repeat(4, 1fr); // 4 NFTs per row
-    }
-}
-
-@media (max-width: 992px) {
-    .nftList {
-        grid-template-columns: repeat(3, 1fr); // 3 NFTs per row
-    }
-}
-
-@media (max-width: 768px) {
-    .nftList {
-        grid-template-columns: repeat(2, 1fr); // 2 NFTs per row
-    }
-
-    .headerElementsWrapper {
-        .searchBarWrapper {
-            width: 100%;
-        }
-    }
-}
-
-@media (max-width: 576px) {
-    .nftList {
-        grid-template-columns: 1fr; // 1 NFT per row
-    }
-
-    .headerElementsWrapper {
-        flex-direction: column;
-
-        .searchBarWrapper {
-            width: auto;
-            padding: 10px;
         }
     }
 }

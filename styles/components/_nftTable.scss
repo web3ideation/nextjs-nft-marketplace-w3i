@@ -1,0 +1,69 @@
+@use "../helpers/variables" as *;
+@use "../helpers/mixins" as *;
+
+// NFT Table styles
+.nftTable {
+    @include boxShadow;
+    table-layout: fixed;
+    border-radius: 5px;
+    border-spacing: 0;
+
+    thead {
+        padding: 8px 12px;
+        border-radius: 5px 5px 0 0;
+        background-color: $background-color;
+        box-shadow: 0 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    }
+    tbody {
+        border-radius: 0 0 5px 5px;
+        display: block; // Enables max-height and overflow-y
+        max-height: 300px; // Example height, adjust to the actual height of 5 rows
+        overflow-y: auto; // Enables vertical scrolling
+    }
+}
+
+// Ensures table rows and headers span the full width
+.nftTable thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+.nftTable tbody tr {
+    display: table;
+    width: 98%;
+    table-layout: fixed;
+    box-sizing: border-box;
+}
+
+.nftTableElementWrapper {
+    @include boxShadow;
+    margin: 15px auto;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+        @include boxShadow-hover;
+        transition: 0.2s;
+    }
+}
+
+// NFT Table row styles
+.nftTableRow {
+    th {
+        padding: 8px 12px;
+    }
+    td {
+        vertical-align: middle;
+        padding: 8px 12px;
+        img {
+            border-radius: 5px;
+            display: block;
+            margin: auto;
+        }
+    }
+}
+.contentWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
