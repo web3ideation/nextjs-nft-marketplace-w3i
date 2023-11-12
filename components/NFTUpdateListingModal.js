@@ -25,6 +25,26 @@ export default function NFTUpdateListingModal(props) {
     const { showNftNotification, closeNftNotification } = useNftNotification()
     const router = useRouter()
 
+    // Initial state for form errors
+    const [errors, setErrors] = useState({
+        price: "",
+    })
+
+    // Validate individual form fields
+    function validateField(name, value) {
+        let errorMessage = ""
+
+        if (name === "number") {
+            if (!/^\d{1,18}(\.\d{1,18})?$/.test(value)) {
+                errorMessage = "Please enter a positive amount in ETH."
+            }
+        }
+        // Update error state for the specific field
+        setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }))
+
+        return errorMessage === ""
+    }
+
     // Reset the price input to its initial state
     const resetPrice = () => setPriceToUpdateListingWith("")
 
@@ -109,7 +129,7 @@ export default function NFTUpdateListingModal(props) {
         <Modal
             isVisible={showUpdateListingModal}
             onOk={handleUpdateButtonClick}
-            okText={"Update"}
+            okText="Update"
             onCancel={handleClose}
             cancelText="Close"
         >
@@ -119,22 +139,27 @@ export default function NFTUpdateListingModal(props) {
                     <input
                         type="number"
                         id="number"
-                        name="New listing price"
+                        name="number"
                         placeholder="min. amount: 0.000000000000000001"
                         value={priceToUpdateListingWith}
                         onChange={(event) => {
                             setPriceToUpdateListingWith(event.target.value)
                         }}
                         disabled={updating}
+                        onBlur={(e) => {
+                            validateField(e.target.name, e.target.value)
+                            setFocusedField(null)
+                        }}
                         onFocus={() => {
                             setFocusedField("number")
                         }}
                         className={focusedField === "number" ? styles.inputFocused : ""}
                     />
+                    {errors["number"] && <Tooltip message={errors["number"]} />}
                 </div>
             </div>
-            <div className={styles.modalDescription}>
-                <div>
+            <div className={styles.modalDescriptionWrapper}>
+                <div className={styles.modalDescription}>
                     <h3>
                         Here are some things to keep in mind when updating your item's listing
                         price in ETH:
