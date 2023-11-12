@@ -6,6 +6,7 @@ import { useRouter } from "next/router"
 const SearchBar = () => {
     const router = useRouter()
     const [searchTerm, setSearchTerm] = useState("")
+    const [focusedField, setFocusedField] = useState(null)
 
     // ------------------ Handlers ------------------
 
@@ -34,12 +35,19 @@ const SearchBar = () => {
     return (
         <div className={styles.searchBarWrapper}>
             <input
-                className={styles.searchBar}
+                key={searchTerm}
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Search..."
+                onBlur={() => {
+                    setFocusedField(null)
+                }}
+                onFocus={() => {
+                    setFocusedField(searchTerm)
+                }}
+                className={focusedField === searchTerm ? styles.inputFocused : ""}
             />
             <Button key="goButton" text="Go" onClick={handleOnClick} />
         </div>
