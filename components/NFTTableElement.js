@@ -1,15 +1,7 @@
-import { useState, useEffect, useCallback } from "react"
-import { useWeb3Contract, useMoralis } from "react-moralis"
-import nftMarketplaceAbi from "../constants/NftMarketplace.json"
-import networkMapping from "../constants/networkMapping.json"
-import { useRouter } from "next/router"
 import Image from "next/image"
-import { useNotification } from "web3uikit"
-import { ethers } from "ethers"
-import LoadingIcon from "../public/LoadingIcon"
-import NFTInfoModal from "../components/NFTInfoModal"
-import NFTUpdateListingModal from "./NFTUpdateListingModal"
 import styles from "../styles/Home.module.css"
+import { ethers } from "ethers"
+import LoadingWave from "../components/LoadingWave"
 
 // Utility function to truncate strings
 const truncateStr = (fullStr, strLen) => {
@@ -35,6 +27,7 @@ export default function NFTTableElement({ collection, loadingImage }) {
         firstTokenName: collectionName,
         firstTokenDescription: tokenDescription,
         count: itemCount, // dies ist die neue Eigenschaft, die die Anzahl der Items in der Sammlung darstellt
+        collectionPrice,
     } = collection
 
     console.log(collection)
@@ -44,19 +37,40 @@ export default function NFTTableElement({ collection, loadingImage }) {
 
     return (
         <>
-            <tr className={styles.nftTableRow}>
-                <td>
-                    <Image
-                        src={imageURI.src}
-                        height={50}
-                        width={50}
-                        alt={tokenDescription || "..."}
-                    />
-                </td>
-                <td>{formattedNftAddress}</td>
-                <td>{collectionName}'s</td>
-                <td>{itemCount}</td>
-            </tr>
+            {imageURI ? (
+                <tr className={styles.nftTableRow}>
+                    <td>
+                        <div className={styles.contentWrapper}>
+                            <Image
+                                src={imageURI.src}
+                                height={50}
+                                width={50}
+                                alt={tokenDescription || "..."}
+                            />
+                        </div>
+                    </td>
+                    <td>
+                        <div className={styles.contentWrapper}>{formattedNftAddress}</div>
+                    </td>
+                    <td>
+                        <div className={styles.contentWrapper}>{collectionName}'s</div>
+                    </td>
+                    <td>
+                        <div className={styles.contentWrapper}>{itemCount}</div>
+                    </td>
+                    <td>
+                        <div className={styles.contentWrapper}>
+                            {ethers.utils.formatUnits(collectionPrice, "ether")} ETH
+                        </div>
+                    </td>
+                </tr>
+            ) : (
+                <div className={styles.nftLoadingIconWrapper}>
+                    <div className={styles.nftLoadingIcon}>
+                        <LoadingWave />
+                    </div>
+                </div>
+            )}
         </>
     )
 }
