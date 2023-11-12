@@ -54,7 +54,22 @@ export default function Home() {
             console.error("Error in approveAndList:", error)
             closeNftNotification(listAndApproveNotificationId)
             showNftNotification("Error", "Failed to approve and list the NFT.", "error")
-        } finally {
+            // @ Niklas: I only commented this to check if the name and symbol are fetched correctly, you can uncomment it again
+            // } finally {
+            //     setTimeout(() => {
+            //         router.reload("/my-nft")
+            //     }, 6000)
+        }
+        // !!! the following lines can be deleted once the name and symbol are implemented in the database
+        try {
+            const fetchNftName = useRawName(nftAddress)
+            await fetchNftName() // This will print the name to the console
+
+            const fetchNftSymbol = useRawSymbol(nftAddress)
+            await fetchNftSymbol() // This will print the symbol to the console
+        } catch (error) {
+            console.error("Error fetching NFT name/symbol:", error)
+            // You might want to handle this error appropriately
         }
     }
 
@@ -74,6 +89,45 @@ export default function Home() {
                 to: nftAddress,
                 data: data,
             })
+        }
+    }
+    // Raw name and symbol function to fetch the NFT name and symbol
+
+    const useRawName = (nftAddress) => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+
+        return async () => {
+            const functionSignature = ethers.utils.id("name()").slice(0, 10)
+            const signer = provider.getSigner()
+            const response = await signer.call({
+                to: nftAddress,
+                data: functionSignature,
+            })
+
+            // Decode the response
+            const decodedResponse = ethers.utils.defaultAbiCoder.decode(["string"], response)
+            const nftName = decodedResponse[0]
+            console.log(nftName) // !!! this line can be deleted once the name and symbol are implemented in the database
+            return nftName
+        }
+    }
+
+    const useRawSymbol = (nftAddress) => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+
+        return async () => {
+            const functionSignature = ethers.utils.id("symbol()").slice(0, 10)
+            const signer = provider.getSigner()
+            const response = await signer.call({
+                to: nftAddress,
+                data: functionSignature,
+            })
+
+            // Decode the response
+            const decodedResponse = ethers.utils.defaultAbiCoder.decode(["string"], response)
+            const nftSymbol = decodedResponse[0]
+            console.log(nftSymbol) // !!! this line can be deleted once the name and symbol are implemented in the database
+            return nftSymbol
         }
     }
 
@@ -101,7 +155,7 @@ export default function Home() {
     }
 
     // Notify the user when the NFT is successfully listed
-    const handleListSuccess = () => {
+    const handleListSuccess = async () => {
         showNftNotification("NFT listing", "NFT listing process...", "info", true)
         setTimeout(() => {
             router.push("/my-nft")
