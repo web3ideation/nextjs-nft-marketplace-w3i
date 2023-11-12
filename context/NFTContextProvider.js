@@ -72,6 +72,7 @@ export const NFTProvider = ({ children }) => {
                     imageURI: {
                         src: tokenURIResponse.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
                         width: 100,
+                        height: 100,
                     },
                     tokenName: tokenURIResponse.name,
                     tokenDescription: tokenURIResponse.description,
@@ -137,13 +138,16 @@ export const NFTProvider = ({ children }) => {
         const collectionsMap = new Map()
 
         nfts.forEach((nft) => {
-            const { nftAddress, tokenId, imageURI, tokenName } = nft
+            const { nftAddress, tokenId, imageURI, tokenName, price } = nft
+
+            const numericPrice = Number(price)
 
             if (!collectionsMap.has(nftAddress)) {
                 collectionsMap.set(nftAddress, {
                     nftAddress,
                     items: [],
                     count: 0,
+                    collectionPrice: 0,
                     firstImageURI: imageURI,
                     firstTokenName: tokenName,
                 })
@@ -153,10 +157,18 @@ export const NFTProvider = ({ children }) => {
             if (!collection.items.some((item) => item.tokenId === tokenId)) {
                 collection.items.push(nft)
                 collection.count += 1
+                if (!isNaN(numericPrice)) {
+                    collection.collectionPrice += numericPrice // Korrekte Addition des Preises
+                }
             }
         })
+        // Konvertieren Sie den Gesamtpreis jeder Sammlung in einen String
+        const collections = Array.from(collectionsMap.values()).map((collection) => ({
+            ...collection,
+            collectionPrice: collection.collectionPrice.toString(),
+        }))
 
-        return Array.from(collectionsMap.values())
+        return collections
     }
 
     // Update collections when NFT data changes
