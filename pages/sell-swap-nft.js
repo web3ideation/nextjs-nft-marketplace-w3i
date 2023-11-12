@@ -19,7 +19,7 @@ export default function Home() {
 
     const [nftAddressFromQuery, setNftAddressFromQuery] = useState("")
     const [tokenIdFromQuery, setTokenIdFromQuery] = useState("")
-    const [activeForm, setActiveForm] = useState(null)
+    const [activeForm, setActiveForm] = useState("sell")
     const [proceeds, setProceeds] = useState("0")
 
     const { nftNotifications, showNftNotification, closeNftNotification } = useNftNotification()
@@ -144,65 +144,91 @@ export default function Home() {
                 <Button onClick={() => setActiveForm("swap")} text="Swap" />
             </div>
             <div className={styles.nftSellSwapWrapper}>
-                {activeForm === "sell" && (
-                    <SellSwapForm
-                        onSubmit={approveAndList}
-                        title="Sell your NFT!"
-                        id="Sell Form"
-                        defaultNftAddress={nftAddressFromQuery}
-                        defaultTokenId={tokenIdFromQuery}
-                    />
-                )}
-                {activeForm === "swap" && (
-                    <SellSwapForm
-                        onSubmit={approveAndList}
-                        title="Swap your NFT!"
-                        id="Swap Form"
-                        defaultNftAddress={nftAddressFromQuery}
-                        defaultTokenId={tokenIdFromQuery}
-                        extraFields={[
-                            {
-                                name: "Desired NFT Address",
-                                type: "text",
-                                key: "desiredNftAddress",
-                                placeholder: "0x0000000000000000000000000000000000000000",
-                            },
-                            {
-                                name: "Desired Token ID",
-                                type: "number",
-                                key: "desiredTokenId",
-                                placeholder: "1",
-                            },
-                        ]}
-                    />
-                )}
-            </div>
-            <div>
-                <div className="flex flex-row justify-center">
-                    <div>Withdraw {proceeds} Ether proceeds</div>
-                </div>
-                {proceeds !== "0" ? (
-                    <Button
-                        name="Withdraw"
-                        type="button"
-                        onClick={() => {
-                            runContractFunction({
-                                params: {
-                                    abi: nftMarketplaceAbi,
-                                    contractAddress: marketplaceAddress,
-                                    functionName: "withdrawProceeds",
-                                    params: {},
+                <div className={styles.nftSellSwapWrapper}>
+                    {activeForm === "sell" && (
+                        <SellSwapForm
+                            onSubmit={approveAndList}
+                            title="Sell your NFT!"
+                            id="Sell Form"
+                            defaultNftAddress={nftAddressFromQuery}
+                            defaultTokenId={tokenIdFromQuery}
+                        />
+                    )}
+                    {activeForm === "swap" && (
+                        <SellSwapForm
+                            onSubmit={approveAndList}
+                            title="Swap your NFT!"
+                            id="Swap Form"
+                            defaultNftAddress={nftAddressFromQuery}
+                            defaultTokenId={tokenIdFromQuery}
+                            extraFields={[
+                                {
+                                    name: "Desired NFT Address",
+                                    type: "text",
+                                    key: "desiredNftAddress",
+                                    placeholder: "0x0000000000000000000000000000000000000000",
                                 },
-                                onError: (error) => console.log(error),
-                                onSuccess: handleWithdrawSuccess,
-                            })
-                        }}
-                    />
-                ) : (
-                    <div className="flex flex-row justify-center">
-                        <div>No proceeds detected</div>
+                                {
+                                    name: "Desired Token ID",
+                                    type: "number",
+                                    key: "desiredTokenId",
+                                    placeholder: "1",
+                                },
+                            ]}
+                        />
+                    )}
+                </div>
+                <div className={styles.nftWithdrawWrapper}>
+                    <div className={styles.nftWithdraw}>
+                        <div>
+                            <h2>Important note for users:</h2>
+                        </div>
+                        <div className={styles.nftWithdrawInformation}>
+                            <p>
+                                When selling or exchanging NFTs on our platform, it is important
+                                that you are clear about the withdrawal process of your proceeds.
+                                After a successful sale or exchange, your proceeds will be credited
+                                to your account in Ether. To access these funds you will need to
+                                make a manual withdrawal. Please remember to withdraw your proceeds
+                                regularly to ensure your funds remain safe and accessible. This
+                                step is crucial to maintaining full control of your earned funds.
+                                If you need help or further information, do not hesitate to contact
+                                our support.
+                            </p>
+                        </div>
+                        <div className={styles.nftCreditInformationWrapper}>
+                            <div className={styles.nftCreditInformation}>
+                                <h3>Your credit:</h3>
+                                <div>{proceeds} ETH</div>
+                            </div>
+                        </div>
+                        <div className={styles.nftWithdrawButton}>
+                            {proceeds !== "0" ? (
+                                <Button
+                                    name="Withdraw"
+                                    type="button"
+                                    text="Withdraw"
+                                    onClick={() => {
+                                        runContractFunction({
+                                            params: {
+                                                abi: nftMarketplaceAbi,
+                                                contractAddress: marketplaceAddress,
+                                                functionName: "withdrawProceeds",
+                                                params: {},
+                                            },
+                                            onError: (error) => console.log(error),
+                                            onSuccess: handleWithdrawSuccess,
+                                        })
+                                    }}
+                                />
+                            ) : (
+                                <div className="flex flex-row justify-center">
+                                    <div>No proceeds detected</div>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                )}
+                </div>
             </div>
         </div>
     )
