@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react" // Import useMemo
+import React, { useState, useMemo } from "react"
 import NFTBox from "../components/NFTBox"
 import styles from "../styles/Home.module.css"
 import { Button } from "web3uikit"

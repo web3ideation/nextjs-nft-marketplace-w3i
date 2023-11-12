@@ -31,20 +31,23 @@ export default function NFTTable({ nftCollections, loadingImage }) {
     return (
         <table className={styles.nftTable}>
             <thead>
-                <tr className={styles.nftTableRow}>
+                <tr>
                     <th></th>
                     <th>Address</th>
                     <th>Collection Name</th>
                     <th>Items</th>
+                    <th>Total price</th>
                 </tr>
             </thead>
             <tbody>
                 {nftCollections.map((collection) => (
-                    <NFTTableElement
-                        key={collection.nftAddress}
-                        collection={collection}
-                        loadingImage={loadingImage}
-                    />
+                    <tr className={styles.nftTableElementWrapper}>
+                        <NFTTableElement
+                            key={`${collection.nftAddress}${collection.itemCount}`}
+                            collection={collection}
+                            loadingImage={loadingImage}
+                        />
+                    </tr>
                 ))}
             </tbody>
         </table>
