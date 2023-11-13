@@ -10,6 +10,7 @@ import LoadingWave from "../components/LoadingWave"
 import NFTInfoModal from "../components/NFTInfoModal"
 import NFTUpdateListingModal from "./NFTUpdateListingModal"
 import styles from "../styles/Home.module.css"
+import { CSSTransition } from "react-transition-group"
 
 // Utility function to truncate strings
 const truncateStr = (fullStr, strLen) => {
@@ -126,7 +127,7 @@ export default function NFTBox({ nftData, loadingImage }) {
         let initiatingPurchaseNotificationId
         console.log("Item clicked", nftAddress, tokenId, marketplaceAddress, price)
         if (!isWeb3Enabled) {
-            showNftNotification("Connect", "Connect your wallet to buy items!", "error")
+            showNftNotification("Connect", "Connect your wallet to buy items!", "info")
             return
         }
 
@@ -286,7 +287,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     <Image
                         className={styles.cardImage}
                         src={imageURI.src}
-                        height={300}
+                        height={225}
                         width={300}
                         loading="eager"
                         alt={tokenDescription || "..."}
@@ -310,8 +311,19 @@ export default function NFTBox({ nftData, loadingImage }) {
                     </div>
                 </div>
             )}
+
             {/* NFT Info Modal */}
-            {showInfoModal && (
+            <CSSTransition
+                in={showInfoModal}
+                timeout={400}
+                classNames={{
+                    enter: styles.modalTransitionEnter,
+                    enterActive: styles.modalTransitionEnterActive,
+                    exit: styles.modalTransitionExit,
+                    exitActive: styles.modalTransitionExitActive,
+                }}
+                unmountOnExit
+            >
                 <NFTInfoModal
                     show={showInfoModal}
                     type="info"
@@ -329,9 +341,20 @@ export default function NFTBox({ nftData, loadingImage }) {
                     copyNftAddressToClipboard={copyNftAddressToClipboard}
                     closeModal={() => setShowInfoModal(false)}
                 />
-            )}
+            </CSSTransition>
+
             {/* NFT Selling Modal */}
-            {showSellModal && (
+            <CSSTransition
+                in={showSellModal}
+                timeout={400}
+                classNames={{
+                    enter: styles.modalTransitionEnter,
+                    enterActive: styles.modalTransitionEnterActive,
+                    exit: styles.modalTransitionExit,
+                    exitActive: styles.modalTransitionExitActive,
+                }}
+                unmountOnExit
+            >
                 <NFTInfoModal
                     show={showSellModal}
                     type="sell"
@@ -349,9 +372,19 @@ export default function NFTBox({ nftData, loadingImage }) {
                     copyNftAddressToClipboard={copyNftAddressToClipboard}
                     closeModal={() => setShowSellModal(false)}
                 />
-            )}
+            </CSSTransition>
             {/* NFT Listing Modal */}
-            {showListModal && (
+            <CSSTransition
+                in={showListModal}
+                timeout={400}
+                classNames={{
+                    enter: styles.modalTransitionEnter,
+                    enterActive: styles.modalTransitionEnterActive,
+                    exit: styles.modalTransitionExit,
+                    exitActive: styles.modalTransitionExitActive,
+                }}
+                unmountOnExit
+            >
                 <NFTInfoModal
                     show={showListModal}
                     type="list"
@@ -369,9 +402,19 @@ export default function NFTBox({ nftData, loadingImage }) {
                     copyNftAddressToClipboard={copyNftAddressToClipboard}
                     closeModal={() => setShowListModal(false)}
                 />
-            )}
+            </CSSTransition>
             {/*Price Updating Modal*/}
-            {showUpdateListingModal && (
+            <CSSTransition
+                in={showUpdateListingModal}
+                timeout={400}
+                classNames={{
+                    enter: styles.modalTransitionEnter,
+                    enterActive: styles.modalTransitionEnterActive,
+                    exit: styles.modalTransitionExit,
+                    exitActive: styles.modalTransitionExitActive,
+                }}
+                unmountOnExit
+            >
                 <NFTUpdateListingModal
                     tokenId={tokenId}
                     marketplaceAddress={marketplaceAddress}
@@ -381,7 +424,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                         setShowUpdateListingModal(false)
                     }}
                 />
-            )}
+            </CSSTransition>
         </>
     )
 }
