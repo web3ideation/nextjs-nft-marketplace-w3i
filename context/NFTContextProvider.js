@@ -3,14 +3,14 @@ import { ethers } from "ethers"
 import { useQuery } from "@apollo/client"
 import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
 
-// Creating a context for NFT data
+// Context for managing and accessing NFT data.
 const NFTContext = createContext()
 
-// Custom hook to access NFT context
+// Custom hook for accessing NFT context in components.
 export const useNFT = () => useContext(NFTContext)
 
 export const NFTProvider = ({ children }) => {
-    // Fetching active and inactive NFT items using GraphQL queries
+    // GraphQL queries to fetch active and inactive NFT items.
     const {
         data: activeItemsData,
         loading: activeLoading,
@@ -22,7 +22,7 @@ export const NFTProvider = ({ children }) => {
         error: inactiveError,
     } = useQuery(GET_INACTIVE_ITEMS)
 
-    // State to store NFT data and collections
+    // States for NFT data and collections.
     const [nftsData, setNftsData] = useState([])
     const [nftCollections, setNftCollections] = useState([])
     const [loadingAllAttributes, setLoadingAllAttributes] = useState(true)
@@ -31,8 +31,7 @@ export const NFTProvider = ({ children }) => {
     console.log("Inactive Data", inactiveItemsData)
     console.log("Nfts Data", nftsData)
     console.log("Nft Collection", nftCollections)
-
-    // Function to retrieve the raw token URI from the blockchain
+    // Fetch the raw token URI from the blockchain using Ethereum provider.
     const getRawTokenURI = useCallback(async (nftAddress, tokenId) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         try {
@@ -51,54 +50,42 @@ export const NFTProvider = ({ children }) => {
         }
     }, [])
 
-    // Using useCallback for useRawName and useRawSymbol to prevent unnecessary re-creations
-    const useRawName = useCallback((nftAddress) => {
+    // Function to fetch contract details (name or symbol) from the blockchain.
+    const fetchContractDetail = useCallback(async (nftAddress, detailType) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const functionSignature = ethers.utils.id(`${detailType}()`).slice(0, 10)
+        const signer = provider.getSigner()
 
-        return async () => {
-            const functionSignature = ethers.utils.id("name()").slice(0, 10)
-            const signer = provider.getSigner()
+        try {
             const response = await signer.call({ to: nftAddress, data: functionSignature })
-
-            // Decoding the response
             const decodedResponse = ethers.utils.defaultAbiCoder.decode(["string"], response)
             return decodedResponse[0]
+        } catch (error) {
+            console.error(`Error fetching contract ${detailType}:`, error)
+            throw error
         }
     }, [])
 
-    const useRawSymbol = useCallback((nftAddress) => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-
-        return async () => {
-            const functionSignature = ethers.utils.id("symbol()").slice(0, 10)
-            const signer = provider.getSigner()
-            const response = await signer.call({ to: nftAddress, data: functionSignature })
-
-            // Decoding the response
-            const decodedResponse = ethers.utils.defaultAbiCoder.decode(["string"], response)
-            return decodedResponse[0]
-        }
-    }, [])
-
-    // Function to load image metadata for a given NFT
+    // Load image and metadata for a given NFT.
     const loadAttributes = useCallback(
         async (nft) => {
             try {
                 const tokenURI = await getRawTokenURI(nft.nftAddress, nft.tokenId)
+                console.log(tokenURI)
                 const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
                 const tokenURIResponse = await fetch(requestURL).then((res) => res.json())
 
-                // Retrieving name and symbol using useRawName and useRawSymbol
-                const nftName = await useRawName(nft.nftAddress)()
-                const nftSymbol = await useRawSymbol(nft.nftAddress)()
+                // Fetching name and symbol of the NFT.
+                const nftName = await fetchContractDetail(nft.nftAddress, "name")
+                const nftSymbol = await fetchContractDetail(nft.nftAddress, "symbol")
 
-                // Extracting attributes
+                // Processing attributes.
                 const attributes = tokenURIResponse.attributes.reduce((acc, attribute) => {
                     acc[attribute.trait_type] = attribute.value
                     return acc
                 }, {})
 
-                // Returning attributes along with imageURI, tokenName, and tokenDescription
+                // Compiling NFT data with loaded attributes.
                 return {
                     ...nft,
                     imageURI: {
@@ -117,10 +104,10 @@ export const NFTProvider = ({ children }) => {
                 return { ...nft, error: true }
             }
         },
-        [getRawTokenURI, useRawName, useRawSymbol]
+        [getRawTokenURI, fetchContractDetail]
     )
 
-    // Function to get the highest listing ID for each NFT
+    // Function to get the highest listing ID for each NFT.
     const getHighestListingIdPerNFT = useCallback((arr) => {
         const map = new Map()
 
@@ -148,7 +135,7 @@ export const NFTProvider = ({ children }) => {
         return Array.from(map.values())
     }, [])
 
-    // Load images for all NFTs when active or inactive data changes
+    // Effect to load images and attributes for all NFTs when data changes.
     useEffect(() => {
         const loadAllAttributes = async (items) => Promise.all(items.map(loadAttributes))
 
@@ -167,7 +154,7 @@ export const NFTProvider = ({ children }) => {
         }
     }, [activeItemsData, inactiveItemsData, loadAttributes])
 
-    // Creating collections from NFT data
+    // Function to create collections from NFT data.
     const createCollections = useCallback((nfts) => {
         const collectionsMap = new Map()
 
@@ -206,13 +193,13 @@ export const NFTProvider = ({ children }) => {
         })
     }, [])
 
-    // Update collections when NFT data changes
+    // Effect to update collections when NFT data changes.
     useEffect(() => {
         const collections = createCollections(nftsData)
         setNftCollections(collections)
     }, [nftsData, createCollections])
 
-    // Providing NFT data and state through context
+    // Context provider for NFT data and state.
     return (
         <NFTContext.Provider
             value={{ nftsData, nftCollections, loadingAttributes: loadingAllAttributes }}
