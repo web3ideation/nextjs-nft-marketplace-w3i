@@ -37,7 +37,7 @@ export default function Home() {
                     ) : (
                         nftsData.map((nft) =>
                             isOwnedByUser(nft.nftOwner) ? (
-                                <NFTBox key={nft.tokenId} nftData={nft} />
+                                <NFTBox key={`${nft.nftAddress}${nft.tokenId}`} nftData={nft} />
                             ) : null
                         )
                     )
