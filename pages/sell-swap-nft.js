@@ -54,11 +54,10 @@ export default function Home() {
             console.error("Error in approveAndList:", error)
             closeNftNotification(listAndApproveNotificationId)
             showNftNotification("Error", "Failed to approve and list the NFT.", "error")
-            // @ Niklas: I only commented this to check if the name and symbol are fetched correctly, you can uncomment it again
-            // } finally {
-            //     setTimeout(() => {
-            //         router.reload("/my-nft")
-            //     }, 6000)
+        } finally {
+            setTimeout(() => {
+                router.reload("/my-nft")
+            }, 6000)
         }
     }
 
