@@ -27,7 +27,6 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
             value: address,
             label: name,
         }))
-        console.log("Unique collections:", collectionsArray)
         return collectionsArray
     }
 
@@ -121,7 +120,6 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
 
     // Update filter states when an option is selected
     const handleOptionChange = (type, value) => {
-        console.log("handleOptionChange:", type, value)
         setFilters((prevFilters) => ({ ...prevFilters, [type]: value }))
     }
 

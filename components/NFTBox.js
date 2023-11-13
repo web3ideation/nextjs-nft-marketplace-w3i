@@ -119,7 +119,6 @@ export default function NFTBox({ nftData, loadingImage }) {
     // Handler for buy click
     const handleBuyClick = async () => {
         let initiatingPurchaseNotificationId
-        console.log("Item clicked", nftAddress, tokenId, marketplaceAddress, price)
         if (!isWeb3Enabled) {
             showNftNotification("Connect", "Connect your wallet to buy items!", "info")
             return
@@ -221,16 +220,12 @@ export default function NFTBox({ nftData, loadingImage }) {
         let copyNftAddressNotificationId
         try {
             await navigator.clipboard.writeText(nftAddress)
-            // Zeigen Sie hier die Erfolgsbenachrichtigung an
-            console.log("copy")
             copyNftAddressNotificationId = showNftNotification(
                 "Success",
                 "Address copied!",
                 "success"
             )
         } catch (error) {
-            console.error("Error copying to clipboard:", error)
-            // Zeigen Sie hier eine Fehlerbenachrichtigung an, falls gewünscht
             showNftNotification("Error", "Error copying!", "error")
         }
     }
@@ -325,7 +320,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     description={description}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
-                    formattedSellerAddress={formattedSeller}
+                    formattedNftOwner={isOwnedByUser ? "You" : formattedNftOwner}
                     tokenId={tokenId}
                     tokenName={tokenName}
                     isListed={isListed}
@@ -356,7 +351,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     description={description}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
-                    formattedSellerAddress={formattedSeller}
+                    formattedNftOwner={isOwnedByUser ? "You" : formattedNftOwner}
                     tokenId={tokenId}
                     tokenName={tokenName}
                     isListed={isListed}
@@ -386,7 +381,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     description={description}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
-                    formattedSellerAddress={formattedSeller}
+                    formattedNftOwner={isOwnedByUser ? "You" : formattedNftOwner}
                     tokenId={tokenId}
                     tokenName={tokenName}
                     isListed={isListed}

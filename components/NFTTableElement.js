@@ -30,8 +30,6 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
         collectionPrice,
     } = collection
 
-    console.log(collection)
-
     // Format address for display
     const formattedNftAddress = truncateStr(nftAddress || "", 15)
 

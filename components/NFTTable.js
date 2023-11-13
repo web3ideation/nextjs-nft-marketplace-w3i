@@ -28,7 +28,7 @@ export default function NFTTable({ nftCollections, loadingImage }) {
 
     const handleOpenModal = (collection) => {
         setSelectedCollection(collection)
-        console.log(collection)
+
         setShowModal(true)
     }
 
