@@ -56,8 +56,8 @@ const NftModal = (props) => {
                     className={styles.modalImage}
                     src={imageURI}
                     alt={tokenDescription}
-                    height={100}
-                    width={100}
+                    height={300}
+                    width={300}
                 />
                 <div className={styles.modalText}>
                     <div>

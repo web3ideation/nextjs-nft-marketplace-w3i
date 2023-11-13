@@ -71,8 +71,8 @@ export const NFTProvider = ({ children }) => {
                     ...nft,
                     imageURI: {
                         src: tokenURIResponse.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
-                        width: 100,
-                        height: 100,
+                        width: 0,
+                        height: 0,
                     },
                     tokenName: tokenURIResponse.name,
                     tokenDescription: tokenURIResponse.description,
