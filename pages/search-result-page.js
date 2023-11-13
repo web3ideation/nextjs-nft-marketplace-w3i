@@ -4,6 +4,7 @@ import styles from "../styles/Home.module.css"
 import NFTBox from "../components/NFTBox"
 import { useRouter } from "next/router"
 import { useNFT } from "../context/NFTContextProvider"
+import { ethers } from "ethers"
 
 const SearchResultPage = () => {
     const router = useRouter()
@@ -20,22 +21,27 @@ const SearchResultPage = () => {
     // Filter NFTs based on the search term when data or query changes
     useEffect(() => {
         const filteredResults = nftsData.filter((item) => {
+            const formattedPrice = ethers.utils.formatUnits(item.price, "ether")
+
             const concatenatedFields = [
-                item.listingId,
-                item.nftAddress,
-                item.tokenId,
-                item.seller,
-                item.tokenName,
-                item.tokenDescription,
-                item.description,
-                item.utility,
-                item.creator,
-                item.Type,
+                item.Background,
                 item.Text1,
                 item.Text2,
                 item.Text3,
                 item.Text4,
-                item.Background,
+                item.Type,
+                item.creator,
+                item.description,
+                item.listingId,
+                item.nftAddress,
+                item.nftName,
+                item.nftSymbol,
+                formattedPrice,
+                item.seller,
+                item.tokenDescription,
+                item.tokenId,
+                item.tokenName,
+                item.utility,
             ].join(" ")
             const lowerCaseConcatenated = concatenatedFields.toLowerCase()
 
