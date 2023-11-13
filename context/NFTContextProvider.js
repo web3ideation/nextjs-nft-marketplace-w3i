@@ -31,6 +31,7 @@ export const NFTProvider = ({ children }) => {
     console.log("Inactive Data", inactiveItemsData)
     console.log("Nfts Data", nftsData)
     console.log("Nft Collection", nftCollections)
+
     // Fetch the raw token URI from the blockchain using Ethereum provider.
     const getRawTokenURI = useCallback(async (nftAddress, tokenId) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -89,7 +90,6 @@ export const NFTProvider = ({ children }) => {
         async (nft) => {
             try {
                 const tokenURI = await getRawTokenURI(nft.nftAddress, nft.tokenId)
-                console.log(tokenURI)
                 const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
                 const tokenURIResponse = await fetch(requestURL).then((res) => res.json())
 
@@ -107,6 +107,7 @@ export const NFTProvider = ({ children }) => {
                 // Compiling NFT data with loaded attributes.
                 return {
                     ...nft,
+                    tokenURI,
                     imageURI: {
                         src: tokenURIResponse.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
                         width: 0,
