@@ -56,6 +56,9 @@
 // Filter open button styles
 .filterOpenButton {
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     left: 128px;
     background-color: $background-color;
     border-radius: 0 5px 5px 0;
