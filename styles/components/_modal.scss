@@ -43,6 +43,10 @@
 
 .collectionModalContentWrapper {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 // Modals
@@ -58,6 +62,7 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    width: 100%;
     overflow-x: auto;
 }
 
@@ -96,6 +101,12 @@
         flex-wrap: wrap;
         text-align: flex-end;
     }
+}
+
+.collectionModalTextWrapper {
+    display: flex;
+    justify-content: center;
+    padding: 0 0 20px 0;
 }
 
 .nftNftAddressToCopy {
@@ -145,7 +156,7 @@
     max-height: 300px;
     padding: 5px;
     border-radius: 5px;
-    border: solid 3px firebrick;
+
     h3,
     h4,
     p {
@@ -159,6 +170,9 @@
     }
     p {
         font-weight: 500;
+    }
+    &.modalAttention {
+        border: solid 3px firebrick;
     }
 }
 
