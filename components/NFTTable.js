@@ -3,6 +3,8 @@ import { useState, useEffect } from "react"
 import { useMoralis } from "react-moralis"
 import networkMapping from "../constants/networkMapping.json"
 import NFTTableElement from "../components/NFTTableElement"
+import NFTCollectionModal from "../components/NFTCollectionModal"
+import { CSSTransition } from "react-transition-group"
 
 export default function NFTTable({ nftCollections, loadingImage }) {
     // ------------------ Hooks & Data Retrieval ------------------
@@ -20,6 +22,40 @@ export default function NFTTable({ nftCollections, loadingImage }) {
 
     // Web3 and User related states
     const [isConnected, setIsConnected] = useState(isWeb3Enabled)
+    const [selectedCollection, setSelectedCollection] = useState(null)
+    const [showModal, setShowModal] = useState(false)
+    const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
+
+    const handleOpenModal = (collection) => {
+        setSelectedCollection(collection)
+        console.log(collection)
+        setShowModal(true)
+    }
+
+    const handleCloseModal = () => {
+        setShowModal(false) // oder was auch immer der Zustand ist, der das Modal kontrolliert
+    }
+
+    // Listener for modals' state
+    function modalListener() {
+        setAnyModalIsOpen(showModal)
+    }
+
+    // ------------------ useEffect Hooks ------------------
+
+    // Handle modal open/close effects on body overflow
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow
+        document.body.style.overflow = anyModalIsOpen ? "hidden" : "auto"
+        return () => {
+            document.body.style.overflow = previousOverflow
+        }
+    }, [anyModalIsOpen])
+
+    // Update connection state and listen to modal changes
+    useEffect(() => {
+        modalListener()
+    }, [showModal])
 
     // Update connection state
     useEffect(() => {
@@ -41,14 +77,30 @@ export default function NFTTable({ nftCollections, loadingImage }) {
             </thead>
             <tbody>
                 {nftCollections.map((collection) => (
-                    <tr className={styles.nftTableElementWrapper}>
-                        <NFTTableElement
-                            key={`${collection.nftAddress}${collection.itemCount}`}
-                            collection={collection}
-                            loadingImage={loadingImage}
-                        />
-                    </tr>
+                    <NFTTableElement
+                        key={`${collection.nftAddress}${collection.itemCount}`}
+                        collection={collection}
+                        loadingImage={loadingImage}
+                        onClick={() => handleOpenModal(collection)}
+                    />
                 ))}
+                <CSSTransition
+                    in={showModal}
+                    timeout={400}
+                    classNames={{
+                        enter: styles.modalTransitionEnter,
+                        enterActive: styles.modalTransitionEnterActive,
+                        exit: styles.modalTransitionExit,
+                        exitActive: styles.modalTransitionExitActive,
+                    }}
+                    unmountOnExit
+                >
+                    <NFTCollectionModal
+                        onClose={handleCloseModal}
+                        selectedCollection={selectedCollection} // Korrigierte Prop-Übergabe
+                        nftCollections={nftCollections}
+                    />
+                </CSSTransition>
             </tbody>
         </table>
     )

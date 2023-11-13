@@ -20,7 +20,7 @@ const truncateStr = (fullStr, strLen) => {
     )
 }
 
-export default function NFTTableElement({ collection, loadingImage }) {
+export default function NFTTableElement({ collection, onClick, loadingImage }) {
     const {
         nftAddress,
         firstImageURI: imageURI,
@@ -38,7 +38,7 @@ export default function NFTTableElement({ collection, loadingImage }) {
     return (
         <>
             {imageURI ? (
-                <tr className={styles.nftTableRow}>
+                <tr className={styles.nftTableRow} onClick={onClick}>
                     <td>
                         <div className={styles.contentWrapper}>
                             <Image
