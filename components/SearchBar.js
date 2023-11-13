@@ -35,7 +35,6 @@ const SearchBar = () => {
     return (
         <div className={styles.searchBarWrapper}>
             <input
-                key={searchTerm}
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}

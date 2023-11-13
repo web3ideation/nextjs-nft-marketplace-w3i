@@ -26,7 +26,7 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
     // Render the check icon if the option is selected
     const renderIcon = (optionValue) => {
         if (selected === optionValue || (selected === "default" && optionValue === "default")) {
-            return <CheckCircle fontSize="30px" />
+            return <CheckCircle fontSize="20px" />
         }
     }
 

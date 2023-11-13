@@ -24,23 +24,37 @@
 .nftListingContainer {
     display: flex;
     flex-direction: column;
+
     width: 100%;
 }
 
 // NFT table container styles
 .nftTableContainer {
     @include flex-center();
-    width: 100%;
+    width: 50%;
 }
 
 // NFT boxes wrapper styles
 // NFT table wrapper styles
-.nftListWrapper,
-.nftTableWrapper {
+.nftListWrapper {
     @include flex-center;
     flex-direction: column;
     margin-top: 40px;
     padding: 16px 150px;
+    font-family: $font-primary;
+
+    h1 {
+        font-size: $font-size-medium;
+        font-weight: 700;
+        text-align: center;
+    }
+}
+
+.nftTableWrapper {
+    @include flex-center;
+    flex-direction: column;
+    margin-top: 40px;
+    padding: 16px 50px 16px 150px;
     font-family: $font-primary;
 
     h1 {

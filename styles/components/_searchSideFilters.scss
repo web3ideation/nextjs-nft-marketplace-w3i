@@ -8,6 +8,7 @@
     transition: transform 0.5s ease-out;
     background-color: $background-color;
     font-family: $font-primary;
+    font-size: $font-size-small;
     height: 100%;
     position: fixed;
     display: flex;
@@ -115,6 +116,8 @@
 
     button {
         font-family: $font-primary;
+        line-height: $line-height-small;
+        font-size: $font-size-small;
         color: $white;
         font-weight: 400;
         padding: 18px 0;

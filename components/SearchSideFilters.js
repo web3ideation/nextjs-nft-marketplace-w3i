@@ -157,6 +157,7 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                     <SearchSideFiltersElement
                         key={label}
                         label={label}
+                        text={label}
                         options={optionsMap[label]}
                         selected={filters[`selected${label}`]}
                         onOptionChange={(value) => handleOptionChange(`selected${label}`, value)}
