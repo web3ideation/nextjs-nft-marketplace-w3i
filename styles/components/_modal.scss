@@ -1,6 +1,24 @@
 @use "../helpers/variables" as *;
 @use "../helpers/mixins" as *;
 
+.modalTransitionEnter {
+    opacity: 0;
+}
+
+.modalTransitionEnterActive {
+    opacity: 1;
+    transition: opacity 400ms;
+}
+
+.modalTransitionExit {
+    opacity: 1;
+}
+
+.modalTransitionExitActive {
+    opacity: 0;
+    transition: opacity 400ms;
+}
+
 .modalBackdrop {
     position: fixed;
     top: 0;
@@ -19,9 +37,12 @@
     padding: 20px;
     border-radius: 5px;
     z-index: 11;
-    width: 400px;
-    max-width: 100%;
+    max-width: 80%;
     font-family: $font-primary;
+}
+
+.collectionModalContentWrapper {
+    padding: 20px;
 }
 
 // Modals
@@ -32,18 +53,36 @@
     align-items: center;
 }
 
+.collectionModalContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: auto;
+}
+
+.collectionModalContentInnerwrapper {
+    margin: 20px 0 20px 20px;
+
+    &:last-of-type {
+        margin: 20px;
+    }
+}
+
 // NFT Modal Image styles
 .modalImage {
     width: 300px;
     height: 300px;
     display: block;
     border-radius: 5px;
+    margin: 20px;
 }
 
 // NFT Modal Text styles
 .modalText {
-    padding-top: 20px;
-    width: 100%;
+    padding: 10px;
+    width: 340px;
+    max-width: 340px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -95,6 +134,7 @@
 }
 
 .modalDescriptionWrapper {
+    max-width: 400px;
     padding: 20px 0;
 }
 
@@ -105,6 +145,7 @@
     max-height: 300px;
     padding: 5px;
     border-radius: 5px;
+    border: solid 3px firebrick;
     h3,
     h4,
     p {

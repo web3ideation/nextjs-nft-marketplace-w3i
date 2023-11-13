@@ -1,66 +1,69 @@
 @use "../helpers/variables" as *;
 @use "../helpers/mixins" as *;
 
+// Variables for shared styles
+$border-radius: 5px;
+$table-width: 100%;
+$shadow: 0 5px 5px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+
 // NFT Table styles
 .nftTable {
     @include boxShadow;
     table-layout: fixed;
-    border-radius: 5px;
+    border-radius: $border-radius;
     border-spacing: 0;
 
     thead {
-        padding: 8px 12px;
-        border-radius: 5px 5px 0 0;
+        padding: 8px 15px;
+        border-radius: $border-radius $border-radius 0 0;
         background-color: $background-color;
-        box-shadow: 0 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        box-shadow: $shadow;
     }
+
     tbody {
-        border-radius: 0 0 5px 5px;
-        display: block; // Enables max-height and overflow-y
-        max-height: 300px; // Example height, adjust to the actual height of 5 rows
-        overflow-y: auto; // Enables vertical scrolling
+        padding: 0 15px;
+        border-radius: 0 0 $border-radius $border-radius;
+        display: block;
+        max-height: 300px;
+        overflow-y: auto;
     }
 }
 
-// Ensures table rows and headers span the full width
-.nftTable thead {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
+// Full-width table rows and headers
+.nftTable thead,
 .nftTable tbody tr {
     display: table;
-    width: 98%;
+    width: $table-width;
     table-layout: fixed;
-    box-sizing: border-box;
 }
 
-.nftTableElementWrapper {
+.nftTable thead th {
+    width: $table-width;
+}
+
+// NFT Table row styles
+.nftTableRow {
     @include boxShadow;
     margin: 15px auto;
-    border-radius: 5px;
+    border-radius: $border-radius;
     cursor: pointer;
     &:hover {
         @include boxShadow-hover;
         transition: 0.2s;
     }
-}
-
-// NFT Table row styles
-.nftTableRow {
-    th {
-        padding: 8px 12px;
-    }
     td {
         vertical-align: middle;
         padding: 8px 12px;
+
         img {
-            border-radius: 5px;
+            border-radius: $border-radius;
             display: block;
             margin: auto;
         }
     }
 }
+
+// Flex container for content
 .contentWrapper {
     display: flex;
     align-items: center;
