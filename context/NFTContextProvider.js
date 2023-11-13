@@ -50,6 +50,24 @@ export const NFTProvider = ({ children }) => {
         }
     }, [])
 
+    const fetchOwnerOf = useCallback(async (nftAddress, tokenId) => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const functionSignature = ethers.utils.id("ownerOf(uint256)").slice(0, 10)
+        const tokenIdHex = ethers.utils
+            .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
+            .slice(2)
+        const data = functionSignature + tokenIdHex
+
+        try {
+            const response = await provider.call({ to: nftAddress, data })
+            const decodedResponse = ethers.utils.defaultAbiCoder.decode(["address"], response)
+            return decodedResponse[0]
+        } catch (error) {
+            console.error(`Error fetching owner of tokenId ${tokenId}:`, error)
+            throw error
+        }
+    }, [])
+
     // Function to fetch contract details (name or symbol) from the blockchain.
     const fetchContractDetail = useCallback(async (nftAddress, detailType) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
@@ -78,6 +96,7 @@ export const NFTProvider = ({ children }) => {
                 // Fetching name and symbol of the NFT.
                 const nftName = await fetchContractDetail(nft.nftAddress, "name")
                 const nftSymbol = await fetchContractDetail(nft.nftAddress, "symbol")
+                const nftOwner = await fetchOwnerOf(nft.nftAddress, nft.tokenId, "ownerOf")
 
                 // Processing attributes.
                 const attributes = tokenURIResponse.attributes.reduce((acc, attribute) => {
@@ -97,6 +116,7 @@ export const NFTProvider = ({ children }) => {
                     tokenDescription: tokenURIResponse.description,
                     nftName,
                     nftSymbol,
+                    nftOwner,
                     ...attributes,
                 }
             } catch (error) {
