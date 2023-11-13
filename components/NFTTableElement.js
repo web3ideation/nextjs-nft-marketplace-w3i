@@ -60,7 +60,10 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
                     </td>
                     <td>
                         <div className={styles.contentWrapper}>
-                            {ethers.utils.formatUnits(collectionPrice, "ether")} ETH
+                            {parseFloat(
+                                ethers.utils.formatUnits(collectionPrice, "ether")
+                            ).toFixed(6)}{" "}
+                            ETH
                         </div>
                     </td>
                 </tr>
