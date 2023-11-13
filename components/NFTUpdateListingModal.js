@@ -159,7 +159,7 @@ export default function NFTUpdateListingModal(props) {
                 </div>
             </div>
             <div className={styles.modalDescriptionWrapper}>
-                <div className={styles.modalDescription}>
+                <div className={`${styles.modalDescription} ${styles.modalAttention}`}>
                     <h3>
                         Here are some things to keep in mind when updating your item's listing
                         price in ETH:
