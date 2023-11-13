@@ -150,6 +150,7 @@ export const NFTProvider = ({ children }) => {
                     collectionPrice: 0,
                     firstImageURI: imageURI,
                     firstTokenName: tokenName,
+                    tokenIds: [],
                 })
             }
 
@@ -157,16 +158,25 @@ export const NFTProvider = ({ children }) => {
             if (!collection.items.some((item) => item.tokenId === tokenId)) {
                 collection.items.push(nft)
                 collection.count += 1
+                collection.tokenIds.push(tokenId) // Accumulate tokenIds
                 if (!isNaN(numericPrice)) {
                     collection.collectionPrice += numericPrice // Korrekte Addition des Preises
                 }
             }
         })
-        // Konvertieren Sie den Gesamtpreis jeder Sammlung in einen String
-        const collections = Array.from(collectionsMap.values()).map((collection) => ({
-            ...collection,
-            collectionPrice: collection.collectionPrice.toString(),
-        }))
+        // Convert tokenIds to a sorted comma-separated string and calculate total price
+        const collections = Array.from(collectionsMap.values()).map((collection) => {
+            // Sort tokenIds in ascending order
+            collection.tokenIds.sort((a, b) => a - b)
+
+            // Join tokenIds with commas
+            collection.tokenIds = collection.tokenIds.join(",")
+
+            return {
+                ...collection,
+                collectionPrice: collection.collectionPrice.toString(),
+            }
+        })
 
         return collections
     }
