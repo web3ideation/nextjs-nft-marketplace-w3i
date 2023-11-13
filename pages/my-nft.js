@@ -11,26 +11,18 @@ export default function Home() {
 
     const [hasOwnNFT, setHasOwnNFT] = useState(false)
 
-    // Function to check if the NFT is owned by the user
-    const isOwnedByUser = (seller, buyer) => {
-        // Check if the seller matches the account
-        if (seller === account) return true
-        // Check if the buyer matches the account and seller doesn't
-        if (seller !== account && buyer === account) return true
-        // Check if the seller is undefined
-        if (seller === undefined) return true
-        return false
+    // Function to check whether the NFT belongs to the user
+    const isOwnedByUser = (nftOwner) => {
+        return nftOwner?.toLowerCase() === account?.toLowerCase()
     }
 
-    // Effect to determine if the user owns any NFTs
+    // Effect to determine whether the user owns NFTs
     useEffect(() => {
-        const hasNFT = nftsData.some((nft) => isOwnedByUser(nft.seller, nft.buyer))
-        if (hasNFT !== hasOwnNFT) {
-            setHasOwnNFT(hasNFT)
-        }
-    }, [nftsData])
+        const hasNFT = nftsData.some((nft) => isOwnedByUser(nft.nftOwner))
+        setHasOwnNFT(hasNFT)
+    }, [nftsData, account])
 
-    // Display a loading state while fetching NFT data
+    // Display the charging status while retrieving the NFT data
     if (loadingImage) {
         return <div>Loading...</div>
     }
@@ -41,16 +33,15 @@ export default function Home() {
             <div className={styles.nftList}>
                 {isWeb3Enabled && chainId ? (
                     !hasOwnNFT ? (
-                        // Display a message if the user doesn't own any NFTs
                         <div>Go get some NFTs for yourself!!!</div>
                     ) : (
-                        // Display the list of NFTs owned by the user
                         nftsData.map((nft) =>
-                            isOwnedByUser(nft.seller, nft.buyer) ? <NFTBox nftData={nft} /> : null
+                            isOwnedByUser(nft.nftOwner) ? (
+                                <NFTBox key={nft.tokenId} nftData={nft} />
+                            ) : null
                         )
                     )
                 ) : (
-                    // Display a message and a button to connect the wallet if Web3 is not enabled
                     <div>
                         <h2>Web3 is currently not enabled - Connect your Wallet here</h2>
                         <ConnectButton />

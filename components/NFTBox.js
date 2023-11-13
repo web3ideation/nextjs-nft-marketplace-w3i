@@ -35,6 +35,7 @@ export default function NFTBox({ nftData, loadingImage }) {
     // Destructure NFT details directly from the prop
     const {
         nftAddress,
+        nftOwner,
         tokenId,
         price,
         seller,
@@ -67,8 +68,8 @@ export default function NFTBox({ nftData, loadingImage }) {
     const [buying, setBuying] = useState(false)
 
     // State for truncated strings
-    const [formattedSeller, setFormattedSeller] = useState("")
     const [formattedNftAddress, setFormattedNftAddress] = useState("")
+    const [formattedNftOwner, setFormattedNftOwner] = useState("")
 
     // Modal states
     const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
@@ -84,14 +85,7 @@ export default function NFTBox({ nftData, loadingImage }) {
     // ------------------ Derived States & Utilities ------------------
 
     // Check ownership of the NFT
-    const isOwnedBySeller = seller === account && !buyer
-    const isOwnedByBuyer = buyer === account
-    const isOwnedByUser = isWeb3Enabled && (isOwnedBySeller || isOwnedByBuyer)
-
-    // Determine the current owner of the NFT
-    const currentOwner = buyer || seller || ""
-
-    // Format addresses for display
+    const isOwnedByUser = isWeb3Enabled && nftOwner?.toLowerCase() === account?.toLowerCase()
 
     // ------------------ Contract Functions ------------------
 
@@ -254,9 +248,9 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Effect to update truncated strings when currentOwner or nftAddress change
     useEffect(() => {
-        setFormattedSeller(truncateStr(currentOwner, 15))
         setFormattedNftAddress(truncateStr(nftAddress, 15))
-    }, [currentOwner, nftAddress])
+        setFormattedNftOwner(truncateStr(nftOwner, 15))
+    }, [nftAddress, nftOwner])
 
     // Update connection state and listen to modal changes
     useEffect(() => {
@@ -294,7 +288,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     />
                     <div className={styles.cardTextArea}>
                         <div className={styles.cardOwnerAndId}>
-                            <div>Owned by {isOwnedByUser ? "You" : formattedSeller}</div>
+                            <div>Owned by {isOwnedByUser ? "You" : formattedNftOwner}</div>
                             <div>Token #{tokenId}</div>
                         </div>
                         <div className={styles.cardListedPrice}>
