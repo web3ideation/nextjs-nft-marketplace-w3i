@@ -9,7 +9,7 @@ const NftModal = (props) => {
         imageURI,
         description,
         tokenDescription,
-        formattedSellerAddress,
+        formattedNftOwner,
         formattedNftAddress,
         tokenId,
         tokenName,
@@ -62,7 +62,7 @@ const NftModal = (props) => {
                 <div className={styles.modalText}>
                     <div>
                         <p>Owned by: </p>
-                        <p>{formattedSellerAddress}</p>
+                        <p>{formattedNftOwner}</p>
                     </div>
                     <div>
                         <p>Token-Adress: </p>
