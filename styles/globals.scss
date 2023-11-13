@@ -9,13 +9,13 @@ html {
 
     ::-webkit-scrollbar-track {
         background: #f1f1f1; /* Hintergrundfarbe des Tracks */
-        border-radius: 2.5px; /* Rundung der Ecken */
+        border-radius: 4px; /* Rundung der Ecken */
     }
 
     ::-webkit-scrollbar-thumb {
         background: $hover-grey; /* Farbe des Scrollbar-Thumb */
         border: solid 2px $secondary-color;
-        border-radius: 2.5px; /* Rundung der Ecken */
+        border-radius: 4px; /* Rundung der Ecken */
     }
 
     ::-webkit-scrollbar-thumb:hover {
