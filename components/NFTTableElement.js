@@ -24,7 +24,7 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
     const {
         nftAddress,
         firstImageURI: imageURI,
-        firstTokenName: collectionName,
+        collectionName: collectionName,
         firstTokenDescription: tokenDescription,
         count: itemCount, // dies ist die neue Eigenschaft, die die Anzahl der Items in der Sammlung darstellt
         collectionPrice,
