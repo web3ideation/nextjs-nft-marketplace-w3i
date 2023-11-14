@@ -9,7 +9,7 @@ import "../styles/globals.css"
 import React, { useEffect, useState } from "react"
 import LoadingWave from "../components/LoadingWave"
 import Footer from "../components/Footer"
-import { NFTProvider } from "../context/NFTContextProvider"
+import { NFTProvider, useNFT } from "../context/NFTContextProvider"
 import styles from "../styles/Home.module.css"
 
 // Initialize Apollo Client with the GraphQL endpoint
@@ -19,16 +19,23 @@ const client = new ApolloClient({
 })
 
 function MyApp({ Component, pageProps }) {
-    // State to control the loading indicator
-    const [isLoading, setIsLoading] = useState(true)
+    const { isLoading } = useNFT()
+    const [showLoading, setShowLoading] = useState(isLoading)
 
-    // Simulate loading for a better user experience
+    console.log("isLoading:", isLoading)
+    console.log("showLoading:", showLoading)
+
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsLoading(false) // Hide loading after 2 seconds
-        }, 2000)
-        return () => clearTimeout(timer) // Clear the timeout if the component unmounts
-    }, [])
+        console.log("Is loading app", isLoading)
+        if (isLoading) {
+            // Zeige die Ladekomponente sofort an, wenn isLoading true ist
+            setShowLoading(true)
+        } else if (!isLoading && showLoading) {
+            // Setze eine Verzögerung, bevor die Ladekomponente ausgeblendet wird
+            const timer = setTimeout(() => setShowLoading(false), 5000) // Verzögerung von 1 Sekunde
+            return () => clearTimeout(timer) // Bereinige den Timer bei Komponentenabbau
+        }
+    }, [isLoading, showLoading])
 
     return (
         <div>
@@ -50,7 +57,7 @@ function MyApp({ Component, pageProps }) {
                             <NftNotification />
                             <SearchResultsProvider>
                                 <Header />
-                                {isLoading ? (
+                                {showLoading ? (
                                     <div className={styles.loadingContainerMain}>
                                         <div className={styles.loadingWrapperMain}>
                                             <LoadingWave />

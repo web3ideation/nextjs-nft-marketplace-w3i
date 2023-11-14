@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client"
 import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
 
 // Context for managing and accessing NFT data.
-const NFTContext = createContext()
+const NFTContext = createContext({})
 
 // Custom hook for accessing NFT context in components.
 export const useNFT = () => useContext(NFTContext)
@@ -27,14 +27,23 @@ export const NFTProvider = ({ children }) => {
     const [nftCollections, setNftCollections] = useState([])
     const [loadingAllAttributes, setLoadingAllAttributes] = useState(true)
 
+    const [isLoading, setIsLoading] = useState(true)
+
     console.log("Active Data", activeItemsData)
     console.log("Inactive Data", inactiveItemsData)
     console.log("Nfts Data", nftsData)
     console.log("Nft Collection", nftCollections)
+    console.log("loaded all attributes", loadingAllAttributes)
+    console.log("Is Loaded Context", isLoading)
+
+    const getEthereumObject = () => {
+        return window.ethereum
+    }
 
     // Fetch the raw token URI from the blockchain using Ethereum provider.
     const getRawTokenURI = useCallback(async (nftAddress, tokenId) => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const ethereum = getEthereumObject()
+        const provider = new ethers.providers.Web3Provider(ethereum)
         try {
             const functionSignature = ethers.utils.id("tokenURI(uint256)").slice(0, 10)
             const tokenIdHex = ethers.utils
@@ -52,7 +61,8 @@ export const NFTProvider = ({ children }) => {
     }, [])
 
     const fetchOwnerOf = useCallback(async (nftAddress, tokenId) => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const ethereum = getEthereumObject()
+        const provider = new ethers.providers.Web3Provider(ethereum)
         const functionSignature = ethers.utils.id("ownerOf(uint256)").slice(0, 10)
         const tokenIdHex = ethers.utils
             .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
@@ -71,7 +81,8 @@ export const NFTProvider = ({ children }) => {
 
     // Function to fetch contract details (name or symbol) from the blockchain.
     const fetchContractDetail = useCallback(async (nftAddress, detailType) => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const ethereum = getEthereumObject()
+        const provider = new ethers.providers.Web3Provider(ethereum)
         const functionSignature = ethers.utils.id(`${detailType}()`).slice(0, 10)
         const signer = provider.getSigner()
 
@@ -112,6 +123,7 @@ export const NFTProvider = ({ children }) => {
                         src: tokenURIResponse.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
                         width: 0,
                         height: 0,
+                        alt: "",
                     },
                     tokenName: tokenURIResponse.name,
                     tokenDescription: tokenURIResponse.description,
@@ -220,10 +232,21 @@ export const NFTProvider = ({ children }) => {
         setNftCollections(collections)
     }, [nftsData, createCollections])
 
+    useEffect(() => {
+        // Setze isLoading auf true, wenn einer der Ladevorgänge aktiv ist
+        const isDataLoading = activeLoading || inactiveLoading || loadingAllAttributes
+        setIsLoading(isDataLoading)
+    }, [activeLoading, inactiveLoading, loadingAllAttributes])
+
     // Context provider for NFT data and state.
     return (
         <NFTContext.Provider
-            value={{ nftsData, nftCollections, loadingAttributes: loadingAllAttributes }}
+            value={{
+                isLoading,
+                nftsData,
+                nftCollections,
+                loadingAttributes: loadingAllAttributes,
+            }}
         >
             {children}
         </NFTContext.Provider>

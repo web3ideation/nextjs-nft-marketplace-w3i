@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
 import SellSwapForm from "../components/SellSwapForm"
 import { useRouter } from "next/router"
 
-export default function Home() {
+const SellSwapNFT = () => {
     const router = useRouter()
     const { chainId, account, isWeb3Enabled } = useMoralis()
     const { runContractFunction } = useWeb3Contract()
@@ -236,3 +236,5 @@ export default function Home() {
         </div>
     )
 }
+
+export default SellSwapNFT

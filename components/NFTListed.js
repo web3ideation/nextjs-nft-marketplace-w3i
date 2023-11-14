@@ -9,7 +9,7 @@ function NFTListed() {
     // ------------------ Hooks & Data Retrieval ------------------
 
     // Retrieve NFT data and loading state using custom hook
-    const { nftsData, loadingImage } = useNFT()
+    const { nftsData, isLoading } = useNFT()
 
     // State for the number of visible NFTs
     const [visibleNFTs, setVisibleNFTs] = useState(5)
@@ -24,11 +24,11 @@ function NFTListed() {
     // ------------------ Render Functions ------------------
 
     // Render the list of NFTs or a loading state
-    const renderNFTList = () => {
-        if (loadingImage) {
+    const renderNFTList = (is) => {
+        if (isLoading) {
             return (
-                <div className={styles.nftLoadingIconWrapper}>
-                    <div className={styles.nftLoadingIcon}>
+                <div className={styles.loadingContainerNotification}>
+                    <div className={styles.loadingWrapperNotification}>
                         <LoadingWave />
                     </div>
                 </div>
@@ -54,7 +54,7 @@ function NFTListed() {
             <div id="NFTListed" className={styles.nftList}>
                 {renderNFTList()}
             </div>
-            {loadingImage ? null : (
+            {isLoading ? null : (
                 <div className={styles.showMoreButton}>
                     <Button
                         text="Show More"
