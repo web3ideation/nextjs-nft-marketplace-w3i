@@ -11,6 +11,8 @@ const NftModal = (props) => {
         tokenDescription,
         formattedNftOwner,
         formattedNftAddress,
+        formattedDesiredNftAddress,
+        desiredTokenId,
         tokenId,
         tokenName,
         isListed,
@@ -89,9 +91,16 @@ const NftModal = (props) => {
                         <p>Switched Owner:</p>
                         <strong>{buyerCount}x</strong>
                     </div>
+                    <div>
+                        <p>Desired Nft:</p>
+                        <div>
+                            <p>{formattedDesiredNftAddress} </p>
+                            <strong> {desiredTokenId}</strong>
+                        </div>
+                    </div>
                     <div className={styles.modalDescriptionWrapper}>
                         <div className={styles.modalDescription}>
-                            <p>Description: </p>
+                            <p>Description:</p>
                             <p>{tokenDescription || description || "..."}</p>
                         </div>
                     </div>
