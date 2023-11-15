@@ -103,7 +103,7 @@ const NftModal = (props) => {
                     {desiredNftAddress !== "0x0000000000000000000000000000000000000000" && (
                         <div>
                             <p>Desired Token-Id </p>
-                            <p>{desiredTokenId}</p>{" "}
+                            <strong>{desiredTokenId}</strong>
                         </div>
                     )}
 
