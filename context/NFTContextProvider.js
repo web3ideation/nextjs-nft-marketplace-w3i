@@ -84,10 +84,9 @@ export const NFTProvider = ({ children }) => {
         const ethereum = getEthereumObject()
         const provider = new ethers.providers.Web3Provider(ethereum)
         const functionSignature = ethers.utils.id(`${detailType}()`).slice(0, 10)
-        const signer = provider.getSigner()
 
         try {
-            const response = await signer.call({ to: nftAddress, data: functionSignature })
+            const response = await provider.call({ to: nftAddress, data: functionSignature })
             const decodedResponse = ethers.utils.defaultAbiCoder.decode(["string"], response)
             return decodedResponse[0]
         } catch (error) {
