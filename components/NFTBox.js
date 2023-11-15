@@ -327,6 +327,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     description={description}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
+                    desiredNftAddress={desiredNftAddress}
                     formattedDesiredNftAddress={formattedDesiredNftAddress}
                     desiredTokenId={desiredTokenId}
                     formattedNftOwner={isOwnedByUser ? "You" : formattedNftOwner}
@@ -360,6 +361,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     description={description}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
+                    desiredNftAddress={desiredNftAddress}
                     formattedDesiredNftAddress={formattedDesiredNftAddress}
                     desiredTokenId={desiredTokenId}
                     formattedNftOwner={isOwnedByUser ? "You" : formattedNftOwner}
@@ -392,6 +394,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     description={description}
                     tokenDescription={tokenDescription}
                     formattedNftAddress={formattedNftAddress}
+                    desiredNftAddress={desiredNftAddress}
                     formattedDesiredNftAddress={formattedDesiredNftAddress}
                     desiredTokenId={desiredTokenId}
                     formattedNftOwner={isOwnedByUser ? "You" : formattedNftOwner}
