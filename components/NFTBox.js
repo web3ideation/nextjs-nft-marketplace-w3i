@@ -29,6 +29,11 @@ const truncateStr = (fullStr, strLen) => {
     )
 }
 
+// Utility function to convert Wei to ETH
+const formatPriceToEther = (priceInWei) => {
+    return ethers.utils.formatUnits(priceInWei, "ether")
+}
+
 export default function NFTBox({ nftData, loadingImage }) {
     // ------------------ Hooks & Data Retrieval ------------------
 
@@ -51,6 +56,8 @@ export default function NFTBox({ nftData, loadingImage }) {
         desiredNftAddress,
         desiredTokenId,
     } = nftData
+
+    const formattedPrice = formatPriceToEther(price)
 
     console.log(desiredNftAddress)
     console.log(desiredTokenId)
@@ -424,6 +431,9 @@ export default function NFTBox({ nftData, loadingImage }) {
                     tokenId={tokenId}
                     marketplaceAddress={marketplaceAddress}
                     nftAddress={nftAddress}
+                    desiredNftAddress={desiredNftAddress}
+                    desiredTokenId={desiredTokenId}
+                    price={formattedPrice}
                     showUpdateListingModal={showUpdateListingModal}
                     onCancel={() => {
                         setShowUpdateListingModal(false)
