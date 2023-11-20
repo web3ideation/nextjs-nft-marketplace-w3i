@@ -59,9 +59,6 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     const formattedPrice = formatPriceToEther(price)
 
-    console.log(desiredNftAddress)
-    console.log(desiredTokenId)
-
     // Retrieve blockchain and user data using Moralis hook
     const { chainId, isWeb3Enabled, account } = useMoralis()
 
@@ -108,6 +105,17 @@ export default function NFTBox({ nftData, loadingImage }) {
         contractAddress: marketplaceAddress,
         functionName: "buyItem",
         msgValue: price,
+        params: {
+            nftAddress: nftAddress,
+            tokenId: tokenId,
+        },
+    })
+
+    //Contract function to cancel listing of an item
+    const { runContractFunction: cancelListing } = useWeb3Contract({
+        abi: nftMarketplaceAbi,
+        contractAddress: marketplaceAddress,
+        functionName: "cancelListing",
         params: {
             nftAddress: nftAddress,
             tokenId: tokenId,
@@ -196,11 +204,64 @@ export default function NFTBox({ nftData, loadingImage }) {
             await tx.wait(1)
             showNftNotification("Success", "Purchase successful!", "success")
             closeNftNotification(purchaseInProgressNotificationId)
+            router.reload()
         } catch (error) {
             console.error("Error processing transaction success:", error)
             showNftNotification("Error", "Error while purchasing!", "error")
             closeNftNotification(purchaseInProgressNotificationId)
         } finally {
+        }
+    }
+
+    // Handler for cancel listing click
+    const handleCancelListingClick = async () => {
+        let cancelListingNotificationId
+        if (!isWeb3Enabled) {
+            showNftNotification("Connect", "Connect your wallet to cancel listing!", "info")
+            return
+        }
+
+        cancelListingNotificationId = showNftNotification(
+            "Cancelling",
+            "Cancelling listing... Check wallet!",
+            "info",
+            true
+        )
+
+        try {
+            const tx = await cancelListing({
+                onError: (error) => {
+                    console.error("cancelListing", error)
+                    showNftNotification("Error", "Could not cancel the listing.", "error", false)
+                    closeNftNotification(cancelListingNotificationId)
+                },
+            })
+            closeNftNotification(cancelListingNotificationId)
+            await handleCancelListingSuccess(tx)
+        } catch (error) {
+            console.error("Error cancelling listing:", error)
+            closeNftNotification(cancelListingNotificationId)
+        }
+    }
+
+    // Handler for successful listing cancellation
+    const handleCancelListingSuccess = async (tx) => {
+        let cancellationInProgressNotificationId
+        try {
+            cancellationInProgressNotificationId = showNftNotification(
+                "Cancelling",
+                "Cancellation in progress...",
+                "info",
+                true
+            )
+            await tx.wait(1)
+            showNftNotification("Success", "Listing cancelled successfully!", "success")
+            closeNftNotification(cancellationInProgressNotificationId)
+            router.reload()
+        } catch (error) {
+            console.error("Error processing transaction success:", error)
+            showNftNotification("Error", "Error while cancelling listing!", "error")
+            closeNftNotification(cancellationInProgressNotificationId)
         }
     }
 
@@ -377,6 +438,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     isListed={isListed}
                     price={ethers.utils.formatUnits(price, "ether")}
                     buyerCount={buyerCount}
+                    handleCancelListingClick={handleCancelListingClick}
                     handleUpdatePriceButtonClick={handleUpdatePriceButtonClick}
                     copyNftAddressToClipboard={copyNftAddressToClipboard}
                     closeModal={() => setShowSellModal(false)}

@@ -21,6 +21,7 @@ const NftModal = (props) => {
         buyerCount,
         handleBuyClick,
         handleListClick,
+        handleCancelListingClick,
         handleUpdatePriceButtonClick,
         copyNftAddressToClipboard,
         closeModal,
@@ -46,6 +47,8 @@ const NftModal = (props) => {
             onOkHandler = () => {}
     }
 
+    const showCancelListingButton = type === "sell"
+
     return (
         <Modal
             isVisible={type}
@@ -53,6 +56,7 @@ const NftModal = (props) => {
             onCancel={closeModal}
             okText={okText}
             onOk={onOkHandler}
+            cancelListing={showCancelListingButton ? handleCancelListingClick : null}
         >
             <div className={styles.modalContent}>
                 <Image

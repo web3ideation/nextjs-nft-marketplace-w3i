@@ -177,13 +177,13 @@
 }
 
 // Footer styles within the modal
-.modalFooter {
-    display: flex;
-    justify-content: space-around;
-
+.modalFooterWrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(2, 1fr));
+    gap: 10px;
     button {
         background-color: $secondary-color;
-        width: 128px;
+        width: 100%;
         color: $white;
         border-radius: 5px;
         font-family: $font-primary;
@@ -196,5 +196,9 @@
             background: $hover-blue;
             color: $hover-grey;
         }
+    }
+
+    button:nth-child(3) {
+        grid-column: span 2;
     }
 }
