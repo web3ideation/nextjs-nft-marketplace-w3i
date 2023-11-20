@@ -14,15 +14,17 @@ const SellSwapNFT = () => {
     const { chainId, account, isWeb3Enabled } = useMoralis()
     const { runContractFunction } = useWeb3Contract()
 
+    // Determine the current chain and marketplace address
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
 
+    // State variables
     const [nftAddressFromQuery, setNftAddressFromQuery] = useState("")
     const [tokenIdFromQuery, setTokenIdFromQuery] = useState("")
     const [activeForm, setActiveForm] = useState("sell")
     const [proceeds, setProceeds] = useState("0")
 
-    const { nftNotifications, showNftNotification, closeNftNotification } = useNftNotification()
+    const { showNftNotification, closeNftNotification } = useNftNotification()
 
     // Update NFT address and token ID from the router query
     useEffect(() => {
@@ -36,28 +38,33 @@ const SellSwapNFT = () => {
 
     // Function to approve the NFT for sale or swap
     const approveAndList = async (data) => {
-        const nftAddress = data.nftAddress
-        const tokenId = data.tokenId
-        const price = ethers.utils.parseUnits(data.price, "ether").toString()
+        const { nftAddress, tokenId, price, desiredNftAddress, desiredTokenId } = data
+        const formattedPrice = ethers.utils.parseUnits(price, "ether").toString()
+        const formattedDesiredNftAddress =
+            desiredNftAddress || "0x0000000000000000000000000000000000000000"
+        const formattedDesiredTokenId = desiredTokenId || "0"
         let listAndApproveNotificationId
 
         try {
             listAndApproveNotificationId = showNftNotification(
                 "Listing",
-                "Aprove and List NFT...",
+                "Approving NFT...",
                 "info",
                 true
             )
             const tx = await useRawApprove(nftAddress)(marketplaceAddress, tokenId)
-            await handleApproveSuccess(tx, nftAddress, tokenId, price)
+            await handleApproveSuccess(
+                tx,
+                nftAddress,
+                tokenId,
+                formattedPrice,
+                formattedDesiredNftAddress,
+                formattedDesiredTokenId
+            )
         } catch (error) {
             console.error("Error in approveAndList:", error)
             closeNftNotification(listAndApproveNotificationId)
             showNftNotification("Error", "Failed to approve and list the NFT.", "error")
-        } finally {
-            setTimeout(() => {
-                router.reload("/my-nft")
-            }, 6000)
         }
     }
 
@@ -81,18 +88,25 @@ const SellSwapNFT = () => {
     }
 
     // Handle the approval success and list the NFT for sale or swap
-    const handleApproveSuccess = async (tx, nftAddress, tokenId, price) => {
+    const handleApproveSuccess = async (
+        tx,
+        nftAddress,
+        tokenId,
+        price,
+        desiredNftAddress,
+        desiredTokenId
+    ) => {
         await tx.wait()
         const listOptions = {
             abi: nftMarketplaceAbi,
             contractAddress: marketplaceAddress,
             functionName: "listItem",
             params: {
-                nftAddress: nftAddress,
-                tokenId: tokenId,
-                price: price,
-                desiredNftAddress: "0x0000000000000000000000000000000000000000",
-                desiredTokenId: "0",
+                nftAddress,
+                tokenId,
+                price,
+                desiredNftAddress,
+                desiredTokenId,
             },
         }
 
@@ -105,15 +119,12 @@ const SellSwapNFT = () => {
 
     // Notify the user when the NFT is successfully listed
     const handleListSuccess = async () => {
-        showNftNotification("NFT listing", "NFT listing process...", "info", true)
-        setTimeout(() => {
-            router.push("/my-nft")
-        }, 6000)
+        showNftNotification("NFT Listed", "Your NFT has been successfully listed.", "success")
     }
 
     // Notify the user when proceeds are successfully withdrawn
     const handleWithdrawSuccess = () => {
-        showNftNotification("Withdrawl", "Withdrawing proceeds", "success")
+        showNftNotification("Withdrawal", "Proceeds successfully withdrawn.", "success")
     }
 
     // Setup the UI, checking for any proceeds the user can withdraw
@@ -129,6 +140,7 @@ const SellSwapNFT = () => {
             },
             onError: (error) => console.log(error),
         })
+
         if (returnedProceeds) {
             // Convert the proceeds from Wei to Ether
             const proceedsInEther = ethers.utils.formatUnits(returnedProceeds.toString(), "ether")
@@ -137,9 +149,10 @@ const SellSwapNFT = () => {
     }
 
     useEffect(() => {
-        setupUI()
+        if (isWeb3Enabled) {
+            setupUI()
+        }
     }, [proceeds, account, isWeb3Enabled, chainId])
-
     return (
         <div className={styles.nftSellSwapContainer}>
             <div className={styles.nftSellSwapButton}>
