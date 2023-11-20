@@ -145,26 +145,27 @@ export const NFTProvider = ({ children }) => {
 
         arr.forEach((item) => {
             const key = `${item.nftAddress}-${item.tokenId}`
-            let existingItem = map.get(key)
+            const existingItem = map.get(key)
 
             if (!existingItem) {
-                existingItem = {
+                map.set(key, {
                     ...item,
                     highestListingId: item.listingId,
                     buyerCount: item.buyer ? 1 : 0,
-                }
-                map.set(key, existingItem)
+                })
             } else {
-                if (item.buyer && Number(item.listingId) < Number(existingItem.highestListingId)) {
-                    existingItem.buyerCount += 1
-                }
-                if (Number(item.listingId) > Number(existingItem.highestListingId)) {
-                    existingItem.highestListingId = item.listingId
-                }
+                map.set(key, {
+                    ...existingItem,
+                    buyerCount: existingItem.buyerCount + (item.buyer ? 1 : 0),
+                    highestListingId:
+                        Number(item.listingId) > Number(existingItem.highestListingId)
+                            ? item.listingId
+                            : existingItem.highestListingId,
+                })
             }
         })
 
-        return Array.from(map.values())
+        return Array.from(map.values()).filter((item) => item.listingId === item.highestListingId)
     }, [])
 
     // Effect to load images and attributes for all NFTs when data changes.
@@ -174,17 +175,17 @@ export const NFTProvider = ({ children }) => {
         if (activeItemsData && inactiveItemsData) {
             setLoadingAllAttributes(true)
 
-            Promise.all([
-                loadAllAttributes(activeItemsData.items),
-                loadAllAttributes(inactiveItemsData.items),
-            ]).then(([activeData, inactiveData]) => {
-                const combinedData = [...activeData, ...inactiveData]
-                const highestListingData = getHighestListingIdPerNFT(combinedData)
-                setNftsData(highestListingData)
+            const combinedData = [...activeItemsData.items, ...inactiveItemsData.items]
+            console.log("Combined Data", combinedData)
+            const highestListingData = getHighestListingIdPerNFT(combinedData)
+            console.log("Highest Listing Data", highestListingData)
+            loadAllAttributes(highestListingData).then((loadedData) => {
+                console.log("Loaded Data", loadedData)
+                setNftsData(loadedData)
                 setLoadingAllAttributes(false)
             })
         }
-    }, [activeItemsData, inactiveItemsData, loadAttributes])
+    }, [activeItemsData, inactiveItemsData, loadAttributes, getHighestListingIdPerNFT])
 
     // Function to create collections from NFT data.
     const createCollections = useCallback((nfts) => {

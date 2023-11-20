@@ -33,7 +33,6 @@ function NFTMostSold() {
 
         // Update the state with the new counts
         setNftAddressCount(addressCount)
-
         return filteredNFTs
     }, [nftsData])
 
