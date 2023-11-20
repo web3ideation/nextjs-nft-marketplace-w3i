@@ -1,52 +1,74 @@
-import Modal from "../components/Modal"
 import React, { useState } from "react"
+import Modal from "../components/Modal"
+import Tooltip from "../components/Tooltip"
 import { useWeb3Contract } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import { ethers } from "ethers"
 import styles from "../styles/Home.module.css"
 import { useNftNotification } from "../context/NFTNotificationContext"
 import { useRouter } from "next/router"
-import Tooltip from "../components/Tooltip"
 
 export default function NFTUpdateListingModal(props) {
     const {
         nftAddress,
         tokenId,
         showUpdateListingModal,
-        enableMouseWheel,
-        disableMouseWheel,
         marketplaceAddress,
         onCancel,
+        price,
+        desiredNftAddress,
+        desiredTokenId,
     } = props
 
-    const [priceToUpdateListingWith, setPriceToUpdateListingWith] = useState("") //!!!W this means that if i just open the modal and klick OK without entering a number the nfts price will be set to 0. which is a problem! tho there should be an error from the marketplace smartcontract that the price can not be zero, i think.
+    // State for form fields and UI states
     const [updating, setUpdating] = useState(false)
     const [focusedField, setFocusedField] = useState(null)
+
+    // Consolidated formData and errors state
+    const [formData, setFormData] = useState({
+        price: price || "",
+        desiredNftAddress: desiredNftAddress || "",
+        desiredTokenId: desiredTokenId || "",
+    })
+
+    const [errors, setErrors] = useState({
+        price: "",
+        desiredNftAddress: "",
+        desiredTokenId: "",
+    })
+
     const { showNftNotification, closeNftNotification } = useNftNotification()
     const router = useRouter()
 
-    // Initial state for form errors
-    const [errors, setErrors] = useState({
-        price: "",
-    })
-
-    // Validate individual form fields
+    // Validate form fields and set error messages
     function validateField(name, value) {
+        console.log(`Validating ${name}: ${value}`) // Logging für Diagnosezwecke
         let errorMessage = ""
-
-        if (name === "number") {
-            if (!/^\d{1,18}(\.\d{1,18})?$/.test(value)) {
-                errorMessage = "Please enter a positive amount in ETH."
-            }
+        if (name === "price" && !/^\d{1,18}(\.\d{1,18})?$/.test(value)) {
+            errorMessage = "Please enter a positive amount in ETH."
+        } else if (name === "desiredNftAddress" && !/^0x[a-fA-F0-9]{40}$/.test(value)) {
+            errorMessage = "Please enter a valid NFT address."
+        } else if (name === "desiredTokenId" && !/^\d+$/.test(value)) {
+            errorMessage = "Token ID must be a positive integer."
         }
-        // Update error state for the specific field
+        console.log(`Error message for ${name}: ${errorMessage}`) // Logging für Diagnosezwecke
         setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }))
-
         return errorMessage === ""
     }
 
-    // Reset the price input to its initial state
-    const resetPrice = () => setPriceToUpdateListingWith("")
+    // Define the smart contract function to update the listing
+    const { runContractFunction: updateListing } = useWeb3Contract({
+        abi: nftMarketplaceAbi,
+        contractAddress: marketplaceAddress,
+        functionName: "updateListing",
+        params: {
+            nftAddress,
+            tokenId,
+            newDesiredNftAddress: formData.desiredNftAddress,
+            newdesiredTokenId: formData.desiredTokenId,
+            newPrice: ethers.utils.parseEther(formData.price),
+        },
+    })
 
     // Handle successful listing update
     const handleUpdateListingSuccess = async (tx) => {
@@ -56,73 +78,62 @@ export default function NFTUpdateListingModal(props) {
         onCancel && onCancel()
     }
 
-    // Define the contract function to update the listing
-    const { runContractFunction: updateListing } = useWeb3Contract({
-        abi: nftMarketplaceAbi,
-        contractAddress: marketplaceAddress,
-        functionName: "updateListing",
-        params: {
-            nftAddress: nftAddress,
-            tokenId: tokenId,
-            newDesiredNftAddress: nftAddress,
-            newdesiredTokenId: tokenId,
-            newPrice: ethers.utils.parseEther(priceToUpdateListingWith || "0"),
-        },
-    })
-
-    // Validate the input before calling the update
+    // Validate the input before updating the listing
     const validateAndUpdateListing = async () => {
-        let validateAndUpdateListingNotificationId
+        const isPriceValid = validateField("price", formData.price)
+        const isAddressValid = validateField("desiredNftAddress", formData.desiredNftAddress)
+        const isTokenIdValid = validateField("desiredTokenId", formData.desiredTokenId)
 
-        const price = parseFloat(priceToUpdateListingWith)
-        if (isNaN(price) || price <= 0) {
-            closeNftNotification(validateAndUpdateListingNotificationId)
-            showNftNotification(
-                "Invalid Price",
-                "Please enter a price greater than zero.",
-                "error"
-            )
+        if (!isPriceValid || !isAddressValid || !isTokenIdValid) {
             return
         }
 
-        validateAndUpdateListingNotificationId = showNftNotification(
+        setUpdating(true)
+        const notificationId = showNftNotification(
             "Updating",
             "Updating listing price",
             "info",
             true
         )
-
-        setUpdating(true)
         await updateListing({
             onError: (error) => {
-                if (error.code === 4001) {
-                    // EIP-1193 user rejected request
-                    closeNftNotification(validateAndUpdateListingNotificationId)
-                    showNftNotification(
-                        "Transaction Cancelled",
-                        "You rejected the transaction.",
-                        "error"
-                    )
-                } else {
-                    closeNftNotification(validateAndUpdateListingNotificationId)
-                    showNftNotification("Error", error.message, "error")
-                }
+                closeNftNotification(notificationId)
+                showNftNotification("Error", error.message, "error")
                 setUpdating(false)
             },
             onSuccess: handleUpdateListingSuccess,
         })
     }
 
+    // Reset the form to its initial state
+    const resetForm = () => {
+        setFormData({
+            price: price || "",
+            desiredNftAddress: desiredNftAddress || "",
+            desiredTokenId: desiredTokenId || "",
+        })
+        setErrors({
+            price: "",
+            desiredNftAddress: "",
+            desiredTokenId: "",
+        })
+    }
+
     // Handle the button click to update the listing
-    const handleUpdateButtonClick = async () => {
+    const handleUpdateButtonClick = () => {
         validateAndUpdateListing()
     }
 
-    // Called when the modal is cancelled or closed
+    // Reset the form when the modal is closed
     const handleClose = () => {
         onCancel && onCancel()
-        enableMouseWheel && enableMouseWheel()
-        resetPrice() // It's safe to reset the price when the modal is closing.
+        resetForm()
+    }
+
+    // Handle input change in a consolidated manner
+    const handleChange = (e) => {
+        const { name, value } = e.target
+        setFormData({ ...formData, [name]: value })
     }
 
     return (
@@ -133,31 +144,41 @@ export default function NFTUpdateListingModal(props) {
             onCancel={handleClose}
             cancelText="Close"
         >
-            <div className={styles.modalInputWrapper}>
-                <label htmlFor="update listing">Update listing price in L1 Currency (ETH)</label>
-                <div className={styles.modalInput}>
-                    <input
-                        type="number"
-                        id="number"
-                        name="number"
-                        placeholder="min. amount: 0.000000000000000001"
-                        value={priceToUpdateListingWith}
-                        onChange={(event) => {
-                            setPriceToUpdateListingWith(event.target.value)
-                        }}
-                        disabled={updating}
-                        onBlur={(e) => {
-                            validateField(e.target.name, e.target.value)
-                            setFocusedField(null)
-                        }}
-                        onFocus={() => {
-                            setFocusedField("number")
-                        }}
-                        className={focusedField === "number" ? styles.inputFocused : ""}
-                    />
-                    {errors["number"] && <Tooltip message={errors["number"]} />}
-                </div>
-            </div>
+            <form className={styles.sellSwapForm}>
+                <h2>Updating price and/or swap</h2>
+                {Object.entries(formData).map(([fieldKey, value]) => (
+                    <div key={fieldKey} className={styles.formInputWrapper}>
+                        <div key={fieldKey} className={styles.modalInputWrapper}>
+                            <label htmlFor={fieldKey}>
+                                {fieldKey.charAt(0).toUpperCase() +
+                                    fieldKey.slice(1).replace("Id", " ID")}
+                            </label>
+                            <div className={styles.modalInput}>
+                                <input
+                                    type={fieldKey === "price" ? "number" : "text"}
+                                    id={fieldKey}
+                                    name={fieldKey}
+                                    placeholder={
+                                        fieldKey === "desiredNftAddress"
+                                            ? "0x0000000000000000000000000000000000000000"
+                                            : fieldKey === "desiredTokenId"
+                                            ? "0"
+                                            : "min. amount: 0.000000000000000001"
+                                    }
+                                    value={formData[fieldKey]}
+                                    onChange={handleChange}
+                                    onBlur={(e) => validateField(e.target.name, e.target.value)}
+                                    onFocus={() => setFocusedField(fieldKey)}
+                                    className={
+                                        focusedField === fieldKey ? styles.inputFocused : ""
+                                    }
+                                />
+                                {errors[fieldKey] && <Tooltip message={errors[fieldKey]} />}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </form>
             <div className={styles.modalDescriptionWrapper}>
                 <div className={`${styles.modalDescription} ${styles.modalAttention}`}>
                     <h3>
