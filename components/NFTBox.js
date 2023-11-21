@@ -222,7 +222,7 @@ export default function NFTBox({ nftData, loadingImage }) {
         }
 
         cancelListingNotificationId = showNftNotification(
-            "Cancelling",
+            "Delisting",
             "Cancelling listing... Check wallet!",
             "info",
             true
@@ -249,7 +249,7 @@ export default function NFTBox({ nftData, loadingImage }) {
         let cancellationInProgressNotificationId
         try {
             cancellationInProgressNotificationId = showNftNotification(
-                "Cancelling",
+                "Delisting",
                 "Cancellation in progress...",
                 "info",
                 true
@@ -257,7 +257,9 @@ export default function NFTBox({ nftData, loadingImage }) {
             await tx.wait(1)
             showNftNotification("Success", "Listing cancelled successfully!", "success")
             closeNftNotification(cancellationInProgressNotificationId)
-            router.reload()
+            setTimeout(() => {
+                router.push("/my-nft")
+            }, 10000)
         } catch (error) {
             console.error("Error processing transaction success:", error)
             showNftNotification("Error", "Error while cancelling listing!", "error")
