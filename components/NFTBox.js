@@ -206,7 +206,9 @@ export default function NFTBox({ nftData, loadingImage }) {
             await tx.wait(1)
             showNftNotification("Success", "Purchase successful!", "success")
             closeNftNotification(purchaseInProgressNotificationId)
-            router.reload()
+            setTimeout(() => {
+                router.reload("/my-nft")
+            }, 5000)
         } catch (error) {
             console.error("Error processing transaction success:", error)
             showNftNotification("Error", "Error while purchasing!", "error")
@@ -260,8 +262,8 @@ export default function NFTBox({ nftData, loadingImage }) {
             showNftNotification("Success", "Listing cancelled successfully!", "success")
             closeNftNotification(cancellationInProgressNotificationId)
             setTimeout(() => {
-                router.push("/my-nft")
-            }, 10000)
+                router.reload("/my-nft")
+            }, 5000)
         } catch (error) {
             console.error("Error processing transaction success:", error)
             showNftNotification("Error", "Error while cancelling listing!", "error")
