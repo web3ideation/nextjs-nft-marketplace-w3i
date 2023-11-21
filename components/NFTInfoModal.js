@@ -48,6 +48,9 @@ const NftModal = forwardRef((props, ref) => {
             onOkHandler = () => {}
     }
 
+    // Determine if the NFT is listed for swap
+    const isListedForSwap = desiredNftAddress !== "0x0000000000000000000000000000000000000000"
+
     const showCancelListingButton = type === "sell"
 
     return (
@@ -90,28 +93,29 @@ const NftModal = forwardRef((props, ref) => {
                         <strong>{tokenName}</strong>
                     </div>
                     <div>
-                        <p>Price: </p>
-                        <strong>{price} ETH</strong>
-                    </div>
-                    <div>
                         <p>Switched Owner:</p>
                         <strong>{buyerCount}x</strong>
                     </div>
-
-                    {desiredNftAddress !== "0x0000000000000000000000000000000000000000" && (
+                    {!isListedForSwap ? (
                         <div>
-                            <p>Desired Address: </p>
-                            <p>{formattedDesiredNftAddress}</p>
+                            <p>Price: </p>
+                            <strong>{price} ETH</strong>
                         </div>
+                    ) : (
+                        <>
+                            <div>
+                                <p>Listed for swap against:</p>
+                            </div>
+                            <div>
+                                <p>Desired Address: </p>
+                                <p>{formattedDesiredNftAddress}</p>
+                            </div>
+                            <div>
+                                <p>Desired Token-Id </p>
+                                <strong>{desiredTokenId}</strong>
+                            </div>
+                        </>
                     )}
-
-                    {desiredNftAddress !== "0x0000000000000000000000000000000000000000" && (
-                        <div>
-                            <p>Desired Token-Id </p>
-                            <strong>{desiredTokenId}</strong>
-                        </div>
-                    )}
-
                     <div className={styles.modalDescriptionWrapper}>
                         <div className={styles.modalDescription}>
                             <p>Description:</p>
