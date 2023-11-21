@@ -34,10 +34,12 @@
     align-items: center;
     justify-content: flex-start;
 
-    h4 {
+    h4,
+    button {
         font-family: $font-primary;
         font-size: $font-size-small;
         font-weight: 500;
+        cursor: pointer;
 
         &:hover {
             color: $hover-blue;
@@ -80,6 +82,10 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+}
+
+.resetButton {
+    background-color: $background-color;
 }
 
 // Background placeholder styles
@@ -127,6 +133,7 @@
         width: 100%;
         border: none;
         background-color: transparent;
+        cursor: pointer;
 
         &:hover {
             color: $hover-grey;

@@ -127,6 +127,16 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
         onFilteredItemsChange(filteredList)
     }
 
+    // Reset filter states to default
+    const resetFilters = () => {
+        setFilters({
+            selectedSorting: "default",
+            selectedStatus: "default",
+            selectedCategory: "default",
+            selectedCollections: "default",
+        })
+    }
+
     // ------------------ Handlers ------------------
 
     // Update filter states when an option is selected
@@ -172,6 +182,11 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                         onOptionChange={(value) => handleOptionChange(`selected${label}`, value)}
                     />
                 ))}
+                <div className={styles.searchSideFiltersOptionWrapper}>
+                    <button className={styles.resetButton} onClick={resetFilters}>
+                        Reset Filters
+                    </button>
+                </div>
                 <div className={styles.backgroundPlaceholder}></div>
             </div>
         </div>
