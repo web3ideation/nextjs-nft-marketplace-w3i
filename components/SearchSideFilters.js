@@ -45,6 +45,8 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 { value: "default", label: "All" },
                 { value: "listed", label: "Listed" },
                 { value: "not listed", label: "Not listed" },
+                { value: "sell", label: "Sell" },
+                { value: "swap", label: "Swap" },
             ],
             Sorting: [
                 { value: "default", label: "By Default" },
@@ -73,12 +75,21 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     // Apply filters to the initial items and update the filtered list
     const filterItems = () => {
         let filteredList = [...initialItems]
+        console.log(initialItems)
 
         // Apply status filter
         if (filters.selectedStatus === "listed") {
             filteredList = filteredList.filter((nft) => nft.isListed)
         } else if (filters.selectedStatus === "not listed") {
             filteredList = filteredList.filter((nft) => !nft.isListed)
+        } else if (filters.selectedStatus === "sell") {
+            filteredList = filteredList.filter(
+                (nft) => nft.desiredNftAddress === "0x0000000000000000000000000000000000000000"
+            )
+        } else if (filters.selectedStatus === "swap") {
+            filteredList = filteredList.filter(
+                (nft) => nft.desiredNftAddress !== "0x0000000000000000000000000000000000000000"
+            )
         }
 
         // Apply sorting logic
