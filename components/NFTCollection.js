@@ -1,5 +1,5 @@
 import React from "react"
-import NFTTable from "./NFTTable.js" // Import the NFTTable component
+import NFTTable from "../components/NFTTable.js"
 import styles from "../styles/Home.module.css"
 import { useNFT } from "../context/NFTContextProvider.js"
 

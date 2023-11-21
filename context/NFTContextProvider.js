@@ -196,7 +196,7 @@ export const NFTProvider = ({ children }) => {
         const collectionsMap = new Map()
 
         nfts.forEach((nft) => {
-            const { nftAddress, tokenId, imageURI, tokenName, price, nftName } = nft
+            const { nftAddress, tokenId, imageURI, tokenName, price, nftName, buyerCount } = nft
             const numericPrice = Number(price)
 
             if (!collectionsMap.has(nftAddress)) {
@@ -204,6 +204,7 @@ export const NFTProvider = ({ children }) => {
                     nftAddress,
                     items: [],
                     count: 0,
+                    collectionCount: 0,
                     collectionPrice: 0,
                     firstImageURI: imageURI,
                     collectionName: nftName,
@@ -216,6 +217,7 @@ export const NFTProvider = ({ children }) => {
                 collection.items.push(nft)
                 collection.count += 1
                 collection.tokenIds.push(tokenId)
+                collection.collectionCount += buyerCount
                 if (!isNaN(numericPrice)) {
                     collection.collectionPrice += numericPrice
                 }

@@ -74,6 +74,7 @@ export default function NFTTable({ nftCollections, loadingImage }) {
                     <th>Address</th>
                     <th>Collection Name</th>
                     <th>Items</th>
+                    <th>Sold</th>
                     <th>Total price</th>
                 </tr>
             </thead>

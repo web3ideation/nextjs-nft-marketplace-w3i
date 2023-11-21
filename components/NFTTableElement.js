@@ -26,6 +26,7 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
         firstImageURI: imageURI,
         collectionName: collectionName,
         firstTokenDescription: tokenDescription,
+        collectionCount,
         count: itemCount, // dies ist die neue Eigenschaft, die die Anzahl der Items in der Sammlung darstellt
         collectionPrice,
     } = collection
@@ -55,6 +56,9 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
                     </td>
                     <td>
                         <div className={styles.contentWrapper}>{itemCount}</div>
+                    </td>
+                    <td>
+                        <div className={styles.contentWrapper}>{collectionCount}</div>
                     </td>
                     <td>
                         <div className={styles.contentWrapper}>
