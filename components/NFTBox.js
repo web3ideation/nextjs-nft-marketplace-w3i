@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import networkMapping from "../constants/networkMapping.json"
@@ -70,6 +70,8 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Router and Notification hooks
     const router = useRouter()
+
+    const modalRef = useRef(null)
 
     // ------------------ State Management ------------------
 
@@ -382,6 +384,7 @@ export default function NFTBox({ nftData, loadingImage }) {
             <CSSTransition
                 in={showInfoModal}
                 timeout={400}
+                nodeRef={modalRef}
                 classNames={{
                     enter: styles.modalTransitionEnter,
                     enterActive: styles.modalTransitionEnterActive,
@@ -416,6 +419,7 @@ export default function NFTBox({ nftData, loadingImage }) {
             <CSSTransition
                 in={showSellModal}
                 timeout={400}
+                nodeRef={modalRef}
                 classNames={{
                     enter: styles.modalTransitionEnter,
                     enterActive: styles.modalTransitionEnterActive,
@@ -450,6 +454,7 @@ export default function NFTBox({ nftData, loadingImage }) {
             <CSSTransition
                 in={showListModal}
                 timeout={400}
+                nodeRef={modalRef}
                 classNames={{
                     enter: styles.modalTransitionEnter,
                     enterActive: styles.modalTransitionEnterActive,
@@ -483,6 +488,7 @@ export default function NFTBox({ nftData, loadingImage }) {
             <CSSTransition
                 in={showUpdateListingModal}
                 timeout={400}
+                nodeRef={modalRef}
                 classNames={{
                     enter: styles.modalTransitionEnter,
                     enterActive: styles.modalTransitionEnterActive,

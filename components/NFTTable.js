@@ -1,5 +1,5 @@
 import styles from "../styles/Home.module.css"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { useMoralis } from "react-moralis"
 import networkMapping from "../constants/networkMapping.json"
 import NFTTableElement from "../components/NFTTableElement"
@@ -17,6 +17,8 @@ export default function NFTTable({ nftCollections, loadingImage }) {
 
     // Get the marketplace address based on the current chain
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
+
+    const modalRef = useRef(null)
 
     // ------------------ State Management ------------------
 
@@ -87,6 +89,7 @@ export default function NFTTable({ nftCollections, loadingImage }) {
                 <CSSTransition
                     in={showModal}
                     timeout={400}
+                    nodeRef={modalRef}
                     classNames={{
                         enter: styles.modalTransitionEnter,
                         enterActive: styles.modalTransitionEnterActive,

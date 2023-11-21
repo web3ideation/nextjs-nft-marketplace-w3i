@@ -1,8 +1,9 @@
+import React, { forwardRef } from "react"
 import Modal from "../components/Modal"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
 
-const NftModal = (props) => {
+const NftModal = forwardRef((props, ref) => {
     // Destructuring the passed properties
     const {
         type, // 'info', 'list', or 'sell'
@@ -58,11 +59,11 @@ const NftModal = (props) => {
             onOk={onOkHandler}
             cancelListing={showCancelListingButton ? handleCancelListingClick : null}
         >
-            <div className={styles.modalContent}>
+            <div ref={ref} className={styles.modalContent}>
                 <Image
                     className={styles.modalImage}
                     src={imageURI}
-                    alt={tokenDescription}
+                    alt={tokenDescription || ""}
                     height={300}
                     width={300}
                 />
@@ -121,6 +122,6 @@ const NftModal = (props) => {
             </div>
         </Modal>
     )
-}
+})
 
 export default NftModal
