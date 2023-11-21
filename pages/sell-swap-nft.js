@@ -19,8 +19,9 @@ const SellSwapNFT = () => {
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
 
     // State variables
-    const [nftAddressFromQuery, setNftAddressFromQuery] = useState("")
-    const [tokenIdFromQuery, setTokenIdFromQuery] = useState("")
+    const [nftAddressFromQuery, setNftAddressFromQuery] = useState(router.query.nftAddress || "")
+    const [tokenIdFromQuery, setTokenIdFromQuery] = useState(router.query.tokenId || "")
+
     const [activeForm, setActiveForm] = useState("sell")
     const [proceeds, setProceeds] = useState("0")
 
@@ -59,7 +60,8 @@ const SellSwapNFT = () => {
                 tokenId,
                 formattedPrice,
                 formattedDesiredNftAddress,
-                formattedDesiredTokenId
+                formattedDesiredTokenId,
+                listAndApproveNotificationId
             )
         } catch (error) {
             console.error("Error in approveAndList:", error)
@@ -94,9 +96,18 @@ const SellSwapNFT = () => {
         tokenId,
         price,
         desiredNftAddress,
-        desiredTokenId
+        desiredTokenId,
+        previousNotificationId
     ) => {
         await tx.wait()
+        closeNftNotification(previousNotificationId)
+        // Show notification for starting the listing process
+        const listNotificationId = showNftNotification(
+            "Check your Wallet",
+            "Confirm listing...",
+            "info",
+            true
+        )
         const listOptions = {
             abi: nftMarketplaceAbi,
             contractAddress: marketplaceAddress,
@@ -112,14 +123,19 @@ const SellSwapNFT = () => {
 
         await runContractFunction({
             params: listOptions,
-            onSuccess: handleListSuccess,
+            onSuccess: () => handleListSuccess(listNotificationId),
             onError: (error) => console.log(error),
         })
     }
 
     // Notify the user when the NFT is successfully listed
-    const handleListSuccess = async () => {
+    const handleListSuccess = async (previousNotificationId) => {
+        closeNftNotification(previousNotificationId)
         showNftNotification("NFT Listed", "Your NFT has been successfully listed.", "success")
+        // Set a timeout for 5 seconds before redirecting
+        setTimeout(() => {
+            router.push("/my-nft")
+        }, 5000)
     }
 
     // Notify the user when proceeds are successfully withdrawn
