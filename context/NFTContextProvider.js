@@ -144,9 +144,11 @@ export const NFTProvider = ({ children }) => {
         const map = new Map()
 
         arr.forEach((item) => {
+            console.log(item)
             const key = `${item.nftAddress}-${item.tokenId}`
             const existingItem = map.get(key)
-
+            console.log("Existing Item", existingItem)
+            console.log("Not Existing Item", !existingItem)
             if (!existingItem) {
                 map.set(key, {
                     ...item,
@@ -154,18 +156,17 @@ export const NFTProvider = ({ children }) => {
                     buyerCount: item.buyer ? 1 : 0,
                 })
             } else {
-                map.set(key, {
-                    ...existingItem,
-                    buyerCount: existingItem.buyerCount + (item.buyer ? 1 : 0),
-                    highestListingId:
-                        Number(item.listingId) > Number(existingItem.highestListingId)
-                            ? item.listingId
-                            : existingItem.highestListingId,
-                })
+                if (Number(item.listingId) > Number(existingItem.listingId)) {
+                    map.set(key, {
+                        ...item,
+                        buyerCount: existingItem.buyerCount + (item.buyer ? 1 : 0),
+                        highestListingId: item.listingId,
+                    })
+                }
             }
         })
 
-        return Array.from(map.values()).filter((item) => item.listingId === item.highestListingId)
+        return Array.from(map.values())
     }, [])
 
     // Effect to load images and attributes for all NFTs when data changes.
