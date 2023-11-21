@@ -139,16 +139,14 @@ export const NFTProvider = ({ children }) => {
         [getRawTokenURI, fetchContractDetail]
     )
 
-    // Function to get the highest listing ID for each NFT.
+    // Function to get a buyerCount and the highest listing ID for each NFT.
     const getHighestListingIdPerNFT = useCallback((arr) => {
         const map = new Map()
 
         arr.forEach((item) => {
-            console.log(item)
             const key = `${item.nftAddress}-${item.tokenId}`
             const existingItem = map.get(key)
-            console.log("Existing Item", existingItem)
-            console.log("Not Existing Item", !existingItem)
+
             if (!existingItem) {
                 map.set(key, {
                     ...item,
@@ -156,11 +154,16 @@ export const NFTProvider = ({ children }) => {
                     buyerCount: item.buyer ? 1 : 0,
                 })
             } else {
-                if (Number(item.listingId) > Number(existingItem.listingId)) {
+                if (Number(item.listingId) > Number(existingItem.highestListingId)) {
                     map.set(key, {
                         ...item,
-                        buyerCount: existingItem.buyerCount + (item.buyer ? 1 : 0),
                         highestListingId: item.listingId,
+                        buyerCount: existingItem.buyerCount + (item.buyer ? 1 : 0),
+                    })
+                } else if (item.buyer) {
+                    map.set(key, {
+                        ...existingItem,
+                        buyerCount: existingItem.buyerCount + 1,
                     })
                 }
             }
