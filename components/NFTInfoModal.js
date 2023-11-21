@@ -32,8 +32,13 @@ const NftModal = forwardRef((props, ref) => {
     let okText, onOkHandler
     switch (type) {
         case "info":
-            okText = "BUY!"
-            onOkHandler = handleBuyClick
+            if (isListed) {
+                okText = "BUY!"
+                onOkHandler = handleBuyClick
+            } else {
+                okText = ""
+                onOkHandler = () => {}
+            }
             break
         case "list":
             okText = "List"
