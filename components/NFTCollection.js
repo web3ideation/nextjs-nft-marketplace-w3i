@@ -1,53 +1,46 @@
 import React, { useState, useEffect, useRef } from "react"
-import NFTTable from "../components/NFTTable.js"
-import styles from "../styles/Home.module.css"
-import { useNFT } from "../context/NFTContextProvider.js"
-import NFTTableElement from "../components/NFTTableElement.js"
-import { useMoralis } from "react-moralis"
-import networkMapping from "../constants/networkMapping.json"
+import NFTTable from "../components/NFTTable"
+import NFTTableElement from "../components/NFTTableElement"
 import NFTCollectionModal from "../components/NFTCollectionModal"
 import { CSSTransition } from "react-transition-group"
+import { useNFT } from "../context/NFTContextProvider"
+import { useMoralis } from "react-moralis"
+import networkMapping from "../constants/networkMapping.json"
+import styles from "../styles/Home.module.css"
 
 function NFTCollection() {
-    // ------------------ Hooks & Data Retrieval ------------------
-
-    // Retrieve NFT data and loading state using custom hook
+    // Hooks & Data Retrieval
     const { nftCollections, loadingImage } = useNFT()
-
-    // Retrieve blockchain and user data using Moralis hook
     const { chainId, isWeb3Enabled } = useMoralis()
 
-    // Convert chain ID to string format
-    const chainString = chainId ? parseInt(chainId).toString() : "31337"
-
-    // Get the marketplace address based on the current chain
-    const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
-
-    const modalRef = useRef(null)
-
-    // ------------------ State Management ------------------
-
-    // Web3 and User related states
+    // State Management
     const [isConnected, setIsConnected] = useState(isWeb3Enabled)
     const [selectedCollection, setSelectedCollection] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
 
+    const modalRef = useRef(null)
+
+    // Convert chain ID to string format
+    const chainString = chainId ? parseInt(chainId).toString() : "31337"
+
+    // Get the marketplace address based on the current chain
+    const marketplaceAddress = networkMapping[chainString]?.NftMarketplace[0]
+
+    // Modal handling functions
     const handleOpenModal = (collection) => {
         setSelectedCollection(collection)
         setShowModal(true)
     }
 
     const handleCloseModal = () => {
-        setShowModal(false) // oder was auch immer der Zustand ist, der das Modal kontrolliert
+        setShowModal(false)
     }
 
     // Listener for modals' state
-    function modalListener() {
+    useEffect(() => {
         setAnyModalIsOpen(showModal)
-    }
-
-    // ------------------ useEffect Hooks ------------------
+    }, [showModal])
 
     // Handle modal open/close effects on body overflow
     useEffect(() => {
@@ -58,38 +51,31 @@ function NFTCollection() {
         }
     }, [anyModalIsOpen])
 
-    // Update connection state and listen to modal changes
-    useEffect(() => {
-        modalListener()
-    }, [showModal])
-
     // Update connection state
     useEffect(() => {
         setIsConnected(isWeb3Enabled)
     }, [isWeb3Enabled])
 
-    // Sortiere die nftCollections basierend auf collectionCount
-    const sortedCollections = [...nftCollections].sort((a, b) => {
-        return b.collectionPrice - a.collectionPrice // Für absteigende Sortierung
-        // return a.collectionCount - b.collectionCount; // Für aufsteigende Sortierung
-    })
+    // Sort collections based on collectionPrice in descending order
+    const sortedCollections = [...nftCollections].sort(
+        (a, b) => b.collectionPrice - a.collectionPrice
+    )
 
-    // Erstelle Tabellenzeilen für jede Sammlung
+    // Create table rows for each collection
     const tableRows = sortedCollections.map((collection) => (
         <NFTTableElement
             key={`${collection.nftAddress}${collection.itemCount}`}
             collection={collection}
             loadingImage={loadingImage}
-            onClick={() => handleOpenModal(collection)} // Stelle sicher, dass `handleOpenModal` definiert ist
+            onClick={() => handleOpenModal(collection)}
         />
     ))
 
-    // ------------------ Render Functions ------------------
-
+    // Render Function
     return (
         <div className={styles.nftTableContainer}>
             <div className={styles.nftTableWrapper}>
-                <h1>NFT (expensive) Collections</h1>
+                <h1>NFT (Expensive) Collections</h1>
                 <div id="NFTCollection" className={styles.nftCollection}>
                     <NFTTable tableRows={tableRows} />
                     <CSSTransition
@@ -106,7 +92,7 @@ function NFTCollection() {
                     >
                         <NFTCollectionModal
                             onClose={handleCloseModal}
-                            selectedCollection={selectedCollection} // Korrigierte Prop-Übergabe
+                            selectedCollection={selectedCollection}
                             nftCollections={nftCollections}
                         />
                     </CSSTransition>

@@ -3,13 +3,13 @@ import styles from "../styles/Home.module.css"
 import { ethers } from "ethers"
 import LoadingWave from "../components/LoadingWave"
 
-// Utility function to truncate strings
+// Utility function to truncate strings for better UI display
 const truncateStr = (fullStr, strLen) => {
     if (fullStr.length <= strLen) return fullStr
 
     const separator = "..."
-    const seperatorLength = separator.length
-    const charsToShow = strLen - seperatorLength
+    const separatorLength = separator.length
+    const charsToShow = strLen - separatorLength
     const frontChars = Math.ceil(charsToShow / 2)
     const backChars = Math.floor(charsToShow / 2)
 
@@ -21,22 +21,24 @@ const truncateStr = (fullStr, strLen) => {
 }
 
 export default function NFTTableElement({ collection, onClick, loadingImage }) {
+    // Destructure properties from the collection object
     const {
         nftAddress,
         firstImageURI: imageURI,
-        collectionName: collectionName,
+        collectionName,
         firstTokenDescription: tokenDescription,
         collectionCount,
-        count: itemCount, // dies ist die neue Eigenschaft, die die Anzahl der Items in der Sammlung darstellt
+        count: itemCount,
         collectionPrice,
     } = collection
 
-    // Format address for display
+    // Format NFT address for display (truncate for brevity)
     const formattedNftAddress = truncateStr(nftAddress || "", 15)
 
     return (
         <>
             {imageURI ? (
+                // Render table row for NFT collection with image
                 <tr className={styles.nftTableRow} onClick={onClick}>
                     <td>
                         <div className={styles.contentWrapper}>
@@ -52,7 +54,7 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
                         <div className={styles.contentWrapper}>{formattedNftAddress}</div>
                     </td>
                     <td>
-                        <div className={styles.contentWrapper}>{collectionName}'s</div>
+                        <div className={styles.contentWrapper}>{collectionName}</div>
                     </td>
                     <td>
                         <div className={styles.contentWrapper}>{itemCount}</div>
@@ -70,6 +72,7 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
                     </td>
                 </tr>
             ) : (
+                // Render loading state if no image URI is available
                 <div className={styles.nftLoadingIconWrapper}>
                     <div className={styles.nftLoadingIcon}>
                         <LoadingWave />
