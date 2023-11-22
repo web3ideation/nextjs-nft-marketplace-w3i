@@ -28,6 +28,11 @@
     width: 100%;
 }
 
+.nftCollectionsContainer {
+    display: flex;
+    padding: 16px 150px;
+}
+
 // NFT table container styles
 .nftTableContainer {
     @include flex-center();
@@ -55,7 +60,6 @@
     @include flex-center;
     flex-direction: column;
     margin-top: 40px;
-    padding: 16px 50px 16px 150px;
     font-family: $font-primary;
 
     h1 {

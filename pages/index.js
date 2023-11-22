@@ -9,7 +9,7 @@ export default function Home() {
     return (
         <div className={styles.nftListingContainer}>
             <NFTListed />
-            <div>
+            <div className={styles.nftCollectionsContainer}>
                 <NFTCollection />
                 <NFTTopCollection />
             </div>
