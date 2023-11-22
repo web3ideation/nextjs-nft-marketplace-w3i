@@ -13,8 +13,8 @@
     "@babel/runtime": "7.x",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@walletconnect/ethereum-provider": "^2.9.2",
-    "@walletconnect/modal": "^2.6.1",
+    "@walletconnect/ethereum-provider": "^2.10.5",
+    "@walletconnect/modal": "^2.6.2",
     "autoprefixer": "^10.4.14",
     "graphql": "^16.6.0",
     "immer": "^10.0.3",
@@ -28,6 +28,7 @@
     "react-router-dom": "^6.19.0",
     "react-transition-group": "^4.4.5",
     "tailwindcss": "^3.3.1",
+    "walletconnect": "^1.7.8",
     "web3uikit": "^1.0.4",
     "ws": "8.14.2"
   },
