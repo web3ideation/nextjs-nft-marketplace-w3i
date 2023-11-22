@@ -140,9 +140,9 @@ export default function NFTUpdateListingModal(props) {
         <Modal
             isVisible={showUpdateListingModal}
             onOk={handleUpdateButtonClick}
-            okText="Update"
+            okText="UPDATE"
             onCancel={handleClose}
-            cancelText="Close"
+            cancelText="CLOSE"
         >
             <form className={styles.sellSwapForm}>
                 <h2>Updating price and/or swap</h2>

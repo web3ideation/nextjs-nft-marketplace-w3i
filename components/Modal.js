@@ -15,7 +15,7 @@ const Modal = ({ isVisible, onCancel, children, okText, onOk, cancelText, cancel
             <div className={styles.modalContentWrapper} onClick={handleModalContentClick}>
                 {children}
                 <div className={styles.modalFooterWrapper}>
-                    {cancelListing && <Button onClick={cancelListing} text="Cancel Listing" />}
+                    {cancelListing && <Button onClick={cancelListing} text="DELIST" />}
                     {okText && <Button onClick={onOk} text={okText} />}
                     {cancelText && <Button onClick={onCancel} text={cancelText} />}
                 </div>

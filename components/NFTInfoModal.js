@@ -45,7 +45,7 @@ const NftModal = forwardRef((props, ref) => {
             onOkHandler = handleListClick
             break
         case "sell":
-            okText = "UPDATE PRICE"
+            okText = "UPDATE"
             onOkHandler = handleUpdatePriceButtonClick
             break
         default:
