@@ -43,9 +43,7 @@ function NFTListed() {
         // Use the slice method to display only the desired number of NFTs
         return sortedAndFilteredNFTs
             .slice(0, visibleNFTs)
-            .map((nft) => (
-                <NFTBox nftData={nft} key={`${nft.nftAddress}${nft.tokenId}${nft.listingId}`} />
-            ))
+            .map((nft) => <NFTBox nftData={nft} key={`${nft.nftAddress}${nft.tokenId}`} />)
     }
 
     return (

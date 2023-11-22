@@ -60,6 +60,7 @@ const NftModal = forwardRef((props, ref) => {
 
     return (
         <Modal
+            ref={ref}
             isVisible={type}
             cancelText="CLOSE"
             onCancel={closeModal}
@@ -67,7 +68,7 @@ const NftModal = forwardRef((props, ref) => {
             onOk={onOkHandler}
             cancelListing={showCancelListingButton ? handleCancelListingClick : null}
         >
-            <div ref={ref} className={styles.modalContent}>
+            <div className={styles.modalContent}>
                 <Image
                     className={styles.modalImage}
                     src={imageURI}

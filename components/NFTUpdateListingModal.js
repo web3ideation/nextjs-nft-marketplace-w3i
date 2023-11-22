@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { forwardRef, useState } from "react"
 import Modal from "../components/Modal"
 import Tooltip from "../components/Tooltip"
 import { useWeb3Contract } from "react-moralis"
@@ -8,7 +8,7 @@ import styles from "../styles/Home.module.css"
 import { useNftNotification } from "../context/NFTNotificationContext"
 import { useRouter } from "next/router"
 
-export default function NFTUpdateListingModal(props) {
+const NFTUpdateListingModal = forwardRef((props, ref) => {
     const {
         nftAddress,
         tokenId,
@@ -138,6 +138,7 @@ export default function NFTUpdateListingModal(props) {
 
     return (
         <Modal
+            ref={ref}
             isVisible={showUpdateListingModal}
             onOk={handleUpdateButtonClick}
             okText="UPDATE"
@@ -225,4 +226,6 @@ export default function NFTUpdateListingModal(props) {
             </div>
         </Modal>
     )
-}
+})
+
+export default NFTUpdateListingModal

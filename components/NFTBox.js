@@ -8,7 +8,7 @@ import { useNftNotification } from "../context/NFTNotificationContext"
 import { ethers } from "ethers"
 import LoadingWave from "../components/LoadingWave"
 import NFTInfoModal from "../components/NFTInfoModal"
-import NFTUpdateListingModal from "./NFTUpdateListingModal"
+import NFTUpdateListingModal from "../components/NFTUpdateListingModal"
 import styles from "../styles/Home.module.css"
 import { CSSTransition } from "react-transition-group"
 
@@ -72,6 +72,7 @@ export default function NFTBox({ nftData, loadingImage }) {
     const router = useRouter()
 
     const modalRef = useRef(null)
+    const updateModalRef = useRef(null)
 
     // ------------------ State Management ------------------
 
@@ -273,11 +274,6 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Handler for updating price button click
     const handleUpdatePriceButtonClick = () => {
-        openUpdateListingModal(true)
-        setShowSellModal(false)
-    }
-    // Open the update listing modal
-    const openUpdateListingModal = () => {
         setShowUpdateListingModal(true)
     }
 
@@ -386,7 +382,6 @@ export default function NFTBox({ nftData, loadingImage }) {
             <CSSTransition
                 in={showInfoModal}
                 timeout={400}
-                nodeRef={modalRef}
                 classNames={{
                     enter: styles.modalTransitionEnter,
                     enterActive: styles.modalTransitionEnterActive,
@@ -396,6 +391,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                 unmountOnExit
             >
                 <NFTInfoModal
+                    ref={modalRef}
                     show={showInfoModal}
                     type="info"
                     imageURI={imageURI.src}
@@ -421,7 +417,6 @@ export default function NFTBox({ nftData, loadingImage }) {
             <CSSTransition
                 in={showSellModal}
                 timeout={400}
-                nodeRef={modalRef}
                 classNames={{
                     enter: styles.modalTransitionEnter,
                     enterActive: styles.modalTransitionEnterActive,
@@ -431,6 +426,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                 unmountOnExit
             >
                 <NFTInfoModal
+                    ref={modalRef}
                     show={showSellModal}
                     type="sell"
                     imageURI={imageURI.src}
@@ -456,7 +452,6 @@ export default function NFTBox({ nftData, loadingImage }) {
             <CSSTransition
                 in={showListModal}
                 timeout={400}
-                nodeRef={modalRef}
                 classNames={{
                     enter: styles.modalTransitionEnter,
                     enterActive: styles.modalTransitionEnterActive,
@@ -466,6 +461,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                 unmountOnExit
             >
                 <NFTInfoModal
+                    ref={modalRef}
                     show={showListModal}
                     type="list"
                     imageURI={imageURI.src}
@@ -490,16 +486,16 @@ export default function NFTBox({ nftData, loadingImage }) {
             <CSSTransition
                 in={showUpdateListingModal}
                 timeout={400}
-                nodeRef={modalRef}
                 classNames={{
-                    enter: styles.modalTransitionEnter,
-                    enterActive: styles.modalTransitionEnterActive,
-                    exit: styles.modalTransitionExit,
-                    exitActive: styles.modalTransitionExitActive,
+                    enter: styles.updateModalTransitionEnter,
+                    enterActive: styles.updateModalTransitionEnterActive,
+                    exit: styles.updateModalTransitionExit,
+                    exitActive: styles.updateModalTransitionExitActive,
                 }}
                 unmountOnExit
             >
                 <NFTUpdateListingModal
+                    ref={updateModalRef}
                     tokenId={tokenId}
                     marketplaceAddress={marketplaceAddress}
                     nftAddress={nftAddress}
@@ -507,9 +503,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     desiredTokenId={desiredTokenId}
                     price={formattedPrice}
                     showUpdateListingModal={showUpdateListingModal}
-                    onCancel={() => {
-                        setShowUpdateListingModal(false)
-                    }}
+                    onCancel={() => setShowUpdateListingModal(false)}
                 />
             </CSSTransition>
         </>

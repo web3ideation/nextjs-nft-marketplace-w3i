@@ -1,20 +1,24 @@
 @use "../helpers/variables" as *;
 @use "../helpers/mixins" as *;
 
-.modalTransitionEnter {
+.modalTransitionEnter,
+.updateModalTransitionEnter {
     opacity: 0;
 }
 
-.modalTransitionEnterActive {
+.modalTransitionEnterActive,
+.updateModalTransitionEnterActive {
     opacity: 1;
     transition: opacity 400ms;
 }
 
-.modalTransitionExit {
+.modalTransitionExit,
+.updateModalTransitionExit {
     opacity: 1;
 }
 
-.modalTransitionExitActive {
+.modalTransitionExitActive,
+.updateModalTransitionExitActive {
     opacity: 0;
     transition: opacity 400ms;
 }

@@ -66,7 +66,6 @@ function NFTCollection() {
                     <CSSTransition
                         in={showModal}
                         timeout={400}
-                        nodeRef={modalRef}
                         classNames={{
                             enter: styles.modalTransitionEnter,
                             enterActive: styles.modalTransitionEnterActive,
@@ -76,6 +75,7 @@ function NFTCollection() {
                         unmountOnExit
                     >
                         <NFTCollectionModal
+                            nodeRef={modalRef}
                             onClose={handleCloseModal}
                             selectedCollection={selectedCollection}
                             nftCollections={nftCollections}
