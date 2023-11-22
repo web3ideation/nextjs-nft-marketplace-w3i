@@ -33,7 +33,7 @@ const NftModal = forwardRef((props, ref) => {
     switch (type) {
         case "info":
             if (isListed) {
-                okText = "BUY!"
+                okText = "BUY"
                 onOkHandler = handleBuyClick
             } else {
                 okText = ""
@@ -41,11 +41,11 @@ const NftModal = forwardRef((props, ref) => {
             }
             break
         case "list":
-            okText = "List"
+            okText = "LIST"
             onOkHandler = handleListClick
             break
         case "sell":
-            okText = "Update price"
+            okText = "UPDATE PRICE"
             onOkHandler = handleUpdatePriceButtonClick
             break
         default:
@@ -61,7 +61,7 @@ const NftModal = forwardRef((props, ref) => {
     return (
         <Modal
             isVisible={type}
-            cancelText="Close"
+            cancelText="CLOSE"
             onCancel={closeModal}
             okText={okText}
             onOk={onOkHandler}

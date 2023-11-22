@@ -4,28 +4,18 @@ import NFTTableElement from "../components/NFTTableElement"
 import NFTCollectionModal from "../components/NFTCollectionModal"
 import { CSSTransition } from "react-transition-group"
 import { useNFT } from "../context/NFTContextProvider"
-import { useMoralis } from "react-moralis"
-import networkMapping from "../constants/networkMapping.json"
 import styles from "../styles/Home.module.css"
 
 function NFTCollection() {
     // Hooks & Data Retrieval
     const { nftCollections, loadingImage } = useNFT()
-    const { chainId, isWeb3Enabled } = useMoralis()
 
     // State Management
-    const [isConnected, setIsConnected] = useState(isWeb3Enabled)
     const [selectedCollection, setSelectedCollection] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
 
     const modalRef = useRef(null)
-
-    // Convert chain ID to string format
-    const chainString = chainId ? parseInt(chainId).toString() : "31337"
-
-    // Get the marketplace address based on the current chain
-    const marketplaceAddress = networkMapping[chainString]?.NftMarketplace[0]
 
     // Modal handling functions
     const handleOpenModal = (collection) => {
@@ -50,11 +40,6 @@ function NFTCollection() {
             document.body.style.overflow = previousOverflow
         }
     }, [anyModalIsOpen])
-
-    // Update connection state
-    useEffect(() => {
-        setIsConnected(isWeb3Enabled)
-    }, [isWeb3Enabled])
 
     // Sort collections based on collectionPrice in descending order
     const sortedCollections = [...nftCollections].sort(

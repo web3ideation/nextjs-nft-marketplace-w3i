@@ -61,21 +61,21 @@ function NFTMostSold() {
 
     return (
         <div className={styles.nftListWrapper}>
-            <h1>Most Sold NFTs</h1>
+            <h1>Most Sold</h1>
             <div id="NFTMostSold" className={styles.nftList}>
                 {renderNFTList()}
             </div>
             {loadingImage ? null : (
                 <div className={styles.showMoreButton}>
                     <Button
-                        text="Show More"
+                        text="MORE"
                         onClick={() => {
                             setVisibleNFTs((prevVisible) => prevVisible + 5)
                         }}
                     />
                     {visibleNFTs > 5 && (
                         <Button
-                            text="Show Less"
+                            text="LESS"
                             onClick={() => {
                                 setVisibleNFTs(5)
                             }}

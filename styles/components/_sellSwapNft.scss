@@ -31,12 +31,16 @@
         gap: 18px;
 
         button {
+            font-family: $font-primary;
+            font-size: $font-size-small;
             background-color: $secondary-color;
             width: 128px;
             color: $white;
             font-weight: 400;
             border-radius: 5px;
             padding: 0 18px;
+            outline: none;
+            border: none;
 
             &:hover {
                 color: $hover-grey;
@@ -117,6 +121,8 @@
             font-size: $font-size-small;
             font-weight: 400;
             padding: 0 18px;
+            outline: none;
+            border: none;
 
             &:hover {
                 color: $hover-grey;

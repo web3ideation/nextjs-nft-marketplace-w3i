@@ -166,7 +166,7 @@ function SellSwapForm({
                     </div>
                 </div>
             ))}
-            <Button type="submit" text="Submit" />
+            <Button type="submit" text="SUBMIT" />
         </form>
     )
 }
