@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react"
 import styles from "../styles/Home.module.css"
-import { CheckCircle } from "@web3uikit/icons"
 
 const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) => {
     const menuRef = useRef(null)
@@ -26,7 +25,7 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
     // Render the check icon if the option is selected
     const renderIcon = (optionValue) => {
         if (selected === optionValue || (selected === "default" && optionValue === "default")) {
-            return <CheckCircle fontSize="20px" />
+            return <p>X</p>
         }
     }
 

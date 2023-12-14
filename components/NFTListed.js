@@ -1,7 +1,6 @@
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useCallback } from "react"
 import NFTBox from "../components/NFTBox"
 import styles from "../styles/Home.module.css"
-import { Button } from "web3uikit"
 import { useNFT } from "../context/NFTContextProvider"
 import LoadingWave from "../components/LoadingWave"
 
@@ -9,7 +8,11 @@ function NFTListed() {
     // ------------------ Hooks & Data Retrieval ------------------
 
     // Retrieve NFT data and loading state using custom hook
-    const { nftsData, isLoading } = useNFT()
+    const { nftsData, isLoading, loadNFTs } = useNFT()
+
+    const reloadNFTs = useCallback(() => {
+        loadNFTs() // Diese Funktion sollte die NFTs neu laden
+    }, [loadNFTs])
 
     // State for the number of visible NFTs
     const [visibleNFTs, setVisibleNFTs] = useState(5)
@@ -43,7 +46,13 @@ function NFTListed() {
         // Use the slice method to display only the desired number of NFTs
         return sortedAndFilteredNFTs
             .slice(0, visibleNFTs)
-            .map((nft) => <NFTBox nftData={nft} key={`${nft.nftAddress}${nft.tokenId}`} />)
+            .map((nft) => (
+                <NFTBox
+                    nftData={nft}
+                    reloadNFTs={reloadNFTs}
+                    key={`${nft.nftAddress}${nft.tokenId}`}
+                />
+            ))
     }
 
     return (
@@ -54,19 +63,22 @@ function NFTListed() {
             </div>
             {isLoading ? null : (
                 <div className={styles.showMoreButton}>
-                    <Button
-                        text="MORE"
+                    <button
                         onClick={() => {
                             setVisibleNFTs((prevVisible) => prevVisible + 20)
                         }}
-                    />
+                    >
+                        MORE
+                    </button>
                     {visibleNFTs > 5 && (
-                        <Button
-                            text="LESS"
+                        <button
                             onClick={() => {
                                 setVisibleNFTs(5)
                             }}
-                        />
+                        >
+                            {" "}
+                            LESS
+                        </button>
                     )}
                 </div>
             )}

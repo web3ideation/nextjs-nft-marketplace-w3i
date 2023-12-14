@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import styles from "../styles/Home.module.css"
 import SearchSideFiltersElement from "./SearchSideFiltersElement"
-import { Chart } from "@web3uikit/icons"
 
 const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     const menuRef = useRef(null)
@@ -169,7 +168,7 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                         }`}
                         onClick={toggleMenu}
                     >
-                        <Chart fontSize="35px" />
+                        X
                     </div>
                 </div>
                 {["Status", "Sorting", "Categories", "Collections"].map((label) => (

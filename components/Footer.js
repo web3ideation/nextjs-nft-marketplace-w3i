@@ -1,6 +1,6 @@
 import styles from "../styles/Home.module.css"
 
-export default function Header({}) {
+export default function Footer({}) {
     return (
         <footer id="rs-footer" className={styles.Footer}>
             <div className={styles.FooterTop}>

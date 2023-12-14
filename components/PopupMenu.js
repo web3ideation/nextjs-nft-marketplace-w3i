@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react"
 import styles from "../styles/Home.module.css"
-import { Button } from "web3uikit"
 import Link from "next/link"
 
 const PopupMenu = () => {
@@ -28,7 +27,7 @@ const PopupMenu = () => {
             onMouseLeave={handleMouseLeave}
         >
             <div className={styles.menuButton}>
-                <Button text="Menu" />
+                <button>Menu</button>
                 {isOpen ? (
                     <span className={styles.menuIconMinus}>-</span>
                 ) : (
@@ -42,13 +41,13 @@ const PopupMenu = () => {
             >
                 {/* List of menu links */}
                 <Link className={styles.popupMenuLinks} href="/">
-                    <Button text="Home" />
+                    <button>Home</button>
                 </Link>
                 <Link className={styles.popupMenuLinks} href="/sell-swap-nft">
-                    <Button text="Sell / Swap NFT" />
+                    <button>Sell / Swap NFT</button>
                 </Link>
                 <Link className={styles.popupMenuLinks} href="/my-nft">
-                    <Button text="My NFT" />
+                    <button>My NFT</button>
                 </Link>
             </div>
         </div>

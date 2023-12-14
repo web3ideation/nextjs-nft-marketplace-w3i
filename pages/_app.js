@@ -1,45 +1,48 @@
+// Importing React, Next.js, Apollo Client, and other necessary libraries
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
-import Head from "next/head"
-import { MoralisProvider } from "react-moralis"
-import { NftNotificationProvider } from "../context/NFTNotificationContext"
-import NftNotification from "../components/NFTNotification"
-import { SearchResultsProvider } from "../context/SearchResultsContext"
-import Header from "../components/Header"
-import "../styles/globals.css"
 import React, { useEffect, useState } from "react"
+import Head from "next/head"
+import { WagmiConfig } from "wagmi"
+import { wagmiConfig } from "../config/wagmiConfig"
+
+// Importing context providers and components
+import { NftNotificationProvider } from "../context/NFTNotificationContext"
+import { SearchResultsProvider } from "../context/SearchResultsContext"
+import { NFTProvider, useNFT } from "../context/NFTContextProvider"
+import NftNotification from "../components/NFTNotification"
+import Header from "../components/Header"
 import LoadingWave from "../components/LoadingWave"
 import Footer from "../components/Footer"
-import { NFTProvider, useNFT } from "../context/NFTContextProvider"
+
+// Importing global styles
+import "../styles/globals.css"
 import styles from "../styles/Home.module.css"
 
-// Initialize Apollo Client with the GraphQL endpoint
+// Initialize Apollo Client
 const client = new ApolloClient({
     cache: new InMemoryCache(),
-    uri: process.env.NEXT_PUBLIC_SUBGRAPH_URL, // Ensure this environment variable is set
+    uri: process.env.NEXT_PUBLIC_SUBGRAPH_URL, // Set environment variable for GraphQL endpoint
 })
 
 function MyApp({ Component, pageProps }) {
     const { isLoading } = useNFT()
     const [showLoading, setShowLoading] = useState(isLoading)
 
-    console.log("isLoading:", isLoading)
-    console.log("showLoading:", showLoading)
-
+    // Effect to manage the loading state
     useEffect(() => {
-        console.log("Is loading app", isLoading)
         if (isLoading) {
-            // Zeige die Ladekomponente sofort an, wenn isLoading true ist
             setShowLoading(true)
         } else if (!isLoading && showLoading) {
-            // Setze eine Verzögerung, bevor die Ladekomponente ausgeblendet wird
-            const timer = setTimeout(() => setShowLoading(false), 5000) // Verzögerung von 1 Sekunde
-            return () => clearTimeout(timer) // Bereinige den Timer bei Komponentenabbau
+            // Delay to hide loading component
+            const timer = setTimeout(() => setShowLoading(false), 5000) // 5-second delay
+            return () => clearTimeout(timer) // Clean up timer on component unmount
         }
     }, [isLoading, showLoading])
 
     return (
-        <div>
+        <>
             <Head>
+                {" "}
                 <title>NFT Marketplace</title>
                 <meta name="description" content="NFT Marketplace" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -48,10 +51,8 @@ function MyApp({ Component, pageProps }) {
                 <link rel="icon" href="/media/only-lightbulb-favicone.ico" />
                 <link rel="canonical" href="https://w3i-marketplace.com" />
             </Head>
-            {/* Wrap the entire application with context providers to manage global state */}
-            <MoralisProvider initializeOnMount={false}>
+            <WagmiConfig config={wagmiConfig}>
                 <ApolloProvider client={client}>
-                    {" "}
                     <NFTProvider>
                         <NftNotificationProvider>
                             <NftNotification />
@@ -70,9 +71,9 @@ function MyApp({ Component, pageProps }) {
                         </NftNotificationProvider>
                     </NFTProvider>
                 </ApolloProvider>
-            </MoralisProvider>
+            </WagmiConfig>
             <Footer />
-        </div>
+        </>
     )
 }
 

@@ -15,35 +15,37 @@ export const NFTProvider = ({ children }) => {
         data: activeItemsData,
         loading: activeLoading,
         error: activeError,
+        refetch: refetchActiveItems,
     } = useQuery(GET_ACTIVE_ITEMS)
     const {
         data: inactiveItemsData,
         loading: inactiveLoading,
         error: inactiveError,
+        refetch: refetchInactiveItems,
     } = useQuery(GET_INACTIVE_ITEMS)
 
     // States for NFT data and collections.
     const [nftsData, setNftsData] = useState([])
     const [nftCollections, setNftCollections] = useState([])
+
     const [loadingAllAttributes, setLoadingAllAttributes] = useState(true)
 
     const [isLoading, setIsLoading] = useState(true)
 
-    console.log("Active Data", activeItemsData)
-    console.log("Inactive Data", inactiveItemsData)
+    // console.log("Active Data", activeItemsData)
+    // console.log("Inactive Data", inactiveItemsData)
     console.log("Nfts Data", nftsData)
-    console.log("Nft Collection", nftCollections)
-    console.log("loaded all attributes", loadingAllAttributes)
-    console.log("Is Loaded Context", isLoading)
+    console.log("Nft Collections", nftCollections)
+    // console.log("loaded all attributes", loadingAllAttributes)
+    // console.log("Is Loaded Context", isLoading)
 
-    const getEthereumObject = () => {
-        return window.ethereum
-    }
+    const getEthereumObject = () => window.ethereum
 
     // Fetch the raw token URI from the blockchain using Ethereum provider.
     const getRawTokenURI = useCallback(async (nftAddress, tokenId) => {
         const ethereum = getEthereumObject()
         const provider = new ethers.providers.Web3Provider(ethereum)
+        console.log("Provider", provider)
         try {
             const functionSignature = ethers.utils.id("tokenURI(uint256)").slice(0, 10)
             const tokenIdHex = ethers.utils
@@ -100,6 +102,7 @@ export const NFTProvider = ({ children }) => {
         async (nft) => {
             try {
                 const tokenURI = await getRawTokenURI(nft.nftAddress, nft.tokenId)
+                console.log("Context token uri", tokenURI)
                 const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
                 const tokenURIResponse = await fetch(requestURL).then((res) => res.json())
 
@@ -172,25 +175,6 @@ export const NFTProvider = ({ children }) => {
         return Array.from(map.values())
     }, [])
 
-    // Effect to load images and attributes for all NFTs when data changes.
-    useEffect(() => {
-        const loadAllAttributes = async (items) => Promise.all(items.map(loadAttributes))
-
-        if (activeItemsData && inactiveItemsData) {
-            setLoadingAllAttributes(true)
-
-            const combinedData = [...activeItemsData.items, ...inactiveItemsData.items]
-            console.log("Combined Data", combinedData)
-            const highestListingData = getHighestListingIdPerNFT(combinedData)
-            console.log("Highest Listing Data", highestListingData)
-            loadAllAttributes(highestListingData).then((loadedData) => {
-                console.log("Loaded Data", loadedData)
-                setNftsData(loadedData)
-                setLoadingAllAttributes(false)
-            })
-        }
-    }, [activeItemsData, inactiveItemsData, loadAttributes, getHighestListingIdPerNFT])
-
     // Function to create collections from NFT data.
     const createCollections = useCallback((nfts) => {
         const collectionsMap = new Map()
@@ -232,6 +216,36 @@ export const NFTProvider = ({ children }) => {
         })
     }, [])
 
+    // Funktion zum Neuladen der NFT-Daten
+    const loadNFTs = useCallback(async () => {
+        try {
+            // Rufe die refetch-Funktionen für beide Queries auf
+            await refetchActiveItems()
+            await refetchInactiveItems()
+        } catch (error) {
+            console.error("Fehler beim Neuladen der NFT-Daten:", error)
+        }
+    }, [refetchActiveItems, refetchInactiveItems])
+
+    // Effect to load images and attributes for all NFTs when data changes.
+    useEffect(() => {
+        const loadAllAttributes = async (items) => Promise.all(items.map(loadAttributes))
+
+        if (activeItemsData && inactiveItemsData) {
+            setLoadingAllAttributes(true)
+
+            const combinedData = [...activeItemsData.items, ...inactiveItemsData.items]
+            // console.log("Combined Data", combinedData)
+            const highestListingData = getHighestListingIdPerNFT(combinedData)
+            // console.log("Highest Listing Data", highestListingData)
+            loadAllAttributes(highestListingData).then((loadedData) => {
+                // console.log("Loaded Data", loadedData)
+                setNftsData(loadedData)
+                setLoadingAllAttributes(false)
+            })
+        }
+    }, [activeItemsData, inactiveItemsData, loadAttributes, getHighestListingIdPerNFT])
+
     // Effect to update collections when NFT data changes.
     useEffect(() => {
         const collections = createCollections(nftsData)
@@ -252,6 +266,7 @@ export const NFTProvider = ({ children }) => {
                 nftsData,
                 nftCollections,
                 loadingAttributes: loadingAllAttributes,
+                loadNFTs,
             }}
         >
             {children}

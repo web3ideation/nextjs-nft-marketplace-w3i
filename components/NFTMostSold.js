@@ -1,40 +1,37 @@
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useCallback } from "react"
 import NFTBox from "../components/NFTBox"
 import styles from "../styles/Home.module.css"
-import { Button } from "web3uikit"
 import { useNFT } from "../context/NFTContextProvider"
 import LoadingWave from "../components/LoadingWave"
 
 function NFTMostSold() {
     // Retrieve NFT data and loading state using custom hook
-    const { nftsData, loadingImage } = useNFT()
+    const { nftsData, loadingImage, loadNFTs } = useNFT()
+
+    const reloadNFTs = useCallback(() => {
+        loadNFTs() // Diese Funktion sollte die NFTs neu laden
+    }, [loadNFTs])
 
     // State for the number of visible NFTs
     const [visibleNFTs, setVisibleNFTs] = useState(5)
 
-    // State to keep track of how many NFTs per address have been shown
-    const [nftAddressCount, setNftAddressCount] = useState({})
-
-    // Filter and sort NFTs by buyerCount and ensure that no more than 3 NFTs per address are shown
+    // Sort NFTs by buyerCount and limit to three per nftAddress
     const sortedAndFilteredNFTs = useMemo(() => {
-        const addressCount = {} // Local tracker for addresses
+        const addressCount = {} // Tracker for the number of NFTs per address
         const filteredNFTs = []
 
-        // Sort the NFTs by buyerCount
-        const sortedNFTs = [...nftsData].sort((a, b) => b.buyerCount - a.buyerCount)
+        ;[...nftsData]
+            .sort((a, b) => b.buyerCount - a.buyerCount)
+            .forEach((nft) => {
+                const count = addressCount[nft.nftAddress] || 0
+                if (count < 3) {
+                    filteredNFTs.push(nft)
+                    addressCount[nft.nftAddress] = count + 1
+                }
+            })
 
-        for (const nft of sortedNFTs) {
-            // Check if the address has been encountered less than 3 times
-            if ((addressCount[nft.nftAddress] || 0) < 3) {
-                filteredNFTs.push(nft)
-                addressCount[nft.nftAddress] = (addressCount[nft.nftAddress] || 0) + 1
-            }
-        }
-
-        // Update the state with the new counts
-        setNftAddressCount(addressCount)
-        return filteredNFTs
-    }, [nftsData])
+        return filteredNFTs.slice(0, visibleNFTs)
+    }, [nftsData, visibleNFTs])
 
     // Render the list of NFTs or a loading state
     const renderNFTList = () => {
@@ -54,9 +51,13 @@ function NFTMostSold() {
         }
 
         // Use the slice method to display only the desired number of NFTs
-        return sortedAndFilteredNFTs
-            .slice(0, visibleNFTs)
-            .map((nft) => <NFTBox nftData={nft} key={`${nft.nftAddress}${nft.tokenId}`} />)
+        return sortedAndFilteredNFTs.map((nft) => (
+            <NFTBox
+                nftData={nft}
+                reloadNFTs={reloadNFTs}
+                key={`${nft.nftAddress}${nft.tokenId}`}
+            />
+        ))
     }
 
     return (
@@ -67,19 +68,21 @@ function NFTMostSold() {
             </div>
             {loadingImage ? null : (
                 <div className={styles.showMoreButton}>
-                    <Button
-                        text="MORE"
+                    <button
                         onClick={() => {
                             setVisibleNFTs((prevVisible) => prevVisible + 5)
                         }}
-                    />
+                    >
+                        MORE
+                    </button>
                     {visibleNFTs > 5 && (
-                        <Button
-                            text="LESS"
+                        <button
                             onClick={() => {
                                 setVisibleNFTs(5)
                             }}
-                        />
+                        >
+                            LESS
+                        </button>
                     )}
                 </div>
             )}

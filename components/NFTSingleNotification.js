@@ -1,6 +1,5 @@
 import React from "react"
 import styles from "../styles/Home.module.css"
-import { CrossCircle } from "web3uikit"
 import LoadingWave from "../components/LoadingWave"
 
 const SingleNotification = ({ notification, clearNftNotification }) => {
@@ -44,9 +43,7 @@ const SingleNotification = ({ notification, clearNftNotification }) => {
                 {notification.isSticky && (
                     // Provide a button to clear sticky notifications and adding LoadingWave
                     <div className={styles.nftNotificationBtnWrapper}>
-                        <button onClick={() => clearNftNotification(notification.id)}>
-                            <CrossCircle fontSize={25} />
-                        </button>
+                        <button onClick={() => clearNftNotification(notification.id)}>X</button>
                         <div className={styles.loadingWrapperNotification}>
                             <LoadingWave></LoadingWave>
                         </div>

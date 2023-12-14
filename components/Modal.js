@@ -1,6 +1,5 @@
 // Modal.js
 import React, { forwardRef } from "react"
-import { Button } from "web3uikit"
 import ReactDOM from "react-dom"
 import styles from "../styles/Home.module.css"
 
@@ -16,9 +15,9 @@ const Modal = forwardRef(
                 <div className={styles.modalContentWrapper} onClick={handleModalContentClick}>
                     {children}
                     <div className={styles.modalFooterWrapper}>
-                        {cancelListing && <Button onClick={cancelListing} text="DELIST" />}
-                        {okText && <Button onClick={onOk} text={okText} />}
-                        {cancelText && <Button onClick={onCancel} text={cancelText} />}
+                        {cancelListing && <button onClick={cancelListing}>DELIST</button>}
+                        {okText && <button onClick={onOk}>{okText}</button>}
+                        {cancelText && <button onClick={onCancel}>{cancelText}</button>}
                     </div>
                 </div>
             </div>

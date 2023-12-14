@@ -48,6 +48,7 @@ const NftModal = forwardRef((props, ref) => {
             okText = "UPDATE"
             onOkHandler = handleUpdatePriceButtonClick
             break
+
         default:
             okText = ""
             onOkHandler = () => {}

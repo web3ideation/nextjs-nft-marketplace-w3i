@@ -1,16 +1,19 @@
-import { useState, useEffect, useRef } from "react"
-import { useWeb3Contract, useMoralis } from "react-moralis"
-import nftMarketplaceAbi from "../constants/NftMarketplace.json"
-import networkMapping from "../constants/networkMapping.json"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { useRouter } from "next/router"
 import Image from "next/image"
-import { useNftNotification } from "../context/NFTNotificationContext"
 import { ethers } from "ethers"
+import { CSSTransition } from "react-transition-group"
+import { useAccount, usePublicClient } from "wagmi"
+
+import { useNFT } from "../context/NFTContextProvider"
+import { useNftNotification } from "../context/NFTNotificationContext"
+import networkMapping from "../constants/networkMapping.json"
 import LoadingWave from "../components/LoadingWave"
 import NFTInfoModal from "../components/NFTInfoModal"
 import NFTUpdateListingModal from "../components/NFTUpdateListingModal"
 import styles from "../styles/Home.module.css"
-import { CSSTransition } from "react-transition-group"
+import { useBuyItem } from "../hooks/useBuyItem"
+import { useCancelListing } from "../hooks/useCancelListing"
 
 // Utility function to truncate strings
 const truncateStr = (fullStr, strLen) => {
@@ -36,20 +39,16 @@ const formatPriceToEther = (priceInWei) => {
 
 export default function NFTBox({ nftData, loadingImage }) {
     // ------------------ Hooks & Data Retrieval ------------------
-
     // Destructure NFT details directly from the prop
     const {
         nftAddress,
         nftOwner,
         tokenId,
         price,
-        seller,
         isListed,
         listingId,
-        buyer,
         imageURI,
         tokenName,
-        Background,
         description,
         tokenDescription,
         buyerCount,
@@ -58,27 +57,21 @@ export default function NFTBox({ nftData, loadingImage }) {
     } = nftData
 
     const formattedPrice = formatPriceToEther(price)
-
-    // Retrieve blockchain and user data using Moralis hook
-    const { chainId, isWeb3Enabled, account } = useMoralis()
-
-    // Convert chain ID to string format
-    const chainString = chainId ? parseInt(chainId).toString() : "31337"
-
-    // Get the marketplace address based on the current chain
+    const chainString = usePublicClient().chains[0]?.id?.toString() ?? "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
-
-    // Router and Notification hooks
+    const { address, isConnected } = useAccount()
     const router = useRouter()
-
+    const { loadNFTs } = useNFT()
     const modalRef = useRef(null)
     const updateModalRef = useRef(null)
 
+    const reloadNFTs = useCallback(() => {
+        loadNFTs()
+    }, [loadNFTs])
+
+    // ------------------- Refs ---------------------------
+
     // ------------------ State Management ------------------
-
-    // Web3 and User related states
-    const [buying, setBuying] = useState(false)
-
     // State for truncated strings
     const [formattedNftAddress, setFormattedNftAddress] = useState("")
     const [formattedNftOwner, setFormattedNftOwner] = useState("")
@@ -93,40 +86,38 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Message states
     const { showNftNotification, closeNftNotification } = useNftNotification()
-    const [transactionError, setTransactionError] = useState(false)
-
-    // ------------------ Derived States & Utilities ------------------
 
     // Check ownership of the NFT
-    const isOwnedByUser = isWeb3Enabled && nftOwner?.toLowerCase() === account?.toLowerCase()
+    const isOwnedByUser = isConnected && nftOwner?.toLowerCase() === address?.toLowerCase()
+
+    // Function for updating after buy or delist
+    const updatePageContentAfterTransaction = useCallback(() => {
+        console.log("Reloding NFTs...")
+        setTimeout(() => {
+            reloadNFTs()
+        }, 1000)
+    }, [loadNFTs])
 
     // ------------------ Contract Functions ------------------
+    // function for buy item
+    const { handleBuyClick } = useBuyItem(
+        marketplaceAddress,
+        price,
+        nftAddress,
+        tokenId,
+        isConnected,
+        updatePageContentAfterTransaction
+    )
+    // function for delisting item
+    const { handleCancelListingClick } = useCancelListing(
+        marketplaceAddress,
+        nftAddress,
+        tokenId,
+        isConnected,
+        updatePageContentAfterTransaction
+    )
 
-    // Contract function to buy an item
-    const { runContractFunction: buyItem } = useWeb3Contract({
-        abi: nftMarketplaceAbi,
-        contractAddress: marketplaceAddress,
-        functionName: "buyItem",
-        msgValue: price,
-        params: {
-            nftAddress: nftAddress,
-            tokenId: tokenId,
-        },
-    })
-
-    //Contract function to cancel listing of an item
-    const { runContractFunction: cancelListing } = useWeb3Contract({
-        abi: nftMarketplaceAbi,
-        contractAddress: marketplaceAddress,
-        functionName: "cancelListing",
-        params: {
-            nftAddress: nftAddress,
-            tokenId: tokenId,
-        },
-    })
-
-    // ------------------ Event Handlers ------------------
-
+    //------------------ Handlers ------------------------
     // Handler for NFT card click
     const handleCardClick = () => {
         if (isOwnedByUser) {
@@ -140,173 +131,36 @@ export default function NFTBox({ nftData, loadingImage }) {
         }
     }
 
-    // Handler for buy click
-    const handleBuyClick = async () => {
-        let initiatingPurchaseNotificationId
-        if (!isWeb3Enabled) {
-            showNftNotification("Connect", "Connect your wallet to buy items!", "info")
-            return
+    // Handler to copy NFT address to clipboard
+    const copyNftAddressToClipboard = async () => {
+        try {
+            await navigator.clipboard.writeText(nftAddress)
+            showNftNotification("Success", "Address copied!", "success")
+        } catch (error) {
+            showNftNotification("Error", "Error copying!", "error")
         }
+    }
 
-        if (buying) {
-            showNftNotification(
-                "Buying",
-                "A purchase is already in progress! Check your wallet!",
-                "error"
-            )
-            return
-        }
-        setBuying(true)
-        initiatingPurchaseNotificationId = showNftNotification(
-            "Buying",
-            "Initiating purchase... Check wallet!",
-            "info",
-            true
+    // Handler for list button click
+    const handleListClick = () => {
+        router.push(
+            `/sell-swap-nft?nftAddress=${nftAddress}&tokenId=${tokenId}&price=${formatPriceToEther(
+                price
+            )}`
         )
-
-        try {
-            const tx = await buyItem({
-                onError: (error) => {
-                    console.error("buyItem", error)
-                    setTransactionError(true)
-                    showNftNotification(
-                        "Error",
-                        "Could not complete the purchase.",
-                        "error",
-                        false
-                    )
-                    closeNftNotification(initiatingPurchaseNotificationId)
-                },
-            })
-            closeNftNotification(initiatingPurchaseNotificationId)
-            await handleBuyItemSuccess(tx)
-        } catch (error) {
-            setTransactionError(true)
-            console.error("Error buying item:", error)
-            closeNftNotification(initiatingPurchaseNotificationId)
-        } finally {
-            // router.reload()
-            setBuying(false)
-            setTransactionError(false)
-        }
-    }
-
-    // Handler for successful item purchase
-    const handleBuyItemSuccess = async (tx) => {
-        let purchaseInProgressNotificationId
-        if (transactionError) {
-            return
-        }
-        try {
-            purchaseInProgressNotificationId = showNftNotification(
-                "Buying",
-                "Purchase in progress...",
-                "info",
-                true
-            )
-            await tx.wait(1)
-            showNftNotification("Success", "Purchase successful!", "success")
-            closeNftNotification(purchaseInProgressNotificationId)
-            setTimeout(() => {
-                router.reload("/my-nft")
-            }, 5000)
-        } catch (error) {
-            console.error("Error processing transaction success:", error)
-            showNftNotification("Error", "Error while purchasing!", "error")
-            closeNftNotification(purchaseInProgressNotificationId)
-        } finally {
-        }
-    }
-
-    // Handler for cancel listing click
-    const handleCancelListingClick = async () => {
-        let cancelListingNotificationId
-        if (!isWeb3Enabled) {
-            showNftNotification("Connect", "Connect your wallet to cancel listing!", "info")
-            return
-        }
-
-        cancelListingNotificationId = showNftNotification(
-            "Delisting",
-            "Cancelling listing... Check wallet!",
-            "info",
-            true
-        )
-
-        try {
-            const tx = await cancelListing({
-                onError: (error) => {
-                    console.error("cancelListing", error)
-                    showNftNotification("Error", "Could not cancel the listing.", "error", false)
-                    closeNftNotification(cancelListingNotificationId)
-                },
-            })
-            closeNftNotification(cancelListingNotificationId)
-            await handleCancelListingSuccess(tx)
-        } catch (error) {
-            console.error("Error cancelling listing:", error)
-            closeNftNotification(cancelListingNotificationId)
-        }
-    }
-
-    // Handler for successful listing cancellation
-    const handleCancelListingSuccess = async (tx) => {
-        let cancellationInProgressNotificationId
-        try {
-            cancellationInProgressNotificationId = showNftNotification(
-                "Delisting",
-                "Cancellation in progress...",
-                "info",
-                true
-            )
-            await tx.wait(1)
-            showNftNotification("Success", "Listing cancelled successfully!", "success")
-            closeNftNotification(cancellationInProgressNotificationId)
-            setTimeout(() => {
-                router.reload("/my-nft")
-            }, 5000)
-        } catch (error) {
-            console.error("Error processing transaction success:", error)
-            showNftNotification("Error", "Error while cancelling listing!", "error")
-            closeNftNotification(cancellationInProgressNotificationId)
-        }
     }
 
     // Handler for updating price button click
     const handleUpdatePriceButtonClick = () => {
         setShowUpdateListingModal(true)
     }
-
-    // Handler for list button click
-    const handleListClick = () => {
-        router.push(`/sell-swap-nft?nftAddress=${nftAddress}&tokenId=${tokenId}`)
-    }
-
+    // ------------------ useEffect Hooks ------------------
     // Listener for modals' state
-    function modalListener() {
+    useEffect(() => {
         setAnyModalIsOpen(
             showUpdateListingModal || showInfoModal || showSellModal || showListModal
         )
-    }
-
-    //------------------ Handler for nftAddress to copy ------------------
-
-    // Handler to copy NFT address to clipboard
-    const copyNftAddressToClipboard = async () => {
-        let copyNftAddressNotificationId
-        try {
-            await navigator.clipboard.writeText(nftAddress)
-            copyNftAddressNotificationId = showNftNotification(
-                "Success",
-                "Address copied!",
-                "success"
-            )
-        } catch (error) {
-            showNftNotification("Error", "Error copying!", "error")
-        }
-    }
-
-    // ------------------ useEffect Hooks ------------------
+    }, [showUpdateListingModal, showInfoModal, showSellModal, showListModal])
 
     // Handle modal open/close effects on body overflow
     useEffect(() => {
@@ -323,11 +177,6 @@ export default function NFTBox({ nftData, loadingImage }) {
         setFormattedNftAddress(truncateStr(nftAddress, 15))
         setFormattedNftOwner(truncateStr(nftOwner, 15))
     }, [nftAddress, nftOwner])
-
-    // Update connection state and listen to modal changes
-    useEffect(() => {
-        modalListener()
-    }, [showUpdateListingModal, showInfoModal, showSellModal, showListModal])
 
     // ------------------ Component Return ------------------
 

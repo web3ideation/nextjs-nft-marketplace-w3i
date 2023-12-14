@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import styles from "../styles/Home.module.css"
-import { Button } from "web3uikit"
 import { useRouter } from "next/router"
 
 const SearchBar = () => {
@@ -48,7 +47,9 @@ const SearchBar = () => {
                 }}
                 className={focusedField === searchTerm ? styles.inputFocused : ""}
             />
-            <Button key="goButton" text="Go" onClick={handleOnClick} />
+            <button key="goButton" onClick={handleOnClick}>
+                Go
+            </button>
         </div>
     )
 }

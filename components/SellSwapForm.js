@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react"
-import { Button } from "web3uikit"
 import styles from "../styles/Home.module.css"
 import Tooltip from "../components/Tooltip"
 
@@ -9,6 +8,7 @@ function SellSwapForm({
     onSubmit,
     defaultNftAddress,
     defaultTokenId,
+    defaultPrice,
     extraFields = [],
 }) {
     const formRef = useRef(null)
@@ -18,7 +18,7 @@ function SellSwapForm({
     const [formData, setFormData] = useState({
         nftAddress: defaultNftAddress,
         tokenId: defaultTokenId,
-        price: "",
+        price: defaultPrice,
         ...extraFields.reduce((acc, field) => {
             acc[field.key] = ""
             return acc
@@ -85,6 +85,16 @@ function SellSwapForm({
     // Handle form input changes
     const handleChange = (e) => {
         const { name, value } = e.target
+        // Check if the field is the price field
+        if (name === "price") {
+            // Split the value into whole and decimal parts
+            const parts = value.split(".")
+
+            // If there's a decimal part and it's length is more than 18, prevent further input
+            if (parts.length > 1 && parts[1].length > 18) {
+                return // Exit without updating the state
+            }
+        }
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -166,7 +176,7 @@ function SellSwapForm({
                     </div>
                 </div>
             ))}
-            <Button type="submit" text="SUBMIT" />
+            <button type="submit">SUBMIT</button>
         </form>
     )
 }

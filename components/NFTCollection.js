@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import NFTTable from "../components/NFTTable"
 import NFTTableElement from "../components/NFTTableElement"
 import NFTCollectionModal from "../components/NFTCollectionModal"
@@ -8,7 +8,11 @@ import styles from "../styles/Home.module.css"
 
 function NFTCollection() {
     // Hooks & Data Retrieval
-    const { nftCollections, loadingImage } = useNFT()
+    const { nftCollections, loadingImage, loadNFTs } = useNFT()
+
+    const reloadNFTs = useCallback(() => {
+        loadNFTs() // Diese Funktion sollte die NFTs neu laden
+    }, [loadNFTs])
 
     // State Management
     const [selectedCollection, setSelectedCollection] = useState(null)
