@@ -4,13 +4,13 @@
 // Notification styles
 .notificationsContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     justify-content: center;
     align-items: flex-end;
     gap: 10px;
     position: fixed;
     right: 0;
-    top: 80px;
+    bottom: 50px;
     z-index: 100;
     font-family: $font-primary;
 }

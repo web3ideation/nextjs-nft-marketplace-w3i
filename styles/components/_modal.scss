@@ -34,6 +34,7 @@
     justify-content: center;
     align-items: center;
     z-index: 10;
+    margin-right: 10px;
 }
 
 .modalContentWrapper {
@@ -195,6 +196,7 @@
         font-weight: 400;
         padding: 0 5px;
         border: none;
+        cursor: pointer;
 
         &:hover {
             background: $hover-blue;

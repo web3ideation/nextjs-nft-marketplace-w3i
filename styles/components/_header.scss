@@ -12,7 +12,7 @@
 
     nav {
         display: flex;
-        justify-content: space-between;
+
         align-items: center;
         margin: 0 16px;
     }
@@ -22,6 +22,7 @@
 .logoAndHeadlineWrapper {
     display: flex;
     align-items: center;
+
     width: 100%;
 
     .headerLogo {
@@ -44,12 +45,13 @@
 .headerElementsWrapper {
     width: 100%;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
     background-color: $background-color;
 
     // Header button styles
     .headerButton {
-        padding: 20px 18px;
+        padding: 18px 18px;
         @include hover-invert;
 
         img {
@@ -57,8 +59,55 @@
         }
     }
 }
+.headerAccountInfoWrapper {
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+}
+
+.headerAccountInfo {
+    padding: 0 18px;
+    display: flex;
+    flex-direction: column;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+}
+
+.onlineDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    @include boxShadow;
+}
+
+.online {
+    background-color: forestgreen;
+}
+
+.offline {
+    background-color: firebrick;
+}
 
 // Connect button styles
 .connectButton {
-    padding: 20px 18px;
+    padding: 0 18px;
+    display: flex;
+    background-color: $background-color;
+
+    button {
+        width: 128px;
+        background-color: $hover-blue;
+        border-radius: 5px;
+        padding: 0 18px;
+        align-items: center;
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $hover-blue;
+            color: $hover-grey;
+        }
+    }
 }
