@@ -10,7 +10,7 @@ const NftModal = forwardRef((props, ref) => {
         imageURI,
         description,
         tokenDescription,
-        formattedNftOwner,
+        formattedTokenOwner,
         formattedNftAddress,
         desiredNftAddress,
         formattedDesiredNftAddress,
@@ -80,7 +80,7 @@ const NftModal = forwardRef((props, ref) => {
                 <div className={styles.modalText}>
                     <div>
                         <p>Owned by: </p>
-                        <p>{formattedNftOwner}</p>
+                        <p>{formattedTokenOwner}</p>
                     </div>
                     <div>
                         <p>Token-Adress: </p>

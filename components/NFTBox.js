@@ -76,7 +76,7 @@ export default function NFTBox({ nftData, loadingImage }) {
     // ------------------ State Management ------------------
     // State for truncated strings
     const [formattedNftAddress, setFormattedNftAddress] = useState("")
-    const [formattedtokenOwner, setFormattedtokenOwner] = useState("")
+    const [formattedTokenOwner, setformattedTokenOwner] = useState("")
     const [formattedDesiredNftAddress, setformattedDesiredNftAddress] = useState("")
 
     // Modal states
@@ -177,7 +177,7 @@ export default function NFTBox({ nftData, loadingImage }) {
     useEffect(() => {
         setformattedDesiredNftAddress(truncateStr(desiredNftAddress, 12))
         setFormattedNftAddress(truncateStr(nftAddress, 12))
-        setFormattedtokenOwner(truncateStr(tokenOwner, 12))
+        setformattedTokenOwner(truncateStr(tokenOwner, 12))
     }, [nftAddress, tokenOwner, desiredNftAddress])
 
     // ------------------ Component Return ------------------
@@ -211,7 +211,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     />
                     <div className={styles.cardTextArea}>
                         <div className={styles.cardOwnerAndId}>
-                            <div>Owned by {isOwnedByUser ? "You" : formattedtokenOwner}</div>
+                            <div>Owned by {isOwnedByUser ? "You" : formattedTokenOwner}</div>
                             <div>Token #{tokenId}</div>
                         </div>
                         <div className={styles.cardListedPrice}>
@@ -252,7 +252,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     desiredNftAddress={desiredNftAddress}
                     formattedDesiredNftAddress={formattedDesiredNftAddress}
                     desiredTokenId={desiredTokenId}
-                    formattedtokenOwner={isOwnedByUser ? "You" : formattedtokenOwner}
+                    formattedTokenOwner={isOwnedByUser ? "You" : formattedTokenOwner}
                     tokenId={tokenId}
                     tokenName={tokenName}
                     isListed={isListed}
@@ -287,7 +287,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     desiredNftAddress={desiredNftAddress}
                     formattedDesiredNftAddress={formattedDesiredNftAddress}
                     desiredTokenId={desiredTokenId}
-                    formattedtokenOwner={isOwnedByUser ? "You" : formattedtokenOwner}
+                    formattedTokenOwner={isOwnedByUser ? "You" : formattedTokenOwner}
                     tokenId={tokenId}
                     tokenName={tokenName}
                     isListed={isListed}
@@ -322,7 +322,7 @@ export default function NFTBox({ nftData, loadingImage }) {
                     desiredNftAddress={desiredNftAddress}
                     formattedDesiredNftAddress={formattedDesiredNftAddress}
                     desiredTokenId={desiredTokenId}
-                    formattedtokenOwner={isOwnedByUser ? "You" : formattedtokenOwner}
+                    formattedTokenOwner={isOwnedByUser ? "You" : formattedTokenOwner}
                     tokenId={tokenId}
                     tokenName={tokenName}
                     isListed={isListed}
