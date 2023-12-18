@@ -18,7 +18,7 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
 
         initialItems.forEach((nft) => {
             if (!collections[nft.nftAddress]) {
-                collections[nft.nftAddress] = nft.nftName
+                collections[nft.nftAddress] = nft.tokenName
             }
         })
 

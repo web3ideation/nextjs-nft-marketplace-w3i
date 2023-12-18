@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { ethers } from "ethers"
 import { useQuery } from "@apollo/client"
 import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
+import { erc721ABI } from "wagmi"
 
 // Context for managing and accessing NFT data.
 const NFTContext = createContext({})
@@ -27,122 +28,96 @@ export const NFTProvider = ({ children }) => {
     // States for NFT data and collections.
     const [nftsData, setNftsData] = useState([])
     const [nftCollections, setNftCollections] = useState([])
-
     const [loadingAllAttributes, setLoadingAllAttributes] = useState(true)
 
     const [isLoading, setIsLoading] = useState(true)
 
-    // console.log("Active Data", activeItemsData)
-    // console.log("Inactive Data", inactiveItemsData)
+    console.log("Active Data", activeItemsData)
+    console.log("Inactive Data", inactiveItemsData)
     console.log("Nfts Data", nftsData)
     console.log("Nft Collections", nftCollections)
     // console.log("loaded all attributes", loadingAllAttributes)
     // console.log("Is Loaded Context", isLoading)
 
+    // Function to get Ethereum object from the window.
     const getEthereumObject = () => window.ethereum
 
-    // Fetch the raw token URI from the blockchain using Ethereum provider.
-    const getRawTokenURI = useCallback(async (nftAddress, tokenId) => {
+    // Function to fetch NFT information.
+    async function getNFTInfo(nftAddress, tokenId) {
         const ethereum = getEthereumObject()
         const provider = new ethers.providers.Web3Provider(ethereum)
-        console.log("Provider", provider)
         try {
-            const functionSignature = ethers.utils.id("tokenURI(uint256)").slice(0, 10)
-            const tokenIdHex = ethers.utils
-                .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
-                .slice(2)
-            const data = functionSignature + tokenIdHex
+            // Verwenden Sie erc721ABI von wagmi
+            const contract = new ethers.Contract(nftAddress, erc721ABI, provider)
+            console.log("Contract", contract)
 
-            const result = await provider.call({ to: nftAddress, data })
-            const decodedData = ethers.utils.defaultAbiCoder.decode(["string"], result)
-            return decodedData[0]
-        } catch (error) {
-            console.error("Error fetching raw tokenURI:", error)
-            throw error
-        }
-    }, [])
+            // Konvertieren Sie die tokenId in eine BigNumber
+            const tokenIdBigNumber = ethers.BigNumber.from(tokenId)
 
-    const fetchOwnerOf = useCallback(async (nftAddress, tokenId) => {
-        const ethereum = getEthereumObject()
-        const provider = new ethers.providers.Web3Provider(ethereum)
-        const functionSignature = ethers.utils.id("ownerOf(uint256)").slice(0, 10)
-        const tokenIdHex = ethers.utils
-            .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
-            .slice(2)
-        const data = functionSignature + tokenIdHex
+            const tokenOwner = await contract.ownerOf(tokenIdBigNumber)
+            const tokenURI = await contract.tokenURI(tokenIdBigNumber)
+            const tokenName = await contract.name()
+            const tokenSymbol = await contract.symbol()
 
-        try {
-            const response = await provider.call({ to: nftAddress, data })
-            const decodedResponse = ethers.utils.defaultAbiCoder.decode(["address"], response)
-            return decodedResponse[0]
-        } catch (error) {
-            console.error(`Error fetching owner of tokenId ${tokenId}:`, error)
-            throw error
-        }
-    }, [])
+            const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
 
-    // Function to fetch contract details (name or symbol) from the blockchain.
-    const fetchContractDetail = useCallback(async (nftAddress, detailType) => {
-        const ethereum = getEthereumObject()
-        const provider = new ethers.providers.Web3Provider(ethereum)
-        const functionSignature = ethers.utils.id(`${detailType}()`).slice(0, 10)
-
-        try {
-            const response = await provider.call({ to: nftAddress, data: functionSignature })
-            const decodedResponse = ethers.utils.defaultAbiCoder.decode(["string"], response)
-            return decodedResponse[0]
-        } catch (error) {
-            console.error(`Error fetching contract ${detailType}:`, error)
-            throw error
-        }
-    }, [])
-
-    // Load image and metadata for a given NFT.
-    const loadAttributes = useCallback(
-        async (nft) => {
-            try {
-                const tokenURI = await getRawTokenURI(nft.nftAddress, nft.tokenId)
-                console.log("Context token uri", tokenURI)
-                const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-                const tokenURIResponse = await fetch(requestURL).then((res) => res.json())
-
-                // Fetching name and symbol of the NFT.
-                const nftName = await fetchContractDetail(nft.nftAddress, "name")
-                const nftSymbol = await fetchContractDetail(nft.nftAddress, "symbol")
-                const nftOwner = await fetchOwnerOf(nft.nftAddress, nft.tokenId, "ownerOf")
-
-                // Processing attributes.
-                const attributes = tokenURIResponse.attributes.reduce((acc, attribute) => {
-                    acc[attribute.trait_type] = attribute.value
-                    return acc
-                }, {})
-
-                // Compiling NFT data with loaded attributes.
+            const response = await fetch(requestURL)
+            if (response.headers.get("content-type").includes("application/json")) {
+                const tokenURIData = await response.json()
+                console.log("TOKEN URI DATA", tokenURIData)
                 return {
-                    ...nft,
+                    ...tokenURIData.attributes,
+                    ...tokenURIData, // Enthält Metadaten wie Name, Beschreibung, Bild-URLs usw.
+                    tokenName,
+                    tokenOwner,
+                    tokenSymbol,
                     tokenURI,
-                    imageURI: {
-                        src: tokenURIResponse.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
-                        width: 0,
-                        height: 0,
-                        alt: "",
-                    },
-                    tokenName: tokenURIResponse.name,
-                    tokenDescription: tokenURIResponse.description,
-                    nftName,
-                    nftSymbol,
-                    nftOwner,
-                    ...attributes,
                 }
-            } catch (error) {
-                console.error("Error loading image for NFT:", nft, error)
-                return { ...nft, error: true }
+            } else {
+                // Hier können Sie z.B. einen Default-Wert zurückgeben oder die URL direkt nutzen
+                console.log("Response is not a JSON. URL points to:", requestURL)
+                return {
+                    image: requestURL, // Verwenden Sie die URL direkt als Bild-URL
+                    tokenName,
+                    tokenOwner,
+                    tokenSymbol,
+                    tokenURI,
+                    // Andere erforderliche Standardwerte
+                }
             }
-        },
-        [getRawTokenURI, fetchContractDetail]
-    )
+        } catch (error) {
+            console.error("Error fetching NFT info:", error)
+            throw error
+        }
+    }
 
-    // Function to get a buyerCount and the highest listing ID for each NFT.
+    // Callback to load attributes for an NFT.
+    const loadAttributes = useCallback(async (nft) => {
+        try {
+            const nftInfo = await getNFTInfo(nft.nftAddress, nft.tokenId)
+            //if (nftInfo === null) {
+            //    return null
+            //}
+
+            return nftInfo
+                ? {
+                      ...nft,
+                      ...nftInfo,
+                      imageURI: {
+                          src: nftInfo.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
+                          width: 0,
+                          height: 0,
+                          alt: "",
+                      },
+                  }
+                : null
+        } catch (error) {
+            console.error("Error loading attributes for NFT:", nft, error)
+            return null
+        }
+    }, [])
+
+    // Callback to get the highest listing ID and buyer count for each NFT.
     const getHighestListingIdPerNFT = useCallback((arr) => {
         const map = new Map()
 
@@ -175,12 +150,21 @@ export const NFTProvider = ({ children }) => {
         return Array.from(map.values())
     }, [])
 
-    // Function to create collections from NFT data.
+    // Callback to create collections from NFT data.
     const createCollections = useCallback((nfts) => {
         const collectionsMap = new Map()
 
         nfts.forEach((nft) => {
-            const { nftAddress, tokenId, imageURI, tokenName, price, nftName, buyerCount } = nft
+            const {
+                nftAddress,
+                tokenId,
+                imageURI,
+                tokenName,
+                price,
+
+                tokenSymbol,
+                buyerCount,
+            } = nft
             const numericPrice = Number(price)
 
             if (!collectionsMap.has(nftAddress)) {
@@ -191,7 +175,8 @@ export const NFTProvider = ({ children }) => {
                     collectionCount: 0,
                     collectionPrice: 0,
                     firstImageURI: imageURI,
-                    collectionName: nftName,
+                    collectionName: tokenName,
+                    collectionSymbol: tokenSymbol,
                     tokenIds: [],
                 })
             }
@@ -229,8 +214,10 @@ export const NFTProvider = ({ children }) => {
 
     // Effect to load images and attributes for all NFTs when data changes.
     useEffect(() => {
-        const loadAllAttributes = async (items) => Promise.all(items.map(loadAttributes))
-
+        const loadAllAttributes = async (items) => {
+            const loadedItems = await Promise.all(items.map(loadAttributes))
+            return loadedItems.filter((item) => item !== null) // Filtern Sie NFTs heraus, die null sind
+        }
         if (activeItemsData && inactiveItemsData) {
             setLoadingAllAttributes(true)
 

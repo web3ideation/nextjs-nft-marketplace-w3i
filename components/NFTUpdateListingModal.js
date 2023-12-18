@@ -142,14 +142,6 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         }
     }, [isUpdateListingTxLoading, isUpdateListingTxSuccess, isUpdateListingTxError])
 
-    // Handle successful listing update
-    const handleUpdateListingSuccess = async (tx) => {
-        await tx.wait(1)
-        showNftNotification("Listing updated", "New price approved", "success")
-        router.reload()
-        onCancel && onCancel()
-    }
-
     // Function for updating after buy or delist
     const updatePageContentAfterTransaction = async () => {
         console.log("Reeeeeeloaaaaaad")

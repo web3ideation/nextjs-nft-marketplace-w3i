@@ -12,7 +12,7 @@ export default function NFTTable({ tableRows }) {
                 <tr>
                     <th></th>
                     <th>Address</th>
-                    <th>Collection Name</th>
+                    <th>Collection</th>
                     <th>Items</th>
                     <th>Sold</th>
                     <th>Total price</th>

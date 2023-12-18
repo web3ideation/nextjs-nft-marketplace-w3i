@@ -28,6 +28,7 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
         collectionName,
         firstTokenDescription: tokenDescription,
         collectionCount,
+        collectionSymbol,
         count: itemCount,
         collectionPrice,
     } = collection
@@ -54,7 +55,7 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
                         <div className={styles.contentWrapper}>{formattedNftAddress}</div>
                     </td>
                     <td>
-                        <div className={styles.contentWrapper}>{collectionName}</div>
+                        <div className={styles.contentWrapper}>{collectionSymbol}</div>
                     </td>
                     <td>
                         <div className={styles.contentWrapper}>{itemCount}</div>
