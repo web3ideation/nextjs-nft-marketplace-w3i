@@ -24,9 +24,11 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
 
     // Render the check icon if the option is selected
     const renderIcon = (optionValue) => {
-        if (selected === optionValue || (selected === "default" && optionValue === "default")) {
-            return <p>X</p>
-        }
+        return (
+            <div
+                className={selected === optionValue ? styles.checkIcon : styles.uncheckedIcon}
+            ></div>
+        )
     }
 
     return (
@@ -51,7 +53,7 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
                         value={option.value}
                         onClick={() => handleButtonClick(option.value)}
                     >
-                        {option.label}
+                        <span className={styles.filterButtonText}>{option.label}</span>{" "}
                         {renderIcon(option.value)}
                     </button>
                 ))}

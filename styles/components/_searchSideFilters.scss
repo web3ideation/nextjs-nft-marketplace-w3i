@@ -65,23 +65,45 @@
     background-color: $background-color;
     border-radius: 0 5px 5px 0;
     box-shadow: 5px 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-
-    &:hover {
-        color: $hover-blue;
+    cursor: pointer;
+    &:hover,
+    &.open {
+        .line {
+            background-color: $hover-blue; /* Farbe beim Hover und wenn geöffnet */
+        }
     }
 }
 
-// Filter open button open styles
-.filterOpenButtonOpen {
-    color: $hover-blue;
+.hamburgerMenu {
+    margin: 10px 5px;
+    width: 25px; /* Breite des Menü-Icons */
+    height: 25px; /* Höhe des Menü-Icons */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    cursor: pointer;
+}
+
+.hamburgerMenu .line {
+    width: 100%; /* Volle Breite des Containers */
+    height: 5px; /* Höhe jeder Linie */
+    border-radius: 3px 3px 3px 3px;
+    background-color: black; /* Farbe der Linien */
 }
 
 // Filter button styles
 .filterButton {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    width: 100%; /* Stellt sicher, dass der Button die volle Breite nutzt */
+    padding: 5px 10px; /* Fügt etwas Polsterung hinzu */
+}
+
+.filterButtonText {
+    flex-grow: 1; /* Erlaubt dem Text, verfügbaren Platz zu nutzen */
+    text-align: left; /* Text linksbündig */
+    margin-right: 10px;
 }
 
 .resetButton {
@@ -119,7 +141,7 @@
     opacity: 0;
     background-color: $secondary-color;
     width: 200px;
-    padding: 0 30px;
+    padding: 0 10px;
     border-radius: 0 5px 5px 0;
     box-shadow: inset 5px 0 5px rgb(0 0 0 / 0.1), inset 1px 0 2px -1px rgb(0 0 0 / 0.1);
 
@@ -144,4 +166,23 @@
 .searchSideFiltersItemsWrapperOpen {
     transform: translateX(0);
     opacity: 1;
+}
+
+.checkIcon,
+.uncheckedIcon {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+}
+
+.checkIcon::after {
+    content: "✔";
 }

@@ -168,7 +168,11 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                         }`}
                         onClick={toggleMenu}
                     >
-                        X
+                        <div className={`${styles.hamburgerMenu} ${isOpen ? "open" : ""}`}>
+                            <div className={styles.line}></div>
+                            <div className={styles.line}></div>
+                            <div className={styles.line}></div>
+                        </div>
                     </div>
                 </div>
                 {["Status", "Sorting", "Categories", "Collections"].map((label) => (
