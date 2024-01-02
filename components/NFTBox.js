@@ -8,34 +8,16 @@ import { useAccount, usePublicClient } from "wagmi"
 import { useNFT } from "../context/NFTContextProvider"
 import { useNftNotification } from "../context/NFTNotificationContext"
 import networkMapping from "../constants/networkMapping.json"
-import LoadingWave from "../components/LoadingWave"
-import NFTInfoModal from "../components/NFTInfoModal"
-import NFTUpdateListingModal from "../components/NFTUpdateListingModal"
+import LoadingWave from "./ui/LoadingWave"
+import NFTInfoModal from "./ui/NFTInfoModal"
+import NFTUpdateListingModal from "./ui/NFTUpdateListingModal"
 import styles from "../styles/Home.module.css"
 import { useBuyItem } from "../hooks/useBuyItem"
 import { useCancelListing } from "../hooks/useCancelListing"
-
-// Utility function to truncate strings
-const truncateStr = (fullStr, strLen) => {
-    if (fullStr.length <= strLen) return fullStr
-
-    const separator = "..."
-    const seperatorLength = separator.length
-    const charsToShow = strLen - seperatorLength
-    const frontChars = Math.ceil(charsToShow / 2)
-    const backChars = Math.floor(charsToShow / 2)
-
-    return (
-        fullStr.substring(0, frontChars) +
-        separator +
-        fullStr.substring(fullStr.length - backChars)
-    )
-}
-
-// Utility function to convert Wei to ETH
-const formatPriceToEther = (priceInWei) => {
-    return ethers.utils.formatUnits(priceInWei, "ether")
-}
+import { truncateStr, formatPriceToEther, truncatePrice } from "../utils/formatting"
+import { updatePageContentAfterTransaction } from "../utils/nftUpdating"
+import { copyNftAddressToClipboard } from "../utils/copyAddress"
+import { fetchEthToEurRate } from "../utils/fetchEthToEurRate"
 
 export default function NFTBox({ nftData, loadingImage }) {
     // ------------------ Hooks & Data Retrieval ------------------
@@ -52,32 +34,27 @@ export default function NFTBox({ nftData, loadingImage }) {
         tokenSymbol,
         description,
         tokenDescription,
+        tokenExternalLink,
         attributes,
         buyerCount,
         desiredNftAddress,
         desiredTokenId,
     } = nftData
 
-    const formattedPrice = formatPriceToEther(price)
-    const chainString = usePublicClient().chains[0]?.id?.toString() ?? "31337"
-    const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
+    const { loadNFTs } = useNFT()
+    // Message states
+    const { showNftNotification } = useNftNotification()
     const { address, isConnected } = useAccount()
     const router = useRouter()
-    const { loadNFTs } = useNFT()
-    const modalRef = useRef(null)
-    const updateModalRef = useRef(null)
-
-    const reloadNFTs = useCallback(() => {
-        loadNFTs()
-    }, [loadNFTs])
-
-    // ------------------- Refs ---------------------------
+    const chainString = usePublicClient().chains[0]?.id?.toString() ?? "31337"
+    const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
 
     // ------------------ State Management ------------------
     // State for truncated strings
     const [formattedNftAddress, setFormattedNftAddress] = useState("")
-    const [formattedTokenOwner, setformattedTokenOwner] = useState("")
-    const [formattedDesiredNftAddress, setformattedDesiredNftAddress] = useState("")
+    const [formattedTokenOwner, setFormattedTokenOwner] = useState("")
+    const [formattedDesiredNftAddress, setFormattedDesiredNftAddress] = useState("")
+    const [formattedPriceInEur, setFormattedPriceInEur] = useState("")
 
     // Modal states
     const [anyModalIsOpen, setAnyModalIsOpen] = useState(false)
@@ -86,21 +63,26 @@ export default function NFTBox({ nftData, loadingImage }) {
     const [showListModal, setShowListModal] = useState(false)
     const [showUpdateListingModal, setShowUpdateListingModal] = useState(false)
 
-    // Message states
-    const { showNftNotification, closeNftNotification } = useNftNotification()
+    // ------------------- Refs ---------------------------
+    const modalRef = useRef(null)
+    const updateModalRef = useRef(null)
 
     // Check ownership of the NFT
     const isOwnedByUser = isConnected && tokenOwner?.toLowerCase() === address?.toLowerCase()
 
-    // Function for updating after buy or delist
-    const updatePageContentAfterTransaction = useCallback(() => {
-        console.log("Reloding NFTs...")
-        setTimeout(() => {
-            reloadNFTs()
-        }, 1000)
-    }, [loadNFTs])
+    const formattedPrice = formatPriceToEther(price)
 
-    // ------------------ Contract Functions ------------------
+    // Convert price to euros
+    const [priceInEur, setPriceInEur] = useState(null)
+
+    // ------------------ Functions and event-handler ------------------
+    const reloadNFTs = useCallback(() => loadNFTs(), [loadNFTs])
+    const handleTransactionCompletion = () => updatePageContentAfterTransaction(reloadNFTs)
+    const handleCopyAddress = () => {
+        copyNftAddressToClipboard(nftAddress, showNftNotification)
+    }
+
+    // ------------------ Contract functions ------------------
     // function for buy item
     const { handleBuyClick } = useBuyItem(
         marketplaceAddress,
@@ -108,7 +90,7 @@ export default function NFTBox({ nftData, loadingImage }) {
         nftAddress,
         tokenId,
         isConnected,
-        updatePageContentAfterTransaction
+        handleTransactionCompletion
     )
     // function for delisting item
     const { handleCancelListingClick } = useCancelListing(
@@ -116,32 +98,15 @@ export default function NFTBox({ nftData, loadingImage }) {
         nftAddress,
         tokenId,
         isConnected,
-        updatePageContentAfterTransaction
+        handleTransactionCompletion
     )
 
-    //------------------ Handlers ------------------------
     // Handler for NFT card click
-    const handleCardClick = () => {
-        if (isOwnedByUser) {
-            if (isListed) {
-                setShowSellModal(true)
-            } else {
-                setShowListModal(true)
-            }
-        } else {
-            setShowInfoModal(true)
-        }
-    }
-
-    // Handler to copy NFT address to clipboard
-    const copyNftAddressToClipboard = async () => {
-        try {
-            await navigator.clipboard.writeText(nftAddress)
-            showNftNotification("Success", "Address copied!", "success")
-        } catch (error) {
-            showNftNotification("Error", "Error copying!", "error")
-        }
-    }
+    const handleCardClick = useCallback(() => {
+        setShowInfoModal(!isOwnedByUser)
+        setShowSellModal(isOwnedByUser && isListed)
+        setShowListModal(isOwnedByUser && !isListed)
+    }, [isOwnedByUser, isListed])
 
     // Handler for list button click
     const handleListClick = () => {
@@ -153,10 +118,9 @@ export default function NFTBox({ nftData, loadingImage }) {
     }
 
     // Handler for updating price button click
-    const handleUpdatePriceButtonClick = () => {
-        setShowUpdateListingModal(true)
-    }
-    // ------------------ useEffect Hooks ------------------
+    const handleUpdatePriceButtonClick = () => setShowUpdateListingModal(true)
+
+    // ------------------ useEffect ------------------
     // Listener for modals' state
     useEffect(() => {
         setAnyModalIsOpen(
@@ -175,10 +139,23 @@ export default function NFTBox({ nftData, loadingImage }) {
 
     // Effect to update truncated strings when currentOwner or nftAddress change
     useEffect(() => {
-        setformattedDesiredNftAddress(truncateStr(desiredNftAddress, 12))
-        setFormattedNftAddress(truncateStr(nftAddress, 12))
-        setformattedTokenOwner(truncateStr(tokenOwner, 12))
-    }, [nftAddress, tokenOwner, desiredNftAddress])
+        setFormattedDesiredNftAddress(truncateStr(desiredNftAddress, 4, 4))
+        setFormattedNftAddress(truncateStr(nftAddress, 4, 4))
+        setFormattedTokenOwner(truncateStr(tokenOwner, 4, 4))
+        setFormattedPriceInEur(truncatePrice(priceInEur, 5))
+    }, [nftAddress, tokenOwner, desiredNftAddress, priceInEur])
+
+    useEffect(() => {
+        const updatePriceInEur = async () => {
+            const ethToEurRate = await fetchEthToEurRate()
+            if (ethToEurRate) {
+                const ethPrice = formatPriceToEther(price)
+                setPriceInEur(ethPrice * ethToEurRate)
+            }
+        }
+
+        updatePriceInEur()
+    }, [price])
 
     // ------------------ Component Return ------------------
 
@@ -206,18 +183,17 @@ export default function NFTBox({ nftData, loadingImage }) {
                         src={imageURI.src}
                         height={225}
                         width={300}
-                        loading="eager"
+                        loading="lazy"
                         alt={tokenDescription || "..."}
                     />
                     <div className={styles.cardTextArea}>
                         <div className={styles.cardOwnerAndId}>
-                            <div>Owned by {isOwnedByUser ? "You" : formattedTokenOwner}</div>
-                            <div>Token #{tokenId}</div>
+                            <div>{tokenName}</div>
+                            <div>#{tokenId}</div>
                         </div>
                         <div className={styles.cardListedPrice}>
-                            <div className={styles.cardPrice}>
-                                {ethers.utils.formatUnits(price, "ether")} ETH
-                            </div>
+                            <div className={styles.cardPrice}>{formattedPrice} ETH</div>
+                            {priceInEur && <strong>{formattedPriceInEur} EUR</strong>}
                         </div>
                     </div>
                 </div>
@@ -248,6 +224,8 @@ export default function NFTBox({ nftData, loadingImage }) {
                     imageURI={imageURI.src}
                     description={description}
                     tokenDescription={tokenDescription}
+                    tokenExternalLink={tokenExternalLink}
+                    attributes={attributes}
                     formattedNftAddress={formattedNftAddress}
                     desiredNftAddress={desiredNftAddress}
                     formattedDesiredNftAddress={formattedDesiredNftAddress}
@@ -255,11 +233,13 @@ export default function NFTBox({ nftData, loadingImage }) {
                     formattedTokenOwner={isOwnedByUser ? "You" : formattedTokenOwner}
                     tokenId={tokenId}
                     tokenName={tokenName}
+                    tokenSymbol={tokenSymbol}
                     isListed={isListed}
-                    price={ethers.utils.formatUnits(price, "ether")}
+                    price={formattedPrice}
+                    priceInEur={formattedPriceInEur}
                     buyerCount={buyerCount}
                     handleBuyClick={handleBuyClick}
-                    copyNftAddressToClipboard={copyNftAddressToClipboard}
+                    copyNftAddressToClipboard={handleCopyAddress}
                     closeModal={() => setShowInfoModal(false)}
                 />
             </CSSTransition>
@@ -283,6 +263,8 @@ export default function NFTBox({ nftData, loadingImage }) {
                     imageURI={imageURI.src}
                     description={description}
                     tokenDescription={tokenDescription}
+                    tokenExternalLink={tokenExternalLink}
+                    attributes={attributes}
                     formattedNftAddress={formattedNftAddress}
                     desiredNftAddress={desiredNftAddress}
                     formattedDesiredNftAddress={formattedDesiredNftAddress}
@@ -290,12 +272,14 @@ export default function NFTBox({ nftData, loadingImage }) {
                     formattedTokenOwner={isOwnedByUser ? "You" : formattedTokenOwner}
                     tokenId={tokenId}
                     tokenName={tokenName}
+                    tokenSymbol={tokenSymbol}
                     isListed={isListed}
-                    price={ethers.utils.formatUnits(price, "ether")}
+                    price={formattedPrice}
+                    priceInEur={formattedPriceInEur}
                     buyerCount={buyerCount}
                     handleCancelListingClick={handleCancelListingClick}
                     handleUpdatePriceButtonClick={handleUpdatePriceButtonClick}
-                    copyNftAddressToClipboard={copyNftAddressToClipboard}
+                    copyNftAddressToClipboard={handleCopyAddress}
                     closeModal={() => setShowSellModal(false)}
                 />
             </CSSTransition>
@@ -318,6 +302,8 @@ export default function NFTBox({ nftData, loadingImage }) {
                     imageURI={imageURI.src}
                     description={description}
                     tokenDescription={tokenDescription}
+                    tokenExternalLink={tokenExternalLink}
+                    attributes={attributes}
                     formattedNftAddress={formattedNftAddress}
                     desiredNftAddress={desiredNftAddress}
                     formattedDesiredNftAddress={formattedDesiredNftAddress}
@@ -325,11 +311,13 @@ export default function NFTBox({ nftData, loadingImage }) {
                     formattedTokenOwner={isOwnedByUser ? "You" : formattedTokenOwner}
                     tokenId={tokenId}
                     tokenName={tokenName}
+                    tokenSymbol={tokenSymbol}
                     isListed={isListed}
-                    price={ethers.utils.formatUnits(price, "ether")}
+                    price={formattedPrice}
+                    priceInEur={formattedPriceInEur}
                     buyerCount={buyerCount}
                     handleListClick={handleListClick}
-                    copyNftAddressToClipboard={copyNftAddressToClipboard}
+                    copyNftAddressToClipboard={handleCopyAddress}
                     closeModal={() => setShowListModal(false)}
                 />
             </CSSTransition>

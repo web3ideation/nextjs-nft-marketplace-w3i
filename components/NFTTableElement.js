@@ -1,24 +1,7 @@
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
-import { ethers } from "ethers"
-import LoadingWave from "../components/LoadingWave"
-
-// Utility function to truncate strings for better UI display
-const truncateStr = (fullStr, strLen) => {
-    if (fullStr.length <= strLen) return fullStr
-
-    const separator = "..."
-    const separatorLength = separator.length
-    const charsToShow = strLen - separatorLength
-    const frontChars = Math.ceil(charsToShow / 2)
-    const backChars = Math.floor(charsToShow / 2)
-
-    return (
-        fullStr.substring(0, frontChars) +
-        separator +
-        fullStr.substring(fullStr.length - backChars)
-    )
-}
+import LoadingWave from "../components/ui/LoadingWave"
+import { truncateStr, formatPriceToEther, truncatePrice } from "../utils/formatting"
 
 export default function NFTTableElement({ collection, onClick, loadingImage }) {
     // Destructure properties from the collection object
@@ -34,7 +17,9 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
     } = collection
 
     // Format NFT address for display (truncate for brevity)
-    const formattedNftAddress = truncateStr(nftAddress || "", 15)
+    const formattedNftAddress = truncateStr(nftAddress || "", 4, 4)
+    const priceInEther = formatPriceToEther(collectionPrice)
+    const formattedPrice = truncatePrice(priceInEther, 4)
 
     return (
         <>
@@ -44,6 +29,7 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
                     <td>
                         <div className={styles.contentWrapper}>
                             <Image
+                                className={styles.tableImage}
                                 src={imageURI.src}
                                 height={50}
                                 width={50}
@@ -64,12 +50,7 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
                         <div className={styles.contentWrapper}>{collectionCount}</div>
                     </td>
                     <td>
-                        <div className={styles.contentWrapper}>
-                            {parseFloat(
-                                ethers.utils.formatUnits(collectionPrice, "ether")
-                            ).toFixed(6)}{" "}
-                            ETH
-                        </div>
+                        <div className={styles.contentWrapper}>{formattedPrice} ETH</div>
                     </td>
                 </tr>
             ) : (

@@ -1,10 +1,47 @@
-import React, { createContext, useContext, useState, useCallback } from "react"
+import React, { createContext, useContext, useReducer, useCallback } from "react"
 
-const NftNotificationContext = createContext({
+const defaultState = {
     nftNotifications: [],
     showNftNotification: () => {},
     clearNftNotification: () => {},
-})
+    closeNftNotification: () => {},
+}
+
+const NftNotificationContext = createContext(defaultState)
+
+// Reducer function to manage state updates in a more predictable way
+function notificationReducer(state, action) {
+    switch (action.type) {
+        case "ADD_NOTIFICATION":
+            const newNotifications = [action.payload, ...state.nftNotifications]
+            if (newNotifications.length > action.maxNotifications) {
+                newNotifications.pop() // Ensure max notifications are not exceeded
+            }
+            return { ...state, nftNotifications: newNotifications }
+
+        case "CLEAR_NOTIFICATION":
+            return {
+                ...state,
+                nftNotifications: state.nftNotifications.filter(
+                    (notification) => notification.id !== action.payload
+                ),
+            }
+
+        case "CLOSE_NOTIFICATION":
+            return {
+                ...state,
+                nftNotifications: state.nftNotifications.map((notification) => {
+                    if (notification.id === action.payload) {
+                        return { ...notification, isSticky: false, closing: true }
+                    }
+                    return notification
+                }),
+            }
+
+        default:
+            return state
+    }
+}
 
 export const useNftNotification = () => {
     const context = useContext(NftNotificationContext)
@@ -15,55 +52,30 @@ export const useNftNotification = () => {
 }
 
 export const NftNotificationProvider = ({ children, maxNotifications = 7 }) => {
-    const [nftNotifications, setNftNotifications] = useState([])
-
-    const clearNftNotification = useCallback((id) => {
-        setNftNotifications((currentNotifications) => {
-            return currentNotifications.filter((notification) => notification.id !== id)
-        })
-    }, [])
-
-    const closeNftNotification = useCallback((id) => {
-        setNftNotifications((currentNotifications) => {
-            return currentNotifications.map((notification) => {
-                if (notification.id === id) {
-                    // Setzen Sie nur die Eigenschaft 'closing' auf true
-                    return { ...notification, isSticky: false, closing: true }
-                }
-                return notification
-            })
-        })
-    }, [])
+    const [state, dispatch] = useReducer(notificationReducer, defaultState)
 
     const showNftNotification = useCallback(
         (title, message, type, isSticky = false) => {
-            const id = Math.random().toString(36).substr(2, 9)
-            const newNotification = {
-                id,
-                title,
-                message,
-                type,
-                isSticky,
-            }
-
-            setNftNotifications((prevNotifications) => {
-                // Wenn die maximale Anzahl erreicht ist, entfernen Sie die älteste Benachrichtigung
-                const notifications = [newNotification, ...prevNotifications]
-                if (notifications.length > maxNotifications) {
-                    // Entfernen Sie die letzte Benachrichtigung im Array
-                    notifications.pop()
-                }
-                return notifications
-            })
+            const id = Math.random().toString(36).slice(2, 11)
+            const newNotification = { id, title, message, type, isSticky }
+            dispatch({ type: "ADD_NOTIFICATION", payload: newNotification, maxNotifications })
             return id
         },
         [maxNotifications]
     )
 
+    const clearNftNotification = useCallback((id) => {
+        dispatch({ type: "CLEAR_NOTIFICATION", payload: id })
+    }, [])
+
+    const closeNftNotification = useCallback((id) => {
+        dispatch({ type: "CLOSE_NOTIFICATION", payload: id })
+    }, [])
+
     return (
         <NftNotificationContext.Provider
             value={{
-                nftNotifications,
+                nftNotifications: state.nftNotifications,
                 showNftNotification,
                 clearNftNotification,
                 closeNftNotification,

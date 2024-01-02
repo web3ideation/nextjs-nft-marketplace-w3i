@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import styles from "../styles/Home.module.css"
 import { useRouter } from "next/router"
+import styles from "../styles/Home.module.css"
 
 const SearchBar = () => {
     const router = useRouter()
@@ -39,17 +39,12 @@ const SearchBar = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Search..."
-                onBlur={() => {
-                    setFocusedField(null)
-                }}
-                onFocus={() => {
-                    setFocusedField(searchTerm)
-                }}
+                onBlur={() => setFocusedField(null)}
+                onFocus={() => setFocusedField(searchTerm)}
                 className={focusedField === searchTerm ? styles.inputFocused : ""}
+                aria-label="Search" // Added for accessibility
             />
-            <button key="goButton" onClick={handleOnClick}>
-                Go
-            </button>
+            <button onClick={handleOnClick}>Go</button>
         </div>
     )
 }

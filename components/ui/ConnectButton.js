@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react"
-import { useAccount, useBalance, useEnsName, useEnsAvatar, useDisconnect } from "wagmi"
+import { useAccount, useBalance, useDisconnect } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
 
-import styles from "../styles/Home.module.css"
+import { truncateStr } from "../../utils/formatting"
+import styles from "../../styles/Home.module.css"
 
 const WalletInfo = () => {
     const { address, isConnected } = useAccount()
     const { data: balanceData } = useBalance({
         address: address,
     })
+    console.log("Balance data", balanceData)
+    console.log("Is Connected: ", isConnected)
+
+    const formattedAddress = truncateStr(address || "", 4, 4)
 
     return (
         <div className={styles.headerAccountInfoWrapper}>
@@ -16,9 +21,7 @@ const WalletInfo = () => {
                 className={`${styles.onlineDot} ${isConnected ? styles.online : styles.offline}`}
             ></div>
             <div className={styles.headerAccountInfo}>
-                <div>
-                    {address.slice(0, 6)}...{address.slice(-4)}
-                </div>
+                <div>{formattedAddress}</div>
                 <div>
                     {balanceData?.formatted.slice(0, balanceData?.formatted.indexOf(".") + 5)} SEP
                 </div>
@@ -32,7 +35,7 @@ const PlaceholderWalletInfo = () => {
         <div className={styles.headerAccountInfoWrapper}>
             <div className={`${styles.onlineDot} ${styles.offline}`}></div>
             <div className={styles.headerAccountInfo} style={{ visibility: "hidden" }}>
-                <div>0x000...0000</div>
+                <div>0x00...0000</div>
                 <div>0.0000 SEP</div>
             </div>
         </div>

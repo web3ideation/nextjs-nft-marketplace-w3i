@@ -2,13 +2,13 @@ import React, { useState, useMemo, useCallback } from "react"
 import NFTBox from "../components/NFTBox"
 import styles from "../styles/Home.module.css"
 import { useNFT } from "../context/NFTContextProvider"
-import LoadingWave from "../components/LoadingWave"
+import LoadingWave from "../components/ui/LoadingWave"
 
 function NFTListed() {
     // ------------------ Hooks & Data Retrieval ------------------
 
     // Retrieve NFT data and loading state using custom hook
-    const { nftsData, isLoading, loadNFTs } = useNFT()
+    const { data: nftsData, isLoading, loadNFTs } = useNFT()
 
     const reloadNFTs = useCallback(() => {
         loadNFTs() // Diese Funktion sollte die NFTs neu laden
@@ -57,7 +57,7 @@ function NFTListed() {
 
     return (
         <div className={styles.nftListWrapper}>
-            <h1>Recently Listed</h1>
+            <h1>Brand New Drops</h1>
             <div id="NFTListed" className={styles.nftList}>
                 {renderNFTList()}
             </div>

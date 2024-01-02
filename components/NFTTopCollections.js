@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react"
 import NFTTable from "../components/NFTTable"
 import NFTTableElement from "../components/NFTTableElement"
-import NFTCollectionModal from "../components/NFTCollectionModal"
+import NFTCollectionModal from "../components/ui/NFTCollectionModal"
 import { CSSTransition } from "react-transition-group"
 import { useNFT } from "../context/NFTContextProvider"
 import styles from "../styles/Home.module.css"
 
 function NFTCollection() {
     // Hooks & Data Retrieval
-    const { nftCollections, loadingImage } = useNFT()
+    const { collections: nftCollections, loadingImage } = useNFT()
 
     // State Management
     const [selectedCollection, setSelectedCollection] = useState(null)
@@ -60,7 +60,7 @@ function NFTCollection() {
     return (
         <div className={styles.nftTableContainer}>
             <div className={styles.nftTableWrapper}>
-                <h1>Top Collections</h1>
+                <h1>Top 10</h1>
                 <div id="NFTCollection" className={styles.nftCollection}>
                     <NFTTable tableRows={tableRows} />
                     <CSSTransition

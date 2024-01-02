@@ -1,6 +1,6 @@
 import React from "react"
-import styles from "../styles/Home.module.css"
-import LoadingWave from "../components/LoadingWave"
+import styles from "../../styles/Home.module.css"
+import LoadingWave from "./LoadingWave"
 
 const SingleNotification = ({ notification, clearNftNotification }) => {
     // Handle the end of the exit animation

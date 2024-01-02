@@ -9,15 +9,9 @@ const PopupMenu = () => {
     // Reference to the menu wrapper, useful for future enhancements or interactions
     const menuRef = useRef(null)
 
-    // Handler to show the popup menu when the mouse enters the menu wrapper
-    const handleMouseEnter = () => {
-        setIsOpen(true)
-    }
-
-    // Handler to hide the popup menu when the mouse leaves the menu wrapper
-    const handleMouseLeave = () => {
-        setIsOpen(false)
-    }
+    // Handler to show/hide the popup menu when the mouse enters the menu wrapper
+    const handleMouseEnter = () => setIsOpen(true)
+    const handleMouseLeave = () => setIsOpen(false)
 
     return (
         <div
@@ -28,11 +22,9 @@ const PopupMenu = () => {
         >
             <div className={styles.menuButton}>
                 <button>Menu</button>
-                {isOpen ? (
-                    <span className={styles.menuIconMinus}>-</span>
-                ) : (
-                    <span className={styles.menuIcon}>+</span>
-                )}
+                <span className={isOpen ? styles.menuIconMinus : styles.menuIcon}>
+                    {isOpen ? "-" : "+"}
+                </span>
             </div>
             <div
                 className={`${styles.popupMenuLinksWrapper} ${

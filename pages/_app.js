@@ -9,9 +9,9 @@ import { wagmiConfig } from "../config/wagmiConfig"
 import { NftNotificationProvider } from "../context/NFTNotificationContext"
 import { SearchResultsProvider } from "../context/SearchResultsContext"
 import { NFTProvider, useNFT } from "../context/NFTContextProvider"
-import NftNotification from "../components/NFTNotification"
+import NftNotification from "../components/ui/NFTNotification"
 import Header from "../components/Header"
-import LoadingWave from "../components/LoadingWave"
+import LoadingWave from "../components/ui/LoadingWave"
 import Footer from "../components/Footer"
 
 // Importing global styles

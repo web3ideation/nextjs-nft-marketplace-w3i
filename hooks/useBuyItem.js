@@ -3,8 +3,16 @@ import { useContractWrite, useWaitForTransaction } from "wagmi"
 import { useNftNotification } from "../context/NFTNotificationContext"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 
-// !!!N I have to bring the notification back in nftBox, just define transaction status here
-
+/**
+ * Custom hook to handle the buying process of an NFT.
+ * @param {string} marketplaceAddress - The marketplace smart contract address.
+ * @param {string} price - The price of the NFT.
+ * @param {string} nftAddress - The address of the NFT.
+ * @param {number} tokenId - The token ID of the NFT.
+ * @param {boolean} isConnected - Whether the user is connected to a wallet.
+ * @param {Function} onSuccessCallback - Callback function to execute on success.
+ * @returns {Object} - Object containing the handleBuyClick function and buying state.
+ */
 export const useBuyItem = (
     marketplaceAddress,
     price,
@@ -20,89 +28,17 @@ export const useBuyItem = (
     const confirmPurchaseNotificationId = useRef(null)
     const whilePurchaseNotificationId = useRef(null)
 
-    // Function to initiate the buy transaction
-    const { data: buyItemData, writeAsync: buyItem } = useContractWrite({
-        address: marketplaceAddress,
-        abi: nftMarketplaceAbi,
-        functionName: "buyItem",
-        value: price,
-        args: [nftAddress, tokenId],
-        onSuccess: (data) => {
-            console.log("Buy item send", data)
-            setBuyTxHash(data.hash)
-            closeNftNotification(confirmPurchaseNotificationId.current)
-        },
-        onError: (error) => {
-            console.log("Buy item error", error)
-            setBuying(false)
-            handleTransactionError(error)
-            closeNftNotification(confirmPurchaseNotificationId.current)
-        },
-    })
-
-    // Wait for transaction confirmation
-    const {
-        data: buyTxReceipt,
-        isLoading: isBuyTxLoading,
-        isSuccess: isBuyTxSuccess,
-        isError: isBuyTxError,
-    } = useWaitForTransaction({
-        hash: buyTxHash,
-    })
-
-    // Update state based on transaction status
-    useEffect(() => {
-        if (isBuyTxLoading) {
-            handleTransactionLoading()
-        } else if (isBuyTxSuccess) {
-            handleTransactionSuccess()
-        } else if (isBuyTxError) {
-            handleTransactionFailure()
-        }
-    }, [isBuyTxLoading, isBuyTxSuccess, isBuyTxError])
-
-    // Function to handle the buy click
-    const handleBuyClick = useCallback(async () => {
-        if (!isConnected) {
-            showNftNotification("Connect wallet", "Connect your wallet to buy items!", "info")
-            return
-        }
-        if (buying) {
-            showNftNotification(
-                "Buying",
-                "A purchase is already in progress! Check your wallet!",
-                "error"
-            )
-            return
-        }
-        setBuying(true)
-        confirmPurchaseNotificationId.current = showNftNotification(
-            "Check your wallet",
-            "Confirm purchase...",
-            "info",
-            true
-        )
-        try {
-            await buyItem()
-        } catch (error) {
-            console.error("An error occurred during the transaction: ", error)
-        }
-    }, [isConnected, buying, buyItem])
-
     // Function to handle transaction error
     const handleTransactionError = useCallback(
         (error) => {
-            if (error.message.includes("User denied transaction signature")) {
-                // for user rejected transaction
-                showNftNotification(
-                    "Transaction Rejected",
-                    "You rejected the transaction.",
-                    "error"
-                )
-            } else {
-                // Handle other errors
-                showNftNotification("Error", error.message || "Failed to buy the NFT.", "error")
-            }
+            const userDenied = error.message.includes("User denied transaction signature")
+            showNftNotification(
+                userDenied ? "Transaction Rejected" : "Error",
+                userDenied
+                    ? "You rejected the transaction."
+                    : error.message || "Failed to buy the NFT.",
+                "error"
+            )
         },
         [showNftNotification]
     )
@@ -139,6 +75,75 @@ export const useBuyItem = (
             closeNftNotification(confirmPurchaseNotificationId.current)
             closeNftNotification(whilePurchaseNotificationId.current)
         }
+    }, [closeNftNotification])
+
+    // Function to initiate the buy transaction
+    const { data: buyItemData, writeAsync: buyItem } = useContractWrite({
+        address: marketplaceAddress,
+        abi: nftMarketplaceAbi,
+        functionName: "buyItem",
+        value: price,
+        args: [nftAddress, tokenId],
+        onSuccess: (data) => {
+            console.log("Buy item send", data)
+            setBuyTxHash(data.hash)
+            closeNftNotification(confirmPurchaseNotificationId.current)
+        },
+        onError: (error) => {
+            console.log("Buy item error", error)
+            setBuying(false)
+            handleTransactionError(error)
+            closeNftNotification(confirmPurchaseNotificationId.current)
+        },
+    })
+
+    // Wait for transaction confirmation
+    const {
+        data: buyTxReceipt,
+        isLoading: isBuyTxLoading,
+        isSuccess: isBuyTxSuccess,
+        isError: isBuyTxError,
+    } = useWaitForTransaction({
+        hash: buyTxHash,
+    })
+
+    // Function to handle the buy click
+    const handleBuyClick = useCallback(async () => {
+        if (!isConnected) {
+            showNftNotification("Connect wallet", "Connect your wallet to buy items!", "info")
+            return
+        }
+        if (buying) {
+            showNftNotification(
+                "Buying",
+                "A purchase is already in progress! Check your wallet!",
+                "error"
+            )
+            return
+        }
+        setBuying(true)
+        confirmPurchaseNotificationId.current = showNftNotification(
+            "Check your wallet",
+            "Confirm purchase...",
+            "info",
+            true
+        )
+        try {
+            await buyItem()
+        } catch (error) {
+            console.error("An error occurred during the transaction: ", error)
+        }
+    }, [isConnected, buying, buyItem, showNftNotification])
+
+    // Update state based on transaction status
+    useEffect(() => {
+        if (isBuyTxLoading) handleTransactionLoading()
+        else if (isBuyTxSuccess) handleTransactionSuccess()
+        else if (isBuyTxError) handleTransactionFailure()
+    }, [isBuyTxLoading, isBuyTxSuccess, isBuyTxError])
+
+    useEffect(() => {
+        // Cleanup function to close notifications when the component unmounts or dependencies change
     }, [closeNftNotification])
 
     return { handleBuyClick, buying }

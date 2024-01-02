@@ -8,7 +8,7 @@ import { ethers } from "ethers"
 
 const SearchResultPage = () => {
     const router = useRouter()
-    const { nftsData, loadingImage } = useNFT()
+    const { data: nftsData, loadingImage } = useNFT()
 
     const [searchResults, setSearchResults] = useState([])
     const [filteredNFTs, setFilteredNFTs] = useState([])

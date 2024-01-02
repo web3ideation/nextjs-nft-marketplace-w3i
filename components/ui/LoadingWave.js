@@ -1,5 +1,5 @@
 import React from "react"
-import styles from "../styles/Home.module.css" // Importieren Sie Ihre CSS-Datei für die Animation
+import styles from "../../styles/Home.module.css" // Importieren Sie Ihre CSS-Datei für die Animation
 
 const LoadingWave = () => {
     return (

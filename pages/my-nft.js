@@ -12,7 +12,7 @@ const MyNFTs = () => {
     //    const isConnected = useConnectionStatus()
     //    const { contract } = useContract(contractAddress)
 
-    const { nftsData, loadingImage } = useNFT()
+    const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
     const [hasOwnNFT, setHasOwnNFT] = useState(false)
 
     const provider = usePublicClient()
@@ -40,18 +40,23 @@ const MyNFTs = () => {
     const { address, isConnected } = getAccount()
 
     // Funktion zur Überprüfung, ob das NFT dem Benutzer gehört
-    const isOwnedByUser = (nftOwner) => {
-        return nftOwner?.toLowerCase() === address?.toLowerCase()
+    const isOwnedByUser = (tokenOwner) => {
+        return tokenOwner?.toLowerCase() === address?.toLowerCase()
     }
 
     // Effekt zur Feststellung, ob der Benutzer NFTs besitzt
     useEffect(() => {
-        const hasNFT = nftsData.some((nft) => isOwnedByUser(nft.nftOwner))
+        const hasNFT = nftsData.some((nft) => isOwnedByUser(nft.tokenOwner))
         setHasOwnNFT(hasNFT)
     }, [nftsData, address])
 
+    // Effect to handle account changes
+    useEffect(() => {
+        reloadNFTs()
+    }, [address, reloadNFTs])
+
     // Anzeigen des Ladestatus beim Abrufen der NFT-Daten
-    if (loadingImage) {
+    if (nftsLoading) {
         return <div>Loading...</div>
     }
 
@@ -62,7 +67,7 @@ const MyNFTs = () => {
                 {isConnected ? (
                     hasOwnNFT ? (
                         nftsData.map((nft) =>
-                            isOwnedByUser(nft.nftOwner) ? (
+                            isOwnedByUser(nft.tokenOwner) ? (
                                 <NFTBox key={`${nft.nftAddress}${nft.tokenId}`} nftData={nft} />
                             ) : null
                         )

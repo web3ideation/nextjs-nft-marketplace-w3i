@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react"
 import styles from "../styles/Home.module.css"
-import Tooltip from "../components/Tooltip"
+import Tooltip from "../components/ui/Tooltip"
 
 function SellSwapForm({
     title,

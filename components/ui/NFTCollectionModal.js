@@ -1,14 +1,14 @@
 import React, { forwardRef } from "react"
-import { useNFT } from "../context/NFTContextProvider"
-import NFTBox from "./NFTBox"
-import Modal from "../components/Modal"
+import { useNFT } from "../../context/NFTContextProvider"
+import NFTBox from "../NFTBox"
+import Modal from "../ui/Modal"
 import { ethers } from "ethers"
-import styles from "../styles/Home.module.css"
+import styles from "../../styles/Home.module.css"
 
 const NFTCollectionModal = forwardRef(
     ({ onClose, selectedCollection, nftCollections, type }, ref) => {
         // Retrieve NFT data and loading state using custom hook
-        const { nftsData, loadingImage } = useNFT()
+        const { data: nftsData, loadingImage } = useNFT()
 
         // Extrahieren Sie die ausgewählte Sammlung aus den NFT-Sammlungen
         const selectedCollectionData = nftCollections.find(
