@@ -38,6 +38,8 @@
   },
   "devDependencies": {
     "@babel/core": "7",
+    "@types/react": "^18.2.46",
+    "@types/react-transition-group": "^4.4.10",
     "post": "^0.0.1",
     "webpack": "5"
   }

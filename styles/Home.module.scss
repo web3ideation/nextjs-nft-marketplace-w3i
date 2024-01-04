@@ -6,9 +6,10 @@
 @use "components/notification";
 @use "components/tooltip";
 @use "components/modal";
-@use "components/connectButton";
+@use "components/walletConnectionManager";
 @use "components/infoModal";
 @use "components/collectionModal";
+@use "components/nftModalList";
 
 @use "components/header";
 @use "components/searchBar";
@@ -22,6 +23,8 @@
 @use "components/sellSwapNft";
 
 @use "components/footer";
+
+@use "pages/my-nft";
 
 // NFT boxes container styles
 .nftListingContainer {
@@ -117,4 +120,11 @@
             color: $hover-grey;
         }
     }
+}
+
+.loadingWaveWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }

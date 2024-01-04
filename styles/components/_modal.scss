@@ -39,11 +39,11 @@
 
 .modalContentWrapper {
     position: relative;
-    background: white; /* Weiße Hintergrundfarbe */
+    background: white;
     border-radius: 5px;
     z-index: 11;
     font-family: $font-primary;
-    max-width: 80%;
+    max-width: 840px;
     overflow: hidden;
 }
 
@@ -64,7 +64,7 @@
 
 .modalContentInnerWrapper {
     position: relative;
-    padding: 20px;
+    padding: 10px;
     z-index: 1;
 }
 
@@ -72,8 +72,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 10px;
-    padding-bottom: 10px;
+    padding: 10px 10px 0 20px;
 }
 
 .closeButton {

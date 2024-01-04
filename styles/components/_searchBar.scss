@@ -4,30 +4,42 @@
 // Search bar wrapper
 .searchBarWrapper {
     display: flex;
-    padding: 20px 0;
+    padding: 20px 18px;
     width: 400px;
+    align-items: center;
 
     input {
-        width: 100%;
+        flex-grow: 1;
+        flex-basis: calc(100% - 50px);
+        height: $line-height-small;
         border-radius: 5px;
         padding: 0 5px;
         box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+        transition: border 0.3s ease, box-shadow 0.3s ease;
     }
     .inputFocused {
         border: solid 1px $hover-blue;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
     }
 
     button {
+        max-width: 50px; // Definieren Sie eine feste Breite für den Button
+        transition: opacity 0.3s ease, transform 0.3s ease, max-width 0.3s ease; // Fügen Sie eine Transition für max-width hinzu
+        opacity: 0;
+        cursor: pointer;
+        padding: 0 18px;
+        background-color: transparent;
+        border: none;
+        overflow: hidden; // Verhindert das Anzeigen von Inhalten außerhalb des Buttons
+        &.visible {
+            opacity: 1;
+        }
+
         @include flex-center;
-        margin-left: 5px;
         font-family: $font-primary;
         font-size: $font-size-small;
         font-weight: 500;
         color: $black;
-        border: none;
-        padding: 0 18px;
-        background-color: transparent;
-        cursor: pointer;
 
         &:hover {
             color: $hover-blue;

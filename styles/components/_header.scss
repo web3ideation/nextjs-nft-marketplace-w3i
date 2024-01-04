@@ -12,50 +12,39 @@
 
     nav {
         display: flex;
-
+        justify-content: space-between;
         align-items: center;
-        margin: 0 16px;
     }
 }
 
 // Logo and headline wrapper within the header
 .logoAndHeadlineWrapper {
     display: flex;
+    justify-content: center;
     align-items: center;
+    height: auto;
+}
+.headerLogo {
+    @include hover-invert;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 166px;
 
-    width: 100%;
-
-    .headerLogo {
-        padding: 0 9px 0 18px;
-        @include hover-invert;
-
-        img {
-            height: 30px;
-        }
-    }
-
-    .headerHeadline {
-        font-family: $font-primary;
-        font-weight: 300;
-        font-size: $font-size-medium;
+    img {
+        height: 30px;
     }
 }
 
+.headerHeadline {
+    font-family: $font-primary;
+    font-weight: 300;
+    font-size: $font-size-medium;
+}
 // Header elements wrapper
 .headerElementsWrapper {
-    width: 100%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     background-color: $background-color;
-
-    // Header button styles
-    .headerButton {
-        padding: 18px 18px;
-        @include hover-invert;
-
-        img {
-            height: 24px;
-        }
-    }
 }

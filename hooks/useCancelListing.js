@@ -1,16 +1,23 @@
-import { useState, useEffect, useRef, useCallback } from "react"
+// React Imports
+import { useState, useEffect, useCallback, useRef } from "react"
+
+// Custom Hooks and Utility Imports
 import { useContractWrite, useWaitForTransaction } from "wagmi"
-import { useNftNotification } from "../context/NFTNotificationContext"
+import { useNftNotification } from "../context/NotificationProvider"
+
+// Constants and Configurations
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 
 /**
- * Custom hook to handle the delisting process of an NFT.
- * @param {string} marketplaceAddress - The marketplace smart contract address.
+ * Custom hook to manage the delisting process of an NFT.
+ * Handles the transaction states, notifications, and user interactions.
+ *
+ * @param {string} marketplaceAddress - The smart contract address of the marketplace.
  * @param {string} nftAddress - The address of the NFT.
  * @param {number} tokenId - The token ID of the NFT.
- * @param {boolean} isConnected - Whether the user is connected to a wallet.
- * @param {Function} onSuccessCallback - Callback function to execute on success.
- * @returns {Object} - Object containing the handleCancelListingClick function and delisting state.
+ * @param {boolean} isConnected - Indicates if the user is connected to a wallet.
+ * @param {Function} onSuccessCallback - Callback to execute on successful delisting.
+ * @returns {Object} Object containing handleCancelListingClick function and delisting state.
  */
 export const useCancelListing = (
     marketplaceAddress,
@@ -19,16 +26,21 @@ export const useCancelListing = (
     isConnected,
     onSuccessCallback
 ) => {
+    // State management for transaction hash and delisting status
     const [cancelTxHash, setCancelTxHash] = useState(null)
     const [delisting, setDelisting] = useState(false)
+
+    // Notification context hooks
     const { showNftNotification, closeNftNotification } = useNftNotification()
 
+    // Refs to manage notification ids
     const confirmCancelListingNotificationId = useRef(null)
     const whileCancelListingNotificationId = useRef(null)
 
-    // Function to handle transaction error
+    // Callback to handle transaction errors
     const handleTransactionError = useCallback(
         (error) => {
+            // Checking if the error is due to user's action
             const userDenied = error.message.includes("User denied transaction signature")
             showNftNotification(
                 userDenied ? "Transaction Rejected" : "Error",
@@ -108,16 +120,6 @@ export const useCancelListing = (
     } = useWaitForTransaction({
         hash: cancelTxHash,
     })
-    // Update state based on transaction status
-    useEffect(() => {
-        if (isCancelTxLoading) {
-            handleTransactionLoading()
-        } else if (isCancelTxSuccess) {
-            handleTransactionSuccess()
-        } else if (isCancelTxError) {
-            handleTransactionFailure()
-        }
-    }, [isCancelTxLoading, isCancelTxSuccess, isCancelTxError])
 
     // Function to handle the delist click
     const handleCancelListingClick = useCallback(async () => {

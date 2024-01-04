@@ -1,0 +1,10 @@
+.modalListWrapper {
+    overflow-x: auto;
+    padding: 10px;
+    margin: 10px;
+}
+.modalList {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}

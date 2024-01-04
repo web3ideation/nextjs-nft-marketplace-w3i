@@ -12,6 +12,7 @@
 // Menu button styles
 .menuButton {
     display: flex;
+    text-decoration: none;
 
     button {
         @include flex-center;
@@ -20,8 +21,7 @@
         line-height: $line-height-small;
         font-weight: 500;
         border: none;
-        padding: 0;
-        padding-right: 5px;
+        padding: 0 18px;
         cursor: pointer;
         color: $black;
         background-color: $background-color;

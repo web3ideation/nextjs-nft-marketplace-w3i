@@ -1,7 +1,12 @@
+// External Libraries
 import { ethers } from "ethers"
+
+// -----------------------------------------------------------------------------------
+// String Utilities
 
 /**
  * Truncates a string by keeping a specified number of characters at the start and end, and adding an ellipsis in the middle.
+ * This function is useful for shortening long strings while preserving context.
  * @param {string} fullStr - The string to truncate.
  * @param {number} frontChars - The number of characters to keep at the start of the string.
  * @param {number} backChars - The number of characters to keep at the end of the string.
@@ -12,7 +17,6 @@ export const truncateStr = (fullStr, frontChars, backChars) => {
     if (fullStr.length <= frontChars + backChars) return fullStr
 
     const separator = "..."
-
     return (
         fullStr.substring(0, frontChars) +
         separator +
@@ -20,17 +24,23 @@ export const truncateStr = (fullStr, frontChars, backChars) => {
     )
 }
 
+// -----------------------------------------------------------------------------------
+// Ethereum Utilities
+
 /**
  * Converts a value from Wei to Ether.
+ * Useful for displaying Ethereum values in a more readable format.
  * @param {string|number} priceInWei - The price in Wei.
  * @returns {string} - The price in Ether.
  */
 export const formatPriceToEther = (priceInWei) => {
-    return ethers.utils.formatUnits(priceInWei, "ether")
+    const priceAsString = String(priceInWei)
+    return ethers.utils.formatUnits(priceAsString, "ether")
 }
 
 /**
  * Reduces a price to a certain number of decimal places.
+ * Useful for standardizing the display of prices.
  * @param {string|number} price - The original price.
  * @param {number} decimalPlaces - The number of decimal places.
  * @returns {string} - The reduced price.

@@ -5,8 +5,9 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    text-align: center;
 }
 
 .collectionModalContent {
@@ -15,7 +16,6 @@
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    overflow-x: auto;
 }
 
 .collectionModalContentInnerwrapper {
@@ -27,18 +27,24 @@
 }
 
 .collectionModalTextWrapper {
-    display: flex;
-    justify-content: center;
-    padding: 0 0 20px 0;
+    @include boxShadowFields;
+    padding: 10px;
+    margin: 0 10px;
+    border-radius: 5px;
+    background-color: $white;
 }
 
-.collectionModalText {
-    margin: 20px;
-    width: 50%;
-    max-width: 340px;
+.collectionModalTextInnerWrapper {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: stretch;
+    border-radius: 5px;
+    height: 100%;
+    width: 100%;
+}
+
+.collectionModalText {
     font-size: $font-size-small;
     font-weight: 500;
     color: $black;
@@ -46,7 +52,11 @@
     div {
         display: flex;
         justify-content: space-between;
-        flex-wrap: wrap;
-        text-align: flex-end;
+        text-align: end;
+
+        p {
+            text-align: start;
+            width: 50%;
+        }
     }
 }

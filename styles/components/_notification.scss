@@ -1,5 +1,6 @@
 @use "../helpers/variables" as *;
 @use "../helpers/keyframes" as *;
+@use "../helpers/mixins" as *;
 
 // Notification styles
 .notificationsContainer {
@@ -58,6 +59,18 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
+    }
+}
+
+.notificationCloseButton {
+    cursor: pointer;
+    background-color: white;
+    img {
+        @include boxShadowFields;
+        height: 20px;
+        width: auto;
+        border: solid 2px black;
+        border-radius: 5px;
     }
 }

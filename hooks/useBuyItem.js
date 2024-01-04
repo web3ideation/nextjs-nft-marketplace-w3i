@@ -1,6 +1,11 @@
+// React and Hooks imports
 import { useState, useEffect, useRef, useCallback } from "react"
+
+// wagmi (Ethereum React hooks) imports
 import { useContractWrite, useWaitForTransaction } from "wagmi"
-import { useNftNotification } from "../context/NFTNotificationContext"
+
+// Custom hooks and utility imports
+import { useNftNotification } from "../context/NotificationProvider"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 
 /**
@@ -21,14 +26,18 @@ export const useBuyItem = (
     isConnected,
     onSuccessCallback
 ) => {
+    // State to track the transaction hash and buying status
     const [buyTxHash, setBuyTxHash] = useState(null)
     const [buying, setBuying] = useState(false)
+
+    // Custom notification hook to show transaction status
     const { showNftNotification, closeNftNotification } = useNftNotification()
 
+    // Refs to store notification ids
     const confirmPurchaseNotificationId = useRef(null)
     const whilePurchaseNotificationId = useRef(null)
 
-    // Function to handle transaction error
+    // Callback to handle transaction error
     const handleTransactionError = useCallback(
         (error) => {
             const userDenied = error.message.includes("User denied transaction signature")
