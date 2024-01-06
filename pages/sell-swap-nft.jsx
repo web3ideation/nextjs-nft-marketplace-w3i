@@ -59,6 +59,8 @@ const SellSwapNFT = () => {
         args: [address],
     })
 
+    const handleTransactionCompletion = () => reloadNFTs()
+
     // Write Contract function to withdraw proceeds
     const withdrawlProceedsNotificationId = useRef(null)
     const whileWithdrawlNotificationId = useRef(null)
@@ -186,7 +188,7 @@ const SellSwapNFT = () => {
                 "Listing item receipt",
                 listItemTxReceipt
             )
-            updateAfterListing()
+            handleTransactionCompletion()
         } else if (isListItemTxError) {
             setListing(false)
             closeNftNotification(whileListingNotificationId.current)

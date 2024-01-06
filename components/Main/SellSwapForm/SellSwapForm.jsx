@@ -1,133 +1,100 @@
-// React imports (React core and hooks
-import React, { useState, useRef } from "react";
+// ------------------ React Imports ------------------
+// Core React and necessary hooks
+import React, { useState, useRef } from "react"
 
-// Importing styles specific to the SellSwapForm component
-import styles from "../../../styles/Home.module.css";
+// ------------------ Custom Hooks & Utility Imports ------------------
+// Utility function for field validation
+import { validateField } from "../../../utils/validation"
 
-// Tooltip component for displaying form field errors
-import Tooltip from "../ux/Tooltip";
+// ------------------ Component Imports ------------------
+// Tooltip component for error display
+import Tooltip from "../ux/Tooltip"
+
+// ------------------ Style Imports ------------------
+// Styles specific to this component
+import styles from "../../../styles/Home.module.css"
 
 // ------------------ SellSwapForm Component ------------------
-// This component renders a form for selling or swapping NFTs, including fields for NFT address, token ID, price, and additional user-defined fields.
+// This component is responsible for rendering a form tailored for selling or swapping NFTs.
+// It includes fields for NFT address, token ID, price, and additional user-defined fields.
 function SellSwapForm({
     title,
-    key,
     onSubmit,
-    defaultNftAddress,
-    defaultTokenId,
-    defaultPrice,
+    defaultNftAddress = "",
+    defaultTokenId = "",
+    defaultPrice = "",
     extraFields = [],
 }) {
-    const formRef = useRef(null);
-    const [focusedField, setFocusedField] = useState(null);
+    // ------------------ Refs ------------------
+    // Reference to the form element for direct DOM manipulation if needed
+    const formRef = useRef(null)
 
     // ------------------ State Initialization ------------------
-    // Initializing form data with default values and dynamic extra fields
+    // State for form data, initialized with default values and dynamically added extra fields
     const [formData, setFormData] = useState({
         nftAddress: defaultNftAddress,
         tokenId: defaultTokenId,
         price: defaultPrice,
-        ...extraFields.reduce((acc, field) => {
-            acc[field.key] = "";
-            return acc;
-        }, {}),
-    });
+        ...extraFields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {}),
+    })
 
-    // Initializing form error state for each field
+    // State for managing form field errors
     const [errors, setErrors] = useState({
         nftAddress: "",
         tokenId: "",
         price: "",
-    });
+    })
 
-    // ------------------ Validation Logic ------------------
-    // Function to validate individual form fields based on field name and value
-    function validateField(name, value) {
-        let errorMessage = "";
+    // State to track the currently focused field
+    const [focusedField, setFocusedField] = useState(null)
 
-        // Custom validation logic based on field type
-        switch (name) {
-            // Validation for Ethereum address fields
-            case "nftAddress":
-            case "desiredNftAddress":
-                if (!/^0x[0-9a-fA-F]{40}$/.test(value)) {
-                    errorMessage = "Please enter a valid Ethereum address in the format 0x1234...";
-                }
-                break;
+    // ------------------ Form Validation ------------------
+    // Validates the entire form data and logs validation results
+    const validateForm = (data) => {
+        let newErrors = {}
+        let isValid = true
 
-            // Validation for token ID fields
-            case "tokenId":
-            case "desiredTokenId":
-                if (!/^[0-9]\d*$/.test(value)) {
-                    errorMessage = "Please enter a positive integer or zero.";
-                }
-                break;
-
-            // Validation for price fields
-            case "price":
-                if (!/^\d{1,18}(\.\d{1,18})?$/.test(value)) {
-                    errorMessage = "Please enter a positive amount in ETH.";
-                }
-                break;
-            default:
-                break;
-        }
-
-        // Updating error state for the specific field
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
-
-        return errorMessage === "";
-    }
-
-    // Function to validate the entire form
-    function validateForm(data) {
-        let isValid = true;
-
-        // Iterating over each form field to validate
         Object.keys(data).forEach((key) => {
-            if (!validateField(key, data[key])) {
-                isValid = false;
+            const errorMessage = validateField(key, data[key])
+            newErrors[key] = errorMessage
+            if (errorMessage) {
+                isValid = false
             }
-        });
+        })
 
-        return isValid;
+        setErrors(newErrors)
+        console.log("Form validation result:", isValid)
+        return isValid
     }
 
     // ------------------ Event Handlers ------------------
-    // Handler for form input changes
+    // Handles changes in form fields and updates state accordingly
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value } = e.target
 
-        // Special handling for price field to restrict decimal places
-        if (name === "price") {
-            const parts = value.split(".");
-            if (parts.length > 1 && parts[1].length > 18) {
-                return;
-            }
-        }
+        setFormData((prev) => ({ ...prev, [name]: value }))
+        setErrors((prev) => ({ ...prev, [name]: validateField(name, value) ? "" : errors[name] }))
+    }
 
-        // Updating form data state
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    // Handler for form submission
+    // Handles form submission, including validation and data logging
     const handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
+        console.log("Form submission attempted")
         if (validateForm(formData)) {
-            onSubmit(formData);
+            console.log("Form data on submit:", formData)
+            onSubmit(formData)
+        } else {
+            console.log("Form validation failed")
         }
-    };
+    }
 
     return (
-        <form className={styles.sellSwapForm} onSubmit={handleSubmit} key={key} ref={formRef}>
+        <form className={styles.sellSwapForm} onSubmit={handleSubmit} ref={formRef}>
             <h2>{title}</h2>
             {/* Standard form fields for NFT Address, Token ID, and Price */}
             {["nftAddress", "tokenId", "price"].map((fieldKey) => (
                 <div key={fieldKey} className={styles.formInputWrapper}>
-                    <div className={styles.formInput}>
+                    <div key={fieldKey} className={styles.formInput}>
                         <label htmlFor={fieldKey}>
                             {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)}
                         </label>
@@ -146,12 +113,16 @@ function SellSwapForm({
                                 value={formData[fieldKey]}
                                 onChange={handleChange}
                                 onBlur={(e) => {
-                                    validateField(e.target.name, e.target.value)
+                                    const error = validateField(e.target.name, e.target.value)
+                                    setErrors((prevErrors) => ({
+                                        ...prevErrors,
+                                        [e.target.name]: error,
+                                    }))
                                     setFocusedField(null)
                                 }}
                                 onFocus={() => {
                                     setFocusedField(fieldKey)
-                                    setErrors("")
+                                    setErrors((prevErrors) => ({ ...prevErrors, [fieldKey]: "" }))
                                 }}
                                 className={focusedField === fieldKey ? styles.inputFocused : ""}
                             />
@@ -174,15 +145,20 @@ function SellSwapForm({
                                 value={formData[field.key]}
                                 onChange={handleChange}
                                 onBlur={(e) => {
-                                    validateField(e.target.name, e.target.value)
+                                    const error = validateField(e.target.name, e.target.value)
+                                    setErrors((prevErrors) => ({
+                                        ...prevErrors,
+                                        [e.target.name]: error,
+                                    }))
                                     setFocusedField(null)
                                 }}
                                 onFocus={() => {
                                     setFocusedField(field.key)
-                                    setErrors("")
+                                    setErrors((prevErrors) => ({ ...prevErrors, [field.key]: "" }))
                                 }}
                                 className={focusedField === field.key ? styles.inputFocused : ""}
                             />
+                            {console.log("ERROR", errors[field.key])}
                             {errors[field.key] && <Tooltip message={errors[field.key]} />}
                         </div>
                     </div>
