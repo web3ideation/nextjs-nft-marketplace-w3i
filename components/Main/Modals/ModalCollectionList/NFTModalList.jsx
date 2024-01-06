@@ -1,5 +1,5 @@
 // React imports (React core and hooks)
-import React, { useMemo } from "react"
+import React, { useMemo, useRef, useEffect } from "react"
 
 // Importing custom hooks and components
 import { useNFT } from "../../../../context/NFTDataProvider"
@@ -11,6 +11,29 @@ import styles from "../../../../styles/Home.module.css"
 function NFTModalList({ filterAddress, filterTokenId }) {
     // Retrieve NFT data and loading state using custom hook
     const { data: nftsData } = useNFT()
+
+    const listRef = useRef(null)
+
+    // Funktion zum horizontalen Scrollen
+    const onWheel = (e) => {
+        if (!listRef.current) return
+        listRef.current.scrollLeft += e.deltaY
+    }
+
+    // Effect Hook, um den Event Listener hinzuzufügen
+    useEffect(() => {
+        const listElement = listRef.current
+        if (listElement) {
+            listElement.addEventListener("wheel", onWheel)
+        }
+
+        // Cleanup-Funktion
+        return () => {
+            if (listElement) {
+                listElement.removeEventListener("wheel", onWheel)
+            }
+        }
+    }, [])
 
     // useMemo for memoizing filtered NFTs to optimize performance
     const filteredNFTs = useMemo(() => {
@@ -36,7 +59,7 @@ function NFTModalList({ filterAddress, filterTokenId }) {
 
     return (
         <div className={styles.modalListContainer}>
-            <div className={styles.modalListWrapper}>
+            <div className={styles.modalListWrapper} ref={listRef}>
                 <div className={styles.modalList}>{renderNFTList()}</div>
             </div>
         </div>
