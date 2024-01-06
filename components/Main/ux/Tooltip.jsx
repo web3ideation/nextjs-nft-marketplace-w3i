@@ -8,11 +8,13 @@ import styles from "../../../styles/Home.module.css"
  * - message: The text to be displayed inside the tooltip.
  */
 function Tooltip({ message }) {
+    // Log when Tooltip is rendered
+    console.log("Rendering Tooltip with message:", message)
     return (
         <div className={styles.tooltip}>
             <span className={styles.tooltipText}>{message}</span>
         </div>
-    );
+    )
 }
 
-export default Tooltip;
+export default Tooltip

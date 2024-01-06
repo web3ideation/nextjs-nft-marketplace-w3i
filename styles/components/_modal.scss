@@ -101,6 +101,9 @@
 }
 
 .modalInput {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     padding: 20px 0;
     input {
         @include boxShadowFields;
