@@ -47,7 +47,7 @@ function NFTListed() {
                 <div className={styles.showMoreButton}>
                     <button
                         onClick={() => {
-                            setVisibleNFTs((prevVisible) => prevVisible + 20)
+                            setVisibleNFTs((prevVisible) => prevVisible + 10)
                         }}
                     >
                         MORE
