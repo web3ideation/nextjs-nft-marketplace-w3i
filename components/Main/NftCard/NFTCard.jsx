@@ -336,6 +336,7 @@ export default function NFTBox({ nftData }) {
                     desiredNftAddress={desiredNftAddress}
                     desiredTokenId={desiredTokenId}
                     price={formattedPrice}
+                    isConnected={isConnected}
                     showUpdateListingModal={showUpdateListingModal}
                     closeModal={() => setShowUpdateListingModal(false)}
                 />
