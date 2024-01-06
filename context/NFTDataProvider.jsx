@@ -1,24 +1,38 @@
 // ------------------ React Imports ------------------
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react"
 
-// External library import for interacting with Ethereum blockchain.
+// ------------------ External Library Imports ------------------
+// Ethereum blockchain interaction library.
 import { ethers } from "ethers"
 import { erc721ABI } from "wagmi"
 
-// Apollo Client hook for making GraphQL queries.
+// Apollo Client for GraphQL queries.
 import { useQuery } from "@apollo/client"
 
-// Importing GraphQL queries
+// ------------------ GraphQL Queries ------------------
+// Importing GraphQL queries for active and inactive items.
 import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
 
-// Creating a React context for managing and accessing NFT data.
+// ------------------ Context Creation ------------------
+// Creating a React context for NFT data management.
 const NFTContext = createContext({})
 
-// Custom hook to access NFT context in components.
+// ------------------ Custom Hooks ------------------
+// Hook for accessing NFT context.
 export const useNFT = () => useContext(NFTContext)
 
+// ------------------ NFT Provider Component ------------------
 export const NFTProvider = ({ children }) => {
-    // GraphQL queries to fetch active and inactive NFT items.
+    // State hook to manage NFT data and collections.
+    const [nftState, setNftState] = useState({
+        data: [],
+        collections: [],
+        isLoading: true,
+        isError: false,
+        loadingAllAttributes: true,
+    })
+
+    // Custom hook for Apollo Client GraphQL queries.
     const {
         data: activeItemsData,
         loading: activeLoading,
@@ -32,16 +46,7 @@ export const NFTProvider = ({ children }) => {
         refetch: refetchInactiveItems,
     } = useQuery(GET_INACTIVE_ITEMS)
 
-    // State for NFT data and collections.
-    const [nftState, setNftState] = useState({
-        data: [],
-        collections: [],
-        isLoading: true,
-        isError: false,
-        loadingAllAttributes: true,
-    })
-
-    // Helper function to update the state.
+    // Helper function for updating NFT state.
     const updateNftState = useCallback((newState) => {
         setNftState((prevState) => ({ ...prevState, ...newState }))
     }, [])
@@ -60,82 +65,88 @@ export const NFTProvider = ({ children }) => {
         }
     }, [refetchActiveItems, refetchInactiveItems])
 
-    console.log("Active Data", activeItemsData)
-    console.log("Inactive Data", inactiveItemsData)
-    console.log("Nfts Data", nftState.data)
-    console.log("Nft Collections", nftState.collections)
+    // console.log("Active Data", activeItemsData)
+    // console.log("Inactive Data", inactiveItemsData)
+    // console.log("Nfts Data", nftState.data)
+    // console.log("Nft Collections", nftState.collections)
     // console.log("loaded all attributes", loadingAllAttributes)
     // console.log("Is Loaded Context", isLoading)
 
     // Function to retrieve the Ethereum object from the window
-    const getEthereumObject = useCallback(() => {
-        const ethereum = window.ethereum
-        if (!ethereum) {
-            console.error("Ethereum object not found")
+    //const getEthereumObject = useCallback(() => {
+    //    const ethereum = window.ethereum
+    //    if (!ethereum) {
+    //        console.error("Ethereum object not found")
+    //        updateNftState({ isError: true })
+    //        return null
+    //    }
+    //    return ethereum
+    //}, [])
+
+    // Function to fetch NFT information.
+    const getNFTInfo = useCallback(async (nftAddress, tokenId) => {
+        let provider
+
+        // Check if window.ethereum is available(wallet)
+        if (window.ethereum) {
+            console.log("Using wallet provider")
+            provider = new ethers.providers.Web3Provider(window.ethereum)
+        } else {
+            // Using the Infura provider if no wallet is available
+            console.log("Using Infura provider")
+            const infuraUrl = "https://sepolia.infura.io/v3/2c8fdbbe1b46451fa44c97b461ccb3c5"
+            provider = new ethers.providers.JsonRpcProvider(infuraUrl)
+        }
+
+        const contract = new ethers.Contract(nftAddress, erc721ABI, provider)
+        const tokenIdBigNumber = ethers.BigNumber.from(tokenId)
+
+        try {
+            const [tokenURI, tokenOwner, tokenName, tokenSymbol] = await Promise.all([
+                contract.tokenURI(tokenIdBigNumber),
+                contract.ownerOf(tokenIdBigNumber),
+                contract.name(),
+                contract.symbol(),
+            ])
+
+            // Fetch tokenURI and other details, then return structured NFT info.
+            const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
+            const response = await fetch(requestURL)
+            const contentType = response.headers.get("content-type")
+
+            if (contentType && contentType.includes("application/json")) {
+                const tokenURIData = await response.json()
+                return {
+                    attributes: tokenURIData.attributes,
+                    tokenDescription: tokenURIData.description,
+                    tokenExternalLink: tokenURIData.external_url,
+                    tokenOwner,
+                    tokenName,
+                    tokenSymbol,
+                    tokenURI,
+                    imageURI: {
+                        src: tokenURIData.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
+                        width: 0,
+                        height: 0,
+                        alt: "",
+                    },
+                }
+            } else {
+                // Additional code for fetching and handling tokenURI data...
+                return {
+                    imageURI: { src: requestURL, width: 0, height: 0, alt: "" },
+                    tokenOwner,
+                    tokenName,
+                    tokenSymbol,
+                    tokenURI,
+                }
+            }
+        } catch (error) {
+            console.error("Fehler beim Abrufen von NFT-Infos:", error)
             updateNftState({ isError: true })
             return null
         }
-        return ethereum
     }, [])
-
-    // Function to fetch NFT information.
-    const getNFTInfo = useCallback(
-        async (nftAddress, tokenId) => {
-            const ethereum = getEthereumObject()
-            if (!ethereum) return null
-
-            const provider = new ethers.providers.Web3Provider(ethereum)
-            const contract = new ethers.Contract(nftAddress, erc721ABI, provider)
-            const tokenIdBigNumber = ethers.BigNumber.from(tokenId)
-
-            try {
-                const [tokenURI, tokenOwner, tokenName, tokenSymbol] = await Promise.all([
-                    contract.tokenURI(tokenIdBigNumber),
-                    contract.ownerOf(tokenIdBigNumber),
-                    contract.name(),
-                    contract.symbol(),
-                ])
-
-                // Fetch tokenURI and other details, then return structured NFT info.
-                const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-                const response = await fetch(requestURL)
-                const contentType = response.headers.get("content-type")
-
-                if (contentType && contentType.includes("application/json")) {
-                    const tokenURIData = await response.json()
-                    return {
-                        attributes: tokenURIData.attributes,
-                        tokenDescription: tokenURIData.description,
-                        tokenExternalLink: tokenURIData.external_url,
-                        tokenOwner,
-                        tokenName,
-                        tokenSymbol,
-                        tokenURI,
-                        imageURI: {
-                            src: tokenURIData.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
-                            width: 0,
-                            height: 0,
-                            alt: "",
-                        },
-                    }
-                } else {
-                    // Additional code for fetching and handling tokenURI data...
-                    return {
-                        imageURI: { src: requestURL, width: 0, height: 0, alt: "" },
-                        tokenOwner,
-                        tokenName,
-                        tokenSymbol,
-                        tokenURI,
-                    }
-                }
-            } catch (error) {
-                console.error("Fehler beim Abrufen von NFT-Infos:", error)
-                updateNftState({ isError: true })
-                return null
-            }
-        },
-        [getEthereumObject]
-    )
 
     // Callback to generate attributes for an NFT.
     const loadAttributes = useCallback(async (nft) => {
