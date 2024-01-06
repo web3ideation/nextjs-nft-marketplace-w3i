@@ -78,8 +78,16 @@ export default function NFTBox({ nftData }) {
     const [priceInEur, setPriceInEur] = useState(null)
 
     // Event handlers for various interactions
-    const handleTransactionCompletion = () => reloadNFTs()
+    const handleTransactionCompletion = () => {
+        reloadNFTs()
+
+        setTimeout(() => {
+            router.push("/my-nft")
+        }, 2000)
+    }
+
     const handleCopyAddress = () => copyNftAddressToClipboard(nftAddress, showNftNotification)
+
     const { handleBuyClick } = useBuyItem(
         marketplaceAddress,
         price,
