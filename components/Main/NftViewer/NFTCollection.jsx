@@ -88,7 +88,7 @@ function NFTCollection() {
                         unmountOnExit
                     >
                         <NFTCollectionModal
-                            nodeRef={modalRef}
+                            ref={modalRef}
                             closeModal={handleCloseModal}
                             selectedCollection={selectedCollection}
                             nftCollections={nftCollections}

@@ -35,6 +35,7 @@ const NFTCollectionModal = forwardRef(
 
         return (
             <Modal
+                ref={ref}
                 key={selectedCollection.nftAddress}
                 isVisible={true}
                 cancelText="CLOSE"

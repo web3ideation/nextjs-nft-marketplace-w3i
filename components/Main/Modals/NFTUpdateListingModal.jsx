@@ -2,31 +2,28 @@
 import React, { forwardRef, useState, useRef, useEffect, useCallback } from "react"
 import PropTypes from "prop-types"
 
-// Next.js router
-import { useRouter } from "next/router"
-
 // Blockchain and Ethereum functionality
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 import { ethers } from "ethers"
+
+// Constants and data
+import nftMarketplaceAbi from "../../../constants/NftMarketplace.json"
 
 // Custom hooks and components
 import { useNFT } from "../../../context/NFTDataProvider"
 import { useNftNotification } from "../../../context/NotificationProvider"
 import Tooltip from "../ux/Tooltip"
 import Modal from "./ModalsBasis/Modal"
+import { validateField } from "../../../utils/validation"
 
 // Styles
 import styles from "../../../styles/Home.module.css"
-
-// Constants and data
-import nftMarketplaceAbi from "../../../constants/NftMarketplace.json"
 
 const NFTUpdateListingModal = forwardRef((props, ref) => {
     // Destructuring props for better readability
     const {
         nftAddress,
         tokenId,
-        showUpdateListingModal,
         marketplaceAddress,
         closeModal,
         price,
@@ -44,58 +41,30 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
     //        desiredTokenId,
     //    })
 
+    // ------------------ Refs ------------------
+    // Reference to the form element for direct DOM manipulation if needed
+    const formRef = useRef(null)
+
     // State hooks for managing form data, validation errors, and updating state
     const [updating, setUpdating] = useState(false)
     const [focusedField, setFocusedField] = useState(null)
-    const [formState, setFormState] = useState({
-        formData: {
-            newPrice: price || "",
-            newDesiredNftAddress: desiredNftAddress || "",
-            newDesiredTokenId: desiredTokenId || "",
-        },
-        errors: {
-            newPrice: "",
-            newDesiredNftAddress: "",
-            newDesiredTokenId: "",
-        },
+    const [formData, setFormData] = useState({
+        newPrice: price,
+        newDesiredNftAddress: desiredNftAddress,
+        newDesiredTokenId: desiredTokenId,
+    })
+    const [errors, setErrors] = useState({
+        newPrice: "",
+        newDesiredNftAddress: "",
+        newDesiredTokenId: "",
     })
 
     // Custom hooks for accessing NFT and notification context
     const { reloadNFTs } = useNFT()
     const { showNftNotification, closeNftNotification } = useNftNotification()
-    const router = useRouter()
 
     // Callback for reloading NFTs
     const handleTransactionCompletion = () => reloadNFTs()
-
-    // Function for validating form fields
-    function validateField(name, value) {
-        let errorMessage = ""
-        switch (name) {
-            case "price":
-                errorMessage = /^\d{1,18}(\.\d{1,18})?$/.test(value)
-                    ? ""
-                    : "Please enter a positive amount in ETH."
-                break
-            case "desiredNftAddress":
-                errorMessage = /^0x[a-fA-F0-9]{40}$/.test(value)
-                    ? ""
-                    : "Please enter a valid NFT address."
-                break
-            case "desiredTokenId":
-                errorMessage = /^\d+$/.test(value) ? "" : "Token ID must be a positive integer."
-                break
-            default:
-                break
-        }
-
-        setFormState((prevState) => ({
-            ...prevState,
-            errors: { ...prevState.errors, [name]: errorMessage },
-        }))
-
-        return errorMessage === ""
-    }
 
     // Refs for managing notifications
     const confirmUpdateListingNotificationId = useRef(null)
@@ -109,9 +78,9 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         args: [
             nftAddress,
             tokenId,
-            ethers.utils.parseEther(formState.formData.newPrice),
-            formState.formData.newDesiredNftAddress,
-            formState.formData.newDesiredTokenId,
+            ethers.utils.parseEther(formData.newPrice),
+            formData.newDesiredNftAddress,
+            formData.newDesiredTokenId,
         ],
         onSuccess: (data) => {
             closeNftNotification(confirmUpdateListingNotificationId.current)
@@ -174,62 +143,65 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         closeNftNotification(confirmUpdateListingNotificationId.current)
     }
 
-    // Function for reloading the page content after a transaction
-    const updatePageContentAfterTransaction = async () => {
-        console.log("Reeeeeeloaaaaaad")
-        setTimeout(() => {
-            reloadNFTs()
-        }, 1000)
-    }
-
     // Function to validate and initiate the listing update
     const validateAndUpdateListing = async () => {
-        const isPriceValid = validateField("price", formState.formData.newPrice)
-        const isAddressValid = validateField(
-            "desiredNftAddress",
-            formState.formData.newDesiredNftAddress
-        )
-        const isTokenIdValid = validateField(
-            "desiredTokenId",
-            formState.formData.newDesiredTokenId
-        )
-
-        if (!isPriceValid || !isAddressValid || !isTokenIdValid) {
-            return
-        }
-
-        if (updating) {
-            showNftNotification(
-                "Updating",
-                "An update is already in progress! Check your wallet!",
-                "error"
+        if (validateForm(formData)) {
+            if (updating) {
+                showNftNotification(
+                    "Updating",
+                    "An update is already in progress! Check your wallet!",
+                    "error"
+                )
+                return
+            } else {
+                console.log("Validation failed")
+            }
+            setUpdating(true)
+            confirmUpdateListingNotificationId.current = showNftNotification(
+                "Check your wallet",
+                "Confirm updating...",
+                "info",
+                true
             )
-            return
-        }
-        setUpdating(true)
-        confirmUpdateListingNotificationId.current = showNftNotification(
-            "Check your wallet",
-            "Confirm updating...",
-            "info",
-            true
-        )
 
-        try {
-            await updateListing()
-        } catch (error) {
-            console.error("An error occurred during the transaction: ", error)
+            try {
+                await updateListing()
+            } catch (error) {
+                console.error("An error occurred during the transaction: ", error)
+            }
         }
+    }
+    // ------------------ Form Validation ------------------
+    // Validates the entire form data and logs validation results
+    const validateForm = (data) => {
+        let newErrors = {}
+        let isValid = true
+
+        Object.keys(data).forEach((key) => {
+            const errorMessage = validateField(key, data[key])
+            newErrors[key] = errorMessage
+
+            console.log(`validateForm: Field: ${key}, Error: ${errorMessage}`)
+
+            if (errorMessage) {
+                isValid = false
+            }
+        })
+
+        setErrors(newErrors)
+        console.log("Form validation result:", isValid)
+        return isValid
     }
 
     // Function to handle changes in form fields
     const handleChange = (e) => {
         const { name, value } = e.target
-        const isValid = validateField(name, value)
+        const error = validateField(name, value)
 
-        setFormState((prevState) => ({
-            formData: { ...prevState.formData, [name]: value },
-            errors: { ...prevState.errors, [name]: isValid ? "" : prevState.errors[name] },
-        }))
+        console.log(`handleChange: ${name}, Value: ${value}, Error: ${error}`)
+
+        setFormData((prev) => ({ ...prev, [name]: value }))
+        setErrors((prev) => ({ ...prev, [name]: error ? error : "" }))
     }
 
     // Function to handle the update button click
@@ -239,17 +211,15 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
 
     // Function to reset the form to its initial state
     const resetForm = () => {
-        setFormState({
-            formData: {
-                newPrice: price || "",
-                newDesiredNftAddress: desiredNftAddress || "",
-                newDesiredTokenId: desiredTokenId || "",
-            },
-            errors: {
-                newPrice: "",
-                newDesiredNftAddress: "",
-                newDesiredTokenId: "",
-            },
+        setFormData({
+            newPrice: price || "",
+            newDesiredNftAddress: desiredNftAddress || "",
+            newDesiredTokenId: desiredTokenId || "",
+        })
+        setErrors({
+            newPrice: "",
+            newDesiredNftAddress: "",
+            newDesiredTokenId: "",
         })
     }
 
@@ -268,9 +238,9 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
             okText="UPDATE"
             onCancel={handleCloseModal}
         >
-            <form className={styles.sellSwapForm}>
+            <form className={styles.sellSwapForm} ref={formRef}>
                 <h2>Updating price and/or swap</h2>
-                {Object.entries(formState.formData).map(([fieldKey, value]) => (
+                {Object.entries(formData).map(([fieldKey, value]) => (
                     <div key={fieldKey} className={styles.formInputWrapper}>
                         <div key={fieldKey} className={styles.modalInputWrapper}>
                             <label htmlFor={fieldKey}>
@@ -283,23 +253,36 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
                                     id={fieldKey}
                                     name={fieldKey}
                                     placeholder={
-                                        fieldKey === "desiredNftAddress"
+                                        fieldKey === "newDesiredNftAddress"
                                             ? "0x0000000000000000000000000000000000000000"
-                                            : fieldKey === "desiredTokenId"
+                                            : fieldKey === "newDesiredTokenId"
                                             ? "0"
                                             : "min. amount: 0.000000000000000001"
                                     }
-                                    value={formState.formData[fieldKey]}
+                                    value={formData[fieldKey]}
                                     onChange={handleChange}
-                                    onBlur={(e) => validateField(e.target.name, e.target.value)}
-                                    onFocus={() => setFocusedField(fieldKey)}
+                                    onBlur={(e) => {
+                                        const error = validateField(e.target.name, e.target.value)
+                                        setErrors((prevErrors) => ({
+                                            ...prevErrors,
+                                            [e.target.name]: error,
+                                        }))
+                                        setFocusedField(null)
+                                    }}
+                                    onFocus={() => {
+                                        setFocusedField(fieldKey)
+                                        setErrors((prevErrors) => ({
+                                            ...prevErrors,
+                                            [fieldKey]: "",
+                                        }))
+                                    }}
                                     className={
                                         focusedField === fieldKey ? styles.inputFocused : ""
                                     }
                                 />
-                                {formState.errors[fieldKey] && (
-                                    <Tooltip message={formState.errors[fieldKey]} />
-                                )}
+                                <div className={styles.tooltipWrapper}>
+                                    {errors[fieldKey] && <Tooltip message={errors[fieldKey]} />}
+                                </div>
                             </div>
                         </div>
                     </div>
