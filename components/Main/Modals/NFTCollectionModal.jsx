@@ -1,10 +1,12 @@
 // ------------------ React Imports ------------------
-import React, { forwardRef } from "react"
+import React, { forwardRef, useEffect, useState } from "react"
 
 // User-created hooks and components
 import { useNFT } from "../../../context/NFTDataProvider"
 import Modal from "./ModalsBasis/Modal"
 import NFTModalList from "./ModalCollectionList/NFTModalList"
+import { fetchEthToEurRate } from "../../../utils/fetchEthToEurRate"
+
 import { formatPriceToEther } from "../../../utils/formatting"
 
 // ------------------ Styles ------------------
@@ -15,6 +17,8 @@ const NFTCollectionModal = forwardRef(
     ({ closeModal, selectedCollection, nftCollections }, ref) => {
         // Retrieve NFT data using a custom hook
         const { data: nftsData } = useNFT()
+
+        const [priceInEur, setPriceInEur] = useState(null)
 
         // Find the selected collection from the list of NFT collections
         const selectedCollectionData = nftCollections.find(
@@ -32,6 +36,17 @@ const NFTCollectionModal = forwardRef(
         )
         // Sort the filtered NFTs data by tokenId
         filteredNFTsData.sort((a, b) => parseInt(a.tokenId) - parseInt(b.tokenId))
+
+        useEffect(() => {
+            const updatePriceInEur = async () => {
+                const ethToEurRate = await fetchEthToEurRate()
+                if (ethToEurRate) {
+                    const ethPrice = formatPriceToEther(selectedCollectionData.collectionPrice)
+                    setPriceInEur(ethPrice * ethToEurRate)
+                }
+            }
+            updatePriceInEur()
+        }, [selectedCollectionData.collectionPrice])
 
         return (
             <Modal
@@ -65,9 +80,10 @@ const NFTCollectionModal = forwardRef(
                             <div>
                                 <p>Volume:</p>
                                 <strong>
-                                    {formatPriceToEther(selectedCollectionData.collectionPrice)}
+                                    {formatPriceToEther(selectedCollectionData.collectionPrice)}{" "}
                                     ETH
                                 </strong>
+                                <strong>{priceInEur} €</strong>
                             </div>
                         </div>
                     </div>
