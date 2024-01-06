@@ -1,24 +1,21 @@
 // React core and hooks
-import React, { forwardRef, useState, useRef, useEffect, useCallback } from "react"
+import React, { forwardRef, useState, useRef } from "react"
 import PropTypes from "prop-types"
 
 // Blockchain and Ethereum functionality
-import { useContractWrite, useWaitForTransaction } from "wagmi"
 import { ethers } from "ethers"
-
-// Constants and data
-import nftMarketplaceAbi from "../../../constants/NftMarketplace.json"
 
 // Custom hooks and components
 import { useNFT } from "../../../context/NFTDataProvider"
-import { useNftNotification } from "../../../context/NotificationProvider"
 import Tooltip from "../ux/Tooltip"
 import Modal from "./ModalsBasis/Modal"
 import { validateField } from "../../../utils/validation"
+import { useUpdateListing } from "../../../hooks/useUpdateListing"
 
 // Styles
 import styles from "../../../styles/Home.module.css"
 
+// Component for updating NFT listings, with form validation and blockchain interaction
 const NFTUpdateListingModal = forwardRef((props, ref) => {
     // Destructuring props for better readability
     const {
@@ -29,25 +26,10 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         price,
         desiredNftAddress,
         desiredTokenId,
+        isConnected,
     } = props
 
-    //    console.log("NFTUpdateListingModal Props", {
-    //        nftAddress,
-    //        tokenId,
-    //        showUpdateListingModal,
-    //        marketplaceAddress,
-    //        price,
-    //        desiredNftAddress,
-    //        desiredTokenId,
-    //    })
-
-    // ------------------ Refs ------------------
-    // Reference to the form element for direct DOM manipulation if needed
-    const formRef = useRef(null)
-
-    // State hooks for managing form data, validation errors, and updating state
-    const [updating, setUpdating] = useState(false)
-    const [focusedField, setFocusedField] = useState(null)
+    // State for form data and validation errors
     const [formData, setFormData] = useState({
         newPrice: price,
         newDesiredNftAddress: desiredNftAddress,
@@ -59,118 +41,36 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         newDesiredTokenId: "",
     })
 
-    // Custom hooks for accessing NFT and notification context
+    // Refs and custom hooks
+    const formRef = useRef(null)
     const { reloadNFTs } = useNFT()
-    const { showNftNotification, closeNftNotification } = useNftNotification()
 
     // Callback for reloading NFTs
     const handleTransactionCompletion = () => reloadNFTs()
 
-    // Refs for managing notifications
-    const confirmUpdateListingNotificationId = useRef(null)
-    const whileUpdatingListingNotificationId = useRef(null)
-
-    // Hook for smart contract interaction to update listing
-    const { writeAsync: updateListing } = useContractWrite({
-        address: marketplaceAddress,
-        abi: nftMarketplaceAbi,
-        functionName: "updateListing",
-        args: [
-            nftAddress,
-            tokenId,
-            ethers.utils.parseEther(formData.newPrice),
-            formData.newDesiredNftAddress,
-            formData.newDesiredTokenId,
-        ],
-        onSuccess: (data) => {
-            closeNftNotification(confirmUpdateListingNotificationId.current)
-            setUpdateListingTxHash(data.hash)
-        },
-        onError: (error) => {
-            handleContractError(error)
-        },
-    })
-
-    // State for managing transaction hash and receipt
-    const [updateListingTxHash, setUpdateListingTxHash] = useState(null)
-    const {
-        isLoading: isUpdateListingTxLoading,
-        isSuccess: isUpdateListingTxSuccess,
-        isError: isUpdateListingTxError,
-    } = useWaitForTransaction({
-        hash: updateListingTxHash,
-    })
-
-    // Effect hook for managing update listing transaction state
-    useEffect(() => {
-        if (isUpdateListingTxLoading) {
-            // Show updating notification
-            whileUpdatingListingNotificationId.current = showNftNotification(
-                "Updating",
-                "Transaction sent. Awaiting confirmation...",
-                "info",
-                true
-            )
-        } else if (isUpdateListingTxSuccess) {
-            // Handle successful update
-            handleSuccessfulUpdate()
-        } else if (isUpdateListingTxError) {
-            // Handle error in update
-            showNftNotification("Error", "Failed to update the NFT.", "error")
-        }
-    }, [isUpdateListingTxLoading, isUpdateListingTxSuccess, isUpdateListingTxError])
-
-    // Function to handle successful update after transaction
-    const handleSuccessfulUpdate = () => {
-        setUpdating(false)
-        closeNftNotification(whileUpdatingListingNotificationId.current)
-        showNftNotification("Listing updated", "New price approved", "success")
-        handleTransactionCompletion()
-    }
-
-    // Function to handle contract interaction error
-    const handleContractError = (error) => {
-        setUpdating(false)
-        if (error.message.includes("User denied transaction signature")) {
-            showNftNotification(
-                "Transaction Rejected",
-                "You have rejected the transaction.",
-                "error"
-            )
-        } else {
-            showNftNotification("Error", error.message || "Failed to update the NFT.", "error")
-        }
-        closeNftNotification(confirmUpdateListingNotificationId.current)
-    }
+    // Function to handle the listing update
+    const { handleUpdateListing } = useUpdateListing(
+        marketplaceAddress,
+        ethers.utils.parseEther(formData.newPrice),
+        nftAddress,
+        tokenId,
+        formData.newDesiredNftAddress,
+        formData.newDesiredTokenId,
+        isConnected,
+        handleTransactionCompletion
+    )
 
     // Function to validate and initiate the listing update
     const validateAndUpdateListing = async () => {
         if (validateForm(formData)) {
-            if (updating) {
-                showNftNotification(
-                    "Updating",
-                    "An update is already in progress! Check your wallet!",
-                    "error"
-                )
-                return
-            } else {
-                console.log("Validation failed")
-            }
-            setUpdating(true)
-            confirmUpdateListingNotificationId.current = showNftNotification(
-                "Check your wallet",
-                "Confirm updating...",
-                "info",
-                true
-            )
-
             try {
-                await updateListing()
+                await handleUpdateListing()
             } catch (error) {
                 console.error("An error occurred during the transaction: ", error)
             }
         }
     }
+
     // ------------------ Form Validation ------------------
     // Validates the entire form data and logs validation results
     const validateForm = (data) => {
@@ -204,11 +104,6 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         setErrors((prev) => ({ ...prev, [name]: error ? error : "" }))
     }
 
-    // Function to handle the update button click
-    const handleUpdateButtonClick = () => {
-        validateAndUpdateListing()
-    }
-
     // Function to reset the form to its initial state
     const resetForm = () => {
         setFormData({
@@ -223,10 +118,9 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         })
     }
 
+    // Close modal and reset form
     const handleCloseModal = () => {
-        if (closeModal) {
-            closeModal()
-        }
+        closeModal?.()
         resetForm()
     }
 
@@ -234,7 +128,7 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         <Modal
             ref={ref}
             isVisible={true}
-            onOk={handleUpdateButtonClick}
+            onOk={validateAndUpdateListing}
             okText="UPDATE"
             onCancel={handleCloseModal}
         >
@@ -267,18 +161,13 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
                                             ...prevErrors,
                                             [e.target.name]: error,
                                         }))
-                                        setFocusedField(null)
                                     }}
                                     onFocus={() => {
-                                        setFocusedField(fieldKey)
                                         setErrors((prevErrors) => ({
                                             ...prevErrors,
                                             [fieldKey]: "",
                                         }))
                                     }}
-                                    className={
-                                        focusedField === fieldKey ? styles.inputFocused : ""
-                                    }
                                 />
                                 <div className={styles.tooltipWrapper}>
                                     {errors[fieldKey] && <Tooltip message={errors[fieldKey]} />}
