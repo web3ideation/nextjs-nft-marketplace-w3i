@@ -113,9 +113,10 @@
         height: 40px;
         padding: 0 5px;
         background-color: #ffffff;
-    }
-    .inputFocused {
-        border: 1px solid blue;
+
+        &:focus {
+            border: 1px solid blue;
+        }
     }
 }
 

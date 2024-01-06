@@ -104,11 +104,11 @@
                 height: 40px;
                 padding: 0 5px;
                 background-color: #ffffff;
-            }
 
-            // Focused input styles
-            .inputFocused {
-                border: 1px solid blue;
+                // Focused input styles
+                &:focus {
+                    border: 1px solid blue;
+                }
             }
         }
 
