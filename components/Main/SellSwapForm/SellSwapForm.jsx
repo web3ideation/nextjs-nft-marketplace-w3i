@@ -45,9 +45,6 @@ function SellSwapForm({
         price: "",
     })
 
-    // State to track the currently focused field
-    const [focusedField, setFocusedField] = useState(null)
-
     // ------------------ Form Validation ------------------
     // Validates the entire form data and logs validation results
     const validateForm = (data) => {
@@ -118,13 +115,10 @@ function SellSwapForm({
                                         ...prevErrors,
                                         [e.target.name]: error,
                                     }))
-                                    setFocusedField(null)
                                 }}
                                 onFocus={() => {
-                                    setFocusedField(fieldKey)
                                     setErrors((prevErrors) => ({ ...prevErrors, [fieldKey]: "" }))
                                 }}
-                                className={focusedField === fieldKey ? styles.inputFocused : ""}
                             />
                             {errors[fieldKey] && <Tooltip message={errors[fieldKey]} />}
                         </div>
@@ -150,13 +144,10 @@ function SellSwapForm({
                                         ...prevErrors,
                                         [e.target.name]: error,
                                     }))
-                                    setFocusedField(null)
                                 }}
                                 onFocus={() => {
-                                    setFocusedField(field.key)
                                     setErrors((prevErrors) => ({ ...prevErrors, [field.key]: "" }))
                                 }}
-                                className={focusedField === field.key ? styles.inputFocused : ""}
                             />
                             {console.log("ERROR", errors[field.key])}
                             {errors[field.key] && <Tooltip message={errors[field.key]} />}

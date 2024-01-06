@@ -9,7 +9,6 @@ import styles from "../../../styles/Home.module.css"
 const SearchBar = () => {
     const router = useRouter()
     const [searchTerm, setSearchTerm] = useState("")
-    const [isFocused, setIsFocused] = useState(false)
 
     // Determine whether to show the search button based on searchTerm
     const showButton = searchTerm.length > 0
@@ -41,9 +40,6 @@ const SearchBar = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Search..."
-                onBlur={() => setIsFocused(false)}
-                onFocus={() => setIsFocused(true)}
-                className={isFocused ? styles.inputFocused : ""}
                 aria-label="Search field"
             />
             {showButton && (
