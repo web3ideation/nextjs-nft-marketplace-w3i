@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 // Custom hooks and utility imports
+import checkIfUserOwnsNFT from "../utils/checkIfUserOWnsNFT"
 import { useNftNotification } from "../context/NotificationProvider"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 
@@ -41,12 +42,19 @@ export const useBuyItem = (
     const handleTransactionError = useCallback(
         (error) => {
             const userDenied = error.message.includes("User denied transaction signature")
+            const userDontOwn = error.message.includes("You don't own the desired NFT for swap")
             showNftNotification(
-                userDenied ? "Transaction Rejected" : "Error",
+                userDenied
+                    ? "Transaction Rejected"
+                    : userDontOwn
+                    ? "Transaction Rejected"
+                    : "Error",
                 userDenied
                     ? "You rejected the transaction."
+                    : userDontOwn
+                    ? "You don't own the desired NFT for swap"
                     : error.message || "Failed to buy the NFT.",
-                "error"
+                userDenied || userDontOwn ? "error" : "error"
             )
         },
         [showNftNotification]
