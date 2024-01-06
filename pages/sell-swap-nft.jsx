@@ -59,7 +59,13 @@ const SellSwapNFT = () => {
         args: [address],
     })
 
-    const handleTransactionCompletion = () => reloadNFTs()
+    const handleTransactionCompletion = () => {
+        reloadNFTs()
+
+        setTimeout(() => {
+            router.push("/my-nft")
+        }, 2000)
+    }
 
     // Write Contract function to withdraw proceeds
     const withdrawlProceedsNotificationId = useRef(null)
