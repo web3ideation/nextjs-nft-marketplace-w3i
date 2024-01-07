@@ -5,7 +5,6 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 // Custom hooks and utility imports
-import checkIfUserOwnsNFT from "../utils/checkIfUserOWnsNFT"
 import { useNftNotification } from "../context/NotificationProvider"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 
