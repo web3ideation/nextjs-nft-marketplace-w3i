@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
+import { debounce } from "lodash"
 
 // wagmi Hooks for Ethereum Interaction
 import { useAccount, useBalance, useDisconnect } from "wagmi"
@@ -25,8 +26,8 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
     const [isOpen, setIsOpen] = useState(false)
     const menuRef = useRef(null)
 
-    // Toggle the visibility of the popup menu
-    const toggleMenu = () => setIsOpen(!isOpen)
+    // Debounce the toggle function to prevent rapid open/close
+    const debouncedToggleMenu = debounce(() => setIsOpen(!isOpen), 100)
 
     // Update wallet info when address or balance changes
     useEffect(() => {
@@ -43,8 +44,8 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
             <div
                 className={styles.headerAccountInfoWrapper}
                 ref={menuRef}
-                onMouseEnter={toggleMenu}
-                onMouseLeave={toggleMenu}
+                onMouseEnter={debouncedToggleMenu}
+                onMouseLeave={debouncedToggleMenu}
             >
                 <div className={styles.onlineDot}></div>
                 <div className={styles.headerAccountInfo}>
