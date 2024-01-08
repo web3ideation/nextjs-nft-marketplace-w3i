@@ -26,6 +26,9 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
     const [isOpen, setIsOpen] = useState(false)
     const menuRef = useRef(null)
 
+    const defaultBalanceData = { formatted: "0", symbol: "N/A" }
+    const actualBalanceData = balanceData || defaultBalanceData
+
     // Debounce the toggle function to prevent rapid open/close
     const debouncedToggleMenu = debounce(() => setIsOpen(!isOpen), 100)
 
@@ -54,22 +57,24 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                 <div className={styles.burgerMenu}>
                     <img src="media/arrow_down.png" alt="Menu Arrow"></img>
                 </div>
-                <div className={`${styles.walletMenu} ${isOpen ? styles.walletMenuOpen : ""}`}>
-                    <div
-                        className={`${styles.walletMenuLinks} ${styles.walletMenuBalance}`}
-                        title={`${balanceData.formatted} ${balanceData.symbol}`}
-                    >
-                        <p>
-                            {formattedPrice} {balanceData.symbol}
-                        </p>
+                {balanceData && (
+                    <div className={`${styles.walletMenu} ${isOpen ? styles.walletMenuOpen : ""}`}>
+                        <div
+                            className={`${styles.walletMenuLinks} ${styles.walletMenuBalance}`}
+                            title={`${actualBalanceData.formatted} ${balanceData.symbol}`}
+                        >
+                            <p>
+                                {formattedPrice} {balanceData.symbol}
+                            </p>
+                        </div>
+                        <Link className={styles.walletMenuLinks} href="/my-nft">
+                            <button>My NFT</button>
+                        </Link>
+                        <div className={styles.walletMenuLinks}>
+                            <button onClick={onDisconnect}>Disconnect</button>
+                        </div>
                     </div>
-                    <Link className={styles.walletMenuLinks} href="/my-nft">
-                        <button>My NFT</button>
-                    </Link>
-                    <div className={styles.walletMenuLinks}>
-                        <button onClick={onDisconnect}>Disconnect</button>
-                    </div>
-                </div>
+                )}
             </div>
         </>
     )
