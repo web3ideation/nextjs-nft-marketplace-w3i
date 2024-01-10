@@ -42,16 +42,23 @@ export const useBuyItem = (
         (error) => {
             const userDenied = error.message.includes("User denied transaction signature")
             const userDontOwn = error.message.includes("You don't own the desired NFT for swap")
+            const userNFTNotApproved = error.message.includes(
+                "NftMarketplace__NotApprovedForMarketplace()"
+            )
             showNftNotification(
                 userDenied
                     ? "Transaction Rejected"
                     : userDontOwn
                     ? "Transaction Rejected"
+                    : userNFTNotApproved
+                    ? "NFT Not Approved"
                     : "Error",
                 userDenied
                     ? "You rejected the transaction."
                     : userDontOwn
                     ? "You don't own the desired NFT for swap"
+                    : userNFTNotApproved
+                    ? "The NFT you own and want to swap is not approved for the marketplace."
                     : error.message || "Failed to buy the NFT.",
                 userDenied || userDontOwn ? "error" : "error"
             )
