@@ -1,42 +1,49 @@
 // React Imports
-import { useEffect, useState, useCallback, useRef } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
+
+// Ethereum and Smart Contract Interaction
+import { ethers } from "ethers"
+import { useAccount, usePublicClient } from "wagmi"
 
 // User-Created Hooks and Components
 import SellSwapForm from "../components/Main/SellSwapForm/SellSwapForm"
 import { useNFT } from "../context/NFTDataProvider"
-import { useNftNotification } from "../context/NotificationProvider"
+import { useGetProceeds } from "../hooks/useGetProceeds"
+import { useWithdrawProceeds } from "../hooks/useWithdrawProceeds"
+import { useRawApprove } from "../hooks/useRawApprove"
+import { useListItem } from "../hooks/useListItem"
+import networkMapping from "../constants/networkMapping.json"
+import LoadingWave from "../components/Main/ux/LoadingWave"
 
 // Styles
 import styles from "../styles/Home.module.css"
 
-// Ethereum and Smart Contract Interaction
-import { ethers } from "ethers"
-import nftMarketplaceAbi from "../constants/NftMarketplace.json"
-import networkMapping from "../constants/networkMapping.json"
-import { getAccount, getContract } from "@wagmi/core"
-import { usePublicClient, useContractWrite, useContractRead, useWaitForTransaction } from "wagmi"
-
 const SellSwapNFT = () => {
     // -------------------- Web3 Elements ---------------------
+    const router = useRouter()
     const provider = usePublicClient()
     const chainId = provider.chains[0]
     const chainString = chainId.id ? parseInt(chainId.id).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
-    const contract = getContract({ address: marketplaceAddress, abi: nftMarketplaceAbi })
-    const { address, isConnected } = getAccount()
-    const router = useRouter()
+    const { address: userAdress, isConnected } = useAccount()
+
+    // ------------------- Custom Hooks -------------------
     const { reloadNFTs } = useNFT()
-    const { showNftNotification, closeNftNotification } = useNftNotification()
 
     // ------------------- State Management -------------------
     const [nftAddressFromQuery, setNftAddressFromQuery] = useState(router.query.nftAddress || "")
     const [tokenIdFromQuery, setTokenIdFromQuery] = useState(router.query.tokenId || "")
     const [priceFromQuery, setPriceFromQuery] = useState(router.query.price || "")
     const [activeForm, setActiveForm] = useState("sell")
-    const [proceeds, setProceeds] = useState("0")
-    const [approving, setApproving] = useState(false)
-    const [listing, setListing] = useState(false)
+    const [proceeds, setProceeds] = useState("0.0")
+    const [formData, setFormData] = useState({
+        nftAddress: "",
+        tokenId: "",
+        price: "",
+        desiredNftAddress: "",
+        desiredTokenId: "",
+    })
 
     // Update NFT address and token ID from the router query
     useEffect(() => {
@@ -45,19 +52,20 @@ const SellSwapNFT = () => {
         setPriceFromQuery(router.query.price)
     }, [router.query])
 
-    // ------------------ Contract Functions ------------------
-    // Read contract function to get proceeds
-    const {
-        data: returnedProceeds,
-        isLoading: isLoadingProceeds,
-        error: errorLoadingProceeds,
-        refetch: refetchProceeds,
-    } = useContractRead({
-        address: marketplaceAddress,
-        abi: nftMarketplaceAbi,
-        functionName: "getProceeds",
-        args: [address],
-    })
+    // Update NFT address, token ID, and price from the router query
+    useEffect(() => {
+        const { nftAddress, tokenId, price } = router.query
+        setFormData({
+            ...formData,
+            nftAddress: nftAddress || "",
+            tokenId: tokenId || "",
+            price: price || "",
+        })
+    }, [router.query])
+
+    const handleWithdrawCompletion = () => {
+        refetchProceeds()
+    }
 
     const handleTransactionCompletion = () => {
         reloadNFTs()
@@ -67,255 +75,98 @@ const SellSwapNFT = () => {
         }, 2000)
     }
 
-    // Write Contract function to withdraw proceeds
-    const withdrawlProceedsNotificationId = useRef(null)
-    const whileWithdrawlNotificationId = useRef(null)
-
-    const { data: withdrawData, writeAsync: withdrawProceeds } = useContractWrite({
-        address: marketplaceAddress,
-        abi: nftMarketplaceAbi,
-        functionName: "withdrawProceeds",
-        onSuccess: (data) => {
-            console.log("Withdrawl send success: ", data)
-            closeNftNotification(withdrawlProceedsNotificationId.current)
-            setWithdrawTxHash(data.hash) // Store the transaction response
-        },
-        onError: (error) => {
-            console.error("Error sending withdrawal:", error)
-            showNftNotification(
-                "Error",
-                error.message || "Withdrawal transaction failed.",
-                "error"
-            )
-        },
-        // add args on call
-    })
-    const [withdrawTxHash, setWithdrawTxHash] = useState(null)
-    const {
-        data: withdrawTxReceipt,
-        isLoading: isWithdrawTxLoading,
-        isSuccess: isWithdrawTxSuccess,
-        isError: isWithdrawTxError,
-    } = useWaitForTransaction({
-        hash: withdrawTxHash,
-    })
-
-    // Effect to handle transaction confirmation
-    useEffect(() => {
-        if (isWithdrawTxLoading) {
-            whileWithdrawlNotificationId.current = showNftNotification(
-                "Withdrawl",
-                "Transaction sent. Awaiting confirmation...",
-                "info",
-                true
-            )
-        } else if (isWithdrawTxSuccess) {
-            closeNftNotification(whileWithdrawlNotificationId.current)
-            showNftNotification("Withdrawal", "Proceeds successfully withdrawn.", "success")
-            console.log("Withdraw data", withdrawData, "Withdraw receipt", withdrawTxReceipt)
-            refetchProceeds()
-        } else if (isWithdrawTxError) {
-            closeNftNotification(whileWithdrawlNotificationId.current)
-            showNftNotification(
-                "Withdrawal",
-                error.message || "Withdrawal transaction failed.",
-                "error"
-            )
-        }
-    }, [isWithdrawTxSuccess, isWithdrawTxLoading, isWithdrawTxError, refetchProceeds])
-
-    const handleWithdrawProceeds = async () => {
-        withdrawlProceedsNotificationId.current = showNftNotification(
-            "Check your wallet",
-            "Confirm withdrawl...",
-            "info",
-            true
-        )
-        await withdrawProceeds()
+    const handleApproveCompletion = () => {
+        handleListItem()
     }
 
-    // Write contract function to list item
-    const confirmListingNotificationId = useRef(null)
-    const whileListingNotificationId = useRef(null)
-
-    const { data: listItemData, writeAsync: listItem } = useContractWrite({
-        address: marketplaceAddress,
-        abi: nftMarketplaceAbi,
-        functionName: "listItem",
-        onSuccess: (data) => {
-            console.log("List Item send: ", data)
-            closeNftNotification(confirmListingNotificationId.current)
-            setListItemTxHash(data.hash)
-        },
-        onError: (error) => {
-            console.log("List item error: ", error)
-            setListing(false)
-            if (error.message.includes("User denied transaction signature")) {
-                // for user rejected transaction
-                showNftNotification(
-                    "Transaction Rejected",
-                    "You have rejected the transaction.",
-                    "error"
-                )
-            } else {
-                // Handle other errors
-                showNftNotification("Error", error.message || "Failed to list the NFT.", "error")
-            }
-            closeNftNotification(confirmListingNotificationId.current)
-        },
-        // add args on call
-    })
-
-    const [listItemTxHash, setListItemTxHash] = useState(null)
-    const {
-        data: listItemTxReceipt,
-        isLoading: isListItemTxLoading,
-        isSuccess: isListItemTxSuccess,
-        isError: isListItemTxError,
-    } = useWaitForTransaction({
-        hash: listItemTxHash,
-    })
-
-    useEffect(() => {
-        if (isListItemTxLoading) {
-            whileListingNotificationId.current = showNftNotification(
-                "Listing",
-                "Transaction sent. Awaiting confirmation...",
-                "info",
-                true
-            )
-        } else if (isListItemTxSuccess) {
-            setListing(false)
-            closeNftNotification(whileListingNotificationId.current)
-            showNftNotification("Success", "Item successful listed", "success")
-            console.log(
-                "Listing item data",
-                listItemData,
-                "Listing item receipt",
-                listItemTxReceipt
-            )
-            handleTransactionCompletion()
-        } else if (isListItemTxError) {
-            setListing(false)
-            closeNftNotification(whileListingNotificationId.current)
-            showNftNotification("Error", error.message || "Failed to list the NFT.", "error")
-        }
-    }, [isListItemTxLoading, isListItemTxSuccess, isListItemTxError])
-
-    // Raw approve function to allow the marketplace to manage the NFT !!!N why is there no approve in the ABI?
-    const useRawApprove = (nftAddress) => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-
-        return async (to, tokenId) => {
-            const functionSignature = ethers.utils.id("approve(address,uint256)").slice(0, 10)
-            const addressPadded = ethers.utils.hexZeroPad(to, 32).slice(2)
-            const tokenIdHex = ethers.utils
-                .hexZeroPad(ethers.BigNumber.from(tokenId).toHexString(), 32)
-                .slice(2)
-            const data = functionSignature + addressPadded + tokenIdHex
-            const signer = provider.getSigner(address)
-            return signer.sendTransaction({
-                to: nftAddress,
-                data: data,
-            })
-        }
+    // Funktion zum Aktualisieren der Formulardaten
+    const updateFormData = (newFormData) => {
+        setFormData(newFormData)
     }
 
-    // (1) onSubmit event handler for the SellSwapForm component
-    // Function to approve the NFT for sale or swap
-    const approveAndList = async (data) => {
-        // Destructuring the data received from the form
-        const { nftAddress, tokenId, price, desiredNftAddress, desiredTokenId } = data
+    // ------------------ Contract Functions ------------------
+    // Function hook to get proceeds
+    const {
+        returnedProceeds,
+        isLoadingProceeds,
+        errorLoadingProceeds,
+        proceedsStatus,
+        refetchProceeds,
+    } = useGetProceeds(marketplaceAddress, userAdress)
+    console.log("Proceeds status", proceedsStatus)
 
-        // (2) Parsing the price to a proper format for blockchain transactions
-        const formattedPrice = ethers.utils.parseUnits(price, "ether").toString()
+    //Function hook to withdraw proceeds
+    const { handleWithdrawProceeds, isWithdrawTxSuccess } = useWithdrawProceeds(
+        marketplaceAddress,
+        isConnected,
+        handleWithdrawCompletion
+    )
 
-        // (3) Formatting the desired NFT address and token ID for the swap functionality, if provided
+    //Function hook to approve an Item for the marketplace
+    const { handleApproveItem, isApprovingTxSuccess } = useRawApprove(
+        formData.nftAddress,
+        marketplaceAddress,
+        formData.tokenId,
+        isConnected,
+        handleApproveCompletion
+    )
+    //Function hook to list an item on the marketplace
+    const { handleListItem } = useListItem(
+        marketplaceAddress,
+        formData.nftAddress,
+        formData.tokenId,
+        formData.price,
+        formData.desiredNftAddress,
+        formData.desiredTokenId,
+        handleTransactionCompletion
+    )
+
+    // Function to handle form submission
+    const handleFormSubmit = (newFormData) => {
+        console.log("Form Data Received: ", newFormData)
+        updateFormData(newFormData)
+
+        const { nftAddress, tokenId, price, desiredNftAddress, desiredTokenId } = newFormData
+
+        const formattedPrice = ethers.utils.parseUnits(price, "ether").toString() // Add any other data formatting here
         const formattedDesiredNftAddress = desiredNftAddress || ethers.constants.AddressZero
         const formattedDesiredTokenId = desiredTokenId || "0"
 
-        // (4) Initialize notification and set approving state
-        let listAndApproveNotificationId
-        let whileApprovingNotificationId
-        let confirmListNotificationId
-        setApproving(true)
-        // (5) Showing a notification to the user to check their wallet for approval
-        listAndApproveNotificationId = showNftNotification(
-            "Check your wallet!",
-            "Confirm for approving NFT...",
-            "info",
-            true
-        )
+        const updatedFormData = {
+            ...newFormData,
+            price: formattedPrice,
+            desiredNftAddress: formattedDesiredNftAddress,
+            desiredTokenId: formattedDesiredTokenId,
+        }
+        setFormData(updatedFormData)
+        approveAndList(updatedFormData)
+    }
+
+    // Function to approve the NFT for sale or swap
+    const approveAndList = async (formData) => {
+        console.log("Starting approveAndList with data:", formData)
         try {
-            // Approving the NFT
-            // (6) Executing the raw approve function to permit the marketplace to handle the NFT
-            const tx = await useRawApprove(nftAddress)(marketplaceAddress, tokenId)
+            // Aufrufen der rawApprove Funktion
+            await handleApproveItem()
 
-            closeNftNotification(listAndApproveNotificationId)
-            whileApprovingNotificationId = showNftNotification(
-                "Approving...",
-                "Approving in progress...",
-                "info",
-                true
-            )
-            await tx.wait()
-
-            closeNftNotification(whileApprovingNotificationId)
-            showNftNotification("Success", "NFT approved", "success")
-            confirmListNotificationId = showNftNotification(
-                "Check your wallet",
-                "Confirm listing...",
-                "info",
-                true
-            )
-
-            // Listing the NFT after approval
-            await listItem({
-                args: [
-                    nftAddress,
-                    tokenId,
-                    formattedPrice,
-                    formattedDesiredNftAddress,
-                    formattedDesiredTokenId,
-                ],
-            })
-            closeNftNotification(confirmListNotificationId)
-        } catch (error) {
-            console.error("Error in approveAndList:", error)
-            closeNftNotification(listAndApproveNotificationId)
-            if (
-                error.message.includes(
-                    "User denied transaction signature" || "user rejected transaction"
-                )
-            ) {
-                // for user rejected transaction
-                showNftNotification(
-                    "Transaction Rejected",
-                    "You have rejected the transaction.",
-                    "error"
-                )
+            if (isApprovingTxSuccess) {
+                await handleListItem()
             } else {
-                // Handle other errors
-                showNftNotification("Error", "Failed to approve and list the NFT.", "error")
+                console.error("No transaction receipt from approve.")
             }
-            console.error("Error in listing NFT:", error)
-        } finally {
-            setApproving(false)
+        } catch (error) {
+            console.error("An error occurred during the transaction: ", error)
         }
     }
 
     // Setup the UI, checking for any proceeds the user can withdraw
     useEffect(() => {
-        if (isConnected && returnedProceeds) {
+        if (isConnected || returnedProceeds || userAdress) {
             // Convert the proceeds from Wei to Ether
             const proceedsInEther = ethers.utils.formatUnits(returnedProceeds.toString(), "ether")
             setProceeds(proceedsInEther)
         }
-    }, [isConnected, returnedProceeds, address])
-
-    useEffect(() => {
-        refetchProceeds()
-    }, [refetchProceeds])
+    }, [isConnected, returnedProceeds, userAdress])
 
     return (
         <div className={styles.nftSellSwapContainer}>
@@ -327,7 +178,7 @@ const SellSwapNFT = () => {
                 <div className={styles.nftSellSwapWrapper}>
                     {activeForm === "sell" && (
                         <SellSwapForm
-                            onSubmit={approveAndList}
+                            onSubmit={handleFormSubmit}
                             title="Sell your NFT!"
                             id="Sell Form"
                             defaultNftAddress={nftAddressFromQuery}
@@ -337,7 +188,7 @@ const SellSwapNFT = () => {
                     )}
                     {activeForm === "swap" && (
                         <SellSwapForm
-                            onSubmit={approveAndList}
+                            onSubmit={handleFormSubmit}
                             title="Swap your NFT!"
                             id="Swap Form"
                             defaultNftAddress={nftAddressFromQuery}
@@ -382,14 +233,14 @@ const SellSwapNFT = () => {
                             <div className={styles.nftCreditInformation}>
                                 <h3>Your credit:</h3>
                                 {isLoadingProceeds ? (
-                                    <div>Processing</div>
+                                    <div>Processing...</div>
                                 ) : (
                                     <div>{proceeds} ETH</div>
                                 )}
                             </div>
                         </div>
                         <div className={styles.nftWithdrawButton}>
-                            {proceeds !== "0" ? (
+                            {proceeds !== "0.0" ? (
                                 <button
                                     name="Withdraw"
                                     type="button"
