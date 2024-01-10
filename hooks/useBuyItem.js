@@ -85,14 +85,6 @@ export const useBuyItem = (
         showNftNotification("Error", "Failed to purchase the NFT.", "error")
     }, [closeNftNotification, showNftNotification])
 
-    // Cleanup function to close notifications when the component unmounts or dependencies change
-    useEffect(() => {
-        return () => {
-            closeNftNotification(confirmPurchaseNotificationId.current)
-            closeNftNotification(whilePurchaseNotificationId.current)
-        }
-    }, [closeNftNotification])
-
     // Function to initiate the buy transaction
     const { data: buyItemData, writeAsync: buyItem } = useContractWrite({
         address: marketplaceAddress,
@@ -147,7 +139,9 @@ export const useBuyItem = (
         try {
             await buyItem()
         } catch (error) {
+            // This will handle any errors that are not caught by the onError callback
             console.error("An error occurred during the transaction: ", error)
+            setBuying(false)
         }
     }, [isConnected, buying, buyItem, showNftNotification])
 
@@ -158,8 +152,12 @@ export const useBuyItem = (
         else if (isBuyTxError) handleTransactionFailure()
     }, [isBuyTxLoading, isBuyTxSuccess, isBuyTxError])
 
+    // Cleanup function to close notifications when the component unmounts or dependencies change
     useEffect(() => {
-        // Cleanup function to close notifications when the component unmounts or dependencies change
+        return () => {
+            closeNftNotification(confirmPurchaseNotificationId.current)
+            closeNftNotification(whilePurchaseNotificationId.current)
+        }
     }, [closeNftNotification])
 
     return { handleBuyClick, buying }
