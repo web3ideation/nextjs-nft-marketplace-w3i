@@ -31,6 +31,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+
+    &:hover .walletMenu {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .onlineDot {
@@ -49,7 +55,6 @@
 }
 
 .burgerMenu {
-    cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -63,7 +68,6 @@
     border-radius: 3px;
     width: 100%;
 }
-
 .walletMenu {
     transform: translateY(-100%);
     opacity: 0;
@@ -76,11 +80,6 @@
     padding: 10px;
     box-shadow: inset 0 5px 5px rgb(0 0 0 / 0.1), inset 0 1px 2px -1px rgb(0 0 0 / 0.1);
     z-index: -1;
-}
-
-.walletMenuOpen {
-    transform: translateY(0);
-    opacity: 1;
 }
 
 .walletMenuLinks {

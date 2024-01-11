@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
-import { debounce } from "lodash"
 
 // wagmi Hooks for Ethereum Interaction
 import { useAccount, useBalance, useDisconnect } from "wagmi"
@@ -23,14 +22,10 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
     const { data: balanceData } = useBalance({ address })
     const [formattedAddress, setFormattedAddress] = useState("")
     const [formattedPrice, setFormattedPrice] = useState("")
-    const [isOpen, setIsOpen] = useState(false)
     const menuRef = useRef(null)
 
     const defaultBalanceData = { formatted: "0", symbol: "N/A" }
     const actualBalanceData = balanceData || defaultBalanceData
-
-    // Debounce the toggle function to prevent rapid open/close
-    const debouncedToggleMenu = debounce(() => setIsOpen(!isOpen), 100)
 
     // Update wallet info when address or balance changes
     useEffect(() => {
@@ -44,12 +39,7 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
 
     return (
         <>
-            <div
-                className={styles.headerAccountInfoWrapper}
-                ref={menuRef}
-                onMouseEnter={debouncedToggleMenu}
-                onMouseLeave={debouncedToggleMenu}
-            >
+            <div className={styles.headerAccountInfoWrapper} ref={menuRef}>
                 <div className={styles.onlineDot}></div>
                 <div className={styles.headerAccountInfo}>
                     <div title={address}>{formattedAddress}</div>
@@ -58,7 +48,7 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                     <img src="media/arrow_down.png" alt="Menu Arrow"></img>
                 </div>
                 {balanceData && (
-                    <div className={`${styles.walletMenu} ${isOpen ? styles.walletMenuOpen : ""}`}>
+                    <div className={styles.walletMenu}>
                         <div
                             className={`${styles.walletMenuLinks} ${styles.walletMenuBalance}`}
                             title={`${actualBalanceData.formatted} ${balanceData.symbol}`}
@@ -69,6 +59,9 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                         </div>
                         <Link className={styles.walletMenuLinks} href="/my-nft">
                             <button>My NFT</button>
+                        </Link>
+                        <Link className={styles.walletMenuLinks} href="/withdraw-proceeds">
+                            <button>Credits</button>
                         </Link>
                         <div className={styles.walletMenuLinks}>
                             <button onClick={onDisconnect}>Disconnect</button>
