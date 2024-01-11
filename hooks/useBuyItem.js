@@ -58,7 +58,7 @@ export const useBuyItem = (
                     : userDontOwn
                     ? "You don't own the desired NFT for swap"
                     : userNFTNotApproved
-                    ? "The NFT you own and want to swap is not approved for the marketplace."
+                    ? "You own the NFT to swap but it is not approved for the marketplace. You need to list the NFT."
                     : error.message || "Failed to buy the NFT.",
                 userDenied || userDontOwn ? "error" : "error"
             )
