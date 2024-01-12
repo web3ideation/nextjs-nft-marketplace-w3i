@@ -101,6 +101,8 @@ const SellSwapNFT = () => {
                             <h3>Your credit:</h3>
                             {isLoadingProceeds ? (
                                 <div>Processing...</div>
+                            ) : errorLoadingProceeds ? (
+                                <div>Error loading proceeds. Please try again later.</div>
                             ) : (
                                 <div className={styles.proceeds}>
                                     <div>{proceeds} ETH</div>
