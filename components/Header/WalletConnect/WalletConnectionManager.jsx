@@ -44,7 +44,7 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                 <div className={styles.headerAccountInfo}>
                     <div title={address}>{formattedAddress}</div>
                 </div>
-                <div className={styles.burgerMenu}>
+                <div className={styles.menuIcon}>
                     <img src="media/arrow_down.png" alt="Menu Arrow"></img>
                 </div>
                 {balanceData && (
@@ -57,11 +57,14 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                                 {formattedPrice} {balanceData.symbol}
                             </p>
                         </div>
+                        <Link className={styles.walletMenuLinks} href="/withdraw-proceeds">
+                            <button>Credits</button>
+                        </Link>{" "}
                         <Link className={styles.walletMenuLinks} href="/my-nft">
                             <button>My NFT</button>
                         </Link>
-                        <Link className={styles.walletMenuLinks} href="/withdraw-proceeds">
-                            <button>Credits</button>
+                        <Link className={styles.walletMenuLinks} href="/">
+                            <button>Home</button>
                         </Link>
                         <div className={styles.walletMenuLinks}>
                             <button onClick={onDisconnect}>Disconnect</button>
@@ -100,17 +103,6 @@ const WalletConnectionManager = () => {
     useEffect(() => {
         setIsClient(typeof window !== "undefined")
     }, [])
-
-    // Log connection status
-    useEffect(() => {
-        if (isConnected) {
-            console.log("Wallet verbunden")
-            // Weitere Aktionen bei Verbindung
-        } else {
-            console.log("Wallet getrennt")
-            // Weitere Aktionen bei Trennung
-        }
-    }, [isConnected])
 
     const handleOpen = () => open()
     const handleDisconnect = () => disconnect()

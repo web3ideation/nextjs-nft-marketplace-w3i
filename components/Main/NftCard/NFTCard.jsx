@@ -15,8 +15,8 @@ import { useCancelListing } from "../../../hooks/useCancelListing"
 
 // ------------------ Component Imports ------------------
 import LoadingWave from "../ux/LoadingWave"
-import NFTInfoModal from "../Modals/NFTInfoModal"
-import NFTUpdateListingModal from "../Modals/NFTUpdateListingModal"
+import NFTInfoModal from "../Modal/ModalType/InfoModal/NFTInfoModal"
+import NFTUpdateListingModal from "../Modal/ModalType/UpdateListingModal/NFTUpdateListingModal"
 
 // ------------------ Utility Imports ------------------
 import { truncateStr, formatPriceToEther, truncatePrice } from "../../../utils/formatting"
@@ -94,6 +94,7 @@ export default function NFTBox({ nftData }) {
         nftAddress,
         tokenId,
         isConnected,
+        formattedPrice,
         handleTransactionCompletion
     )
     const { handleCancelListingClick } = useCancelListing(
@@ -108,12 +109,21 @@ export default function NFTBox({ nftData }) {
         setShowSellModal(isOwnedByUser && isListed)
         setShowListModal(isOwnedByUser && !isListed)
     }, [isOwnedByUser, isListed])
-    const handleListClick = () =>
-        router.push(
-            `/sell-swap-nft?nftAddress=${nftAddress}&tokenId=${tokenId}&price=${formatPriceToEther(
-                price
-            )}`
-        )
+
+    const handleListClick = (action) => {
+        if (action === "sell") {
+            // Logic for sell
+            router.push(
+                `/sell-nft?nftAddress=${nftAddress}&tokenId=${tokenId}&price=${formatPriceToEther(
+                    price
+                )}`
+            )
+        } else if (action === "swap") {
+            // Logic for swap
+            router.push(`/swap-nft?nftAddress=${nftAddress}&tokenId=${tokenId}`)
+        }
+    }
+
     const handleUpdatePriceButtonClick = () => setShowUpdateListingModal(true)
 
     // useEffect hooks for side effects
@@ -190,11 +200,7 @@ export default function NFTBox({ nftData }) {
                     </div>
                 </div>
             ) : (
-                <div className={styles.nftLoadingIconWrapper}>
-                    <div className={styles.nftLoadingIcon}>
-                        <LoadingWave />
-                    </div>
-                </div>
+                <LoadingWave />
             )}
 
             {/* NFT Info Modal */}

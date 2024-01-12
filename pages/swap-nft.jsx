@@ -32,7 +32,7 @@ const SellSwapNFT = () => {
     const [nftAddressFromQuery, setNftAddressFromQuery] = useState(router.query.nftAddress || "")
     const [tokenIdFromQuery, setTokenIdFromQuery] = useState(router.query.tokenId || "")
     const [priceFromQuery, setPriceFromQuery] = useState(router.query.price || "")
-    const [activeForm, setActiveForm] = useState("sell")
+    const [activeForm] = useState("swap")
     const [formData, setFormData] = useState({
         nftAddress: "",
         tokenId: "",
@@ -136,10 +136,6 @@ const SellSwapNFT = () => {
 
     return (
         <div className={styles.nftSellSwapContainer}>
-            <div className={styles.nftSellSwapButton}>
-                <button onClick={() => setActiveForm("sell")}>SELL</button>
-                <button onClick={() => setActiveForm("swap")}>SWAP</button>
-            </div>
             <div className={styles.nftSellSwapWrapper}>
                 <div className={styles.nftSellSwapWrapperInner}>
                     {activeForm === "sell" && (

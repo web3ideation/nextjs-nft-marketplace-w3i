@@ -1,0 +1,26 @@
+@use "../../../../styles/helpers/variables" as *;
+@use "../../../../styles/helpers/mixins" as *;
+
+// NFT table container styles
+.nftTableContainer {
+    @include flex-center();
+    width: 50%;
+}
+
+.nftTableWrapper {
+    @include flex-center;
+    flex-direction: column;
+    margin-top: 40px;
+    font-family: $font-primary;
+
+    h1 {
+        font-size: $font-size-medium;
+        font-weight: 700;
+        text-align: center;
+    }
+}
+
+// NFT collection styles
+.nftCollection {
+    padding: 16px;
+}

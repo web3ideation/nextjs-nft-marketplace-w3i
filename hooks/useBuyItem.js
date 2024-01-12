@@ -24,6 +24,7 @@ export const useBuyItem = (
     nftAddress,
     tokenId,
     isConnected,
+    formattedPrice,
     onSuccessCallback
 ) => {
     // State to track the transaction hash and buying status
@@ -139,7 +140,7 @@ export const useBuyItem = (
         setBuying(true)
         confirmPurchaseNotificationId.current = showNftNotification(
             "Check your wallet",
-            "Confirm purchase...",
+            `Confirm purchase for ${formattedPrice} ETH excluding fees...`,
             "info",
             true
         )
@@ -150,7 +151,7 @@ export const useBuyItem = (
             console.error("An error occurred during the transaction: ", error)
             setBuying(false)
         }
-    }, [isConnected, buying, buyItem, showNftNotification])
+    }, [isConnected, buying, formattedPrice, buyItem, showNftNotification])
 
     // Update state based on transaction status
     useEffect(() => {

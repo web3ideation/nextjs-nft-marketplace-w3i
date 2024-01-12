@@ -1,7 +1,7 @@
-@use "../helpers/variables" as *;
-@use "../helpers/mixins" as *;
+@use "../../../../styles/helpers/variables" as *;
+@use "../../../../styles/helpers/mixins" as *;
 
-.myNftWrapper {
+.nftListNewWrapper {
     @include flex-center;
     flex-direction: column;
     margin-top: 40px;
@@ -16,19 +16,8 @@
     }
 }
 
-.myNftTotalInformation {
-    padding: 10px 20px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    p {
-        text-align: center;
-        width: 33.3%;
-    }
-}
-
 // NFT boxes grid styles
-.myNftList {
+.nftListNew {
     display: grid;
     grid-template-columns: repeat(5, 1fr); // 5 NFTs / row
     justify-items: stretch;

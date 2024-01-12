@@ -1,0 +1,124 @@
+@use "../helpers/variables" as *;
+@use "../helpers/mixins" as *;
+@use "../helpers/keyframes" as *;
+
+.withdrawProceedsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 40px 192px;
+    height: 100vh;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    font-weight: 500;
+}
+
+.withdrawProceedsWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 18px;
+    width: 100%;
+    padding: 16px 32px;
+}
+
+.withdrawProceedsButton {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 18px;
+
+    button {
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        background-color: $secondary-color;
+        width: 128px;
+        color: $white;
+        font-weight: 400;
+        border-radius: 5px;
+        padding: 0 18px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            color: $hover-grey;
+        }
+    }
+}
+
+.withdrawProceeds {
+    @include boxShadow;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 500px;
+    width: 100%;
+    padding: 16px 32px;
+    border-radius: 5px;
+
+    h2 {
+        font-size: $font-size-medium;
+        font-weight: 600;
+    }
+}
+
+.withdrawProceedsInformation {
+    @include boxShadowFields;
+    border-radius: 5px;
+    border: solid 3px firebrick;
+    p {
+        overflow-y: auto;
+        width: 100%;
+        max-height: 300px;
+        padding: 10px;
+    }
+}
+
+.proceedsInformationWrapper {
+    @include boxShadowFields;
+    border-radius: $border-radius;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.proceedsInformation {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h3 {
+        font-size: $font-size-medium;
+        font-weight: 500;
+    }
+    div {
+        font-size: $font-size-medium;
+        font-weight: 500;
+    }
+}
+
+.proceeds {
+    text-align: end;
+    width: 50%;
+}
+
+.withdrawProceedsBtn {
+    button {
+        background-color: $hover-blue;
+        width: 128px;
+        height: 49px;
+        color: $white;
+        border-radius: 5px;
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        font-weight: 400;
+        padding: 0 18px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            color: $hover-grey;
+        }
+    }
+}

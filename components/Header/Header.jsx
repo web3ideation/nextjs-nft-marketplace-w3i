@@ -22,10 +22,10 @@ const Header = () => {
                 </div>
                 <div className={styles.headerElementsWrapper}>
                     <SearchBar />
-                    <Link className={styles.menuButton} href="/sell-swap-nft">
+                    <Link className={styles.headerMenuBtn} href="/sell-nft">
                         <button>Sell</button>
                     </Link>
-                    <Link className={styles.menuButton} href="/sell-swap-nft">
+                    <Link className={styles.headerMenuBtn} href="/swap-nft">
                         <button>Swap</button>
                     </Link>
                     <WalletConnectionManager />

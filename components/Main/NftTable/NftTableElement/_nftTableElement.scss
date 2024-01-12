@@ -1,0 +1,37 @@
+@use "../../../../styles/helpers/variables" as *;
+@use "../../../../styles/helpers/mixins" as *;
+
+// NFT Table row styles
+.nftTableRow {
+    @include boxShadow;
+    margin: 15px auto;
+    border-radius: $border-radius;
+    cursor: pointer;
+    &:hover {
+        @include boxShadow-hover;
+        transition: 0.2s;
+    }
+    td {
+        vertical-align: middle;
+        padding: 8px 0;
+
+        img {
+            display: block;
+            margin: auto;
+            border-radius: $border-radius;
+        }
+    }
+}
+
+// Flex container for content
+.contentWrapper {
+    @include flex-center;
+    text-align: center;
+    height: 100%;
+}
+
+.tableImage {
+    display: block;
+    object-fit: cover;
+    width: 50px;
+}

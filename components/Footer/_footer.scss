@@ -1,0 +1,12 @@
+@use "../../styles/helpers/variables" as *;
+
+// Footer styles
+.footerContainer {
+    text-align: center;
+    padding: 20px 0;
+    margin: 40px 0 0 0;
+    font-family: $font-secondary;
+    font-size: $font-size-small;
+    color: $black;
+    background-color: $background-color;
+}

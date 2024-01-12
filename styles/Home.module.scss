@@ -2,129 +2,43 @@
 @use "helpers/mixins" as *;
 @use "helpers/keyframes" as *;
 
-@use "components/loadingWave";
-@use "components/notification";
-@use "components/tooltip";
-@use "components/modal";
-@use "components/walletConnectionManager";
-@use "components/infoModal";
-@use "components/collectionModal";
-@use "components/nftModalList";
+@use "../components/Main/Notification/notification";
 
-@use "components/header";
-@use "components/searchBar";
-@use "components/popupMenu";
+@use "../components/Main/ux/tooltip";
+@use "../components/Main/ux/loadingWave";
 
-@use "components/nftBox";
-@use "components/nftTable";
+@use "../components/Main/Modal/ModalBasis/modal";
+@use "../components/Main/Modal/ModalElements/ModalCollectionList/nftModalList";
+@use "../components/Main/Modal/ModalType/InfoModal/infoModal";
+@use "../components/Main/Modal/ModalType/UpdateListingModal/updateListingModal";
+@use "../components/Main/Modal/ModalType/CollectionModal/collectionModal";
 
-@use "components/searchSideFilters.scss";
+@use "../components/Header/header";
+@use "../components/Header/SearchBar/searchBar";
+@use "../components/Header/WalletConnect/walletConnectionManager";
+@use "../components/Header/PopupMenu/popupMenu";
 
-@use "components/sellSwapNft";
+@use "../components/Main/NftCard/nftCard";
+@use "../components/Main/NftTable/nftTable";
+@use "../components/Main/NftTable/NftTableElement/nftTableElement";
 
-@use "components/footer";
+@use "../components/Main/SearchSideBar/searchSideFilters";
 
+@use "../components/Main/NftViewer/Collection/nftCollection";
+@use "../components/Main/NftViewer/Listed/nftListed";
+@use "../components/Main/NftViewer/Listed/nftMostSold";
+
+@use "../components/Main/SellSwapForm/sellSwapForm";
+
+@use "../components/Footer/footer";
+
+@use "pages/index";
 @use "pages/my-nft";
-
-// NFT boxes container styles
-.nftListingContainer {
-    display: flex;
-    flex-direction: column;
-
-    width: 100%;
-}
-
-.nftCollectionsContainer {
-    display: flex;
-    padding: 16px 150px;
-}
-
-// NFT table container styles
-.nftTableContainer {
-    @include flex-center();
-    width: 50%;
-}
-
-// NFT boxes wrapper styles
-// NFT table wrapper styles
-.nftListWrapper {
-    @include flex-center;
-    flex-direction: column;
-    margin-top: 40px;
-    width: 100%;
-    padding: 16px 150px;
-    font-family: $font-primary;
-
-    h1 {
-        font-size: $font-size-medium;
-        font-weight: 700;
-        text-align: center;
-    }
-}
-
-.nftTableWrapper {
-    @include flex-center;
-    flex-direction: column;
-    margin-top: 40px;
-    font-family: $font-primary;
-
-    h1 {
-        font-size: $font-size-medium;
-        font-weight: 700;
-        text-align: center;
-    }
-}
-
-// NFT boxes grid styles
-.nftList {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); // 5 NFTs / row
-    justify-items: stretch;
-    width: 100%;
-    padding: 16px;
-    gap: 16px;
-    &:first-child {
-        justify-self: start;
-    }
-    &:last-child {
-        justify-self: end;
-    }
-}
-
-// NFT collection styles
-.nftCollection {
-    padding: 16px;
-}
-
-// Show more button styles
-.showMoreButton {
-    @include flex-center;
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-
-    button {
-        background-color: $secondary-color;
-        width: 128px;
-        color: $white;
-        border-radius: 5px;
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        font-weight: 400;
-        padding: 0 18px;
-        border: none;
-        cursor: pointer;
-
-        &:hover {
-            background-color: $hover-blue;
-            color: $hover-grey;
-        }
-    }
-}
+@use "pages/search-result-page";
+@use "pages/sell-swap-nft";
+@use "pages/withdraw-proceeds";
 
 .loadingWaveWrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include flex-center;
     height: 100vh;
 }

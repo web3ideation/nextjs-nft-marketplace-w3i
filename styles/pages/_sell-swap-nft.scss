@@ -1,0 +1,55 @@
+@use "../helpers/variables" as *;
+@use "../helpers/mixins" as *;
+@use "../helpers/keyframes" as *;
+
+// Sell/Swap Nft page styles
+.nftSellSwapContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 40px 192px;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    font-weight: 500;
+}
+
+.nftSellSwapButton {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 18px;
+    button {
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        background-color: $secondary-color;
+        width: 128px;
+        height: 49px;
+        color: $white;
+        font-weight: 400;
+        border-radius: 5px;
+        padding: 0 18px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            color: $hover-grey;
+        }
+    }
+}
+
+.nftSellSwapWrapper {
+    display: flex;
+    flex-direction: row;
+    padding: 16px 32px;
+    width: 100%;
+    gap: 18px;
+}
+
+.nftSellSwapWrapperInner {
+    display: flex;
+    flex-direction: row;
+    padding: 16px 32px;
+    width: 100%;
+    gap: 18px;
+}

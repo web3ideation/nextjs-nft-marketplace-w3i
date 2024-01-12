@@ -1,7 +1,7 @@
-// Importing necessary modules and components
-import Image from "next/image" // Next.js optimized image component
-import styles from "../../../../styles/Home.module.css" // Style module for the home page
-import LoadingWave from "../../ux/LoadingWave" // Custom LoadingWave component for UX
+import Image from "next/image"
+import styles from "../../../../styles/Home.module.css"
+import LoadingWave from "../../ux/LoadingWave"
+
 // Utility functions for formatting
 import { truncateStr, formatPriceToEther, truncatePrice } from "../../../../utils/formatting"
 

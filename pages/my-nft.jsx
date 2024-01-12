@@ -77,7 +77,7 @@ const MyNFTs = () => {
     // Render loading state
     if (nftsLoading) {
         return (
-            <div className={styles.nftListWrapper}>
+            <div className={styles.myNftWrapper}>
                 <h1>My NFTs</h1>
                 <div className={styles.loadingWaveWrapper}>
                     <LoadingWave />
@@ -86,7 +86,7 @@ const MyNFTs = () => {
         )
     }
     return (
-        <div className={styles.nftListWrapper}>
+        <div className={styles.myNftWrapper}>
             <h1>My NFTs</h1>
             {isConnected && (
                 <div className={styles.myNftTotalInformation}>
@@ -95,7 +95,7 @@ const MyNFTs = () => {
                     <p title={totalPriceInEur}>Total Price: {formattedTotalPriceInEur}... €</p>
                 </div>
             )}
-            <div className={styles.nftList}>
+            <div className={styles.myNftList}>
                 {isConnected ? (
                     hasOwnNFT ? (
                         nftsData

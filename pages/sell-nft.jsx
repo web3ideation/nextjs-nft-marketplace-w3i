@@ -32,7 +32,7 @@ const SellSwapNFT = () => {
     const [nftAddressFromQuery, setNftAddressFromQuery] = useState(router.query.nftAddress || "")
     const [tokenIdFromQuery, setTokenIdFromQuery] = useState(router.query.tokenId || "")
     const [priceFromQuery, setPriceFromQuery] = useState(router.query.price || "")
-    const [activeForm, setActiveForm] = useState("sell")
+    const [activeForm] = useState("sell")
     const [formData, setFormData] = useState({
         nftAddress: "",
         tokenId: "",
@@ -136,10 +136,6 @@ const SellSwapNFT = () => {
 
     return (
         <div className={styles.nftSellSwapContainer}>
-            <div className={styles.nftSellSwapButton}>
-                <button onClick={() => setActiveForm("sell")}>SELL</button>
-                <button onClick={() => setActiveForm("swap")}>SWAP</button>
-            </div>
             <div className={styles.nftSellSwapWrapper}>
                 <div className={styles.nftSellSwapWrapperInner}>
                     {activeForm === "sell" && (
@@ -150,30 +146,6 @@ const SellSwapNFT = () => {
                             defaultNftAddress={nftAddressFromQuery}
                             defaultTokenId={tokenIdFromQuery}
                             defaultPrice={priceFromQuery}
-                        />
-                    )}
-                    {activeForm === "swap" && (
-                        <SellSwapForm
-                            onSubmit={handleFormSubmit}
-                            title="Swap your NFT!"
-                            id="Swap Form"
-                            defaultNftAddress={nftAddressFromQuery}
-                            defaultTokenId={tokenIdFromQuery}
-                            defaultPrice={priceFromQuery}
-                            extraFields={[
-                                {
-                                    name: "Desired NFT Address",
-                                    type: "text",
-                                    key: "desiredNftAddress",
-                                    placeholder: "0x0000000000000000000000000000000000000000",
-                                },
-                                {
-                                    name: "Desired Token ID",
-                                    type: "number",
-                                    key: "desiredTokenId",
-                                    placeholder: "0",
-                                },
-                            ]}
                         />
                     )}
                 </div>

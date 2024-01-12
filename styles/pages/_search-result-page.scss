@@ -1,0 +1,39 @@
+@use "../helpers/variables" as *;
+@use "../helpers/mixins" as *;
+
+.nftSearchResultsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.nftSearchResultsWrapper {
+    @include flex-center;
+    flex-direction: column;
+    margin-top: 40px;
+    padding: 16px 150px;
+    width: 100%;
+    font-family: $font-primary;
+
+    h1 {
+        font-size: $font-size-medium;
+        font-weight: 700;
+        text-align: center;
+    }
+}
+
+// NFT boxes grid styles
+.nftSearchResults {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); // 5 NFTs / row
+    justify-items: stretch;
+    padding: 16px;
+    width: 100%;
+    gap: 16px;
+    &:first-child {
+        justify-self: start;
+    }
+    &:last-child {
+        justify-self: end;
+    }
+}

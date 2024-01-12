@@ -1,0 +1,46 @@
+@use "../../../../../styles/helpers/variables" as *;
+@use "../../../../../styles/helpers/mixins" as *;
+
+.collectionModalContentWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.collectionModalContent {
+    @include boxShadowFields;
+    padding: 10px;
+    margin: 0 10px;
+    border-radius: 5px;
+    background-color: $white;
+}
+
+.collectionModalTextWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.collectionModalText {
+    font-size: $font-size-small;
+    font-weight: 500;
+    color: $black;
+
+    div {
+        display: flex;
+        justify-content: space-between;
+        text-align: end;
+
+        p {
+            text-align: start;
+            width: 50%;
+        }
+    }
+}

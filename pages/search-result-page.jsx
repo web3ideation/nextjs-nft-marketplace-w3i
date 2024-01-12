@@ -70,14 +70,14 @@ const SearchResultPage = () => {
     }
 
     return (
-        <div className={styles.nftListingContainer}>
+        <div className={styles.nftSearchResultsContainer}>
             <SearchSideFilters
                 initialItems={searchResults}
                 onFilteredItemsChange={handleFilteredItemsChange}
             />
-            <div className={styles.nftListWrapper}>
+            <div className={styles.nftSearchResultsWrapper}>
                 <h1>Search results for: {searchTermFromQuery}</h1>
-                <div className={styles.nftList}>
+                <div className={styles.nftSearchResults}>
                     {filteredNFTs.map((result) => (
                         <div key={`${result.nftAddress}${result.tokenId}`}>
                             <NFTBox nftData={result} />

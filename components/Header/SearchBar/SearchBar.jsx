@@ -35,17 +35,20 @@ const SearchBar = () => {
     return (
         <div className={styles.searchBarWrapper}>
             <input
+                className={styles.searchBarInput}
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 placeholder="Search..."
                 aria-label="Search field"
             />
             {showButton && (
-                <button onClick={handleSearch} className={styles.visible}>
-                    Go
-                </button>
+                <div className={styles.searchBarBtn}>
+                    <button onClick={handleSearch} className={styles.visible}>
+                        Go
+                    </button>
+                </div>
             )}
         </div>
     )
