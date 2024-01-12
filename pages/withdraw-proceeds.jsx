@@ -10,7 +10,7 @@ import { useAccount, usePublicClient } from "wagmi"
 
 import { useGetProceeds } from "../hooks/useGetProceeds"
 import { useWithdrawProceeds } from "../hooks/useWithdrawProceeds"
-
+import { fetchEthToEurRate } from "../utils/fetchEthToEurRate"
 import networkMapping from "../constants/networkMapping.json"
 
 // Styles
@@ -27,6 +27,7 @@ const SellSwapNFT = () => {
 
     // ------------------- State Management -------------------
     const [proceeds, setProceeds] = useState("0.0")
+    const [proceedsInEur, setProceedsInEur] = useState("0.0")
 
     // ------------------ Contract Functions ------------------
 
@@ -61,36 +62,54 @@ const SellSwapNFT = () => {
         }
     }, [isConnected, returnedProceeds, userAdress])
 
+    useEffect(() => {
+        const updatePriceInEur = async () => {
+            const ethToEurRate = await fetchEthToEurRate()
+            if (ethToEurRate) {
+                setProceedsInEur(proceeds * ethToEurRate)
+            }
+        }
+        updatePriceInEur()
+    }, [proceeds])
+
     return (
-        <div className={styles.nftSellSwapContainer}>
-            <div className={styles.nftWithdrawWrapper}>
-                <div className={styles.nftWithdraw}>
+        <div className={styles.withdrawProceedsContainer}>
+            <div className={styles.withdrawProceedsWrapper}>
+                <div className={styles.withdrawProceeds}>
                     <div>
                         <h2>Important note for users:</h2>
                     </div>
-                    <div className={styles.nftWithdrawInformation}>
+                    <div className={styles.withdrawProceedsInformation}>
                         <p>
                             When selling or exchanging NFTs on our platform, it is important that
                             you are clear about the withdrawal process of your proceeds. After a
                             successful sale or exchange, your proceeds will be credited to your
-                            account in Ether. To access these funds you will need to make a manual
-                            withdrawal. Please remember to withdraw your proceeds regularly to
-                            ensure your funds remain safe and accessible. This step is crucial to
-                            maintaining full control of your earned funds. If you need help or
-                            further information, do not hesitate to contact our support.
+                            account in Ether (ETH). To access these funds, you will need to make a
+                            manual withdrawal, and please note that the withdrawal will be
+                            conducted only in ETH. Additionally, be aware that withdrawing funds
+                            will incur gas fees, which are required for processing the transaction
+                            on the Ethereum network. These fees vary based on network congestion.
+                            Therefore, we recommend planning your withdrawals accordingly. Please
+                            remember to withdraw your proceeds regularly to ensure your funds
+                            remain safe and accessible. This step is crucial to maintaining full
+                            control of your earned funds. If you need help or further information,
+                            do not hesitate to contact our support.
                         </p>
                     </div>
-                    <div className={styles.nftCreditInformationWrapper}>
-                        <div className={styles.nftCreditInformation}>
+                    <div className={styles.proceedsInformationWrapper}>
+                        <div className={styles.proceedsInformation}>
                             <h3>Your credit:</h3>
                             {isLoadingProceeds ? (
                                 <div>Processing...</div>
                             ) : (
-                                <div>{proceeds} ETH</div>
+                                <div className={styles.proceeds}>
+                                    <div>{proceeds} ETH</div>
+                                    <div>{proceedsInEur} €</div>
+                                </div>
                             )}
                         </div>
                     </div>
-                    <div className={styles.nftWithdrawButton}>
+                    <div className={styles.withdrawProceedsBtn}>
                         {proceeds !== "0.0" ? (
                             <button
                                 name="Withdraw"
