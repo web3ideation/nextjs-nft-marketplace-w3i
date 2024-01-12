@@ -24,12 +24,14 @@
 }
 
 .headerLogo {
-    @include hover-invert;
     @include flex-center;
     width: 166px;
 
     img {
         height: 30px;
+    }
+    &:hover {
+        @include invert;
     }
 }
 

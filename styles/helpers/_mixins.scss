@@ -5,11 +5,9 @@
     align-items: center;
 }
 
-@mixin hover-invert {
-    &:hover {
-        filter: invert(28%) sepia(50%) saturate(4473%) hue-rotate(205deg) brightness(100%)
-            contrast(86%);
-    }
+@mixin invert {
+    filter: invert(28%) sepia(50%) saturate(4473%) hue-rotate(205deg) brightness(100%)
+        contrast(86%);
 }
 
 @mixin boxShadow {

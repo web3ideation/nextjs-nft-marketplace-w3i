@@ -21,6 +21,7 @@
     &:hover {
         @include boxShadow-hover;
         transition: 0.2s;
+        transform: scale(1.02);
     }
 }
 

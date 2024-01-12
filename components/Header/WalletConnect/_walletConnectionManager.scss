@@ -13,12 +13,6 @@
     }
 }
 
-.headerAccountInfoWrapper {
-    &:hover .menuIcon {
-        @include hover-invert;
-    }
-}
-
 .onlineDot {
     @include boxShadow;
     width: 12px;
@@ -35,6 +29,7 @@
 }
 
 .menuIcon {
+    transition: 0.5s ease-out;
     img {
         display: flex;
         flex-direction: column;
@@ -59,9 +54,15 @@
 }
 
 .headerAccountInfoWrapper {
-    &:hover .walletMenu {
-        transform: translateY(0);
-        opacity: 0.9;
+    &:hover {
+        .walletMenu {
+            transform: translateY(0);
+            opacity: 0.9;
+        }
+        .menuIcon {
+            transform: rotateX(180deg);
+            @include invert;
+        }
     }
 }
 
@@ -94,6 +95,7 @@
     font-weight: 400;
     color: $black;
     background-color: $white;
+    cursor: default;
 }
 
 // Connect button styles
