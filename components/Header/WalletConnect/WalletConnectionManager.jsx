@@ -19,13 +19,17 @@ import styles from "../../../styles/Home.module.css"
 // Component to display wallet information
 const WalletInfo = ({ onDisconnect, isClient }) => {
     const { address } = useAccount()
-    const { data: balanceData } = useBalance({ address })
+    const { data: balanceData, refetch } = useBalance({ address })
     const [formattedAddress, setFormattedAddress] = useState("")
     const [formattedPrice, setFormattedPrice] = useState("")
     const menuRef = useRef(null)
 
     const defaultBalanceData = { formatted: "0", symbol: "N/A" }
     const actualBalanceData = balanceData || defaultBalanceData
+
+    const updateBalance = () => {
+        refetch()
+    }
 
     // Update wallet info when address or balance changes
     useEffect(() => {
@@ -39,7 +43,11 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
 
     return (
         <>
-            <div className={styles.headerAccountInfoWrapper} ref={menuRef}>
+            <div
+                className={styles.headerAccountInfoWrapper}
+                ref={menuRef}
+                onMouseEnter={updateBalance}
+            >
                 <div className={styles.onlineDot}></div>
                 <div className={styles.headerAccountInfo}>
                     <div title={address}>{formattedAddress}</div>
