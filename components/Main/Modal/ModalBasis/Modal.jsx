@@ -45,7 +45,6 @@ const Modal = forwardRef((props, ref) => {
 
     // Render the modal using React Portal to attach it to 'document.body'
     // This allows the modal to be on top of everything else on the page
-
     return ReactDOM.createPortal(modalContent, document.body)
 })
 

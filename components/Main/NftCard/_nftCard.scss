@@ -17,10 +17,11 @@
     color: $black;
     background-color: $color-white;
     cursor: pointer;
+    transition: 0.3s ease-out;
 
     &:hover {
         @include boxShadow-hover;
-        transition: 0.2s;
+        transition: 0.1s ease-in;
         transform: scale(1.02);
     }
 }

@@ -105,9 +105,22 @@ export default function NFTBox({ nftData }) {
         handleTransactionCompletion
     )
     const handleCardClick = useCallback(() => {
-        setShowInfoModal(!isOwnedByUser)
-        setShowSellModal(isOwnedByUser && isListed)
-        setShowListModal(isOwnedByUser && !isListed)
+        if (!isOwnedByUser) {
+            setShowInfoModal(true)
+            setShowSellModal(false)
+            setShowListModal(false)
+            setShowUpdateListingModal(false)
+        } else if (isOwnedByUser && isListed) {
+            setShowSellModal(true)
+            setShowInfoModal(false)
+            setShowListModal(false)
+            setShowUpdateListingModal(false)
+        } else if (isOwnedByUser && !isListed) {
+            setShowListModal(true)
+            setShowInfoModal(false)
+            setShowSellModal(false)
+            setShowUpdateListingModal(false)
+        }
     }, [isOwnedByUser, isListed])
 
     const handleListClick = (action) => {
@@ -124,7 +137,12 @@ export default function NFTBox({ nftData }) {
         }
     }
 
-    const handleUpdatePriceButtonClick = () => setShowUpdateListingModal(true)
+    const handleUpdatePriceButtonClick = () => {
+        setShowListModal(false)
+        setShowInfoModal(false)
+        setShowSellModal(false)
+        setShowUpdateListingModal(true)
+    }
 
     // useEffect hooks for side effects
     useEffect(() => {
