@@ -3,6 +3,7 @@
 @use "helpers/keyframes" as *;
 
 @use "../components/Main/Notification/notification";
+@use "../components/Main/Notification/NotificationElement/singleNotification";
 
 @use "../components/Main/ux/tooltip";
 @use "../components/Main/ux/loadingWave";

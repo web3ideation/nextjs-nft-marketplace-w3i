@@ -2,75 +2,25 @@
 @use "../../../styles/helpers/variables" as *;
 @use "../../../styles/helpers/mixins" as *;
 
-// Notification styles
-.notificationsContainer {
+.nftNotificationInnerWrapper {
     display: flex;
-    flex-direction: column-reverse;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 10px;
-    position: fixed;
-    right: 0;
-    bottom: 50px;
-    z-index: 100;
-    font-family: $font-primary;
+    flex-direction: row;
+    justify-content: space-between;
 }
-
-.nftNotification {
-    width: 300px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 5px 0 0 5px;
-
-    &.enter {
-        animation: slideIn 1.5s forwards ease-out, slideOut 1.5s 4s forwards;
-    }
-
-    &.sticky {
-        animation: slideIn 1.5s forwards ease-out;
-    }
-
-    &.exit {
-        animation: slideOut 1.5s forwards;
-    }
-
-    &.info {
-        color: $hover-blue;
-        border: solid 3px $hover-blue;
-        border-right: none;
-    }
-
-    &.error {
-        color: firebrick;
-        border: solid 3px firebrick;
-        border-right: none;
-    }
-
-    &.success {
-        color: forestgreen;
-        border: solid 3px forestgreen;
-        border-right: none;
-    }
-    .nftNotificationInnerWrapper {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-    .nftNotificationBtnWrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-    }
+.nftNotificationBtnWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
-
 .notificationCloseButton {
     cursor: pointer;
-    background-color: white;
+    background-color: $color-white;
     img {
         @include boxShadowFields;
         height: 20px;
         width: auto;
-        border: solid 2px black;
+        border: solid 2px $color-black;
         border-radius: 5px;
     }
 }
