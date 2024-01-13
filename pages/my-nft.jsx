@@ -79,7 +79,7 @@ const MyNFTs = () => {
         return (
             <div className={styles.myNftWrapper}>
                 <h1>My NFTs</h1>
-                <div className={styles.loadingWaveWrapper}>
+                <div className={styles.myNftLoadingWaveWrapper}>
                     <LoadingWave />
                 </div>
             </div>

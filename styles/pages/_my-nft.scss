@@ -1,6 +1,11 @@
 @use "../helpers/variables" as *;
 @use "../helpers/mixins" as *;
 
+.myNftLoadingWaveWrapper {
+    display: flex;
+    transform: scale(2);
+}
+
 .myNftWrapper {
     @include flex-center;
     flex-direction: column;
