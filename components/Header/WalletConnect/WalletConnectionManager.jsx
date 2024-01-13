@@ -35,7 +35,7 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
     useEffect(() => {
         if (isClient) {
             setFormattedAddress(truncateStr(address, 4, 4))
-            setFormattedPrice(truncatePrice(balanceData?.formatted || "0", 4))
+            setFormattedPrice(truncatePrice(balanceData?.formatted || "0", 5))
         }
     }, [address, balanceData, isClient])
 
