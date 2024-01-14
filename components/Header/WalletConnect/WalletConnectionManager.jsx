@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import Link from "next/link"
 
 // wagmi Hooks for Ethereum Interaction
@@ -7,6 +7,8 @@ import { useWeb3Modal } from "@web3modal/wagmi/react"
 
 // Utility Functions
 import { truncateStr, truncatePrice } from "../../../utils/formatting"
+
+import ChatModal from "../../Main/Modal/ModalType/ChatModal/ChatModal"
 
 // Styles
 import styles from "../../../styles/Home.module.css"
@@ -23,6 +25,13 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
     const [formattedAddress, setFormattedAddress] = useState("")
     const [formattedPrice, setFormattedPrice] = useState("")
     const menuRef = useRef(null)
+    const modalRef = useRef(null)
+
+    const [showChatModal, setShowChatModal] = useState(false)
+
+    const handleChatClick = () => {
+        setShowChatModal(true)
+    }
 
     const defaultBalanceData = { formatted: "0", symbol: "N/A" }
     const actualBalanceData = balanceData || defaultBalanceData
@@ -38,6 +47,14 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
             setFormattedPrice(truncatePrice(balanceData?.formatted || "0", 5))
         }
     }, [address, balanceData, isClient])
+
+    useEffect(() => {
+        const previousOverflow = document.body.style.overflow
+        document.body.style.overflow = showChatModal ? "hidden" : "auto"
+        return () => {
+            document.body.style.overflow = previousOverflow
+        }
+    }, [showChatModal])
 
     if (!isClient) return null
 
@@ -74,12 +91,21 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                         <Link className={styles.walletMenuLinks} href="/">
                             <button>Home</button>
                         </Link>
+                        <div className={styles.walletMenuLinks} onClick={handleChatClick}>
+                            <button>Chat</button>
+                        </div>
                         <div className={styles.walletMenuLinks}>
                             <button onClick={onDisconnect}>Disconnect</button>
                         </div>
                     </div>
                 )}
             </div>
+            <ChatModal
+                ref={modalRef}
+                closeModal={() => setShowChatModal(false)}
+                isVisible={showChatModal}
+                modalTitle={"Chat"}
+            ></ChatModal>
         </>
     )
 }
