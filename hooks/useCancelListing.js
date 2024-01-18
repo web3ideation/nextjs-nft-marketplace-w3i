@@ -57,7 +57,7 @@ export const useCancelListing = (
     useEffect(() => {
         let interval
         if (polling) {
-            interval = setInterval(checkTransactionStatus, 5000) // Poll every 5 seconds
+            interval = setInterval(checkTransactionStatus, 2500) // Poll every 5 seconds
         }
         return () => clearInterval(interval) // Cleanup
     }, [polling])
@@ -110,14 +110,6 @@ export const useCancelListing = (
         showNftNotification("Error", "Failed to delist the NFT.", "error")
         setPolling(false) // Stop polling on failure
     }, [closeNftNotification, showNftNotification])
-
-    // Cleanup function to close notifications when the component unmounts or dependencies change
-    useEffect(() => {
-        return () => {
-            closeNftNotification(confirmCancelListingNotificationId.current)
-            closeNftNotification(whileCancelListingNotificationId.current)
-        }
-    }, [closeNftNotification])
 
     // Function to initiate the cancel listing transaction
     const { data: cancelListingData, writeAsync: cancelListing } = useContractWrite({
@@ -184,8 +176,12 @@ export const useCancelListing = (
         else if (isCancelTxError) handleTransactionFailure()
     }, [isCancelTxLoading, isCancelTxSuccess, isCancelTxError])
 
+    // Cleanup function to close notifications when the component unmounts or dependencies change
     useEffect(() => {
-        // Cleanup function to close notifications when the component unmounts or dependencies change
+        return () => {
+            closeNftNotification(confirmCancelListingNotificationId.current)
+            closeNftNotification(whileCancelListingNotificationId.current)
+        }
     }, [closeNftNotification])
 
     return { handleCancelListingClick, delisting }

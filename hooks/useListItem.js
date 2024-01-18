@@ -28,6 +28,7 @@ export const useListItem = (
     price,
     desiredNftAddress,
     desiredTokenId,
+    userAddress,
     onSuccessCallback
 ) => {
     // State for transaction hash and listing status
@@ -46,18 +47,23 @@ export const useListItem = (
         (error) => {
             const userDenied = error.message.includes("User denied transaction signature")
             const userDontOwn = error.message.includes("You don't own the desired NFT for swap")
+            const nftNotApproved = error.message.includes("not approved")
             showNftNotification(
                 userDenied
                     ? "Transaction Rejected"
                     : userDontOwn
+                    ? "Transaction Rejected"
+                    : nftNotApproved
                     ? "Transaction Rejected"
                     : "Error",
                 userDenied
                     ? "You rejected the transaction."
                     : userDontOwn
                     ? "You don't own the desired NFT for swap"
+                    : nftNotApproved
+                    ? "The NFT was not succesfully approved"
                     : error.message || "Failed to buy the NFT.",
-                userDenied || userDontOwn ? "error" : "error"
+                userDenied || userDontOwn || nftNotApproved ? "error" : "error"
             )
         },
         [showNftNotification]

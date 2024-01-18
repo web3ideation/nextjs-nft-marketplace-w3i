@@ -38,6 +38,31 @@ export const useBuyItem = (
     const confirmPurchaseNotificationId = useRef(null)
     const whilePurchaseNotificationId = useRef(null)
 
+    // Define a state for polling interval
+    const [polling, setPolling] = useState(false)
+
+    // Function to check the transaction status
+    const checkTransactionStatus = async () => {
+        try {
+            const receipt = await web3Provider.getTransactionReceipt(buyTxHash)
+            if (receipt) {
+                handleTransactionSuccess()
+                setPolling(false) // Stop polling
+            }
+        } catch (error) {
+            console.error("Error fetching transaction receipt: ", error)
+        }
+    }
+
+    // Start polling when a transaction is initiated
+    useEffect(() => {
+        let interval
+        if (polling) {
+            interval = setInterval(checkTransactionStatus, 2500) // Poll every 5 seconds
+        }
+        return () => clearInterval(interval) // Cleanup
+    }, [polling])
+
     // Callback to handle transaction error
     const handleTransactionError = useCallback(
         (error) => {
@@ -84,6 +109,7 @@ export const useBuyItem = (
         showNftNotification("Success", "Purchase successful", "success")
         console.log("Buy item data", buyItemData, "Buy item receipt", buyTxReceipt)
         onSuccessCallback?.()
+        setPolling(false) // Stop polling on success
     }, [closeNftNotification, showNftNotification, onSuccessCallback])
 
     // Function to handle transaction failure
@@ -91,6 +117,7 @@ export const useBuyItem = (
         setBuying(false)
         closeNftNotification(whilePurchaseNotificationId.current)
         showNftNotification("Error", "Failed to purchase the NFT.", "error")
+        setPolling(false) // Stop polling on failure
     }, [closeNftNotification, showNftNotification])
 
     // Function to initiate the buy transaction
@@ -146,6 +173,7 @@ export const useBuyItem = (
         )
         try {
             await buyItem()
+            setPolling(true) // Start polling after initiating the transaction
         } catch (error) {
             // This will handle any errors that are not caught by the onError callback
             console.error("An error occurred during the transaction: ", error)

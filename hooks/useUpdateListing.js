@@ -37,6 +37,31 @@ export const useUpdateListing = (
     const confirmUpdateListingNotificationId = useRef(null)
     const whileUpdatingListingNotificationId = useRef(null)
 
+    // Define a state for polling interval
+    const [polling, setPolling] = useState(false)
+
+    // Function to check the transaction status
+    const checkTransactionStatus = async () => {
+        try {
+            const receipt = await web3Provider.getTransactionReceipt(updateListingTxHash)
+            if (receipt) {
+                handleTransactionSuccess()
+                setPolling(false) // Stop polling
+            }
+        } catch (error) {
+            console.error("Error fetching transaction receipt: ", error)
+        }
+    }
+
+    // Start polling when a transaction is initiated
+    useEffect(() => {
+        let interval
+        if (polling) {
+            interval = setInterval(checkTransactionStatus, 2500) // Poll every 5 seconds
+        }
+        return () => clearInterval(interval) // Cleanup
+    }, [polling])
+
     // Callback to handle transaction error
     const handleTransactionError = useCallback(
         (error) => {
@@ -74,6 +99,7 @@ export const useUpdateListing = (
             updateListingTxReceipt
         )
         onSuccessCallback?.()
+        setPolling(false) // Stop polling on success
     }, [closeNftNotification, showNftNotification, onSuccessCallback])
 
     // Function to handle transaction failure
@@ -81,15 +107,8 @@ export const useUpdateListing = (
         setUpdating(false)
         closeNftNotification(whileUpdatingListingNotificationId.current)
         showNftNotification("Error", "Failed to update the NFT.", "error")
+        setPolling(false) // Stop polling on failure
     }, [closeNftNotification, showNftNotification])
-
-    // Cleanup function to close notifications when the component unmounts or dependencies change
-    useEffect(() => {
-        return () => {
-            closeNftNotification(confirmUpdateListingNotificationId.current)
-            closeNftNotification(whileUpdatingListingNotificationId.current)
-        }
-    }, [closeNftNotification])
 
     // Define the smart contract function to update the listing
     const { data: updateListingData, writeAsync: updateListing } = useContractWrite({
@@ -139,6 +158,7 @@ export const useUpdateListing = (
         )
         try {
             await updateListing()
+            setPolling(true) // Start polling after initiating the transaction
         } catch (error) {
             // This will handle any errors that are not caught by the onError callback
             console.log("An error occurred during the transaction: ", error)
@@ -156,8 +176,12 @@ export const useUpdateListing = (
         }
     }, [isUpdateListingTxLoading, isUpdateListingTxSuccess, isUpdateListingTxError])
 
+    // Cleanup function to close notifications when the component unmounts or dependencies change
     useEffect(() => {
-        // Cleanup function to close notifications when the component unmounts or dependencies change
+        return () => {
+            closeNftNotification(confirmUpdateListingNotificationId.current)
+            closeNftNotification(whileUpdatingListingNotificationId.current)
+        }
     }, [closeNftNotification])
 
     return { handleUpdateListing, updating }
