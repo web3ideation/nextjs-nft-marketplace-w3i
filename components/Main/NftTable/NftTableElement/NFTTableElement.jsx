@@ -1,12 +1,15 @@
+import React from "react"
+
 import Image from "next/image"
 import styles from "../../../../styles/Home.module.css"
 import LoadingWave from "../../ux/LoadingWave"
+import { useModal } from "../../../../context/ModalProvider"
 
 // Utility functions for formatting
 import { truncateStr, formatPriceToEther, truncatePrice } from "../../../../utils/formatting"
 
 // NFTTableElement: A React component to render a table row for a specific NFT collection
-export default function NFTTableElement({ collection, onClick, loadingImage }) {
+export default function NFTTableElement({ collection }) {
     // Destructuring properties from the 'collection' object
     const {
         nftAddress,
@@ -18,16 +21,26 @@ export default function NFTTableElement({ collection, onClick, loadingImage }) {
         collectionPrice,
     } = collection
 
+    const { openModal } = useModal()
+
     // Formatting NFT address and price for display
     const formattedNftAddress = truncateStr(nftAddress || "", 4, 4) // Truncating NFT address for brevity
     const priceInEther = formatPriceToEther(collectionPrice) // Converting price to Ether
     const formattedPrice = truncatePrice(priceInEther, 4) // Formatting and truncating price
-
+    const handleCollectionClick = (collection) => {
+        const modalId = "topCollectionModal-" + collection.nftAddress
+        openModal("collection", modalId, collection)
+    }
+    console.log("COOOLLection", collection)
     return (
         <>
             {imageURI ? (
                 // Render table row for NFT collection with image
-                <tr className={styles.nftTableRow} onClick={onClick}>
+                <tr
+                    className={styles.nftTableRow}
+                    key={`${collection.nftAddress}${collection.collectionCount}`}
+                    onClick={() => handleCollectionClick(collection)}
+                >
                     <td>
                         <div className={styles.contentWrapper}>
                             <Image

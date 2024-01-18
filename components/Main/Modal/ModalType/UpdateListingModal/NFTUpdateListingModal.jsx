@@ -4,6 +4,7 @@ import PropTypes from "prop-types"
 
 // Blockchain and Ethereum functionality
 import { ethers } from "ethers"
+import { useAccount, usePublicClient } from "wagmi"
 
 // Custom hooks and components
 import { useNFT } from "../../../../../context/NFTDataProvider"
@@ -11,6 +12,8 @@ import Tooltip from "../../../ux/Tooltip"
 import Modal from "../../ModalBasis/Modal"
 import { validateField } from "../../../../../utils/validation"
 import { useUpdateListing } from "../../../../../hooks/useUpdateListing"
+import { useModal } from "../../../../../context/ModalProvider"
+import networkMapping from "../../../../../constants/networkMapping.json"
 
 // Styles
 import styles from "../../../../../styles/Home.module.css"
@@ -18,22 +21,18 @@ import styles from "../../../../../styles/Home.module.css"
 // Component for updating NFT listings, with form validation and blockchain interaction
 const NFTUpdateListingModal = forwardRef((props, ref) => {
     // Destructuring props for better readability
-    const {
-        nftAddress,
-        tokenId,
-        marketplaceAddress,
-        closeModal,
-        price,
-        desiredNftAddress,
-        desiredTokenId,
-        isConnected,
-    } = props
+    const { modalContent, modalType } = useModal()
+    console.log("MODAL Type", modalType)
+    console.log("Modal content", modalContent)
+    const { address, isConnected } = useAccount()
+    const chainString = usePublicClient().chains[0]?.id?.toString() ?? "31337"
+    const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
 
     // State for form data and validation errors
     const [formData, setFormData] = useState({
-        newPrice: price,
-        newDesiredNftAddress: desiredNftAddress,
-        newDesiredTokenId: desiredTokenId,
+        newPrice: modalContent.price,
+        newDesiredNftAddress: modalContent.desiredNftAddress,
+        newDesiredTokenId: modalContent.desiredTokenId,
     })
     const [errors, setErrors] = useState({
         newPrice: "",
@@ -52,8 +51,8 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
     const { handleUpdateListing } = useUpdateListing(
         marketplaceAddress,
         ethers.utils.parseEther(formData.newPrice),
-        nftAddress,
-        tokenId,
+        modalContent.nftAddress,
+        modalContent.tokenId,
         formData.newDesiredNftAddress,
         formData.newDesiredTokenId,
         isConnected,
@@ -107,9 +106,9 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
     // Function to reset the form to its initial state
     const resetForm = () => {
         setFormData({
-            newPrice: price || "",
-            newDesiredNftAddress: desiredNftAddress || "",
-            newDesiredTokenId: desiredTokenId || "",
+            newPrice: modalContent.price || "",
+            newDesiredNftAddress: modalContent.desiredNftAddress || "",
+            newDesiredTokenId: modalContent.desiredTokenId || "",
         })
         setErrors({
             newPrice: "",
@@ -118,20 +117,12 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         })
     }
 
-    // Close modal and reset form
-    const handleCloseModal = () => {
-        closeModal?.()
-        resetForm()
-    }
-
     return (
         <Modal
             ref={ref}
-            isVisible={true}
-            onOk={validateAndUpdateListing}
-            okText="UPDATE"
             modalTitle="Updating price or the desired swap"
-            closeModal={handleCloseModal}
+            okText="UPDATE"
+            onOk={validateAndUpdateListing}
         >
             <form className={styles.updateListingForm} ref={formRef}>
                 {Object.entries(formData).map(([fieldKey, value]) => (

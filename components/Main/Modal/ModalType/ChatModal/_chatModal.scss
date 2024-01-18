@@ -19,11 +19,10 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    align-items: end;
+    align-items: flex-end;
     flex-grow: 1;
     overflow-y: auto;
     padding: 10px;
-
     border-bottom: 1px solid #ccc; /* Trennlinie zwischen Nachrichtenbereich und Eingabebereich */
     margin-bottom: 10px;
 }

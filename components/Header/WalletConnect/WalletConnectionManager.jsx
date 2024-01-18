@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react"
+import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
 
 // wagmi Hooks for Ethereum Interaction
@@ -8,7 +8,7 @@ import { useWeb3Modal } from "@web3modal/wagmi/react"
 // Utility Functions
 import { truncateStr, truncatePrice } from "../../../utils/formatting"
 
-import ChatModal from "../../Main/Modal/ModalType/ChatModal/ChatModal"
+import { useModal } from "../../../context/ModalProvider"
 
 // Styles
 import styles from "../../../styles/Home.module.css"
@@ -27,10 +27,11 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
     const menuRef = useRef(null)
     const modalRef = useRef(null)
 
-    const [showChatModal, setShowChatModal] = useState(false)
+    // Verwenden Sie ModalContext
+    const { openModal } = useModal()
 
     const handleChatClick = () => {
-        setShowChatModal(true)
+        openModal("chat", address)
     }
 
     const defaultBalanceData = { formatted: "0", symbol: "N/A" }
@@ -47,14 +48,6 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
             setFormattedPrice(truncatePrice(balanceData?.formatted || "0", 5))
         }
     }, [address, balanceData, isClient])
-
-    useEffect(() => {
-        const previousOverflow = document.body.style.overflow
-        document.body.style.overflow = showChatModal ? "hidden" : "auto"
-        return () => {
-            document.body.style.overflow = previousOverflow
-        }
-    }, [showChatModal])
 
     if (!isClient) return null
 
@@ -100,12 +93,6 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                     </div>
                 )}
             </div>
-            <ChatModal
-                ref={modalRef}
-                closeModal={() => setShowChatModal(false)}
-                isVisible={showChatModal}
-                modalTitle={"Chat"}
-            ></ChatModal>
         </>
     )
 }

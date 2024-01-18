@@ -1,27 +1,33 @@
-// React imports
+// ChatModalComponent.tsx
+
+// React Imports
 import React, { useState, forwardRef } from "react"
 
-// User-created components and hooks
+// User-Created Components and Hooks
 import Modal from "../../ModalBasis/Modal"
 
-// Style imports
+// Style Imports
 import styles from "../../../../../styles/Home.module.css"
 
-// ChatModal component using forwardRef for parent component referencing
+/**
+ * ChatModal Component
+ * This component is a specialized modal for chat functionality,
+ * using forwardRef for parent component referencing. It maintains
+ * the state of messages and handles sending and clearing messages.
+ */
 const ChatModal = forwardRef((props, ref) => {
-    // Local state for managing message input and message list
+    // Local State: Managing message input and message list
     const [message, setMessage] = useState("")
     const [messages, setMessages] = useState([])
 
-    // Destructuring props for easier access
-    const { closeModal, modalTitle, isVisible } = props
-
-    // Handles input change for message text
+    // Function: handleMessageChange
+    // Updates the message state as the user types in the input.
     const handleMessageChange = (e) => {
         setMessage(e.target.value)
     }
 
-    // Handles sending a message
+    // Function: handleSendMessage
+    // Adds the current message to the messages list and clears the input field.
     const handleSendMessage = () => {
         if (message.trim()) {
             setMessages((prevMessages) => [...prevMessages, message])
@@ -29,7 +35,8 @@ const ChatModal = forwardRef((props, ref) => {
         }
     }
 
-    // Clears all messages
+    // Function: handleClearMessages
+    // Clears all messages from the chat.
     const handleClearMessages = () => {
         setMessages([])
     }
@@ -37,9 +44,7 @@ const ChatModal = forwardRef((props, ref) => {
     return (
         <Modal
             ref={ref}
-            isVisible={isVisible}
-            modalTitle={modalTitle}
-            closeModal={closeModal}
+            modalTitle={"Chat"}
             okText={"Send"}
             onOk={handleSendMessage}
             clearMessages={handleClearMessages}
@@ -66,5 +71,9 @@ const ChatModal = forwardRef((props, ref) => {
         </Modal>
     )
 })
+
+// Setting Display Name for Debugging
+// This helps in identifying the component in React Developer Tools.
+ChatModal.displayName = "ChatModal"
 
 export default ChatModal

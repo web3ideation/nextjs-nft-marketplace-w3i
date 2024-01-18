@@ -1,3 +1,4 @@
+// Keyframes for notification animation
 @keyframes slideIn {
     0% {
         opacity: 0;
@@ -26,6 +27,58 @@
         opacity: 0;
         padding: 18px;
         transform: translate3D(100%, 0, 0);
+    }
+}
+
+// Keyframes for modals animation
+@keyframes modalEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalExit {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes modalChangingOut {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+}
+@keyframes modalChangingIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
     }
 }
 

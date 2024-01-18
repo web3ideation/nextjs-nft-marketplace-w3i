@@ -1,26 +1,21 @@
 @use "../../../../styles/helpers/variables" as *;
 @use "../../../../styles/helpers/mixins" as *;
+@use "../../../../styles/helpers/keyframes";
 
-.modalTransitionEnter,
-.updateModalTransitionEnter {
-    opacity: 0;
+.modalEnter {
+    animation: modalEnter 0.4s forwards;
 }
 
-.modalTransitionEnterActive,
-.updateModalTransitionEnterActive {
-    opacity: 1;
-    transition: opacity 400ms ease-in;
+.modalExit {
+    animation: modalExit 0.4s forwards;
 }
 
-.modalTransitionExit,
-.updateModalTransitionExit {
-    opacity: 1;
+.modalChangingOut {
+    animation: modalChangingOut 0.4s forwards;
 }
 
-.modalTransitionExitActive,
-.updateModalTransitionExitActive {
-    opacity: 0;
-    transition: opacity 400ms ease-out;
+.modalChangingIn {
+    animation: modalChangingIn 0.4s forwards;
 }
 
 .modalBackdrop {
