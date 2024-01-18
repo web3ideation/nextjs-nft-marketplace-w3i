@@ -85,6 +85,7 @@ const MyNFTs = () => {
             </div>
         )
     }
+
     return (
         <div className={styles.myNftWrapper}>
             <h1>My NFTs</h1>
@@ -115,4 +116,5 @@ const MyNFTs = () => {
         </div>
     )
 }
+
 export default MyNFTs
