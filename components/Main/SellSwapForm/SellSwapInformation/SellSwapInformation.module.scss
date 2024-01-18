@@ -1,0 +1,17 @@
+@use "../../../../styles/helpers/variables" as *;
+@use "../../../../styles/helpers/mixins" as *;
+
+.sellSwapInformationWrapper {
+    @include flex-center;
+    padding: 0 0 20px 0;
+    width: 100%;
+}
+
+.sellSwapInformation {
+    @include boxShadowFields;
+    padding: 10px;
+    border-radius: 5px;
+    border: solid 3px $color-firebrick;
+    overflow-y: auto;
+    max-height: 300px;
+}
