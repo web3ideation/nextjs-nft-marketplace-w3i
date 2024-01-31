@@ -8,11 +8,23 @@ import LoadingWave from "../../ux/LoadingWave"
 import styles from "../../../../styles/Home.module.css"
 
 // Component for displaying a single notification
-const SingleNotification = ({ notification, clearNftNotification }) => {
+const SingleNotification = ({
+    notification,
+    closeNftNotification,
+    clearNftNotification,
+    onClose,
+}) => {
     // Handles the end of the exit animation
     const handleAnimationEnd = (e) => {
         if (e.animationName === styles.slideOut) {
             clearNftNotification(notification.id)
+        }
+    }
+
+    const handleCloseClick = () => {
+        closeNftNotification(notification.id)
+        if (onClose) {
+            onClose(notification.id)
         }
     }
 
@@ -49,7 +61,7 @@ const SingleNotification = ({ notification, clearNftNotification }) => {
                     <div className={styles.nftNotificationBtnWrapper}>
                         <button
                             className={styles.notificationCloseButton}
-                            onClick={() => clearNftNotification(notification.id)}
+                            onClick={handleCloseClick}
                         >
                             <img src="/media/close_icon.png" alt="Close Notification" />
                         </button>

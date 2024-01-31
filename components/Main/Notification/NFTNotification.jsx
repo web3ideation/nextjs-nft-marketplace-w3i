@@ -15,8 +15,12 @@ import styles from "../../../styles/Home.module.css"
  */
 const NftNotification = () => {
     // Destructuring methods and state from the NFT notification context
-    const { nftNotifications, showNftNotification, clearNftNotification, closeNftNotification } =
-        useNftNotification()
+    const { nftNotifications, closeNftNotification, clearNftNotification } = useNftNotification()
+
+    const handleNotificationClose = (notificationId) => {
+        // Hier können Sie die zusätzliche Logik hinzufügen
+        console.log("Notification closed with ID:", notificationId)
+    }
 
     return (
         <div className={styles.notificationsContainer}>
@@ -26,8 +30,8 @@ const NftNotification = () => {
                     className={`${styles.nftNotification} ${styles[notification.type]}`}
                     notification={notification}
                     clearNftNotification={clearNftNotification}
-                    showNftNotification={showNftNotification}
                     closeNftNotification={closeNftNotification}
+                    onClose={handleNotificationClose}
                 />
             ))}
         </div>

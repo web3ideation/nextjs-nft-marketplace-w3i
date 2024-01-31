@@ -32,6 +32,7 @@ function notificationReducer(state, action) {
                 ...state,
                 nftNotifications: state.nftNotifications.map((notification) => {
                     if (notification.id === action.payload) {
+                        notification.onClose?.()
                         return { ...notification, isSticky: false, closing: true }
                     }
                     return notification
@@ -55,9 +56,9 @@ export const NftNotificationProvider = ({ children, maxNotifications = 7 }) => {
     const [state, dispatch] = useReducer(notificationReducer, defaultState)
 
     const showNftNotification = useCallback(
-        (title, message, type, isSticky = false) => {
+        (title, message, type, isSticky = false, onClose = () => {}) => {
             const id = Math.random().toString(36).slice(2, 11)
-            const newNotification = { id, title, message, type, isSticky }
+            const newNotification = { id, title, message, type, isSticky, onClose }
             dispatch({ type: "ADD_NOTIFICATION", payload: newNotification, maxNotifications })
             return id
         },
