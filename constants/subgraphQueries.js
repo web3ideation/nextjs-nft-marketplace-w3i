@@ -3,7 +3,7 @@ import { gql } from "@apollo/client"
 // This gives all the Items which are currently listed
 const GET_ACTIVE_ITEMS = gql`
     {
-        items(where: { isListed: true }, orderBy: listingId, orderDirection: desc) {
+        items(first: 1000, where: { isListed: true }, orderBy: listingId, orderDirection: desc) {
             listingId
             nftAddress
             tokenId
@@ -19,7 +19,7 @@ const GET_ACTIVE_ITEMS = gql`
 // This gives all the Items which have ever been listed, including the ones which have been sold, but doesnt include the buyers address
 const GET_INACTIVE_ITEMS = gql`
     {
-        items(where: { isListed: false }, orderBy: listingId, orderDirection: desc) {
+        items(first: 1000, where: { isListed: false }, orderBy: listingId, orderDirection: desc) {
             listingId
             nftAddress
             tokenId
