@@ -95,7 +95,6 @@ const SellSwapNFT = () => {
         formData.price,
         formData.desiredNftAddress,
         formData.desiredTokenId,
-
         handleTransactionCompletion
     )
 
@@ -104,7 +103,7 @@ const SellSwapNFT = () => {
         console.log("Form Data Received: ", newFormData)
         updateFormData(newFormData)
 
-        const { nftAddress, tokenId, price, desiredNftAddress, desiredTokenId } = newFormData
+        const { price, desiredNftAddress, desiredTokenId } = newFormData
 
         const formattedPrice = ethers.utils.parseUnits(price, "ether").toString() // Add any other data formatting here
         const formattedDesiredNftAddress = desiredNftAddress || ethers.constants.AddressZero
