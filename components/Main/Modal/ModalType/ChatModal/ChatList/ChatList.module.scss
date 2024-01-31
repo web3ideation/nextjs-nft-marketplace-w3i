@@ -1,0 +1,30 @@
+@use "../../../../../../styles/helpers/variables" as *;
+@use "../../../../../../styles/helpers/mixins" as *;
+
+.chatListContainer {
+    @include boxShadowFields;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 5px;
+    width: 30%;
+    border-radius: 5px;
+    background-color: $color-white;
+    overflow-y: auto;
+    direction: rtl;
+}
+
+.chatPartner {
+    @include boxShadowFields;
+    display: flex;
+    justify-content: center;
+    margin: 5px;
+    padding: 5px;
+    border: solid 1px $hover-blue;
+    border-radius: $border-radius;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.02);
+    }
+}

@@ -17,7 +17,6 @@ const Modal = forwardRef((props, ref) => {
     const { children, okText, onOk, cancelListing, clearMessages, modalTitle } = props
     // Using useModal hook to manage modal state and actions
     const { isModalOpen, closeModal, modalState, currentModalId } = useModal()
-    console.log("Current modal id", currentModalId)
     useEffect(() => {
         // Speichern des ursprünglichen overflow-Wertes des body-Elements
         const originalStyle = window.getComputedStyle(document.body).overflow

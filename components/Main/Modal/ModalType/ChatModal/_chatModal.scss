@@ -1,16 +1,22 @@
 @use "../../../../../styles/helpers/variables" as *;
 @use "../../../../../styles/helpers/mixins" as *;
 
+.chatModalContainer {
+    display: flex;
+    min-height: 400px;
+    max-height: 40vh;
+    min-width: 600px;
+    max-width: 800px;
+    padding: 5px;
+}
+
 .chatContainer {
     @include boxShadowFields;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    margin: 10px;
-    min-height: 400px;
-    max-height: 80vh;
-    min-width: 500px;
-    max-width: 800px;
+    margin: 5px;
+    width: 70%;
     border-radius: 5px;
     background-color: $color-white;
 }
@@ -18,13 +24,10 @@
 .messagesArea {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-end;
-    flex-grow: 1;
-    overflow-y: auto;
     padding: 10px;
-    border-bottom: 1px solid #ccc; /* Trennlinie zwischen Nachrichtenbereich und Eingabebereich */
+    border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
+    overflow: auto;
 }
 
 .inputArea {
@@ -41,10 +44,36 @@
     margin: 10px;
 }
 
-.chatMessage {
-    max-width: 50%;
-    border: solid 1px $hover-blue;
-    border-radius: $border-radius;
-    padding: 5px;
+.chatMessageInWrapper {
+    display: flex;
+    justify-content: flex-start;
+    max-width: 100%;
     margin: 0 5px 5px 5px;
+}
+
+.chatMessageIn {
+    @include boxShadowFields;
+    max-width: 50%;
+    padding: 5px;
+    border: solid 1px $color-forestgreen;
+    border-radius: $border-radius;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+}
+
+.chatMessageOutWrapper {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 100%;
+    margin: 0 5px 5px 5px;
+}
+
+.chatMessageOut {
+    @include boxShadowFields;
+    max-width: 50%;
+    padding: 5px;
+    border: solid 1px $color-firebrick;
+    border-radius: $border-radius;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
 }

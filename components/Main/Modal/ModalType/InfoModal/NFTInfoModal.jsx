@@ -70,7 +70,7 @@ const NftModal = forwardRef((props, ref) => {
 
         setTimeout(() => {
             router.push("/my-nft")
-        }, 2000)
+        }, 1500)
     }
 
     const { handleBuyClick } = useBuyItem(
@@ -184,7 +184,7 @@ const NftModal = forwardRef((props, ref) => {
     return (
         <Modal
             ref={ref}
-            modalTitle={[modalContent.tokenName, " ", "#", modalContent.tokenId]}
+            modalTitle={[modalContent.tokenName]}
             okText={okText}
             onOk={onOkHandler}
             cancelListing={showCancelListingButton ? handleCancelListingClick : null}
