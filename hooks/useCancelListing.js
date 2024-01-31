@@ -66,7 +66,7 @@ export const useCancelListing = (
     const handleTransactionError = useCallback(
         (error) => {
             // Checking if the error is due to user's action
-            const userDenied = error.message.includes("User denied transaction signature")
+            const userDenied = error.message.includes("User rejected the request")
             showNftNotification(
                 userDenied ? "Transaction Rejected" : "Error",
                 userDenied
@@ -161,6 +161,7 @@ export const useCancelListing = (
             "info",
             true
         )
+
         try {
             await cancelListing()
             setPolling(true) // Start polling after initiating the transaction
