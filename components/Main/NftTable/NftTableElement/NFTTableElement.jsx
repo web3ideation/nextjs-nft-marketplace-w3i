@@ -31,7 +31,6 @@ export default function NFTTableElement({ collection }) {
         const modalId = "topCollectionModal-" + collection.nftAddress
         openModal("collection", modalId, collection)
     }
-    console.log("COOOLLection", collection)
     return (
         <>
             {imageURI ? (

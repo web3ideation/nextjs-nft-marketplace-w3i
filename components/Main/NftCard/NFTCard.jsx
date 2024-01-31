@@ -28,7 +28,7 @@ export default function NFTBox({ nftData }) {
         isListed,
         listingId,
         imageURI,
-        tokenName,
+        collectionName,
         tokenSymbol,
         tokenDescription,
     } = nftData
@@ -110,7 +110,7 @@ export default function NFTBox({ nftData }) {
                     />
                     <div className={styles.cardTextArea}>
                         <div className={styles.cardOwnerAndId}>
-                            <div>{tokenName}</div>
+                            <div>{collectionName}</div>
                             <div>#{tokenId}</div>
                         </div>
                         <div className={styles.cardListedPrice}>
