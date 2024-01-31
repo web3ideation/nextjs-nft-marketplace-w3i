@@ -25,13 +25,27 @@ const SearchResultPage = () => {
     // Retrieving the search term from the URL query.
     const searchTermFromQuery = router.query.search || ""
 
+    const attributesToString = (attributes) => {
+        if (!attributes || !Array.isArray(attributes)) {
+            return "" // Rückgabe eines leeren Strings, wenn keine Attribute vorhanden sind
+        }
+        return attributes
+            .map((attr) =>
+                attr.trait_type && attr.value ? `${attr.trait_type}: ${attr.value}` : ""
+            )
+            .join(" ")
+            .toLowerCase()
+    }
+
     // Effect: Filter NFTs based on the search term when data or query changes.
     useEffect(() => {
         const filteredResults = nftsData.filter((item) => {
             const formattedPrice = ethers.utils.formatUnits(item.price, "ether")
+            const attributesString = attributesToString(item.attributes)
             const concatenatedFields = [
                 // Concatenating relevant fields for the search functionality.
                 item.Background,
+                attributesString,
                 item.Text1,
                 item.Text2,
                 item.Text3,
@@ -47,6 +61,7 @@ const SearchResultPage = () => {
                 item.tokenDescription,
                 item.tokenId,
                 item.tokenName,
+                item.collectionName,
                 item.utility,
             ]
                 .join(" ")
