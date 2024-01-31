@@ -55,12 +55,12 @@ const SellSwapNFT = () => {
     console.log("Withdraw ", isWithdrawTxSuccess)
     // Setup the UI, checking for any proceeds the user can withdraw
     useEffect(() => {
-        if (isConnected || returnedProceeds || userAdress) {
+        if (returnedProceeds) {
             // Convert the proceeds from Wei to Ether
             const proceedsInEther = ethers.utils.formatUnits(returnedProceeds.toString(), "ether")
             setProceeds(proceedsInEther)
         }
-    }, [isConnected, returnedProceeds, userAdress])
+    }, [returnedProceeds])
 
     useEffect(() => {
         const updatePriceInEur = async () => {
