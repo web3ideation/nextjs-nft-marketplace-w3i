@@ -14,13 +14,13 @@ import { NFTProvider } from "../context/NFTDataProvider"
 import { ModalProvider } from "../context/ModalProvider"
 
 // Importing components from local components directory
-import ModalRenderer from "../components/Main/Modal/ModalBasis/ModalRenderer"
+import ModalRenderer from "../components/Main/Modal/ModalRenderer"
 import NftNotification from "../components/Main/Notification/NFTNotification"
 import Header from "../components/Header/Header"
 import Footer from "../components/Footer/Footer"
 
 // Importing global styles
-import "../styles/globals.css"
+import "../styles/globals.scss"
 
 // Apollo Client Initialization with environment variable for GraphQL endpoint
 const client = new ApolloClient({
