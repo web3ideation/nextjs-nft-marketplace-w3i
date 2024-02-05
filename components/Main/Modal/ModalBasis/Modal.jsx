@@ -6,7 +6,7 @@ import ReactDOM from "react-dom"
 import { useModal } from "../../../../context/ModalProvider"
 
 // Styles import
-import styles from "../../../../styles/Home.module.css"
+import styles from "./Modal.module.scss"
 
 /**
  * Modal component with forwardRef for parent components to reference.

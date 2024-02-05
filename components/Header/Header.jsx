@@ -7,7 +7,7 @@ import SearchBar from "./SearchBar/SearchBar"
 import WalletConnectionManager from "./WalletConnect/WalletConnectionManager"
 
 // Styles
-import styles from "../../styles/Home.module.css"
+import styles from "./Header.module.scss"
 
 // Header component for the NFT Marketplace
 const Header = () => {

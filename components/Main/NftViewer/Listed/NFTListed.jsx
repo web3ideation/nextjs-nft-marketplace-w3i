@@ -6,7 +6,7 @@ import { useNFT } from "../../../../context/NFTDataProvider"
 import NFTBox from "../../NftCard/NFTCard"
 
 // ------------------ Styles ------------------
-import styles from "../../../../styles/Home.module.css"
+import styles from "./NFTListed.module.scss"
 
 function NFTListed() {
     // Retrieve NFT data and loading state using custom hook

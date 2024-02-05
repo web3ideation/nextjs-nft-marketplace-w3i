@@ -7,7 +7,7 @@ import NFTTable from "../../NftTable/NFTTable"
 import NFTTableElement from "../../NftTable/NftTableElement/NFTTableElement"
 
 // Style Imports
-import styles from "../../../../styles/Home.module.css"
+import styles from "./NFTCollection.module.scss"
 
 function NFTCollection() {
     // State management for NFT collections and modal states

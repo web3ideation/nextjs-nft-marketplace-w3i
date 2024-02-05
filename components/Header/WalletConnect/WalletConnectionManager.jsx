@@ -11,7 +11,7 @@ import { truncateStr, truncatePrice } from "../../../utils/formatting"
 import { useModal } from "../../../context/ModalProvider"
 
 // Styles
-import styles from "../../../styles/Home.module.css"
+import styles from "./WalletConnectionManager.module.scss"
 
 /**
  * Component to display wallet information.

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react"
-import styles from "../styles/Home.module.css"
+import styles from "./PopupMenu.module.scss"
 import Link from "next/link"
 
 const PopupMenu = () => {

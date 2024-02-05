@@ -6,7 +6,7 @@ import { useNftNotification } from "../../../context/NotificationProvider"
 import SingleNotification from "./NotificationElement/NFTSingleNotification"
 
 // Styles
-import styles from "../../../styles/Home.module.css"
+import styles from "./Notification.module.scss"
 
 /**
  * NftNotification Component
@@ -27,7 +27,6 @@ const NftNotification = () => {
             {nftNotifications.map((notification) => (
                 <SingleNotification
                     key={notification.id}
-                    className={`${styles.nftNotification} ${styles[notification.type]}`}
                     notification={notification}
                     clearNftNotification={clearNftNotification}
                     closeNftNotification={closeNftNotification}

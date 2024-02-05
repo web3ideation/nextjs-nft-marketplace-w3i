@@ -1,5 +1,5 @@
 // Style import
-import styles from "../../../styles/Home.module.css"
+import styles from "./Tooltip.module.scss"
 
 /**
  * Tooltip Component

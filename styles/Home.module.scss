@@ -2,38 +2,6 @@
 @use "helpers/mixins" as *;
 @use "helpers/keyframes" as *;
 
-@use "../components/Main/Notification/notification";
-@use "../components/Main/Notification/NotificationElement/singleNotification";
-
-@use "../components/Main/ux/tooltip";
-@use "../components/Main/ux/loadingWave";
-
-@use "../components/Main/Modal/ModalBasis/modal";
-@use "../components/Main/Modal/ModalElements/ModalCollectionList/nftModalList";
-@use "../components/Main/Modal/ModalType/InfoModal/infoModal";
-@use "../components/Main/Modal/ModalType/UpdateListingModal/updateListingModal";
-@use "../components/Main/Modal/ModalType/CollectionModal/collectionModal";
-@use "../components/Main/Modal/ModalType/ChatModal/chatModal";
-
-@use "../components/Header/header";
-@use "../components/Header/SearchBar/searchBar";
-@use "../components/Header/WalletConnect/walletConnectionManager";
-@use "../components/Header/PopupMenu/popupMenu";
-
-@use "../components/Main/NftCard/nftCard";
-@use "../components/Main/NftTable/nftTable";
-@use "../components/Main/NftTable/NftTableElement/nftTableElement";
-
-@use "../components/Main/SearchSideBar/searchSideFilters";
-
-@use "../components/Main/NftViewer/Collection/nftCollection";
-@use "../components/Main/NftViewer/Listed/nftListed";
-@use "../components/Main/NftViewer/Listed/nftMostSold";
-
-@use "../components/Main/SellSwapForm/sellSwapForm";
-
-@use "../components/Footer/footer";
-
 @use "pages/index";
 @use "pages/my-nft";
 @use "pages/search-result-page";

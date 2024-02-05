@@ -1,7 +1,7 @@
 import React from "react"
 
 import Image from "next/image"
-import styles from "../../../../styles/Home.module.css"
+import styles from "./NFTTableElement.module.scss"
 import LoadingWave from "../../ux/LoadingWave"
 import { useModal } from "../../../../context/ModalProvider"
 

@@ -5,7 +5,7 @@ import React from "react"
 import LoadingWave from "../../ux/LoadingWave"
 
 // Styles
-import styles from "../../../../styles/Home.module.css"
+import styles from "./SingleNotification.module.scss"
 
 // Component for displaying a single notification
 const SingleNotification = ({

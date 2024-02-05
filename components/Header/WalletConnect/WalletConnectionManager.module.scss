@@ -1,0 +1,122 @@
+@use "../../../styles/helpers/variables" as *;
+@use "../../../styles/helpers/mixins" as *;
+
+.headerAccountInfoWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 18px;
+    cursor: pointer;
+}
+
+.onlineDot {
+    @include boxShadow;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: $color-forestgreen;
+}
+
+.headerAccountInfo {
+    padding: 0 18px;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    font-weight: 500;
+}
+
+.menuIcon {
+    transition: 0.5s ease-in;
+    img {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 18px;
+        width: auto;
+    }
+}
+
+.walletMenu {
+    position: absolute;
+    z-index: -1;
+    transform: translateY(-100%);
+    padding: 10px;
+    top: 100%;
+    width: 250px;
+    border-radius: 0 0 5px 5px;
+    background-color: $secondary-color;
+    box-shadow: inset 0 5px 5px rgb(0 0 0 / 0.1), inset 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    opacity: 0;
+    transition: 0.5s ease-out;
+}
+
+.headerAccountInfoWrapper {
+    transition: 0.4s ease-in;
+    &:hover {
+        color: $hover-blue;
+        .walletMenu {
+            transform: translateY(0);
+            opacity: 0.9;
+        }
+        .menuIcon {
+            transform: rotateX(180deg);
+            @include invert;
+        }
+    }
+}
+
+.walletMenuLinks {
+    @include flex-center;
+    padding: 10px 40px;
+    text-decoration: none;
+    button {
+        border: none;
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        line-height: $line-height-small;
+        font-weight: 400;
+        color: $white;
+        background-color: $secondary-color;
+        cursor: pointer;
+
+        &:hover {
+            color: $hover-grey;
+            background-color: transparent;
+        }
+    }
+}
+
+.walletMenuBalance {
+    border-radius: 5px;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    line-height: $line-height-small;
+    font-weight: 400;
+    color: $black;
+    background-color: $white;
+    cursor: default;
+}
+
+// Connect button styles
+.connectButton {
+    display: flex;
+    padding: 0 18px;
+    background-color: $background-color;
+
+    button {
+        align-items: center;
+        padding: 0 18px;
+        width: 128px;
+        border-radius: 5px;
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        color: $color-white;
+        background-color: $hover-blue;
+        cursor: pointer;
+
+        &:hover {
+            color: $hover-grey;
+            background-color: $hover-blue;
+        }
+    }
+}

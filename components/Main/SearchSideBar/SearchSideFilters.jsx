@@ -1,11 +1,11 @@
 // Importing React functionalities
 import React, { useState, useRef, useEffect } from "react"
 
-// Importing styles
-import styles from "../../../styles/Home.module.css"
-
 // Importing custom components
 import SearchSideFiltersElement from "./SideBarElement/SearchSideFiltersElement"
+
+// Importing styles
+import styles from "./SearchSideFilters.module.scss"
 
 // SearchSideFilters component definition
 const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {

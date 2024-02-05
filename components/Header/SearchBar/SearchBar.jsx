@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import { useRouter } from "next/router"
 
 // Styles
-import styles from "../../../styles/Home.module.css"
+import styles from "./SearchBar.module.scss"
 
 // SearchBar Functional Component
 const SearchBar = () => {

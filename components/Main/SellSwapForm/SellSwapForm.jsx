@@ -13,7 +13,7 @@ import SellSwapInformation from "./SellSwapInformation/SellSwapInformation"
 
 // ------------------ Style Imports ------------------
 // Styles specific to this component
-import styles from "../../../styles/Home.module.css"
+import styles from "./SellSwapForm.module.scss"
 
 // ------------------ SellSwapForm Component ------------------
 // This component is responsible for rendering a form tailored for selling or swapping NFTs.

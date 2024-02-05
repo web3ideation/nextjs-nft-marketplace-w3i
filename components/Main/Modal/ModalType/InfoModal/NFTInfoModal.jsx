@@ -23,7 +23,7 @@ import { copyNftAddressToClipboard } from "../../../../../utils/copyAddress"
 import networkMapping from "../../../../../constants/networkMapping.json"
 
 // Styles import
-import styles from "../../../../../styles/Home.module.css"
+import styles from "./InfoModal.module.scss"
 
 const NftModal = forwardRef((props, ref) => {
     // Destructuring the passed properties

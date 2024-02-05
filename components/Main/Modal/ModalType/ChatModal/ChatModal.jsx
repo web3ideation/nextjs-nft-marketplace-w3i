@@ -7,7 +7,7 @@ import React, { useState, useRef, useEffect, forwardRef } from "react"
 import Modal from "../../ModalBasis/Modal"
 
 // Style Imports
-import styles from "../../../../../styles/Home.module.css"
+import styles from "./ChatModal.module.scss"
 import ChatList from "./ChatList/ChatList"
 
 /**

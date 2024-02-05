@@ -1,8 +1,8 @@
 // React Imports
-import React from "react";
+import React from "react"
 
 // Style Imports
-import styles from "../../../styles/Home.module.css";
+import styles from "./NFTTable.module.scss"
 
 /**
  * NFTTable Component
@@ -29,6 +29,5 @@ export default function NFTTable({ tableRows }) {
             </thead>
             <tbody>{tableRows}</tbody>
         </table>
-    );
+    )
 }
-

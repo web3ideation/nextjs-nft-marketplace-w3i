@@ -1,8 +1,8 @@
 // React imports
-import React from "react";
+import React from "react"
 
 // Style imports
-import styles from "../../../styles/Home.module.css";
+import styles from "./LoadingWave.module.scss"
 
 /**
  * LoadingWave Component
@@ -19,7 +19,7 @@ const LoadingWave = () => {
             <div className={styles.wave}></div>
             <div className={styles.wave}></div>
         </div>
-    );
-};
+    )
+}
 
-export default LoadingWave;
+export default LoadingWave

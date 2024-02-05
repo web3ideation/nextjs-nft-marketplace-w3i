@@ -12,7 +12,7 @@ import { fetchEthToEurRate } from "../../../../../utils/fetchEthToEurRate"
 import { formatPriceToEther } from "../../../../../utils/formatting"
 
 // ------------------ Styles ------------------
-import styles from "../../../../../styles/Home.module.css"
+import styles from "./CollectionModal.module.scss"
 
 // Component for displaying a modal with NFT collection details
 const NFTCollectionModal = forwardRef((prop, ref) => {

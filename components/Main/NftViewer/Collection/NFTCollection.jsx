@@ -9,7 +9,7 @@ import NFTTable from "../../NftTable/NFTTable"
 import NFTTableElement from "../../NftTable/NftTableElement/NFTTableElement"
 
 // Style imports
-import styles from "../../../../styles/Home.module.css"
+import styles from "./NFTCollection.module.scss"
 
 function NFTCollection() {
     // Hooks & Data Retrieval

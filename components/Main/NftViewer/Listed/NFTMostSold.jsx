@@ -7,7 +7,7 @@ import { useNFT } from "../../../../context/NFTDataProvider"
 import LoadingWave from "../../ux/LoadingWave"
 
 // ------------------ Styles ------------------
-import styles from "../../../../styles/Home.module.css"
+import styles from "./NFTMostSold.module.scss"
 
 // Component for displaying the most sold NFTs
 function NFTMostSold() {

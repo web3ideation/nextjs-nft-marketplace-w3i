@@ -16,7 +16,7 @@ import { formatPriceToEther, truncatePrice } from "../../../utils/formatting"
 import { fetchEthToEurRate } from "../../../utils/fetchEthToEurRate"
 
 // ------------------ Constant & Style Imports ------------------
-import styles from "../../../styles/Home.module.css"
+import styles from "./NFTCard.module.scss"
 
 // ------------------ Main Component Function ------------------
 export default function NFTBox({ nftData }) {

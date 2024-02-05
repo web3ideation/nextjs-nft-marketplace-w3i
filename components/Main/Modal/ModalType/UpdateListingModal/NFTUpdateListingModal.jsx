@@ -16,7 +16,7 @@ import { useModal } from "../../../../../context/ModalProvider"
 import networkMapping from "../../../../../constants/networkMapping.json"
 
 // Styles
-import styles from "../../../../../styles/Home.module.css"
+import styles from "./UpdateListingModal.module.scss"
 
 // Component for updating NFT listings, with form validation and blockchain interaction
 const NFTUpdateListingModal = forwardRef((props, ref) => {
