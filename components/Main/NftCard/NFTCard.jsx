@@ -85,7 +85,6 @@ export default function NFTBox({ nftData }) {
         <>
             {imageURI ? (
                 <div className={styles.nftCard} onClick={() => handleCardClick(nftData)}>
-                    {" "}
                     <div className={styles.cardTitleWrapper}>
                         <div className={styles.cardTitle}>
                             <h2>{tokenSymbol}</h2>

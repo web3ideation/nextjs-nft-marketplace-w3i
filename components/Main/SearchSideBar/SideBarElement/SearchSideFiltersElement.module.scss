@@ -1,0 +1,111 @@
+@use "../../../../styles/helpers/keyframes" as *;
+@use "../../../../styles/helpers/variables" as *;
+@use "../../../../styles/helpers/mixins" as *;
+
+.searchSideFilters {
+    width: 100%;
+    background-color: $background-color;
+}
+
+// Side filter option wrapper styles
+.searchSideFiltersOptionWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 1;
+    width: 128px;
+    background-color: $background-color;
+
+    h4 {
+        padding: 18px;
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        font-weight: 500;
+        cursor: pointer;
+
+        &:hover {
+            color: $hover-blue;
+        }
+    }
+}
+
+// Search side filter items wrapper styles
+.searchSideFiltersItemsWrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+    width: 250px;
+    max-height: 400px;
+    left: 128px;
+    padding: 0px 10px;
+    transform: translate3d(-100%, -59px, 0);
+    transition: 0.5s ease-out;
+    opacity: 0;
+    background-color: $secondary-color;
+    border-radius: 0 5px 5px 0;
+    box-shadow: inset 5px 0 5px rgb(0 0 0 / 0.1), inset 1px 0 2px -1px rgb(0 0 0 / 0.1);
+    overflow: auto;
+}
+
+// Search side filter items wrapper open styles
+.searchSideFiltersItemsWrapperOpen {
+    transform: translate3d(0, -59px, 0);
+    opacity: 0.9;
+}
+
+// Filter button styles
+.filterButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 18px 0px;
+    z-index: 1;
+    width: 100%;
+    background-color: $secondary-color;
+}
+
+.filterButtonText {
+    flex-grow: 1;
+    text-align: left;
+    margin-right: 10px;
+    font-family: $font-primary;
+    line-height: $line-height-small;
+    font-size: $font-size-small;
+    color: $white;
+    font-weight: 400;
+    cursor: pointer;
+
+    &:hover {
+        .checkIcon,
+        .uncheckedIcon {
+            border: 2px solid $hover-grey;
+            color: $hover-grey;
+        }
+        color: $hover-grey;
+    }
+}
+
+.checkIcon,
+.uncheckedIcon {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    color: $white;
+}
+
+.checkIcon::after {
+    content: "✔";
+}

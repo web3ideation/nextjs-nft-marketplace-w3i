@@ -1,27 +1,33 @@
 // React Imports
-import React, { useState } from "react";
+import React, { useState } from "react"
 
 // Style Imports
-import styles from "../../../../styles/Home.module.css";
+import styles from "./SearchSideFiltersElement.module.scss"
 
 // SearchSideFiltersElement: Dropdown filter component for search sidebar.
 const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
 
     // Event Handlers
     // handleMouseEnter: Opens the filter dropdown on mouse enter.
-    const handleMouseEnter = () => setIsOpen(true);
+    const handleMouseEnter = () => setIsOpen(true)
 
     // handleMouseLeave: Closes the filter dropdown on mouse leave.
-    const handleMouseLeave = () => setIsOpen(false);
+    const handleMouseLeave = () => setIsOpen(false)
 
     // handleButtonClick: Triggered when a filter option is clicked.
-    const handleButtonClick = (value) => onOptionChange(value);
+    const handleButtonClick = (value) => {
+        if (selected === value) {
+            onOptionChange("default")
+        } else {
+            onOptionChange(value)
+        }
+    }
 
     // renderIcon: Renders the check/uncheck icon based on the selected option.
     const renderIcon = (optionValue) => (
         <div className={selected === optionValue ? styles.checkIcon : styles.uncheckedIcon} />
-    );
+    )
 
     return (
         <div
@@ -50,7 +56,7 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
                 ))}
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default SearchSideFiltersElement;
+export default SearchSideFiltersElement

@@ -31,13 +31,14 @@
 
 .modalContentWrapper {
     position: relative;
+    display: flex;
+    flex-direction: column;
     z-index: 11;
-    max-width: 840px;
-    max-height: 95vh;
+    max-width: 50%;
+    max-height: 95%;
     border-radius: 5px;
     font-family: $font-primary;
     background: white;
-    overflow: auto;
 }
 
 .modalContentWrapper::before {
@@ -47,7 +48,6 @@
     top: 0;
     left: 0;
     right: 0;
-    //transform: translateX(-20px);
     bottom: -20px;
     border-radius: 5px;
     opacity: 0.1;
@@ -57,9 +57,10 @@
 }
 
 .modalContentInnerWrapper {
-    position: relative;
     z-index: 1;
     padding: 10px;
+    flex: 1;
+    overflow: auto;
 }
 
 .modalHeaderWrapper {
@@ -83,7 +84,7 @@
 
 // Footer styles within the modal
 .modalFooterWrapper {
-    padding: 20px 0 10px 0;
+    padding: 20px 0 20px 0;
     display: flex;
     justify-content: center;
 

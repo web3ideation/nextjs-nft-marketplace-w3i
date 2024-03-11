@@ -80,6 +80,8 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     // Function to apply filters to the initial items
     const filterItems = () => {
         let filteredList = [...initialItems]
+        console.log("Vor dem Filtern:", filteredList.length)
+        console.log("selected Filters", filters)
         console.log(initialItems)
 
         // Apply status filter
@@ -110,7 +112,7 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                     return a.price - b.price
                 case "mostSold":
                     return b.buyerCount - a.buyerCount
-                case "mostSold":
+                case "lessSold":
                     return a.buyerCount - b.buyerCount
                 default:
                     return 0
@@ -127,6 +129,8 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 return nft.nftAddress === filters.selectedCollections
             })
         }
+        console.log("Nach dem Filtern:", filteredList)
+        console.log("Nach dem Filtern:", filteredList.length)
 
         // Inform parent component about the filtered items
         onFilteredItemsChange(filteredList)
@@ -165,7 +169,9 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                     isOpen ? styles.searchSideFiltersWrapperOpen : ""
                 }`}
             >
-                <div className={styles.filterText}>
+                {" "}
+                <div className={`${styles.backgroundPlaceholder} ${styles.placeholderA}`}></div>
+                <div className={styles.filterHeadlineWrapper}>
                     <h3>Filter</h3>
                     <div
                         className={`${styles.filterOpenButton} ${
@@ -173,10 +179,12 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                         }`}
                         onClick={toggleMenu}
                     >
-                        <div className={`${styles.hamburgerMenu} ${isOpen ? "open" : ""}`}>
-                            <div className={styles.line}></div>
-                            <div className={styles.line}></div>
-                            <div className={styles.line}></div>
+                        <div
+                            className={`${styles.sideBarArrow} ${
+                                isOpen ? styles.sideBarArrowOpen : ""
+                            }`}
+                        >
+                            <img src="media/arrow_down.png" alt="Menu Arrow"></img>
                         </div>
                     </div>
                 </div>
@@ -190,12 +198,10 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                         onOptionChange={(value) => handleOptionChange(`selected${label}`, value)}
                     />
                 ))}
-                <div className={styles.searchSideFiltersOptionWrapper}>
-                    <button className={styles.resetButton} onClick={resetFilters}>
-                        Reset Filters
-                    </button>
-                </div>
-                <div className={styles.backgroundPlaceholder}></div>
+                <button className={styles.resetButton} onClick={resetFilters}>
+                    Reset Filters
+                </button>
+                <div className={`${styles.backgroundPlaceholder} ${styles.placeholderB}`}></div>
             </div>
         </div>
     )

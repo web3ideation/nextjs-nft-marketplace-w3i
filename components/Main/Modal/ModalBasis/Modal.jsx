@@ -64,30 +64,28 @@ const Modal = forwardRef((props, ref) => {
     const modalContent = (
         <div ref={ref} className={modalClassName} onClick={handleCloseModal}>
             <div className={styles.modalContentWrapper} onClick={handleModalContentClick}>
-                <div className={styles.modalContentInnerWrapper}>
-                    <div className={styles.modalHeaderWrapper}>
-                        <h3>{modalTitle}</h3>
-                        <button className={styles.closeButton} onClick={handleCloseModal}>
-                            <img
-                                src="/media/close_icon.png"
-                                alt="Close modal"
-                                aria-label="Close Button"
-                            />
-                        </button>
-                    </div>
-                    {children}
-                    <div className={styles.modalFooterWrapper}>
-                        {(clearMessages || cancelListing) && (
-                            <button onClick={secondaryButtonAction}>{secondaryButtonText}</button>
-                        )}
-                        {Array.isArray(okText)
-                            ? okText.map((text, index) => (
-                                  <button key={text} onClick={onOk[index]}>
-                                      {text}
-                                  </button>
-                              ))
-                            : okText && <button onClick={onOk}>{okText}</button>}
-                    </div>
+                <div className={styles.modalHeaderWrapper}>
+                    <h3>{modalTitle}</h3>
+                    <button className={styles.closeButton} onClick={handleCloseModal}>
+                        <img
+                            src="/media/close_icon.png"
+                            alt="Close modal"
+                            aria-label="Close Button"
+                        />
+                    </button>
+                </div>
+                <div className={styles.modalContentInnerWrapper}>{children}</div>
+                <div className={styles.modalFooterWrapper}>
+                    {(clearMessages || cancelListing) && (
+                        <button onClick={secondaryButtonAction}>{secondaryButtonText}</button>
+                    )}
+                    {Array.isArray(okText)
+                        ? okText.map((text, index) => (
+                              <button key={text} onClick={onOk[index]}>
+                                  {text}
+                              </button>
+                          ))
+                        : okText && <button onClick={onOk}>{okText}</button>}
                 </div>
             </div>
         </div>

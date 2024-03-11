@@ -18,7 +18,7 @@ const Header = () => {
                     <Link className={styles.headerLogo} href="/" target="_self">
                         <img src="/media/Logo-w3i-marketplace.png" alt="Logo-W3I-Market"></img>
                     </Link>
-                    <h1 className={styles.headerHeadline}>M</h1>
+                    <h1 className={styles.headerHeadline}>Headline</h1>
                 </div>
                 <div className={styles.headerElementsWrapper}>
                     <SearchBar />
