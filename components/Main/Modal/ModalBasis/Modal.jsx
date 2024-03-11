@@ -21,7 +21,7 @@ const Modal = forwardRef((props, ref) => {
         // Speichern des ursprünglichen overflow-Wertes des body-Elements
         const originalStyle = window.getComputedStyle(document.body).overflow
 
-        if (modalState === "opening" || "changing") {
+        if (modalState === "opening" || modalState === "changing") {
             document.body.style.overflow = "hidden"
         } else if (modalState === "closed") {
             document.body.style.overflow = "auto"
@@ -47,8 +47,16 @@ const Modal = forwardRef((props, ref) => {
     const secondaryButtonText = clearMessages ? "Clear Messages" : "DELIST"
     const secondaryButtonAction = clearMessages ? clearMessages : cancelListing
 
+    const modalBackdropClassName = `${styles.modalBackdrop} ${
+        modalState === "opening"
+            ? styles.modalBackdropEnter // Einblendklasse für den Backdrop
+            : modalState === "closing"
+            ? styles.modalBackdropExit // Ausblendklasse für den Backdrop
+            : "" // Keine Klasse oder eine Standardklasse für den Backdrop im statischen Zustand
+    }`
+
     // Class name determination based on the modalState
-    const modalClassName = `${styles.modalBackdrop} ${
+    const modalAnimationClassName = `${styles.modalContainer} ${
         modalState === "opening"
             ? styles.modalEnter
             : modalState === "closing"
@@ -62,30 +70,32 @@ const Modal = forwardRef((props, ref) => {
 
     // Structure of the modal content
     const modalContent = (
-        <div ref={ref} className={modalClassName} onClick={handleCloseModal}>
-            <div className={styles.modalContentWrapper} onClick={handleModalContentClick}>
-                <div className={styles.modalHeaderWrapper}>
-                    <h3>{modalTitle}</h3>
-                    <button className={styles.closeButton} onClick={handleCloseModal}>
-                        <img
-                            src="/media/close_icon.png"
-                            alt="Close modal"
-                            aria-label="Close Button"
-                        />
-                    </button>
-                </div>
-                <div className={styles.modalContentInnerWrapper}>{children}</div>
-                <div className={styles.modalFooterWrapper}>
-                    {(clearMessages || cancelListing) && (
-                        <button onClick={secondaryButtonAction}>{secondaryButtonText}</button>
-                    )}
-                    {Array.isArray(okText)
-                        ? okText.map((text, index) => (
-                              <button key={text} onClick={onOk[index]}>
-                                  {text}
-                              </button>
-                          ))
-                        : okText && <button onClick={onOk}>{okText}</button>}
+        <div ref={ref} className={modalBackdropClassName} onClick={handleCloseModal}>
+            <div className={modalAnimationClassName}>
+                <div className={styles.modalContentWrapper} onClick={handleModalContentClick}>
+                    <div className={styles.modalHeaderWrapper}>
+                        <h3>{modalTitle}</h3>
+                        <button className={styles.closeButton} onClick={handleCloseModal}>
+                            <img
+                                src="/media/close_icon.png"
+                                alt="Close modal"
+                                aria-label="Close Button"
+                            />
+                        </button>
+                    </div>
+                    <div className={styles.modalContentInnerWrapper}>{children}</div>
+                    <div className={styles.modalFooterWrapper}>
+                        {(clearMessages || cancelListing) && (
+                            <button onClick={secondaryButtonAction}>{secondaryButtonText}</button>
+                        )}
+                        {Array.isArray(okText)
+                            ? okText.map((text, index) => (
+                                  <button key={text} onClick={onOk[index]}>
+                                      {text}
+                                  </button>
+                              ))
+                            : okText && <button onClick={onOk}>{okText}</button>}
+                    </div>
                 </div>
             </div>
         </div>

@@ -2,6 +2,25 @@
 @use "../../../../styles/helpers/mixins" as *;
 @use "../../../../styles/helpers/keyframes";
 
+.modalBackdropEnter {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.modalBackdropExit {
+    animation: fadeOut 0.4s ease-out forwards;
+}
+
+.modalBackdrop {
+    position: fixed;
+    @include flex-center;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+}
+
 .modalEnter {
     animation: modalEnter 0.4s forwards;
 }
@@ -18,7 +37,7 @@
     animation: modalChangingIn 0.4s forwards;
 }
 
-.modalBackdrop {
+.modalContainer {
     position: fixed;
     @include flex-center;
     z-index: 10;
@@ -26,7 +45,6 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
 }
 
 .modalContentWrapper {
