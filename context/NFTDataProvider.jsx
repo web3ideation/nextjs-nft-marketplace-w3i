@@ -67,7 +67,7 @@ export const NFTProvider = ({ children }) => {
 
     // console.log("Active Data", activeItemsData)
     // console.log("Inactive Data", inactiveItemsData)
-    // console.log("Nfts Data", nftState.data)
+    console.log("Nfts Data", nftState.data)
     // console.log("Nft Collections", nftState.collections)
     // console.log("loaded all attributes", loadingAllAttributes)
     // console.log("Is Loaded Context", isLoading)
@@ -102,7 +102,7 @@ export const NFTProvider = ({ children }) => {
         const tokenIdBigNumber = ethers.BigNumber.from(tokenId)
 
         try {
-            const [tokenURI, tokenOwner, tokenName, tokenSymbol] = await Promise.all([
+            const [tokenURI, tokenOwner, collectionName, tokenSymbol] = await Promise.all([
                 contract.tokenURI(tokenIdBigNumber),
                 contract.ownerOf(tokenIdBigNumber),
                 contract.name(),
@@ -120,8 +120,9 @@ export const NFTProvider = ({ children }) => {
                     attributes: tokenURIData.attributes,
                     tokenDescription: tokenURIData.description,
                     tokenExternalLink: tokenURIData.external_url,
+                    tokenName: tokenURIData.name,
                     tokenOwner,
-                    tokenName,
+                    collectionName,
                     tokenSymbol,
                     tokenURI,
                     imageURI: {
@@ -136,7 +137,7 @@ export const NFTProvider = ({ children }) => {
                 return {
                     imageURI: { src: requestURL, width: 0, height: 0, alt: "" },
                     tokenOwner,
-                    tokenName,
+                    collectionName,
                     tokenSymbol,
                     tokenURI,
                 }
@@ -189,8 +190,15 @@ export const NFTProvider = ({ children }) => {
     const createCollections = useCallback((nfts) => {
         const collectionsMap = new Map()
         nfts.forEach((nft) => {
-            const { nftAddress, tokenId, imageURI, tokenName, price, tokenSymbol, buyerCount } =
-                nft
+            const {
+                nftAddress,
+                tokenId,
+                imageURI,
+                collectionName,
+                price,
+                tokenSymbol,
+                buyerCount,
+            } = nft
             const numericPrice = Number(price)
             if (!collectionsMap.has(nftAddress)) {
                 collectionsMap.set(nftAddress, {
@@ -200,7 +208,7 @@ export const NFTProvider = ({ children }) => {
                     collectionCount: 0,
                     collectionPrice: 0,
                     firstImageURI: imageURI,
-                    collectionName: tokenName,
+                    collectionName,
                     collectionSymbol: tokenSymbol,
                     tokenIds: [],
                 })
