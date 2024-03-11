@@ -1,5 +1,5 @@
 // React and Hooks import
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 
 // Styles
@@ -12,6 +12,18 @@ const SearchBar = () => {
 
     // Determine whether to show the search button based on searchTerm
     const showButton = searchTerm.length > 0
+
+    useEffect(() => {
+        const handleRouteChange = () => {
+            setSearchTerm("")
+        }
+
+        router.events.on("routeChangeStart", handleRouteChange)
+
+        return () => {
+            router.events.off("routeChangeStart", handleRouteChange)
+        }
+    }, [router.events])
 
     // ------------------ Handlers ------------------
 
