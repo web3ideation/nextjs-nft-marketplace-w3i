@@ -11,7 +11,7 @@ import NFTBox from "../components/Main/NftCard/NFTCard"
 import { ethers } from "ethers"
 
 // --- Styles ---
-import styles from "../styles/Home.module.css"
+import styles from "../styles/Home.module.scss"
 
 // SearchResultPage Component
 // This component displays the search results for NFTs based on the user's query.
@@ -21,6 +21,7 @@ const SearchResultPage = () => {
 
     const [searchResults, setSearchResults] = useState([])
     const [filteredNFTs, setFilteredNFTs] = useState([])
+    const [visibleResults, setVisibleResults] = useState(25) // Anfangszustand auf 50 gesetzte Ergebnisse
 
     // Retrieving the search term from the URL query.
     const searchTermFromQuery = router.query.search || ""
@@ -79,28 +80,47 @@ const SearchResultPage = () => {
         setFilteredNFTs(newFilteredItems)
     }
 
+    const showMoreResults = () => {
+        setVisibleResults((prevVisibleResults) => prevVisibleResults + 25)
+    }
+
+    const showLessResults = () => {
+        setVisibleResults((prevVisibleResults) => Math.max(prevVisibleResults - 25, 25))
+    }
+
     // Rendering loading state or the search results.
     if (loadingImage) {
         return <div>Loading...</div>
     }
 
     return (
-        <div className={styles.nftSearchResultsContainer}>
+        <>
+            {" "}
             <SearchSideFilters
                 initialItems={searchResults}
                 onFilteredItemsChange={handleFilteredItemsChange}
             />
-            <div className={styles.nftSearchResultsWrapper}>
-                <h1>Search results for: {searchTermFromQuery}</h1>
-                <div className={styles.nftSearchResults}>
-                    {filteredNFTs.map((result) => (
-                        <div key={`${result.nftAddress}${result.tokenId}`}>
-                            <NFTBox nftData={result} />
-                        </div>
-                    ))}
+            <div className={styles.nftSearchResultsContainer}>
+                <div className={styles.nftSearchResultsWrapper}>
+                    <h1>Search results for: {searchTermFromQuery}</h1>
+                    <div className={styles.nftSearchResults}>
+                        {filteredNFTs.slice(0, visibleResults).map((result) => (
+                            <div key={`${result.nftAddress}${result.tokenId}`}>
+                                <NFTBox nftData={result} />
+                            </div>
+                        ))}
+                    </div>
+                    <div className={styles.loadMoreButton}>
+                        {visibleResults < filteredNFTs.length && (
+                            <button onClick={showMoreResults}>Load more</button>
+                        )}
+                        {visibleResults > 25 && (
+                            <button onClick={showLessResults}>Show less</button>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

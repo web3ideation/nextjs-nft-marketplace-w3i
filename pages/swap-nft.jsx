@@ -14,7 +14,7 @@ import { useListItem } from "../hooks/useListItem"
 import networkMapping from "../constants/networkMapping.json"
 
 // Styles
-import styles from "../styles/Home.module.css"
+import styles from "../styles/Home.module.scss"
 
 const SellSwapNFT = () => {
     // -------------------- Web3 Elements ---------------------
@@ -101,7 +101,7 @@ const SellSwapNFT = () => {
         console.log("Form Data Received: ", newFormData)
         updateFormData(newFormData)
 
-        const { nftAddress, tokenId, price, desiredNftAddress, desiredTokenId } = newFormData
+        const { price, desiredNftAddress, desiredTokenId } = newFormData
 
         const formattedPrice = ethers.utils.parseUnits(price, "ether").toString() // Add any other data formatting here
         const formattedDesiredNftAddress = desiredNftAddress || ethers.constants.AddressZero

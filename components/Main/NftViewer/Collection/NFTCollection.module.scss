@@ -10,7 +10,6 @@
 .nftTableWrapper {
     @include flex-center;
     flex-direction: column;
-    margin-top: 40px;
     font-family: $font-primary;
 
     h1 {
@@ -22,5 +21,5 @@
 
 // NFT collection styles
 .nftCollection {
-    padding: 16px;
+    padding: 10px 0;
 }

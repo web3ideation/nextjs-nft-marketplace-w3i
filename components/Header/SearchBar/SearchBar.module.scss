@@ -49,3 +49,28 @@
         }
     }
 }
+
+.searchIcon {
+    background: none;
+    border: none;
+    font-size: 24px; // Größe der Lupe anpassen
+    cursor: pointer;
+}
+
+// Media Queries für kleinere Bildschirme
+@media (max-width: 600px) {
+    .searchBarWrapper {
+        justify-content: center; // Zentriert die Lupe, wenn das Eingabefeld nicht sichtbar ist
+        padding: 10px; // Geringerer Abstand für kleinere Bildschirme
+        width: auto; // Anpassung der Breite
+    }
+
+    .searchBarInput,
+    .searchBarBtn {
+        display: none; // Versteckt Eingabefeld und Suchknopf standardmäßig auf kleinen Bildschirmen
+    }
+
+    .searchIcon {
+        display: block; // Stellt sicher, dass die Lupe sichtbar ist
+    }
+}

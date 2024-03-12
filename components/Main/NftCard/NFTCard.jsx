@@ -31,6 +31,7 @@ export default function NFTBox({ nftData }) {
         collectionName,
         tokenSymbol,
         tokenDescription,
+        desiredNftAddress,
     } = nftData
 
     // Context and hook usage for data and actions
@@ -44,6 +45,13 @@ export default function NFTBox({ nftData }) {
     const formattedPrice = formatPriceToEther(price)
     const [priceInEur, setPriceInEur] = useState(null)
     const [formattedPriceInEur, setFormattedPriceInEur] = useState()
+    const [isImageLoading, setIsImageLoading] = useState(true) // New state for image loading
+
+    // State für die Deckkraft von Bild und Ladeindikator
+    const [imageOpacity, setImageOpacity] = useState(0)
+    const [loadingWaveOpacity, setLoadingWaveOpacity] = useState(1)
+
+    const isListedForSwap = desiredNftAddress !== "0x0000000000000000000000000000000000000000"
 
     const handleCardClick = (nftData) => {
         console.log("Card Clicked. Owned by user:", isOwnedByUser, "Listed:", isListed)
@@ -79,42 +87,70 @@ export default function NFTBox({ nftData }) {
         updatePriceInEur()
     }, [price])
 
+    // Sobald das Bild geladen ist, aktualisieren Sie die Deckkraft
+    const handleImageLoad = () => {
+        setImageOpacity(1) // Bild einblenden
+        setLoadingWaveOpacity(0) // Ladeindikator ausblenden
+    }
+
     // ------------------ Component Return ------------------
 
     return (
         <>
             {imageURI ? (
-                <div className={styles.nftCard} onClick={() => handleCardClick(nftData)}>
-                    <div className={styles.cardTitleWrapper}>
-                        <div className={styles.cardTitle}>
-                            <h2>{tokenSymbol}</h2>
+                <div className={styles.nftCardWrapper}>
+                    <div className={styles.nftCard} onClick={() => handleCardClick(nftData)}>
+                        <div className={styles.cardBackgroundImage}>
+                            <div
+                                className={styles.cardImageLoadingWaveWrapper}
+                                style={{ opacity: loadingWaveOpacity }}
+                            >
+                                <LoadingWave />
+                            </div>
+                            <Image
+                                src={imageURI.src}
+                                layout="responsive"
+                                width={300}
+                                height={300}
+                                loading="lazy"
+                                alt={tokenDescription || "..."}
+                                className={styles.cardImage}
+                                style={{ opacity: imageOpacity }}
+                                onLoadingComplete={handleImageLoad}
+                            />
                         </div>
-                        <div>
-                            {isListed ? (
-                                <div className={styles.cardListedStatus}>Listed #{listingId}</div>
-                            ) : (
-                                <div className={styles.cardNotListedStatus}>
-                                    Not Listed #{listingId}
+
+                        <div className={styles.cardContent}>
+                            <div className={styles.cardTitleWrapper}>
+                                <div className={styles.cardTitle}>
+                                    <h2>{tokenSymbol}</h2>
                                 </div>
-                            )}
-                        </div>
-                    </div>
-                    <Image
-                        className={styles.cardImage}
-                        src={imageURI.src}
-                        height={225}
-                        width={300}
-                        loading="lazy"
-                        alt={tokenDescription || "..."}
-                    />
-                    <div className={styles.cardTextArea}>
-                        <div className={styles.cardOwnerAndId}>
-                            <div>{collectionName}</div>
-                            <div>#{tokenId}</div>
-                        </div>
-                        <div className={styles.cardListedPrice}>
-                            <div className={styles.cardPrice}>{formattedPrice} ETH</div>
-                            {priceInEur && <strong>{formattedPriceInEur} EUR</strong>}
+                                <div>#{tokenId}</div>
+                            </div>
+                            <div className={styles.cardTextArea}>
+                                <div className={styles.cardSwapAndListingStatusWrapper}>
+                                    <div>
+                                        {isListedForSwap ? <div>Swap</div> : <div>Sell</div>}
+                                    </div>
+                                    <div>
+                                        {isListed ? (
+                                            <div className={styles.cardListedStatus}>
+                                                Listed #{listingId}
+                                            </div>
+                                        ) : (
+                                            <div className={styles.cardNotListedStatus}>
+                                                Not Listed #{listingId}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className={styles.cardPriceWrapper}>
+                                    <div className={styles.cardPrice}>
+                                        {formattedPrice} ETH{/*Ξ*/}
+                                    </div>
+                                    {priceInEur && <strong>{formattedPriceInEur} €</strong>}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

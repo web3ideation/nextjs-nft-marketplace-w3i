@@ -14,7 +14,7 @@ import { useListItem } from "../hooks/useListItem"
 import networkMapping from "../constants/networkMapping.json"
 
 // Styles
-import styles from "../styles/Home.module.css"
+import styles from "../styles/Home.module.scss"
 
 const SellSwapNFT = () => {
     // -------------------- Web3 Elements ---------------------

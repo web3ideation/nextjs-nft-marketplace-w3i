@@ -15,7 +15,7 @@ function NFTMostSold() {
     const { data: nftsData, loadingImage } = useNFT()
 
     // State for the number of visible NFTs
-    const [visibleNFTs, setVisibleNFTs] = useState(5)
+    const [visibleNFTs, setVisibleNFTs] = useState(6)
 
     // useMemo used to sort and filter NFTs based on buyerCount and limit per address
     const sortedAndFilteredNFTs = useMemo(() => {
@@ -62,10 +62,10 @@ function NFTMostSold() {
             </div>
             {loadingImage ? null : (
                 <div className={styles.showMoreMostButton}>
-                    <button onClick={() => setVisibleNFTs((prevVisible) => prevVisible + 5)}>
+                    <button onClick={() => setVisibleNFTs((prevVisible) => prevVisible + 6)}>
                         MORE
                     </button>
-                    {visibleNFTs > 5 && <button onClick={() => setVisibleNFTs(5)}>LESS</button>}
+                    {visibleNFTs > 6 && <button onClick={() => setVisibleNFTs(6)}>LESS</button>}
                 </div>
             )}
         </div>

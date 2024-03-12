@@ -4,8 +4,6 @@
 .nftListNewWrapper {
     @include flex-center;
     flex-direction: column;
-    margin-top: 40px;
-    padding: 16px 150px;
     width: 100%;
     font-family: $font-primary;
 
@@ -19,16 +17,20 @@
 // NFT boxes grid styles
 .nftListNew {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); // 5 NFTs / row
-    justify-items: stretch;
-    padding: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    justify-items: center;
+    padding: 10px 0;
     width: 100%;
-    gap: 16px;
-    &:first-child {
-        justify-self: start;
+    gap: 14px;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
     }
-    &:last-child {
-        justify-self: end;
+
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+        gap: 16px;
     }
 }
 

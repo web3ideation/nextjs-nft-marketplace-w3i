@@ -2,34 +2,101 @@
 @use "../../../styles/helpers/mixins" as *;
 
 // NFT card styles
+.nftCardWrapper {
+    height: 150px;
+    width: 150px;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        height: 200px;
+        width: 200px;
+    }
+
+    @media (min-width: 1024px) {
+        height: 270px;
+        width: 270px;
+    }
+}
+
 .nftCard {
-    @include boxShadow;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 3px 0;
-    height: 300px;
-    width: 300px;
+    height: 150px;
+    width: 150px;
     border-radius: 5px;
     font-family: $font-primary;
     font-size: $font-size-small;
     font-weight: 500;
     color: $black;
     background-color: $color-white;
-    cursor: pointer;
+    @include boxShadow;
     transition: 0.3s ease-out;
+    overflow: hidden;
+    cursor: pointer;
 
     &:hover {
         @include boxShadow-hover;
         transition: 0.1s ease-in;
         transform: scale(1.02);
     }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        height: 200px;
+        width: 200px;
+    }
+
+    @media (min-width: 1024px) {
+        height: 270px;
+        width: 270px;
+    }
+}
+
+.cardImageLoadingWaveWrapper {
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute; // Stellen Sie sicher, dass es sich absolut zum Elternelement positioniert.
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2; // Stellen Sie sicher, dass es über dem Bild liegt.
+}
+.cardImageLoadingWaveWrapper,
+.cardImage {
+    transition: opacity 0.5s ease-out; // Sanfter Übergang für die Deckkraft
+}
+.cardBackgroundImage {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.cardContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+    height: 100%;
 }
 
 // Owner, price, and card information styles
+.cardTitleWrapper {
+    background-color: $white-semi-transparent;
+}
+
 .cardTitleWrapper,
-.cardOwnerAndId,
-.cardListedPrice {
+.cardSwapAndListingStatusWrapper,
+.cardPriceWrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -52,8 +119,10 @@
 
 // NFT image styles
 .cardImage {
-    display: block;
+    opacity: 0;
     object-fit: cover;
+    z-index: 1; // Stellen Sie sicher, dass das Bild unter dem Ladeindikator, aber über dem Hintergrundbild liegt.
+    position: relative;
 }
 
 // NFT text area styles
@@ -61,4 +130,14 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background-color: $white-transparent;
+    visibility: hidden;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        visibility: visible;
+    }
+
+    @media (min-width: 1024px) {
+        visibility: visible;
+    }
 }

@@ -1,0 +1,28 @@
+// NFT boxes container styles
+.nftListingContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 25px;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        padding: 16px 50px;
+    }
+
+    @media (min-width: 1024px) {
+        padding: 16px 100px;
+    }
+}
+
+.nftCollectionsContainer {
+    display: flex;
+    padding: 16px 25px;
+    gap: 16px;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        padding: 16px 50px;
+    }
+
+    @media (min-width: 1024px) {
+        padding: 16px 100px;
+    }
+}

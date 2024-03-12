@@ -18,7 +18,7 @@ const Header = () => {
                     <Link className={styles.headerLogo} href="/" target="_self">
                         <img src="/media/Logo-w3i-marketplace.png" alt="Logo-W3I-Market"></img>
                     </Link>
-                    <h1 className={styles.headerHeadline}>Headline</h1>
+                    <h1 className={styles.headerHeadline}></h1>
                 </div>
                 <div className={styles.headerElementsWrapper}>
                     <SearchBar />
@@ -45,5 +45,27 @@ const Header = () => {
         </div>
     )
 }
+//              <div className={`${styles.hamburgerMenu} ${isOpen ? "open" : ""}`}>
+//                  <div className={styles.line}></div>
+//                  <div className={styles.line}></div>
+//                  <div className={styles.line}></div>
+//              </div>
+
+//              .hamburgerMenu {
+//                  margin: 10px 5px;
+//                  width: 25px; /* Breite des Menü-Icons */
+//                  height: 25px; /* Höhe des Menü-Icons */
+//                  display: flex;
+//                  flex-direction: column;
+//                  justify-content: space-around;
+//                  cursor: pointer;
+//              }
+//
+//              .hamburgerMenu .line {
+//                  width: 100%; /* Volle Breite des Containers */
+//                  height: 5px; /* Höhe jeder Linie */
+//                  border-radius: 3px 3px 3px 3px;
+//                  background-color: black; /* Farbe der Linien */
+//              }
 
 export default Header

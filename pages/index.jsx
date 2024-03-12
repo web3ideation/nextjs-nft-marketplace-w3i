@@ -8,18 +8,22 @@ import NFTTopCollection from "../components/Main/NftViewer/Collection/NFTTopColl
 import NFTMostSold from "../components/Main/NftViewer/Listed/NFTMostSold"
 
 // Style Imports
-import styles from "../styles/Home.module.css"
+import styles from "../styles/pages/index.module.scss"
 
 // Home Component: Displays the NFT listing, collections, top collections, and most sold NFTs.
 export default function Home() {
     return (
-        <div className={styles.nftListingContainer}>
-            <NFTListed />
+        <>
+            <div className={styles.nftListingContainer}>
+                <NFTListed />
+            </div>
             <div className={styles.nftCollectionsContainer}>
                 <NFTCollection />
                 <NFTTopCollection />
             </div>
-            <NFTMostSold />
-        </div>
+            <div className={styles.nftListingContainer}>
+                <NFTMostSold />
+            </div>
+        </>
     )
 }

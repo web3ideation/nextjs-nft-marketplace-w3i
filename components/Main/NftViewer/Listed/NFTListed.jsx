@@ -13,7 +13,7 @@ function NFTListed() {
     const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
 
     // State for the number of visible NFTs
-    const [visibleNFTs, setVisibleNFTs] = useState(5)
+    const [visibleNFTs, setVisibleNFTs] = useState(6)
 
     // Sort and filter NFTs based on listingId and isListed status
     const sortedAndFilteredNFTs = useMemo(() => {
@@ -47,18 +47,17 @@ function NFTListed() {
                 <div className={styles.showMoreNewButton}>
                     <button
                         onClick={() => {
-                            setVisibleNFTs((prevVisible) => prevVisible + 10)
+                            setVisibleNFTs((prevVisible) => prevVisible + 12)
                         }}
                     >
                         MORE
                     </button>
-                    {visibleNFTs > 5 && (
+                    {visibleNFTs > 6 && (
                         <button
                             onClick={() => {
-                                setVisibleNFTs(5)
+                                setVisibleNFTs(6)
                             }}
                         >
-                            {" "}
                             LESS
                         </button>
                     )}

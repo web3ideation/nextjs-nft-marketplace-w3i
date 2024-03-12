@@ -10,7 +10,7 @@ import { formatPriceToEther, truncatePrice } from "../utils/formatting"
 import { fetchEthToEurRate } from "../utils/fetchEthToEurRate"
 
 // Styles import
-import styles from "../styles/Home.module.css"
+import styles from "../styles/Home.module.scss"
 
 const MyNFTs = () => {
     // State for managing NFT data, loading states, and price calculations
