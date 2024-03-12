@@ -51,7 +51,7 @@ const NFTCollectionModal = forwardRef((prop, ref) => {
     }, [selectedCollection.collectionPrice])
 
     return (
-        <Modal ref={ref} key={selectedCollection?.nftAddress} cancelText="CLOSE">
+        <Modal ref={ref} key={selectedCollection?.nftAddress}>
             <div className={styles.collectionModalContentWrapper}>
                 <h2>
                     {selectedCollection.collectionName} <br /> Collection

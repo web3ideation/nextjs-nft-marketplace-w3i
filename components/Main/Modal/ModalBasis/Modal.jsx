@@ -21,7 +21,11 @@ const Modal = forwardRef((props, ref) => {
         // Speichern des ursprünglichen overflow-Wertes des body-Elements
         const originalStyle = window.getComputedStyle(document.body).overflow
 
-        if (modalState === "opening" || modalState === "changing") {
+        if (
+            modalState === "opening" ||
+            modalState === "changingOut" ||
+            modalState === "changingIn"
+        ) {
             document.body.style.overflow = "hidden"
         } else if (modalState === "closed") {
             document.body.style.overflow = "auto"
