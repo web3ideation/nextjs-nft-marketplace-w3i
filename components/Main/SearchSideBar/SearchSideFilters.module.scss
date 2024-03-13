@@ -69,32 +69,49 @@
         height: 26px;
         transform: rotateZ(270deg);
     }
-    &:hover {
-        @include invert;
+    @media (min-width: 768px) and (max-width: 1023px) {
+    }
+    @media (min-width: 1024px) {
+        &:hover {
+            @include invert;
+        }
     }
 }
 
 .sideBarArrowOpen {
     transform: rotateY(180deg);
     transition: transform 0.5s ease-out;
-
-    &:hover {
-        @include invert;
+    @media (min-width: 768px) and (max-width: 1023px) {
+    }
+    @media (min-width: 1024px) {
+        &:hover {
+            @include invert;
+        }
     }
 }
 
 .resetButton {
-    padding: 18px 0;
     width: 100%;
-    font-family: $font-primary;
-    font-size: $font-size-small;
-    font-weight: 500;
+    z-index: 1;
+    padding: 18px;
     background-color: $background-color;
+    border-bottom: solid 1px $background-color;
+    border-top: solid 1px $background-color;
+    button {
+        width: 100%;
+        font-family: $font-primary;
+        font-size: $font-size-small;
+        font-weight: 500;
+        background-color: $background-color;
+        cursor: pointer;
 
-    cursor: pointer;
-
-    &:hover {
-        color: $hover-blue;
+        @media (min-width: 768px) and (max-width: 1023px) {
+        }
+        @media (min-width: 1024px) {
+            &:hover {
+                color: $hover-blue;
+            }
+        }
     }
 }
 

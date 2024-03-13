@@ -16,6 +16,8 @@
     z-index: 1;
     width: 128px;
     background-color: $background-color;
+    border-bottom: solid 1px $background-color;
+    border-top: solid 1px $background-color;
 
     h4 {
         padding: 18px;
@@ -24,8 +26,12 @@
         font-weight: 500;
         cursor: pointer;
 
-        &:hover {
-            color: $hover-blue;
+        @media (min-width: 768px) and (max-width: 1023px) {
+        }
+        @media (min-width: 1024px) {
+            &:hover {
+                color: $hover-blue;
+            }
         }
     }
 }
@@ -54,7 +60,7 @@
 // Search side filter items wrapper open styles
 .searchSideFiltersItemsWrapperOpen {
     transform: translate3d(0, -59px, 0);
-    opacity: 0.9;
+    opacity: 1;
 }
 
 // Filter button styles

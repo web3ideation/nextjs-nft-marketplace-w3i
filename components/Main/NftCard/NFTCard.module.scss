@@ -29,7 +29,7 @@
     font-size: $font-size-small;
     font-weight: 500;
     color: $black;
-    background-color: $color-white;
+
     @include boxShadow;
     transition: 0.3s ease-out;
     overflow: hidden;
@@ -87,6 +87,7 @@
     justify-content: space-between;
     z-index: 1;
     height: 100%;
+    width: 100%;
 }
 
 // Owner, price, and card information styles
@@ -121,7 +122,7 @@
 .cardImage {
     opacity: 0;
     object-fit: cover;
-    z-index: 1; // Stellen Sie sicher, dass das Bild unter dem Ladeindikator, aber über dem Hintergrundbild liegt.
+    z-index: 1;
     position: relative;
 }
 

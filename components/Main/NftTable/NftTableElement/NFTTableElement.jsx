@@ -1,12 +1,13 @@
 import React from "react"
 
 import Image from "next/image"
-import styles from "./NFTTableElement.module.scss"
 import LoadingWave from "../../ux/LoadingWave"
 import { useModal } from "../../../../context/ModalProvider"
 
 // Utility functions for formatting
 import { truncateStr, formatPriceToEther, truncatePrice } from "../../../../utils/formatting"
+
+import styles from "./NFTTableElement.module.scss"
 
 // NFTTableElement: A React component to render a table row for a specific NFT collection
 export default function NFTTableElement({ collection }) {
@@ -51,13 +52,13 @@ export default function NFTTableElement({ collection }) {
                             />
                         </div>
                     </td>
-                    <td>
+                    <td className={styles.nonNecessaryTableItems}>
                         <div className={styles.contentWrapper}>{formattedNftAddress}</div>
                     </td>
                     <td>
                         <div className={styles.contentWrapper}>{collectionSymbol}</div>
                     </td>
-                    <td>
+                    <td className={styles.nonNecessaryTableItems}>
                         <div className={styles.contentWrapper}>{itemCount}</div>
                     </td>
                     <td>

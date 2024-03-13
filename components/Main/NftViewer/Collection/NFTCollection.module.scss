@@ -4,7 +4,16 @@
 // NFT table container styles
 .nftTableContainer {
     @include flex-center();
-    width: 50%;
+    width: 100%;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        padding: 16px 50px;
+        width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+        width: 50%;
+    }
 }
 
 .nftTableWrapper {

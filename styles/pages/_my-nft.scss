@@ -10,9 +10,19 @@
     @include flex-center;
     flex-direction: column;
     margin-top: 40px;
-    padding: 16px 150px;
     width: 100%;
     font-family: $font-primary;
+    padding: 16px 25px;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        padding: 16px 0;
+        flex-direction: column;
+    }
+
+    @media (min-width: 1024px) {
+        padding: 16px 100px;
+        flex-direction: row;
+    }
 
     h1 {
         font-size: $font-size-medium;

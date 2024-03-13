@@ -20,10 +20,10 @@ export default function NFTTable({ tableRows }) {
             <thead>
                 <tr>
                     <th></th>
-                    <th>Address</th>
+                    <th className={styles.nonNecessaryTableItems}>Address</th>
                     <th>Collection</th>
                     <th>Items</th>
-                    <th>Sold</th>
+                    <th className={styles.nonNecessaryTableItems}>Sold</th>
                     <th>Total price</th>
                 </tr>
             </thead>

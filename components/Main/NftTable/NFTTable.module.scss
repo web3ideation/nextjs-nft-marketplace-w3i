@@ -39,3 +39,14 @@ $shadow: 0 5px 5px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 .nftTable thead th {
     width: $table-width;
 }
+
+.nonNecessaryTableItems {
+    display: none;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        display: table-cell;
+    }
+
+    @media (min-width: 1024px) {
+        display: table-cell;
+    }
+}

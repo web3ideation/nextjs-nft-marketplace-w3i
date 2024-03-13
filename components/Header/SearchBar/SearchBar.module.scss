@@ -4,9 +4,23 @@
 // Search bar wrapper
 .searchBarWrapper {
     display: flex;
-    padding: 20px 18px;
-    width: 400px;
     align-items: center;
+    width: 150px;
+    padding: 10px;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        display: flex;
+        align-items: center;
+        width: 200px;
+        padding: 15px;
+    }
+
+    @media (min-width: 1024px) {
+        display: flex;
+        align-items: center;
+        width: 300px;
+        padding: 20px;
+    }
 }
 
 .searchBarInput {
@@ -29,17 +43,16 @@
     button {
         @include flex-center;
         max-width: 50px;
-        padding: 0 18px;
+        padding: 10px;
         font-family: $font-primary;
         font-size: $font-size-small;
         font-weight: 500;
         color: $black;
-        border: none;
         background-color: transparent;
-        overflow: hidden;
         opacity: 0;
         transition: opacity 0.3s ease, transform 0.3s ease, max-width 0.3s ease;
         cursor: pointer;
+        overflow: hidden;
 
         &.visible {
             opacity: 1;
@@ -47,30 +60,5 @@
         &:hover {
             color: $hover-blue;
         }
-    }
-}
-
-.searchIcon {
-    background: none;
-    border: none;
-    font-size: 24px; // Größe der Lupe anpassen
-    cursor: pointer;
-}
-
-// Media Queries für kleinere Bildschirme
-@media (max-width: 600px) {
-    .searchBarWrapper {
-        justify-content: center; // Zentriert die Lupe, wenn das Eingabefeld nicht sichtbar ist
-        padding: 10px; // Geringerer Abstand für kleinere Bildschirme
-        width: auto; // Anpassung der Breite
-    }
-
-    .searchBarInput,
-    .searchBarBtn {
-        display: none; // Versteckt Eingabefeld und Suchknopf standardmäßig auf kleinen Bildschirmen
-    }
-
-    .searchIcon {
-        display: block; // Stellt sicher, dass die Lupe sichtbar ist
     }
 }

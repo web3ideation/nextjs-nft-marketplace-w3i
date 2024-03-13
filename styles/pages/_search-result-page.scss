@@ -5,13 +5,12 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 16px 150px;
+    padding: 16px 0 16px 150px;
 }
 
 .nftSearchResultsWrapper {
     @include flex-center;
     flex-direction: column;
-    margin-top: 40px;
     width: 100%;
     font-family: $font-primary;
 

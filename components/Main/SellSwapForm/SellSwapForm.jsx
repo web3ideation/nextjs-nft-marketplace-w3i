@@ -46,7 +46,7 @@ function SellSwapForm({
         price: "",
     })
 
-    // Zustand für Checkboxen
+    // state for checkboxes
     const [checkboxData, setCheckboxData] = useState({
         Music: false,
         DAO: false,
@@ -55,8 +55,6 @@ function SellSwapForm({
         Wearables: false,
         Staking: false,
         Membership: false,
-
-        // Fügen Sie weitere Kategorien hinzu
     })
 
     // ------------------ Form Validation ------------------
@@ -102,14 +100,13 @@ function SellSwapForm({
     return (
         <div className={styles.sellSwapFormWrapper}>
             <h2>{title}</h2>
-            <div className={styles.sellSwapFormTitles}>
-                <h3>The data of your NFT</h3>
-                <h3>Choose your category</h3>
-            </div>
             <form className={styles.sellSwapForm} onSubmit={handleSubmit} ref={formRef}>
                 <div className={styles.sellSwapInputFieldsWrapper}>
                     {/* Standard form fields for NFT Address, Token ID, and Price */}
                     <div className={styles.sellSwapFormInputWrapper}>
+                        <div className={styles.sellSwapFormTitles}>
+                            <h3>The data of your NFT</h3>
+                        </div>
                         {["nftAddress", "tokenId", "price"].map((fieldKey) => (
                             <div key={fieldKey} className={styles.sellSwapFormInput}>
                                 <label htmlFor={fieldKey}>
@@ -185,7 +182,9 @@ function SellSwapForm({
                         ))}
                     </div>
                     <div className={styles.checkboxFieldsWrapper}>
-                        {" "}
+                        <div className={styles.sellSwapFormTitles}>
+                            <h3>Choose your category</h3>
+                        </div>
                         {Object.keys(checkboxData).map((category) => (
                             <div key={category} className={styles.checkboxWrapper}>
                                 <input

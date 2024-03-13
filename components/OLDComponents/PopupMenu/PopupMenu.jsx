@@ -1,6 +1,8 @@
-import React, { useState, useRef } from "react"
-import styles from "./PopupMenu.module.scss"
+import React, { useState, useRef, useEffect } from "react"
+
 import Link from "next/link"
+
+import styles from "./PopupMenu.module.scss"
 
 const PopupMenu = () => {
     // State to manage the visibility of the popup menu
@@ -10,21 +12,31 @@ const PopupMenu = () => {
     const menuRef = useRef(null)
 
     // Handler to show/hide the popup menu when the mouse enters the menu wrapper
-    const handleMouseEnter = () => setIsOpen(true)
-    const handleMouseLeave = () => setIsOpen(false)
+    const handleMouseClick = () => {
+        setIsOpen(!isOpen)
+    }
+    // Funktion, die überprüft, ob außerhalb des Menüs geklickt wurde
+    const handleClickOutside = (event) => {
+        if (menuRef.current && !menuRef.current.contains(event.target)) {
+            setIsOpen(false)
+        }
+    }
 
+    // Event-Listener hinzufügen, um Klicks außerhalb zu erkennen
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside)
+
+        return () => {
+            // Bereinigung des Event-Listeners, um Memory-Leaks zu vermeiden
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [])
     return (
-        <div
-            className={styles.popupMenuWrapper}
-            ref={menuRef}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
-            <div className={styles.menuButton}>
-                <button>Menu</button>
-                <span className={isOpen ? styles.menuIconMinus : styles.menuIcon}>
-                    {isOpen ? "-" : "+"}
-                </span>
+        <div className={styles.popupMenu} ref={menuRef} onClick={handleMouseClick}>
+            <div className={`${styles.hamburgerMenu} ${isOpen ? styles.hamburgerMenuOpen : ""}`}>
+                <div className={styles.line}></div>
+                <div className={styles.line}></div>
+                <div className={styles.line}></div>
             </div>
             <div
                 className={`${styles.popupMenuLinksWrapper} ${
@@ -35,8 +47,11 @@ const PopupMenu = () => {
                 <Link className={styles.popupMenuLinks} href="/">
                     <button>Home</button>
                 </Link>
-                <Link className={styles.popupMenuLinks} href="/sell-swap-nft">
-                    <button>Sell / Swap NFT</button>
+                <Link className={styles.popupMenuLinks} href="/sell-nft">
+                    <button>Sell NFT</button>
+                </Link>
+                <Link className={styles.popupMenuLinks} href="/swap-nft">
+                    <button>Swap NFT</button>
                 </Link>
                 <Link className={styles.popupMenuLinks} href="/my-nft">
                     <button>My NFT</button>

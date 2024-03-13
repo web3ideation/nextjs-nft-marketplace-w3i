@@ -5,6 +5,7 @@ import React from "react"
 // Importing custom components
 import SearchBar from "./SearchBar/SearchBar"
 import WalletConnectionManager from "./WalletConnect/WalletConnectionManager"
+import PopupMenu from "../OLDComponents/PopupMenu/PopupMenu"
 
 // Styles
 import styles from "./Header.module.scss"
@@ -12,7 +13,7 @@ import styles from "./Header.module.scss"
 // Header component for the NFT Marketplace
 const Header = () => {
     return (
-        <div className={styles.headerContainer}>
+        <header className={styles.headerContainer}>
             <nav>
                 <div className={styles.logoAndHeadlineWrapper}>
                     <Link className={styles.headerLogo} href="/" target="_self">
@@ -41,31 +42,12 @@ const Header = () => {
                         ></img>
                     </Link>
                 </div>
+                <div className={styles.popupMenuWrapper}>
+                    <PopupMenu />
+                </div>
             </nav>
-        </div>
+        </header>
     )
 }
-//              <div className={`${styles.hamburgerMenu} ${isOpen ? "open" : ""}`}>
-//                  <div className={styles.line}></div>
-//                  <div className={styles.line}></div>
-//                  <div className={styles.line}></div>
-//              </div>
-
-//              .hamburgerMenu {
-//                  margin: 10px 5px;
-//                  width: 25px; /* Breite des Menü-Icons */
-//                  height: 25px; /* Höhe des Menü-Icons */
-//                  display: flex;
-//                  flex-direction: column;
-//                  justify-content: space-around;
-//                  cursor: pointer;
-//              }
-//
-//              .hamburgerMenu .line {
-//                  width: 100%; /* Volle Breite des Containers */
-//                  height: 5px; /* Höhe jeder Linie */
-//                  border-radius: 3px 3px 3px 3px;
-//                  background-color: black; /* Farbe der Linien */
-//              }
 
 export default Header

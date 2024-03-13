@@ -69,8 +69,16 @@
 
 .sellSwapInputFieldsWrapper {
     @include flex-center;
+    flex-direction: column;
     gap: 10px;
     width: 100%;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        flex-direction: column;
+    }
+
+    @media (min-width: 1024px) {
+        flex-direction: row;
+    }
 }
 
 // Input wrapper styles
@@ -78,7 +86,14 @@
     @include boxShadowFields;
     border-radius: $border-radius;
     padding: 10px;
-    width: 50%;
+    width: 100%;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+        width: 50%;
+    }
 }
 
 // Input styles
@@ -97,10 +112,17 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    padding: 30px 20px 10px 20px;
+    padding: 10px;
     height: 100%;
-    width: 50%;
+    width: 100%;
     border-radius: $border-radius;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+        width: 50%;
+    }
 }
 
 .sellSwapInputWrapper {

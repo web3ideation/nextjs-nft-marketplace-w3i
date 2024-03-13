@@ -4,10 +4,11 @@
 // Header styles
 .headerContainer {
     position: sticky;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     top: 0;
     z-index: 10;
     width: 100%;
+    height: 50px;
     background-color: $background-color;
     box-shadow: 0 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 
@@ -15,24 +16,40 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        height: 100%;
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        margin-bottom: 30px;
+        height: 60px;
+    }
+
+    @media (min-width: 1024px) {
+        margin-bottom: 40px;
+        height: 70px;
     }
 }
 
 // Logo and headline wrapper within the header
 .logoAndHeadlineWrapper {
     @include flex-center;
-    height: auto;
 }
 
 .headerLogo {
     @include flex-center;
-    width: 166px;
-
+    padding: 10px;
     img {
         height: 30px;
     }
-    &:hover {
-        @include invert;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        padding: 15px;
+    }
+
+    @media (min-width: 1024px) {
+        padding: 20px;
+        &:hover {
+            @include invert;
+        }
     }
 }
 
@@ -44,10 +61,17 @@
 
 // Header elements wrapper
 .headerElementsWrapper {
-    display: flex;
+    display: none;
     justify-content: flex-end;
     align-items: center;
-    background-color: $background-color;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        display: flex;
+    }
+
+    @media (min-width: 1024px) {
+        display: flex;
+    }
 }
 
 // Menu button styles
@@ -57,7 +81,6 @@
 
     button {
         @include flex-center;
-        padding: 0 18px;
         border: none;
         font-family: $font-primary;
         font-size: $font-size-small;
@@ -67,8 +90,33 @@
         background-color: $background-color;
         cursor: pointer;
 
-        &:hover {
-            color: $hover-blue;
+        @media (min-width: 768px) and (max-width: 1023px) {
+            padding: 10px;
         }
+
+        @media (min-width: 1024px) {
+            padding: 18px;
+            &:hover {
+                color: $hover-blue;
+            }
+        }
+    }
+}
+
+// Popup menu wrapper
+.popupMenuWrapper {
+    position: fixed;
+    @include flex-center;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 50px;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        display: none;
+    }
+
+    @media (min-width: 1024px) {
+        display: none;
     }
 }

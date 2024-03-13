@@ -1,5 +1,5 @@
 // ------------------ React Imports ------------------
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useEffect } from "react"
 
 // ------------------ Custom Hooks & Component Imports ------------------
 import { useNFT } from "../../../../context/NFTDataProvider"
@@ -13,7 +13,34 @@ function NFTListed() {
     const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
 
     // State for the number of visible NFTs
-    const [visibleNFTs, setVisibleNFTs] = useState(6)
+    const [visibleNFTs, setVisibleNFTs] = useState(null)
+    const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(null)
+
+    useEffect(() => {
+        //function to get initial count of items should be displayed
+        function getInitialVisibleCount() {
+            const width = window.innerWidth
+            if (width < 768) {
+                return 4
+            } else if (width >= 768 && width < 1024) {
+                return 9
+            } else {
+                return 6
+            }
+        }
+        setVisibleNFTs(getInitialVisibleCount())
+        setInitialVisibleNFTs(getInitialVisibleCount())
+
+        function handleResize() {
+            setVisibleNFTs(getInitialVisibleCount())
+            setInitialVisibleNFTs(getInitialVisibleCount())
+        }
+
+        window.addEventListener("resize", handleResize)
+
+        // Cleanup
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
 
     // Sort and filter NFTs based on listingId and isListed status
     const sortedAndFilteredNFTs = useMemo(() => {
@@ -52,10 +79,10 @@ function NFTListed() {
                     >
                         MORE
                     </button>
-                    {visibleNFTs > 6 && (
+                    {visibleNFTs > 9 && (
                         <button
                             onClick={() => {
-                                setVisibleNFTs(6)
+                                setVisibleNFTs(initialVisibleNFTs)
                             }}
                         >
                             LESS

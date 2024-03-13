@@ -11,6 +11,7 @@ import styles from "./SearchSideFilters.module.scss"
 const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     const menuRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
+    const [isButtonPressed, setIsButtonPressed] = useState(false)
 
     // State for managing filter options
     const [optionsMap, setOptionsMap] = useState({
@@ -156,6 +157,23 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     const toggleMenu = () => {
         setIsOpen((prevIsOpen) => !prevIsOpen)
     }
+    const handleTouchStart = () => {
+        setIsButtonPressed(true)
+    }
+
+    const handleTouchEnd = () => {
+        setIsButtonPressed(false)
+        // Aufruf der Reset-Funktion hier, falls nicht bereits im onClick-Handler
+        resetFilters()
+    }
+
+    const handleMouseDown = () => {
+        setIsButtonPressed(true)
+    }
+
+    const handleMouseUp = () => {
+        setIsButtonPressed(false)
+    }
 
     // Effect to re-filter items when filter states change
     useEffect(() => {
@@ -198,9 +216,18 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                         onOptionChange={(value) => handleOptionChange(`selected${label}`, value)}
                     />
                 ))}
-                <button className={styles.resetButton} onClick={resetFilters}>
-                    Reset Filters
-                </button>
+                <div className={styles.resetButton}>
+                    <button
+                        onTouchStart={handleTouchStart}
+                        onTouchEnd={handleTouchEnd}
+                        onMouseDown={handleMouseDown}
+                        onMouseUp={handleMouseUp}
+                        onClick={resetFilters}
+                        style={{ transform: isButtonPressed ? "scale(0.95)" : "scale(1)" }}
+                    >
+                        Reset Filters
+                    </button>
+                </div>
                 <div className={`${styles.backgroundPlaceholder} ${styles.placeholderB}`}></div>
             </div>
         </div>

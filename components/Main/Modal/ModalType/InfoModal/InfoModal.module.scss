@@ -4,29 +4,51 @@
 .modalContent {
     @include boxShadowFields;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin: 10px;
     max-width: 100%;
     border-radius: 5px;
     background-color: $color-white;
     overflow: auto;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        flex-direction: row;
+    }
+
+    @media (min-width: 1024px) {
+        flex-direction: row;
+    }
 }
 
 .modalImage {
     display: flex;
     align-items: center;
-    width: 50%;
+    width: 100%;
     padding: 10px;
     img {
         height: auto;
         width: 100%;
         border-radius: 5px;
     }
+    @media (min-width: 768px) and (max-width: 1023px) {
+        width: 50%;
+    }
+
+    @media (min-width: 1024px) {
+        width: 50%;
+    }
 }
 
 .modalTextWrapper {
-    width: 50%;
+    width: 100%;
     padding: 10px;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        width: 50%;
+    }
+
+    @media (min-width: 1024px) {
+        width: 50%;
+    }
 }
 
 .modalTextInnerWrapper {

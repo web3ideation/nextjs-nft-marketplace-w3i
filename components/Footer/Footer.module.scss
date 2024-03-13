@@ -9,4 +9,14 @@
     font-size: $font-size-small;
     color: $black;
     background-color: $background-color;
+    img {
+        width: 100%;
+        @media (min-width: 768px) and (max-width: 1023px) {
+            width: 50%;
+        }
+
+        @media (min-width: 1024px) {
+            width: 25%;
+        }
+    }
 }

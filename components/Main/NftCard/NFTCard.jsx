@@ -21,21 +21,40 @@ import styles from "./NFTCard.module.scss"
 // ------------------ Main Component Function ------------------
 export default function NFTBox({ nftData }) {
     // Destructuring for clarity
-    const {
-        tokenOwner,
-        tokenId,
-        price,
-        isListed,
-        listingId,
-        imageURI,
-        collectionName,
-        tokenSymbol,
-        tokenDescription,
-        desiredNftAddress,
-    } = nftData
+    const { isListed, listingId, tokenOwner, desiredNftAddress } = nftData
 
     // Context and hook usage for data and actions
     const { address, isConnected } = useAccount()
+    // Standardwerte für den Ladezustand
+    const defaultImageURI = "/path/to/default/image.jpg" // Pfad zu einem Standardbild
+    const defaultTokenSymbol = "LOADING..."
+    const defaultTokenId = "000"
+    const defaultPrice = "0"
+    const defaultTokenDescription = "Description is loading..."
+    const defaultCollectionName = "Collection loading..."
+
+    // Zustandsvariablen für NFT-Daten, initialisiert mit Standardwerten
+    const [imageURI, setImageURI] = useState(defaultImageURI)
+    const [tokenSymbol, setTokenSymbol] = useState(defaultTokenSymbol)
+    const [tokenId, setTokenId] = useState(defaultTokenId)
+    const [price, setPrice] = useState(defaultPrice)
+    const [tokenDescription, setTokenDescription] = useState(defaultTokenDescription)
+    const [collectionName, setCollectionName] = useState(defaultCollectionName)
+    // ... Weitere Zustandsvariablen für andere NFT-Eigenschaften
+
+    // useEffect Hook, um echte Daten zu laden und Zustände zu aktualisieren
+    useEffect(() => {
+        if (nftData) {
+            // Annahme: nftData enthält alle benötigten Informationen
+            setImageURI(nftData.imageURI || defaultImageURI)
+            setTokenSymbol(nftData.tokenSymbol || defaultTokenSymbol)
+            setTokenId(nftData.tokenId || defaultTokenId)
+            setPrice(nftData.price || defaultPrice)
+            setTokenDescription(nftData.tokenDescription || defaultTokenDescription)
+            setCollectionName(nftData.collectionName || defaultCollectionName)
+            // ... Zustände für andere NFT-Eigenschaften aktualisieren
+        }
+    }, [nftData]) // Abhängigkeiten, hier nftData, damit der Effekt ausgeführt wird, wenn sich nftData ändert
 
     // Verwenden Sie ModalContext
     const { openModal } = useModal()
@@ -45,7 +64,6 @@ export default function NFTBox({ nftData }) {
     const formattedPrice = formatPriceToEther(price)
     const [priceInEur, setPriceInEur] = useState(null)
     const [formattedPriceInEur, setFormattedPriceInEur] = useState()
-    const [isImageLoading, setIsImageLoading] = useState(true) // New state for image loading
 
     // State für die Deckkraft von Bild und Ladeindikator
     const [imageOpacity, setImageOpacity] = useState(0)
@@ -119,7 +137,6 @@ export default function NFTBox({ nftData }) {
                                 onLoadingComplete={handleImageLoad}
                             />
                         </div>
-
                         <div className={styles.cardContent}>
                             <div className={styles.cardTitleWrapper}>
                                 <div className={styles.cardTitle}>
