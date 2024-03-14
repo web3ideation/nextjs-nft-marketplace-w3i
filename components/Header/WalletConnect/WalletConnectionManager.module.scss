@@ -72,12 +72,13 @@
 
 .walletMenuLinks {
     display: flex;
-    justify-content: flex-start;
+
     padding: 10px 40px;
     background-color: $secondary-color;
     text-decoration: none;
     button {
-        border: none;
+        width: 100%;
+        text-align: start;
         font-family: $font-primary;
         font-size: $font-size-small;
         line-height: $line-height-small;
