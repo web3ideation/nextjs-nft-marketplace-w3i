@@ -194,8 +194,8 @@ const NftModal = forwardRef((props, ref) => {
                     <Image
                         src={modalContent.imageURI.src}
                         alt={modalContent.tokenDescription || ""}
-                        height={300}
-                        width={300}
+                        width={600}
+                        height={800}
                     />
                 </div>
                 <div className={styles.modalTextWrapper}>

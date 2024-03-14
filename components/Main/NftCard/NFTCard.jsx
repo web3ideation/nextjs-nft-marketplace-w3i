@@ -128,9 +128,10 @@ export default function NFTBox({ nftData }) {
                             <Image
                                 src={imageURI.src}
                                 layout="responsive"
-                                width={300}
-                                height={300}
+                                width={270}
+                                height={270}
                                 loading="lazy"
+                                //placeholder="blur"
                                 alt={tokenDescription || "..."}
                                 className={styles.cardImage}
                                 style={{ opacity: imageOpacity }}

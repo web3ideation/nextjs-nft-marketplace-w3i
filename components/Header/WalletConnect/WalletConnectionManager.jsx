@@ -74,15 +74,15 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                             <p>
                                 {formattedPrice} {balanceData.symbol}
                             </p>
-                        </div>
-                        <Link className={styles.walletMenuLinks} href="/withdraw-proceeds">
-                            <button>Credits</button>
-                        </Link>{" "}
-                        <Link className={styles.walletMenuLinks} href="/my-nft">
-                            <button>My NFT</button>
-                        </Link>
+                        </div>{" "}
                         <Link className={styles.walletMenuLinks} href="/">
                             <button>Home</button>
+                        </Link>
+                        <Link className={styles.walletMenuLinks} href="/withdraw-proceeds">
+                            <button>Credits</button>
+                        </Link>
+                        <Link className={styles.walletMenuLinks} href="/my-nft">
+                            <button>My NFT</button>
                         </Link>
                         <div className={styles.walletMenuLinks} onClick={handleChatClick}>
                             <button>Chat</button>
