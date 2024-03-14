@@ -69,7 +69,7 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 { value: "wearables", label: "Wearables" },
                 { value: "membership", label: "Membership" },
                 { value: "music", label: "Music" },
-                { value: "staking", label: "Staking" },
+                { value: "real world assets", label: "Real world assets" },
                 { value: "gaming", label: "Gaming" },
                 { value: "dao", label: "Dao" },
             ],

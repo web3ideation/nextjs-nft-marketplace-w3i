@@ -53,7 +53,7 @@ function SellSwapForm({
         Utility: false,
         Gaming: false,
         Wearables: false,
-        Staking: false,
+        "Real world assets": false,
         Membership: false,
     })
 
