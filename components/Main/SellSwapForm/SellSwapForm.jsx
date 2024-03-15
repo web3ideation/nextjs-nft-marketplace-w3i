@@ -213,7 +213,7 @@ function SellSwapForm({
                     buttonText={"Approve and list"}
                     onClickAction={() => {}}
                     type="submit"
-                ></BtnWithAction>
+                />
             </form>
         </div>
     )

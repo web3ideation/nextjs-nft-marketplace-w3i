@@ -9,6 +9,7 @@ import BtnWithAction from "../../../uiComponents/BtnWithAction"
 
 // Styles import
 import styles from "./Modal.module.scss"
+import Image from "next/image"
 
 /**
  * Modal component with forwardRef for parent components to reference.
@@ -82,7 +83,9 @@ const Modal = forwardRef((props, ref) => {
                     <div className={styles.modalHeaderWrapper}>
                         <h3>{modalTitle}</h3>
                         <button className={styles.closeButton} onClick={handleCloseModal}>
-                            <img
+                            <Image
+                                width={100}
+                                height={100}
                                 src="/media/close_icon.png"
                                 alt="Close modal"
                                 aria-label="Close Button"
@@ -96,7 +99,7 @@ const Modal = forwardRef((props, ref) => {
                                 onClickAction={secondaryButtonAction}
                                 buttonText={secondaryButtonText}
                                 style={{ width: "50%" }}
-                            ></BtnWithAction>
+                            />
                         )}
                         {Array.isArray(okText)
                             ? okText.map((text, index) => (
@@ -105,14 +108,14 @@ const Modal = forwardRef((props, ref) => {
                                       onClickAction={onOk[index]}
                                       buttonText={text}
                                       style={{ width: "50%" }}
-                                  ></BtnWithAction>
+                                  />
                               ))
                             : okText && (
                                   <BtnWithAction
                                       onClickAction={onOk}
                                       buttonText={okText}
                                       style={{ width: "50%" }}
-                                  ></BtnWithAction>
+                                  />
                               )}
                     </div>
                 </div>

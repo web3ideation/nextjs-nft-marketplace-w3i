@@ -138,14 +138,8 @@ const SellSwapNFT = () => {
     return (
         <div className={styles.nftSellSwapContainer}>
             <div className={styles.nftSellSwapButton}>
-                <BtnWithAction
-                    onClickAction={() => setActiveForm("sell")}
-                    buttonText={"SELL"}
-                ></BtnWithAction>
-                <BtnWithAction
-                    onClickAction={() => setActiveForm("swap")}
-                    buttonText={"SWAP"}
-                ></BtnWithAction>
+                <BtnWithAction onClickAction={() => setActiveForm("sell")} buttonText={"SELL"} />
+                <BtnWithAction onClickAction={() => setActiveForm("swap")} buttonText={"SWAP"} />
             </div>
             <div className={styles.nftSellSwapWrapper}>
                 <div className={styles.nftSellSwapWrapperInner}>

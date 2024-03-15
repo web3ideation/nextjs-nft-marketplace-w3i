@@ -228,7 +228,12 @@ const NftModal = forwardRef((props, ref) => {
                                 className={`${styles.modalLoveLightInner} ${styles[loveLightClass]}`}
                                 onClick={handleLoveLightClick}
                             >
-                                <img src="/media/only-lightbulb.png"></img>
+                                <Image
+                                    width={100}
+                                    height={100}
+                                    src="/media/only-lightbulb.png"
+                                    alt="love-lightbulb"
+                                />
                             </div>
                         </div>
                         <div className={styles.modalText}>

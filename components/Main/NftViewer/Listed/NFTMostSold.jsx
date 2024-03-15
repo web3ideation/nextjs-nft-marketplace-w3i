@@ -66,12 +66,12 @@ function NFTMostSold() {
                     <BtnWithAction
                         buttonText={"More"}
                         onClickAction={() => setVisibleNFTs((prevVisible) => prevVisible + 12)}
-                    ></BtnWithAction>
+                    />
                     {visibleNFTs > 9 && (
                         <BtnWithAction
                             buttonText={"Less"}
                             onClickAction={() => setVisibleNFTs(initialVisibleNFTs)}
-                        ></BtnWithAction>
+                        />
                     )}
                 </div>
             )}
