@@ -3,7 +3,7 @@ import Link from "next/link"
 import { useModal } from "../../../../context/ModalProvider"
 import styles from "./WalletMenu.module.scss"
 
-const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isHovered }) => {
+const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isHovered, isClient }) => {
     const defaultBalanceData = { formatted: "0", symbol: "N/A" }
     const actualBalanceData = balanceData || defaultBalanceData
     const modalRef = useRef(null)
@@ -16,6 +16,9 @@ const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isHovered }) =>
 
     // Klassenname basierend auf isHovered
     const menuClassNames = isHovered ? `${styles.walletMenu} ${styles.visible}` : styles.walletMenu
+
+    // Nur rendern, wenn isClient true ist
+    if (!isClient) return null
 
     return balanceData ? (
         <div className={menuClassNames}>

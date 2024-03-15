@@ -4,7 +4,7 @@ import { truncateStr, truncatePrice } from "../../../../utils/formatting"
 import WalletMenu from "../WalletMenu/WalletMenu"
 import styles from "./WalletInfo.module.scss"
 
-const WalletInfo = ({ onDisconnect }) => {
+const WalletInfo = ({ onDisconnect, isClient }) => {
     const { address } = useAccount()
     const { data: balanceData, refetch: refetchBalance } = useBalance({ address })
     const [formattedAddress, setFormattedAddress] = useState("")
@@ -12,9 +12,13 @@ const WalletInfo = ({ onDisconnect }) => {
     const [isHovered, setIsHovered] = useState(false)
 
     useEffect(() => {
-        setFormattedAddress(truncateStr(address, 4, 4))
-        setFormattedPrice(truncatePrice(balanceData?.formatted || "0", 5))
-    }, [address, balanceData])
+        if (isClient) {
+            setFormattedAddress(truncateStr(address, 4, 4))
+            setFormattedPrice(truncatePrice(balanceData?.formatted || "0", 5))
+        }
+    }, [address, balanceData, isClient])
+
+    if (!isClient) return null
 
     return (
         <div
@@ -37,6 +41,7 @@ const WalletInfo = ({ onDisconnect }) => {
                 formattedPrice={formattedPrice}
                 onDisconnect={onDisconnect}
                 isHovered={isHovered} // Hover-State an WalletMenu übergeben
+                isClient={isClient}
             />
         </div>
     )
