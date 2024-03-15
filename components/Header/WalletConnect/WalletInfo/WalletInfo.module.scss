@@ -3,15 +3,29 @@
 
 .headerAccountInfoWrapper {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     cursor: pointer;
+    background-color: $white;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
     @media (min-width: 768px) and (max-width: 1023px) {
-        padding: 16px;
+        flex-direction: row;
+        justify-content: center;
+        padding: 2.5px;
+        background-color: $background-color;
+        margin-bottom: 0;
+        border-radius: none;
     }
 
     @media (min-width: 1024px) {
+        flex-direction: row;
+        justify-content: center;
         padding: 23.5px 20px;
+        background-color: $background-color;
+        margin-bottom: 0;
+        border-radius: none;
     }
 }
 
@@ -32,23 +46,53 @@
     height: 12px;
     border-radius: 50%;
     background-color: $color-forestgreen;
+    margin: 10px;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        margin: 0;
+    }
+
+    @media (min-width: 1024px) {
+        margin: 0;
+    }
 }
 
 .headerAccountInfo {
     transition: 0.4s ease-in;
-    padding: 0 18px;
+    text-align: start;
+    padding: 0 10px;
     font-family: $font-primary;
     font-size: $font-size-small;
     font-weight: 500;
+    @media (min-width: 768px) and (max-width: 1023px) {
+    }
+
+    @media (min-width: 1024px) {
+    }
 }
 
 .menuIcon {
     transition: 0.4s ease-in;
     img {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        height: 18px;
-        width: auto;
+        display: none;
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        img {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 18px;
+            width: auto;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        img {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 18px;
+            width: auto;
+        }
     }
 }

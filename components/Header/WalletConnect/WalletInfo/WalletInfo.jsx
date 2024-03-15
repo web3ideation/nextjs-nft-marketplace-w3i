@@ -42,6 +42,7 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                 onDisconnect={onDisconnect}
                 isHovered={isHovered} // Hover-State an WalletMenu übergeben
                 isClient={isClient}
+                address={address}
             />
         </div>
     )

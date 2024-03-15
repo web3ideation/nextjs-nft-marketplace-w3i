@@ -3,6 +3,8 @@ import React, { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 
 import styles from "./PopupMenu.module.scss"
+import WalletConnectionManager from "../../Header/WalletConnect/WalletConnectionManager"
+import WalletMenu from "../../Header/WalletConnect/WalletMenu/WalletMenu"
 
 const PopupMenu = () => {
     // State to manage the visibility of the popup menu
@@ -43,19 +45,8 @@ const PopupMenu = () => {
                     isOpen ? styles.popupMenuLinksWrapperOpen : ""
                 }`}
             >
-                {/* List of menu links */}
-                <Link className={styles.popupMenuLinks} href="/">
-                    <button>Home</button>
-                </Link>
-                <Link className={styles.popupMenuLinks} href="/sell-nft">
-                    <button>Sell NFT</button>
-                </Link>
-                <Link className={styles.popupMenuLinks} href="/swap-nft">
-                    <button>Swap NFT</button>
-                </Link>
-                <Link className={styles.popupMenuLinks} href="/my-nft">
-                    <button>My NFT</button>
-                </Link>
+                <WalletConnectionManager />
+                <WalletMenu />
             </div>
         </div>
     )

@@ -2,22 +2,32 @@
 @use "../../../../styles/helpers/mixins" as *;
 
 .walletMenu {
-    padding-bottom: 21px;
-    position: absolute;
-    z-index: 1;
-    width: 250px;
-    border-radius: 0 0 5px 5px;
-    background-color: $secondary-color;
-    transform-origin: top;
-    transform: scaleY(0);
-    opacity: 0;
-    transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
     @media (min-width: 768px) and (max-width: 1023px) {
         top: 60px;
+        padding-bottom: 21px;
+        position: absolute;
+        z-index: 1;
+        width: 250px;
+        border-radius: 0 0 5px 5px;
+        background-color: $secondary-color;
+        transform-origin: top;
+        transform: scaleY(0);
+        opacity: 0;
+        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
     }
 
     @media (min-width: 1024px) {
         top: 70px;
+        padding-bottom: 21px;
+        position: absolute;
+        z-index: 1;
+        width: 250px;
+        border-radius: 0 0 5px 5px;
+        background-color: $secondary-color;
+        transform-origin: top;
+        transform: scaleY(0);
+        opacity: 0;
+        transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
     }
 }
 
@@ -28,8 +38,7 @@
 
 .walletMenuLinks {
     display: flex;
-    padding: 10px 40px;
-    background-color: $secondary-color;
+    padding: 10px;
     text-decoration: none;
     button {
         width: 100%;
@@ -38,20 +47,45 @@
         font-size: $font-size-small;
         line-height: $line-height-small;
         font-weight: 400;
-        color: $white;
-        background-color: $secondary-color;
+        color: $black;
+        background-color: $white;
         cursor: pointer;
 
         &:hover {
             color: $hover-grey;
         }
     }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        padding: 10px 40px;
+        background-color: $secondary-color;
+        button {
+            color: $white;
+            background-color: $secondary-color;
+        }
+    }
+    @media (min-width: 1024px) {
+        padding: 10px 40px;
+        button {
+            color: $white;
+            background-color: $secondary-color;
+        }
+    }
+}
+
+.hidden {
+    @media (min-width: 768px) and (max-width: 1023px) {
+        display: none;
+    }
+    @media (min-width: 1024px) {
+        display: none;
+    }
 }
 
 .walletMenuBalance {
     @include flex-center;
-    margin: 5px 10px;
-    border-radius: 5px;
+
+    border-bottom: solid 1px $black;
     font-family: $font-primary;
     font-size: $font-size-small;
     line-height: $line-height-small;
@@ -59,4 +93,15 @@
     color: $black;
     background-color: $white;
     cursor: default;
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        border: none;
+        border-radius: 5px;
+        margin: 5px 10px;
+    }
+    @media (min-width: 1024px) {
+        border: none;
+        border-radius: 5px;
+        margin: 5px 10px;
+    }
 }

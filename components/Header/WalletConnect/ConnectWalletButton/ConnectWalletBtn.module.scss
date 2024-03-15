@@ -2,29 +2,23 @@
 @use "../../../../styles/helpers/mixins" as *;
 
 .headerAccountInfoWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
     @media (min-width: 768px) and (max-width: 1023px) {
         padding: 16px;
     }
 
     @media (min-width: 1024px) {
         padding: 23.5px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
     }
 }
 
 // Connect button styles
 .connectButton {
-    display: flex;
-    background-color: $background-color;
-
     button {
-        align-items: center;
-        padding: 0 18px;
-        width: 128px;
-        border-radius: 5px;
+        padding: 10px 0;
         font-family: $font-primary;
         font-size: $font-size-small;
         color: $color-white;
@@ -35,5 +29,26 @@
             color: $hover-grey;
             background-color: $hover-blue;
         }
+        @media (min-width: 768px) and (max-width: 1023px) {
+            border-radius: 5px;
+            padding: 0 18px;
+            width: 128px;
+        }
+
+        @media (min-width: 1024px) {
+            border-radius: 5px;
+            padding: 0 18px;
+            width: 128px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        background-color: $background-color;
+        align-items: center;
+    }
+
+    @media (min-width: 1024px) {
+        background-color: $background-color;
+        align-items: center;
     }
 }
