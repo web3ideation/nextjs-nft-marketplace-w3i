@@ -139,18 +139,16 @@ const SellSwapNFT = () => {
     return (
         <div className={styles.nftSellSwapContainer}>
             <div className={styles.nftSellSwapWrapper}>
-                <div className={styles.nftSellSwapWrapperInner}>
-                    {activeForm === "sell" && (
-                        <SellSwapForm
-                            onSubmit={handleFormSubmit}
-                            title="Sell your NFT!"
-                            id="Sell Form"
-                            defaultNftAddress={nftAddressFromQuery}
-                            defaultTokenId={tokenIdFromQuery}
-                            defaultPrice={priceFromQuery}
-                        />
-                    )}
-                </div>
+                {activeForm === "sell" && (
+                    <SellSwapForm
+                        onSubmit={handleFormSubmit}
+                        title="Sell your NFT!"
+                        id="Sell Form"
+                        defaultNftAddress={nftAddressFromQuery}
+                        defaultTokenId={tokenIdFromQuery}
+                        defaultPrice={priceFromQuery}
+                    />
+                )}
             </div>
         </div>
     )

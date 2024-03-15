@@ -125,6 +125,9 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
             onOk={validateAndUpdateListing}
         >
             <form className={styles.updateListingForm} ref={formRef}>
+                <div className={styles.updateListingFormTitle}>
+                    <h3>The data of your NFT</h3>
+                </div>
                 {Object.entries(formData).map(([fieldKey, value]) => (
                     <div key={fieldKey} className={styles.formInputWrapper}>
                         <div key={fieldKey} className={styles.modalInputWrapper}>
@@ -168,6 +171,7 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
                     </div>
                 ))}
             </form>
+
             <div className={styles.updateModalDescriptionWrapper}>
                 <div className={`${styles.updateModalDescription} ${styles.modalAttention}`}>
                     <h3>
