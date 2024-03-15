@@ -9,6 +9,7 @@ import PopupMenu from "../OLDComponents/PopupMenu/PopupMenu"
 
 // Styles
 import styles from "./Header.module.scss"
+import Image from "next/image"
 
 // Header component for the NFT Marketplace
 const Header = () => {
@@ -17,7 +18,12 @@ const Header = () => {
             <nav>
                 <div className={styles.logoAndHeadlineWrapper}>
                     <Link className={styles.headerLogo} href="/" target="_self">
-                        <img src="/media/Logo-w3i-marketplace.png" alt="Logo-W3I-Market"></img>
+                        <Image
+                            height={30}
+                            width={100}
+                            src="/media/Logo-w3i-marketplace.png"
+                            alt="Logo-W3I-Market"
+                        />
                     </Link>
                     <h1 className={styles.headerHeadline}></h1>
                 </div>
@@ -36,10 +42,12 @@ const Header = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <img
+                        <Image
+                            height={30}
+                            width={100}
                             src="/media/Logo-insconsolata-straightened-e1690296964226.png"
                             alt="Logo-Web3Ideation"
-                        ></img>
+                        />
                     </Link>
                 </div>
                 <div className={styles.popupMenuWrapper}>

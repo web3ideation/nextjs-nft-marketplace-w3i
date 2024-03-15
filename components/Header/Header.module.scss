@@ -39,6 +39,7 @@
     @include flex-center;
     padding: 10px;
     img {
+        object-fit: contain;
         height: 30px;
     }
     @media (min-width: 768px) and (max-width: 1023px) {
