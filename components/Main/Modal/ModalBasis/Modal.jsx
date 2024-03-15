@@ -5,6 +5,8 @@ import ReactDOM from "react-dom"
 // Custom hooks import
 import { useModal } from "../../../../context/ModalProvider"
 
+import BtnWithAction from "../../../uiComponents/BtnWithAction"
+
 // Styles import
 import styles from "./Modal.module.scss"
 
@@ -90,15 +92,28 @@ const Modal = forwardRef((props, ref) => {
                     <div className={styles.modalContentInnerWrapper}>{children}</div>
                     <div className={styles.modalFooterWrapper}>
                         {(clearMessages || cancelListing) && (
-                            <button onClick={secondaryButtonAction}>{secondaryButtonText}</button>
+                            <BtnWithAction
+                                onClickAction={secondaryButtonAction}
+                                buttonText={secondaryButtonText}
+                                style={{ width: "50%" }}
+                            ></BtnWithAction>
                         )}
                         {Array.isArray(okText)
                             ? okText.map((text, index) => (
-                                  <button key={text} onClick={onOk[index]}>
-                                      {text}
-                                  </button>
+                                  <BtnWithAction
+                                      key={text}
+                                      onClickAction={onOk[index]}
+                                      buttonText={text}
+                                      style={{ width: "50%" }}
+                                  ></BtnWithAction>
                               ))
-                            : okText && <button onClick={onOk}>{okText}</button>}
+                            : okText && (
+                                  <BtnWithAction
+                                      onClickAction={onOk}
+                                      buttonText={okText}
+                                      style={{ width: "50%" }}
+                                  ></BtnWithAction>
+                              )}
                     </div>
                 </div>
             </div>

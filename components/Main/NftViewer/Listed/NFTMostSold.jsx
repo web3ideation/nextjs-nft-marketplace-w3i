@@ -5,6 +5,7 @@ import React, { useState, useMemo } from "react"
 import NFTBox from "../../NftCard/NFTCard"
 import { useNFT } from "../../../../context/NFTDataProvider"
 import LoadingWave from "../../ux/LoadingWave"
+import BtnWithAction from "../../../uiComponents/BtnWithAction"
 
 // ------------------ Styles ------------------
 import styles from "./NFTMostSold.module.scss"
@@ -61,11 +62,17 @@ function NFTMostSold() {
                 {renderNFTList()}
             </div>
             {loadingImage ? null : (
-                <div className={styles.showMoreMostButton}>
-                    <button onClick={() => setVisibleNFTs((prevVisible) => prevVisible + 6)}>
-                        MORE
-                    </button>
-                    {visibleNFTs > 6 && <button onClick={() => setVisibleNFTs(6)}>LESS</button>}
+                <div className={styles.showMoreBtns}>
+                    <BtnWithAction
+                        buttonText={"More"}
+                        onClickAction={() => setVisibleNFTs((prevVisible) => prevVisible + 12)}
+                    ></BtnWithAction>
+                    {visibleNFTs > 9 && (
+                        <BtnWithAction
+                            buttonText={"Less"}
+                            onClickAction={() => setVisibleNFTs(initialVisibleNFTs)}
+                        ></BtnWithAction>
+                    )}
                 </div>
             )}
         </div>

@@ -21,31 +21,6 @@
     }
 }
 
-.nftSellSwapButton {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    gap: 18px;
-    button {
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        background-color: $secondary-color;
-        width: 128px;
-        height: 49px;
-        color: $white;
-        font-weight: 400;
-        border-radius: 5px;
-        padding: 0 18px;
-        outline: none;
-        border: none;
-        cursor: pointer;
-
-        &:hover {
-            color: $hover-grey;
-        }
-    }
-}
-
 .nftSellSwapWrapper {
     display: flex;
     flex-direction: row;
@@ -53,9 +28,8 @@
     gap: 18px;
 }
 
-.nftSellSwapWrapperInner {
+.nftSellSwapButton {
     display: flex;
-    flex-direction: row;
-    width: 100%;
-    gap: 18px;
+    justify-content: center;
+    width: 50%;
 }

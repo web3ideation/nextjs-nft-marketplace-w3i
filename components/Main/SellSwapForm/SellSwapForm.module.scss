@@ -45,26 +45,6 @@
         -webkit-appearance: none;
         margin: 0;
     }
-
-    // Button styles within the form
-    button {
-        background-color: $hover-blue;
-        width: 128px;
-        height: 49px;
-        color: $white;
-        border-radius: 5px;
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        font-weight: 400;
-        padding: 0 18px;
-        outline: none;
-        border: none;
-        cursor: pointer;
-
-        &:hover {
-            color: $hover-grey;
-        }
-    }
 }
 
 .sellSwapInputFieldsWrapper {

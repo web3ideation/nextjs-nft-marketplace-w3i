@@ -59,11 +59,11 @@
     background: white;
 
     @media (min-width: 768px) and (max-width: 1023px) {
-        max-width: 80%;
+        max-width: 90%;
     }
 
     @media (min-width: 1024px) {
-        max-width: 60%;
+        max-width: 55%;
     }
 }
 
@@ -110,28 +110,8 @@
 
 // Footer styles within the modal
 .modalFooterWrapper {
-    padding: 20px 0 20px 0;
     display: flex;
-    justify-content: center;
-
-    button {
-        @include flex-center;
-        margin: 0 30px;
-        padding: 0 10px;
-        width: 50%;
-        height: 49px;
-        border-radius: 5px;
-        border: none;
-        font-family: $font-secondary;
-        font-size: $font-size-small;
-        font-weight: 400;
-        color: $white;
-        background-color: $secondary-color;
-        cursor: pointer;
-
-        &:hover {
-            color: $hover-grey;
-            background: $hover-blue;
-        }
-    }
+    justify-content: space-around;
+    padding: 20px 30px;
+    gap: 18px;
 }

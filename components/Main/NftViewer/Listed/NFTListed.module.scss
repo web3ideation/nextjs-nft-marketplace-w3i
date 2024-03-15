@@ -35,27 +35,10 @@
 }
 
 // Show more button styles
-.showMoreNewButton {
+.showMoreBtns {
     @include flex-center;
     justify-content: center;
+    width: 50%;
     gap: 18px;
-    padding: 20px;
-
-    button {
-        padding: 0 18px;
-        width: 128px;
-        height: 49px;
-        border-radius: 5px;
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        font-weight: 400;
-        color: $white;
-        background-color: $secondary-color;
-        cursor: pointer;
-
-        &:hover {
-            background-color: $hover-blue;
-            color: $hover-grey;
-        }
-    }
+    margin: 20px;
 }

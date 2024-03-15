@@ -4,6 +4,7 @@ import React, { useState, useMemo, useEffect } from "react"
 // ------------------ Custom Hooks & Component Imports ------------------
 import { useNFT } from "../../../../context/NFTDataProvider"
 import NFTBox from "../../NftCard/NFTCard"
+import BtnWithAction from "../../../uiComponents/BtnWithAction"
 
 // ------------------ Styles ------------------
 import styles from "./NFTListed.module.scss"
@@ -71,22 +72,16 @@ function NFTListed() {
             <h1>Brand New Drops</h1>
             <div className={styles.nftListNew}>{renderNFTList()}</div>
             {nftsLoading ? null : (
-                <div className={styles.showMoreNewButton}>
-                    <button
-                        onClick={() => {
-                            setVisibleNFTs((prevVisible) => prevVisible + 12)
-                        }}
-                    >
-                        MORE
-                    </button>
+                <div className={styles.showMoreBtns}>
+                    <BtnWithAction
+                        buttonText={"More"}
+                        onClickAction={() => setVisibleNFTs((prevVisible) => prevVisible + 12)}
+                    ></BtnWithAction>
                     {visibleNFTs > 9 && (
-                        <button
-                            onClick={() => {
-                                setVisibleNFTs(initialVisibleNFTs)
-                            }}
-                        >
-                            LESS
-                        </button>
+                        <BtnWithAction
+                            buttonText={"Less"}
+                            onClickAction={() => setVisibleNFTs(initialVisibleNFTs)}
+                        ></BtnWithAction>
                     )}
                 </div>
             )}

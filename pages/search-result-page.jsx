@@ -12,6 +12,7 @@ import { ethers } from "ethers"
 
 // --- Styles ---
 import styles from "../styles/Home.module.scss"
+import BtnWithAction from "../components/uiComponents/BtnWithAction"
 
 // SearchResultPage Component
 // This component displays the search results for NFTs based on the user's query.
@@ -110,12 +111,18 @@ const SearchResultPage = () => {
                             </div>
                         ))}
                     </div>
-                    <div className={styles.loadMoreButton}>
+                    <div className={styles.loadMoreBtns}>
                         {visibleResults < filteredNFTs.length && (
-                            <button onClick={showMoreResults}>Load more</button>
+                            <BtnWithAction
+                                buttonText={"Load More"}
+                                onClickAction={showMoreResults}
+                            ></BtnWithAction>
                         )}
                         {visibleResults > 25 && (
-                            <button onClick={showLessResults}>Show less</button>
+                            <BtnWithAction
+                                buttonText={"Show Less"}
+                                onClickAction={showLessResults}
+                            ></BtnWithAction>
                         )}
                     </div>
                 </div>

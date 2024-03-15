@@ -10,6 +10,7 @@ import { validateField } from "../../../utils/validation"
 // Tooltip component for error display
 import Tooltip from "../ux/Tooltip"
 import SellSwapInformation from "./SellSwapInformation/SellSwapInformation"
+import BtnWithAction from "../../uiComponents/BtnWithAction"
 
 // ------------------ Style Imports ------------------
 // Styles specific to this component
@@ -208,7 +209,11 @@ function SellSwapForm({
                     <h3>Here are some things to keep in mind when listing your item:</h3>
                 </div>
                 <SellSwapInformation />
-                <button type="submit">APPROVE AND LIST</button>
+                <BtnWithAction
+                    buttonText={"Approve and list"}
+                    onClickAction={() => {}}
+                    type="submit"
+                ></BtnWithAction>
             </form>
         </div>
     )

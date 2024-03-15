@@ -1,0 +1,21 @@
+// ButtonWithAction.module.scss
+@use "../../styles/helpers/variables" as *;
+
+.button {
+    padding: 10px 18px;
+    min-width: 128px;
+    max-width: 50%;
+    height: 49px;
+    border-radius: 5px;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    font-weight: 400;
+    color: $white;
+    background-color: $secondary-color;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $hover-blue;
+        color: $hover-grey;
+    }
+}
