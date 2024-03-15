@@ -1,0 +1,54 @@
+@use "../../../../styles/helpers/variables" as *;
+@use "../../../../styles/helpers/mixins" as *;
+
+.headerAccountInfoWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        padding: 16px;
+    }
+
+    @media (min-width: 1024px) {
+        padding: 23.5px 20px;
+    }
+}
+
+.headerAccountInfoWrapper {
+    &:hover {
+        color: $hover-blue;
+
+        .menuIcon {
+            transform: rotateX(180deg);
+            @include invert;
+        }
+    }
+}
+
+.onlineDot {
+    @include boxShadow;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: $color-forestgreen;
+}
+
+.headerAccountInfo {
+    transition: 0.4s ease-in;
+    padding: 0 18px;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    font-weight: 500;
+}
+
+.menuIcon {
+    transition: 0.4s ease-in;
+    img {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 18px;
+        width: auto;
+    }
+}
