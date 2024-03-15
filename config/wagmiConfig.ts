@@ -1,3 +1,5 @@
+"use client"
+
 // External Library Imports
 import { sepolia } from "wagmi"
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react"
