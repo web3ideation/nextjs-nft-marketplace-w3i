@@ -1,14 +1,10 @@
 @use "../../styles/helpers/variables" as *;
 
 // Footer styles
-.footerContainer {
-    text-align: center;
-    padding: 20px 0;
-    margin: 40px 0 0 0;
-    font-family: $font-secondary;
-    font-size: $font-size-small;
-    color: $black;
-    background-color: $background-color;
+.footer {
+    margin-top: 30px;
+    background-color: $color-light-black;
+    background-size: cover;
     img {
         width: 100%;
         @media (min-width: 768px) and (max-width: 1023px) {
@@ -19,4 +15,129 @@
             width: 25%;
         }
     }
+}
+.footerTop {
+    border-color: $color-light-black;
+    padding: 58px 0 38px;
+}
+
+.footerContainer {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 540px;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        max-width: 720px;
+    }
+
+    @media (min-width: 1024px) {
+        width: 100%;
+        max-width: 1200px;
+    }
+}
+
+.row {
+    display: flex;
+    flex-direction: column;
+    margin: 0 -15px;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        flex-direction: row;
+    }
+
+    @media (min-width: 1024px) {
+        flex-direction: row;
+    }
+}
+
+.footerOne {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.footerLogoWrapper {
+    margin-bottom: 30px;
+    width: 50%;
+}
+
+.footerTopLogo {
+    background-color: transparent;
+    img {
+        width: 100%;
+        filter: invert(100);
+        object-fit: contain;
+    }
+}
+
+.footerTextWrapper {
+    margin: 0 0 30px;
+    overflow: hidden;
+}
+
+.footerText {
+    font-family: $font-secondary;
+    color: $color-white;
+    p {
+        margin-bottom: 26px;
+    }
+}
+
+.footerBtnWrapper {
+    margin: 40px 0 26px 0;
+}
+
+.footerTwo {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.footerContactWrapper {
+    margin: 0 0 30px;
+    overflow: hidden;
+}
+
+.footerTitle {
+    font-family: $font-primary;
+    font-size: 24px;
+    color: $color-white;
+    font-weight: 700;
+    letter-spacing: 0;
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.contactList {
+    margin-left: 0;
+    text-align: left;
+    padding-right: 50px;
+    list-style: none;
+}
+
+.mailIcon::before {
+    position: absolute;
+    left: 0;
+    margin-left: 0;
+    font-size: 20px;
+    color: $secondary-color;
+}
+
+.footerLinks {
+    text-decoration: none;
+    color: $color-white;
+    font-family: $font-secondary;
+    font-size: 16px;
+}
+
+.footerThree {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
 }
