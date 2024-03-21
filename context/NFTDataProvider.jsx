@@ -11,7 +11,7 @@ import { useQuery } from "@apollo/client"
 
 // ------------------ GraphQL Queries ------------------
 // Importing GraphQL queries for active and inactive items.
-import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "../constants/subgraphQueries"
+import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "@constants/subgraphQueries"
 
 // ------------------ Context Creation ------------------
 // Creating a React context for NFT data management.

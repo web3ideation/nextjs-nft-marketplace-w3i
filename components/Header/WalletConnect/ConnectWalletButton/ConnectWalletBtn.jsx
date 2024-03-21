@@ -1,4 +1,5 @@
 import React from "react"
+
 import styles from "./ConnectWalletBtn.module.scss"
 
 const ConnectWalletBtn = ({ onConnect, isClient }) => {

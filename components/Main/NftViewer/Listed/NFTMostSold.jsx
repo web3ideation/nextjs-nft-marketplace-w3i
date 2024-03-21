@@ -3,9 +3,8 @@ import React, { useState, useMemo, useEffect } from "react"
 
 // ------------------ Custom Hooks & Component Imports ------------------
 import NFTBox from "../../NftCard/NFTCard"
-import { useNFT } from "../../../../context/NFTDataProvider"
-import LoadingWave from "../../ux/LoadingWave"
-import BtnWithAction from "../../../uiComponents/BtnWithAction"
+import { useNFT } from "@context/NFTDataProvider"
+import BtnWithAction from "@components/uiComponents/BtnWithAction"
 
 // ------------------ Styles ------------------
 import styles from "./NFTMostSold.module.scss"

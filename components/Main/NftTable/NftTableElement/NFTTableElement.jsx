@@ -1,11 +1,11 @@
 import React from "react"
-
 import Image from "next/image"
-import LoadingWave from "../../ux/LoadingWave"
-import { useModal } from "../../../../context/ModalProvider"
+
+import LoadingWave from "@components/Main/ux/LoadingWave"
+import { useModal } from "@context/ModalProvider"
 
 // Utility functions for formatting
-import { truncateStr, formatPriceToEther, truncatePrice } from "../../../../utils/formatting"
+import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
 
 import styles from "./NFTTableElement.module.scss"
 

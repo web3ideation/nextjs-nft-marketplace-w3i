@@ -1,6 +1,8 @@
 import React from "react"
 import Link from "next/link"
-import { useModal } from "../../../../context/ModalProvider"
+
+import { useModal } from "@context/ModalProvider"
+
 import styles from "./WalletMenu.module.scss"
 
 const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isOpen, isClient, address }) => {

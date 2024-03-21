@@ -6,21 +6,21 @@ import Image from "next/image"
 import { useAccount, usePublicClient } from "wagmi"
 
 // Custom hooks and components
-import { useNFT } from "../../../../../context/NFTDataProvider"
-import { useBuyItem } from "../../../../../hooks/useBuyItem"
-import { useCancelListing } from "../../../../../hooks/useCancelListing"
-import { useNftNotification } from "../../../../../context/NotificationProvider"
-import { useModal } from "../../../../../context/ModalProvider"
+import { useNFT } from "@context/NFTDataProvider"
+import { useBuyItem } from "@hooks/useBuyItem"
+import { useCancelListing } from "@hooks/useCancelListing"
+import { useNftNotification } from "@context/NotificationProvider"
+import { useModal } from "@context/ModalProvider"
 import Modal from "../../ModalBasis/Modal"
 import NFTModalList from "../../ModalElements/ModalCollectionList/NFTModalList"
 
 // ------------------ Utility Imports ------------------
-import { truncateStr, formatPriceToEther, truncatePrice } from "../../../../../utils/formatting"
-import { fetchEthToEurRate } from "../../../../../utils/fetchEthToEurRate"
-import { copyNftAddressToClipboard } from "../../../../../utils/copyAddress"
+import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
+import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
+import { copyNftAddressToClipboard } from "@utils/copyAddress"
 
 // Constants import
-import networkMapping from "../../../../../constants/networkMapping.json"
+import networkMapping from "@constants/networkMapping.json"
 
 // Styles import
 import styles from "./InfoModal.module.scss"

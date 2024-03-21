@@ -8,9 +8,9 @@ import { validateField } from "../../../utils/validation"
 
 // ------------------ Component Imports ------------------
 // Tooltip component for error display
-import Tooltip from "../ux/Tooltip"
+import Tooltip from "@components/Main/ux/Tooltip"
 import SellSwapInformation from "./SellSwapInformation/SellSwapInformation"
-import BtnWithAction from "../../uiComponents/BtnWithAction"
+import BtnWithAction from "@components/uiComponents/BtnWithAction"
 
 // ------------------ Style Imports ------------------
 // Styles specific to this component

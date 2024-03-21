@@ -5,7 +5,7 @@ import { useCallback, useEffect } from "react"
 import { useContractRead } from "wagmi"
 
 // Custom hooks and utility imports
-import nftMarketplaceAbi from "../constants/NftMarketplace.json"
+import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
 /**
  * Custom hook to get proceeds of an user.

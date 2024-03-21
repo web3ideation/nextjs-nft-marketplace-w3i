@@ -7,7 +7,7 @@ import NftInfoModal from "./ModalType/InfoModal/NFTInfoModal"
 import NFTCollectionModal from "./ModalType/CollectionModal/NFTCollectionModal"
 import NFTUpdateListingModal from "./ModalType/UpdateListingModal/NFTUpdateListingModal"
 // Importing custom hooks
-import { useModal } from "../../../context/ModalProvider"
+import { useModal } from "@context/ModalProvider"
 
 // ModalRenderer: A component to render different types of modals based on the modal type
 const ModalRenderer = () => {

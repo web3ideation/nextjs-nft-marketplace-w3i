@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react"
+
 import { useAccount, useDisconnect } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
+
 import WalletInfo from "../WalletConnect/WalletInfo/WalletInfo"
 import ConnectWalletBtn from "../WalletConnect/ConnectWalletButton/ConnectWalletBtn"
 

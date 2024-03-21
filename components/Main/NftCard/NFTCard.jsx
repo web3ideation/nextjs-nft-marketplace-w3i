@@ -6,14 +6,14 @@ import Image from "next/image"
 import { useAccount } from "wagmi"
 
 // ------------------ Custom Hook Imports ------------------
-import { useModal } from "../../../context/ModalProvider"
+import { useModal } from "@context/ModalProvider"
 
 // ------------------ Component Imports ------------------
-import LoadingWave from "../ux/LoadingWave"
+import LoadingWave from "@components/Main/ux/LoadingWave"
 
 // ------------------ Utility Imports ------------------
-import { formatPriceToEther, truncatePrice } from "../../../utils/formatting"
-import { fetchEthToEurRate } from "../../../utils/fetchEthToEurRate"
+import { formatPriceToEther, truncatePrice } from "@utils/formatting"
+import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 
 // ------------------ Constant & Style Imports ------------------
 import styles from "./NFTCard.module.scss"

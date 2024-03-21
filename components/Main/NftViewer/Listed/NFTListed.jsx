@@ -2,9 +2,9 @@
 import React, { useState, useMemo, useEffect } from "react"
 
 // ------------------ Custom Hooks & Component Imports ------------------
-import { useNFT } from "../../../../context/NFTDataProvider"
+import { useNFT } from "@context/NFTDataProvider"
 import NFTBox from "../../NftCard/NFTCard"
-import BtnWithAction from "../../../uiComponents/BtnWithAction"
+import BtnWithAction from "@components/uiComponents/BtnWithAction"
 
 // ------------------ Styles ------------------
 import styles from "./NFTListed.module.scss"

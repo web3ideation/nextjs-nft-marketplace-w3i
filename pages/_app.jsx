@@ -5,19 +5,19 @@ import React from "react"
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
 import Head from "next/head"
 import { WagmiConfig } from "wagmi"
-import { wagmiConfig } from "../config/wagmiConfig"
+import { wagmiConfig } from "@config/wagmiConfig"
 
 // Importing context providers from local context directory
-import { NftNotificationProvider } from "../context/NotificationProvider"
-import { SearchResultsProvider } from "../context/SearchResultsProvider"
-import { NFTProvider } from "../context/NFTDataProvider"
-import { ModalProvider } from "../context/ModalProvider"
+import { NftNotificationProvider } from "@context/NotificationProvider"
+import { SearchResultsProvider } from "@context/SearchResultsProvider"
+import { NFTProvider } from "@context/NFTDataProvider"
+import { ModalProvider } from "@context/ModalProvider"
 
 // Importing components from local components directory
-import ModalRenderer from "../components/Main/Modal/ModalRenderer"
-import NftNotification from "../components/Main/Notification/NFTNotification"
-import Header from "../components/Header/Header"
-import Footer from "../components/Footer/Footer"
+import ModalRenderer from "@components/Main/Modal/ModalRenderer"
+import NftNotification from "@components/Main/Notification/NFTNotification"
+import Header from "@components/Header/Header"
+import Footer from "@components/Footer/Footer"
 
 // Importing global styles
 import "../styles/globals.scss"

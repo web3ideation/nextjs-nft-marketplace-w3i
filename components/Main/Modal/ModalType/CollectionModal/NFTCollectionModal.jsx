@@ -2,14 +2,14 @@
 import React, { forwardRef, useEffect, useState } from "react"
 
 // User-created hooks and components
-import { useNFT } from "../../../../../context/NFTDataProvider"
-import { useModal } from "../../../../../context/ModalProvider"
+import { useNFT } from "@context/NFTDataProvider"
+import { useModal } from "@context/ModalProvider"
 import Modal from "../../ModalBasis/Modal"
 import NFTModalList from "../../ModalElements/ModalCollectionList/NFTModalList"
 
 // Utility imports
-import { fetchEthToEurRate } from "../../../../../utils/fetchEthToEurRate"
-import { formatPriceToEther } from "../../../../../utils/formatting"
+import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
+import { formatPriceToEther } from "@utils/formatting"
 
 // ------------------ Styles ------------------
 import styles from "./CollectionModal.module.scss"

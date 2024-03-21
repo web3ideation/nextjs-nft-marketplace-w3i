@@ -2,8 +2,8 @@
 import React, { useMemo, useRef, useEffect } from "react"
 
 // Importing custom hooks and components
-import { useNFT } from "../../../../../context/NFTDataProvider"
-import NFTBox from "../../../NftCard/NFTCard"
+import { useNFT } from "@context/NFTDataProvider"
+import NFTBox from "@components/Main/NftCard/NFTCard"
 
 // Styles import
 import styles from "./NFTModalList.module.scss"

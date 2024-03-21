@@ -8,15 +8,15 @@ import { useAccount, usePublicClient } from "wagmi"
 
 // User-Created Hooks and Components
 
-import { useGetProceeds } from "../hooks/useGetProceeds"
-import { useWithdrawProceeds } from "../hooks/useWithdrawProceeds"
-import { fetchEthToEurRate } from "../utils/fetchEthToEurRate"
-import networkMapping from "../constants/networkMapping.json"
+import { useGetProceeds } from "@hooks/useGetProceeds"
+import { useWithdrawProceeds } from "@hooks/useWithdrawProceeds"
+import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
+import networkMapping from "@constants/networkMapping.json"
 
-import BtnWithAction from "../components/uiComponents/BtnWithAction"
+import BtnWithAction from "@components/uiComponents/BtnWithAction"
 
 // Styles
-import styles from "../styles/Home.module.scss"
+import styles from "@styles/Home.module.scss"
 
 const SellSwapNFT = () => {
     // -------------------- Web3 Elements ---------------------

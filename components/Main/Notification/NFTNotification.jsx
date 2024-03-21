@@ -2,7 +2,7 @@
 import React from "react"
 
 // Custom Hooks and Components
-import { useNftNotification } from "../../../context/NotificationProvider"
+import { useNftNotification } from "@context/NotificationProvider"
 import SingleNotification from "./NotificationElement/NFTSingleNotification"
 
 // Styles

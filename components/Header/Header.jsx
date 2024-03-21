@@ -1,15 +1,15 @@
 // React and Hooks import
-import Link from "next/link"
 import React from "react"
+import Image from "next/image"
+import Link from "next/link"
 
 // Importing custom components
 import SearchBar from "./SearchBar/SearchBar"
 import WalletConnectionManager from "./WalletConnect/WalletConnectionManager"
-import PopupMenu from "../OLDComponents/PopupMenu/PopupMenu"
+import PopupMenu from "@components/OLDComponents/PopupMenu/PopupMenu"
 
 // Styles
 import styles from "./Header.module.scss"
-import Image from "next/image"
 
 // Header component for the NFT Marketplace
 const Header = () => {

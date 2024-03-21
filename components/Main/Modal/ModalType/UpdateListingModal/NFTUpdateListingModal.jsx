@@ -7,13 +7,13 @@ import { ethers } from "ethers"
 import { useAccount, usePublicClient } from "wagmi"
 
 // Custom hooks and components
-import { useNFT } from "../../../../../context/NFTDataProvider"
-import Tooltip from "../../../ux/Tooltip"
+import { useNFT } from "@context/NFTDataProvider"
+import Tooltip from "@components/Main/ux/Tooltip"
 import Modal from "../../ModalBasis/Modal"
-import { validateField } from "../../../../../utils/validation"
-import { useUpdateListing } from "../../../../../hooks/useUpdateListing"
-import { useModal } from "../../../../../context/ModalProvider"
-import networkMapping from "../../../../../constants/networkMapping.json"
+import { validateField } from "@utils/validation"
+import { useUpdateListing } from "@hooks/useUpdateListing"
+import { useModal } from "@context/ModalProvider"
+import networkMapping from "@constants/networkMapping.json"
 
 // Styles
 import styles from "./UpdateListingModal.module.scss"

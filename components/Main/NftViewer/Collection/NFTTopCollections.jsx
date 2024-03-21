@@ -2,7 +2,7 @@
 import React, { useEffect } from "react"
 
 // Custom Hooks and Components
-import { useNFT } from "../../../../context/NFTDataProvider"
+import { useNFT } from "@context/NFTDataProvider"
 import NFTTable from "../../NftTable/NFTTable"
 import NFTTableElement from "../../NftTable/NftTableElement/NFTTableElement"
 

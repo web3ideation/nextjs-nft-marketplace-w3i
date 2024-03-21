@@ -2,7 +2,7 @@
 import React from "react"
 
 // Custom Hooks and Components
-import LoadingWave from "../../ux/LoadingWave"
+import LoadingWave from "@components/Main/ux/LoadingWave"
 
 // Styles
 import styles from "./SingleNotification.module.scss"

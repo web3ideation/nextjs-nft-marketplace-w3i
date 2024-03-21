@@ -7,15 +7,15 @@ import { ethers } from "ethers"
 import { useAccount, usePublicClient } from "wagmi"
 
 // User-Created Hooks and Components
-import SellSwapForm from "../../Main/SellSwapForm/SellSwapForm"
-import BtnWithAction from "../../uiComponents/BtnWithAction"
-import { useNFT } from "../../../context/NFTDataProvider"
-import { useRawApprove } from "../../../hooks/useRawApprove"
-import { useListItem } from "../../../hooks/useListItem"
-import networkMapping from "../../../constants/networkMapping.json"
+import SellSwapForm from "@components/Main/SellSwapForm/SellSwapForm"
+import BtnWithAction from "@components/uiComponents/BtnWithAction"
+import { useNFT } from "@context/NFTDataProvider"
+import { useRawApprove } from "@hooks/useRawApprove"
+import { useListItem } from "@hooks/useListItem"
+import networkMapping from "@constants/networkMapping.json"
 
 // Styles
-import styles from "../styles/Home.module.scss"
+import styles from "@styles/Home.module.scss"
 
 const SellSwapNFT = () => {
     // -------------------- Web3 Elements ---------------------

@@ -3,16 +3,16 @@ import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 
 // --- Custom Hooks and Components Imports ---
-import { useNFT } from "../context/NFTDataProvider"
-import SearchSideFilters from "../components/Main/SearchSideBar/SearchSideFilters"
-import NFTBox from "../components/Main/NftCard/NFTCard"
+import { useNFT } from "@context/NFTDataProvider"
+import SearchSideFilters from "@components/Main/SearchSideBar/SearchSideFilters"
+import NFTBox from "@components/Main/NftCard/NFTCard"
 
 // --- Third-party Libraries ---
 import { ethers } from "ethers"
 
 // --- Styles ---
-import styles from "../styles/Home.module.scss"
-import BtnWithAction from "../components/uiComponents/BtnWithAction"
+import styles from "@styles/Home.module.scss"
+import BtnWithAction from "@components/uiComponents/BtnWithAction"
 
 // SearchResultPage Component
 // This component displays the search results for NFTs based on the user's query.

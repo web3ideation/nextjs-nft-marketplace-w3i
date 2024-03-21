@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react"
 import { useAccount } from "wagmi"
 
 // Custom components and hooks
-import { useNFT } from "../context/NFTDataProvider"
-import NFTBox from "../components/Main/NftCard/NFTCard"
-import LoadingWave from "../components/Main/ux/LoadingWave"
-import { formatPriceToEther, truncatePrice } from "../utils/formatting"
-import { fetchEthToEurRate } from "../utils/fetchEthToEurRate"
+import { useNFT } from "@context/NFTDataProvider"
+import NFTBox from "@components/Main/NftCard/NFTCard"
+import LoadingWave from "@components/Main/ux/LoadingWave"
+import { formatPriceToEther, truncatePrice } from "@utils/formatting"
+import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 
 // Styles import
-import styles from "../styles/Home.module.scss"
+import styles from "@styles/Home.module.scss"
 
 const MyNFTs = () => {
     // State for managing NFT data, loading states, and price calculations

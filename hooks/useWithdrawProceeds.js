@@ -5,10 +5,10 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 // Custom hooks
-import { useNftNotification } from "../context/NotificationProvider"
+import { useNftNotification } from "@context/NotificationProvider"
 
 // Constants Imports
-import nftMarketplaceAbi from "../constants/NftMarketplace.json"
+import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
 /**
  * Custom hook to handle the update listing process of an NFT.

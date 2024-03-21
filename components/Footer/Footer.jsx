@@ -1,9 +1,10 @@
 import React from "react"
-import styles from "./Footer.module.scss"
-
-import BtnWithAction from "../uiComponents/BtnWithAction"
 import Link from "next/link"
 import Image from "next/image"
+
+import BtnWithAction from "@components/uiComponents/BtnWithAction"
+
+import styles from "./Footer.module.scss"
 
 const handleClick = () => {
     window.location.href = "https://web3ideation.com/contact"

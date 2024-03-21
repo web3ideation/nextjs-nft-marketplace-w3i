@@ -1,15 +1,15 @@
 // React imports: Core and hooks
 import React, { forwardRef, useEffect } from "react"
 import ReactDOM from "react-dom"
+import Image from "next/image"
 
 // Custom hooks import
-import { useModal } from "../../../../context/ModalProvider"
+import { useModal } from "@context/ModalProvider"
 
-import BtnWithAction from "../../../uiComponents/BtnWithAction"
+import BtnWithAction from "@components/uiComponents/BtnWithAction"
 
 // Styles import
 import styles from "./Modal.module.scss"
-import Image from "next/image"
 
 /**
  * Modal component with forwardRef for parent components to reference.

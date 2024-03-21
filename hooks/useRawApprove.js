@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { erc721ABI, useContractWrite, useWaitForTransaction } from "wagmi"
 
 // Custom hooks and utility imports
-import { useNftNotification } from "../context/NotificationProvider"
+import { useNftNotification } from "@context/NotificationProvider"
 
 /**
  * Custom hook for managing the NFT approval process.

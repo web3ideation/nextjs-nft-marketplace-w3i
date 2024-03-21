@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react"
+import Image from "next/image"
+
 import { useAccount, useBalance } from "wagmi"
-import { truncateStr, truncatePrice } from "../../../../utils/formatting"
+import { truncateStr, truncatePrice } from "@utils/formatting"
+
 import WalletMenu from "../WalletMenu/WalletMenu"
 import styles from "./WalletInfo.module.scss"
-import Image from "next/image"
 
 const WalletInfo = ({ onDisconnect, isClient }) => {
     const { address } = useAccount()

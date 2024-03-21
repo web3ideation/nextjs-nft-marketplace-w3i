@@ -3,7 +3,7 @@ import React, { forwardRef, useEffect, useState } from "react"
 import ReactDOM from "react-dom"
 
 // Styles import
-import styles from "../../../../styles/Home.module.css"
+import styles from "@styles/Home.module.css"
 
 // Modal component using forwardRef for parent components to reference
 const Modal = forwardRef((props, ref) => {
