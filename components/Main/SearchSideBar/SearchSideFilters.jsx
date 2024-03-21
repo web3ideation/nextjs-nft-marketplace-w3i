@@ -163,7 +163,6 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
 
     const handleTouchEnd = () => {
         setIsButtonPressed(false)
-        // Aufruf der Reset-Funktion hier, falls nicht bereits im onClick-Handler
         resetFilters()
     }
 

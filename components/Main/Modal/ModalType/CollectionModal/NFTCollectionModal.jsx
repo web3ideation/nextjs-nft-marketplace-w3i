@@ -51,35 +51,40 @@ const NFTCollectionModal = forwardRef((prop, ref) => {
     }, [selectedCollection.collectionPrice])
 
     return (
-        <Modal ref={ref} key={selectedCollection?.nftAddress}>
+        <Modal
+            ref={ref}
+            key={selectedCollection?.nftAddress}
+            modalTitle={selectedCollection.collectionName + " Collection"}
+        >
             <div className={styles.collectionModalContentWrapper}>
-                <h2>
-                    {selectedCollection.collectionName} <br /> Collection
-                </h2>
-            </div>
-            {selectedCollection && <NFTModalList filterAddress={selectedCollection.nftAddress} />}
-            <div className={styles.collectionModalContent}>
-                <div className={styles.collectionModalTextWrapper}>
-                    <div className={styles.collectionModalText}>
-                        <div>
-                            <p>Collection address:</p>
-                            <strong>{selectedCollection.nftAddress}</strong>
-                        </div>
-                        <div>
-                            <p>Items: </p>
-                            <strong>{selectedCollection.count}</strong>
-                        </div>
-                        <div>
-                            <p>Token-Id's: </p>
-                            <strong>{selectedCollection.tokenIds.split(",").join(", ")}</strong>
-                        </div>
-                        <div>
-                            <p>Volume:</p>
-                            <strong>
-                                {formatPriceToEther(selectedCollection.collectionPrice)}
-                                ETH
-                            </strong>
-                            <strong>{priceInEur ? `${priceInEur} €` : "Loading..."}</strong>
+                {selectedCollection && (
+                    <NFTModalList filterAddress={selectedCollection.nftAddress} />
+                )}
+                <div className={styles.collectionModalContent}>
+                    <div className={styles.collectionModalTextWrapper}>
+                        <div className={styles.collectionModalText}>
+                            <div>
+                                <p>Collection address:</p>
+                                <strong>{selectedCollection.nftAddress}</strong>
+                            </div>
+                            <div>
+                                <p>Items: </p>
+                                <strong>{selectedCollection.count}</strong>
+                            </div>
+                            <div>
+                                <p>Token-Id's: </p>
+                                <strong>
+                                    {selectedCollection.tokenIds.split(",").join(", ")}
+                                </strong>
+                            </div>
+                            <div>
+                                <p>Volume:</p>
+                                <strong>
+                                    {formatPriceToEther(selectedCollection.collectionPrice)}
+                                    ETH
+                                </strong>
+                                <strong>{priceInEur ? `${priceInEur} €` : "Loading..."}</strong>
+                            </div>
                         </div>
                     </div>
                 </div>

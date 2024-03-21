@@ -1,19 +1,11 @@
-import React, { useRef } from "react"
+import React from "react"
 import Link from "next/link"
 import { useModal } from "../../../../context/ModalProvider"
 import styles from "./WalletMenu.module.scss"
 
-const WalletMenu = ({
-    balanceData,
-    formattedPrice,
-    onDisconnect,
-    isHovered,
-    isClient,
-    address,
-}) => {
+const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isOpen, isClient, address }) => {
     const defaultBalanceData = { formatted: "0", symbol: "N/A" }
     const actualBalanceData = balanceData || defaultBalanceData
-    const modalRef = useRef(null)
 
     const { openModal } = useModal()
 
@@ -21,10 +13,8 @@ const WalletMenu = ({
         openModal("chat", address)
     }
 
-    // Klassenname basierend auf isHovered
-    const menuClassNames = isHovered ? `${styles.walletMenu} ${styles.visible}` : styles.walletMenu
+    const menuClassNames = isOpen ? `${styles.walletMenu} ${styles.visible}` : styles.walletMenu
 
-    // Nur rendern, wenn isClient true ist
     if (!isClient) return null
 
     return balanceData ? (
@@ -55,7 +45,10 @@ const WalletMenu = ({
             <div className={styles.walletMenuLinks} onClick={handleChatClick}>
                 <button>Chat</button>
             </div>
-            <div className={styles.walletMenuLinks} onClick={onDisconnect}>
+            <div
+                className={`${styles.walletMenuLinks} ${styles.disconnect}`}
+                onClick={onDisconnect}
+            >
                 <button>Disconnect</button>
             </div>
         </div>

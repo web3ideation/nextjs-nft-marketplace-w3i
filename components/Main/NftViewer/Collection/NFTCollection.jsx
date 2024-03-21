@@ -40,7 +40,7 @@ function NFTCollection() {
         <>
             <div className={styles.nftTableContainer}>
                 <div className={styles.nftTableWrapper}>
-                    <h1>Top Value</h1>
+                    <h2>Top Value</h2>
                     <div className={styles.nftCollection}>
                         <NFTTable tableRows={tableRows} />
                     </div>

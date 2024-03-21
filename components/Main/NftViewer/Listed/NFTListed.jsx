@@ -10,42 +10,47 @@ import BtnWithAction from "../../../uiComponents/BtnWithAction"
 import styles from "./NFTListed.module.scss"
 
 function NFTListed() {
-    // Retrieve NFT data and loading state using custom hook
-    const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
-
-    // State for the number of visible NFTs
+    // State hooks for managing NFT visibility
     const [visibleNFTs, setVisibleNFTs] = useState(null)
     const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(null)
 
+    // Custom hook to retrieve NFT data and loading state
+    const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
+
     useEffect(() => {
-        //function to get initial count of items should be displayed
+        // Function to determine initial count of visible items based on screen width
         function getInitialVisibleCount() {
             const width = window.innerWidth
             if (width < 768) {
-                return 4
+                return 6
             } else if (width >= 768 && width < 1024) {
                 return 9
             } else {
-                return 6
+                return 12
             }
         }
-        setVisibleNFTs(getInitialVisibleCount())
-        setInitialVisibleNFTs(getInitialVisibleCount())
 
-        function handleResize() {
-            setVisibleNFTs(getInitialVisibleCount())
-            setInitialVisibleNFTs(getInitialVisibleCount())
+        // Set initial visible NFTs based on screen size
+        const initialCount = getInitialVisibleCount()
+        setVisibleNFTs(initialCount)
+        setInitialVisibleNFTs(initialCount)
+
+        // Handle window resize to adjust visible NFTs
+        const handleResize = () => {
+            const newCount = getInitialVisibleCount()
+            setVisibleNFTs(newCount)
+            setInitialVisibleNFTs(newCount)
         }
 
         window.addEventListener("resize", handleResize)
 
-        // Cleanup
+        // Cleanup function to remove event listener on component unmount
         return () => window.removeEventListener("resize", handleResize)
     }, [])
 
-    // Sort and filter NFTs based on listingId and isListed status
+    // Memoized sorting and filtering of NFTs based on their listed status and listing ID
     const sortedAndFilteredNFTs = useMemo(() => {
-        return [...nftsData]
+        return nftsData
             .filter((nft) => nft.isListed)
             .sort((a, b) => Number(b.listingId) - Number(a.listingId))
     }, [nftsData])
@@ -69,15 +74,21 @@ function NFTListed() {
 
     return (
         <div className={styles.nftListNewWrapper}>
-            <h1>Brand New Drops</h1>
+            <h2>Brand New Drops</h2>
             <div className={styles.nftListNew}>{renderNFTList()}</div>
             {nftsLoading ? null : (
                 <div className={styles.showMoreBtns}>
                     <BtnWithAction
                         buttonText={"More"}
-                        onClickAction={() => setVisibleNFTs((prevVisible) => prevVisible + 12)}
+                        onClickAction={() =>
+                            setVisibleNFTs(
+                                (prevVisible) =>
+                                    prevVisible +
+                                    (initialVisibleNFTs > 12 ? initialVisibleNFTs : 12)
+                            )
+                        }
                     />
-                    {visibleNFTs > 9 && (
+                    {visibleNFTs > initialVisibleNFTs && (
                         <BtnWithAction
                             buttonText={"Less"}
                             onClickAction={() => setVisibleNFTs(initialVisibleNFTs)}

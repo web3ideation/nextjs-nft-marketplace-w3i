@@ -127,21 +127,20 @@ export default function NFTBox({ nftData }) {
                             </div>
                             <Image
                                 src={imageURI.src}
-                                layout="responsive"
-                                width={270}
-                                height={270}
+                                width={300}
+                                height={300}
                                 loading="lazy"
                                 //placeholder="blur"
                                 alt={tokenDescription || "..."}
                                 className={styles.cardImage}
                                 style={{ opacity: imageOpacity }}
-                                onLoadingComplete={handleImageLoad}
+                                onLoad={handleImageLoad}
                             />
                         </div>
                         <div className={styles.cardContent}>
                             <div className={styles.cardTitleWrapper}>
                                 <div className={styles.cardTitle}>
-                                    <h2>{tokenSymbol}</h2>
+                                    <h3>{tokenSymbol}</h3>
                                 </div>
                                 <div>#{tokenId}</div>
                             </div>
