@@ -1,16 +1,18 @@
-@use "../../../../styles/helpers/variables" as *;
-@use "../../../../styles/helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 .nftListNewWrapper {
-    @include flex-center;
+    display: flex;
+    justify-content: flex-start;
     flex-direction: column;
-    width: 100%;
     font-family: $font-primary;
 
-    h1 {
-        font-size: $font-size-medium;
+    h2 {
+        padding: 10px 50px;
+        font-size: $font-size-xxl;
         font-weight: 700;
-        text-align: center;
+        text-align: left;
     }
 }
 
@@ -38,7 +40,7 @@
 .showMoreBtns {
     @include flex-center;
     justify-content: center;
-    width: 50%;
+    max-width: 100%;
     gap: 18px;
     margin: 20px;
 }

@@ -1,42 +1,62 @@
-@use "../../../../styles/helpers/variables" as *;
-@use "../../../../styles/helpers/mixins" as *;
-
-.headerAccountInfoWrapper {
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
+.headerAccountInfoContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    background-color: $white;
+    justify-content: center;
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 5px;
+    background-color: $color-white;
+    cursor: pointer;
+    transition: color 0.4s ease, transform 0.4s ease;
+
     @media (min-width: 768px) and (max-width: 1023px) {
         flex-direction: row;
-        justify-content: center;
         padding: 2.5px;
         background-color: $background-color;
         margin-bottom: 0;
-        border-radius: none;
+        border-radius: 0;
     }
 
     @media (min-width: 1024px) {
         flex-direction: row;
-        justify-content: center;
         padding: 23.5px 20px;
         background-color: $background-color;
         margin-bottom: 0;
-        border-radius: none;
+        border-radius: 0;
+        &:hover {
+            color: $hover-blue;
+
+            .menuIcon img {
+                @include invert;
+                transform: rotateX(180deg);
+            }
+        }
+    }
+}
+.headerAccountInfoContainerOpen {
+    @media (max-width: 1023px) {
+        color: $hover-blue;
+
+        .menuIcon img {
+            @include invert;
+            transform: rotateX(180deg);
+        }
     }
 }
 
-.headerAccountInfoWrapper {
-    &:hover {
-        color: $hover-blue;
+.headerAccountInfoWrapperInner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        flex-direction: row;
+    }
 
-        .menuIcon {
-            transform: rotateX(180deg);
-            @include invert;
-        }
+    @media (min-width: 1024px) {
+        flex-direction: row;
     }
 }
 
@@ -47,50 +67,39 @@
     border-radius: 50%;
     background-color: $color-forestgreen;
     margin: 10px;
-    @media (min-width: 768px) and (max-width: 1023px) {
-        margin: 0;
-    }
 
-    @media (min-width: 1024px) {
+    @media (min-width: 768px) {
         margin: 0;
     }
 }
 
 .headerAccountInfo {
-    transition: 0.4s ease-in;
     text-align: start;
     padding: 0 10px;
     font-family: $font-primary;
-    font-size: $font-size-small;
+    font-size: $font-size-large;
     font-weight: 500;
+
     @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: $font-size-medium;
     }
 
     @media (min-width: 1024px) {
+        font-size: $font-size-small;
     }
 }
 
 .menuIcon {
-    transition: 0.4s ease-in;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
     img {
         display: none;
-    }
+        transition: 0.4s ease-out;
 
-    @media (min-width: 768px) and (max-width: 1023px) {
-        img {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            height: 18px;
-            width: auto;
-        }
-    }
-
-    @media (min-width: 1024px) {
-        img {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
+        @media (min-width: 768px) {
+            display: block;
             height: 18px;
             width: auto;
         }

@@ -1,5 +1,6 @@
-@use "../../../styles/helpers/variables" as *;
-@use "../../../styles/helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 .sellSwapFormWrapper {
     @include boxShadow;
@@ -13,8 +14,16 @@
     border-radius: 5px;
 
     h2 {
-        font-size: $font-size-medium;
-        font-weight: 600;
+        font-size: $font-size-xxl;
+        font-weight: 700;
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: $font-size-extra-large;
+    }
+
+    @media (min-width: 1024px) {
+        font-size: $font-size-large;
     }
 }
 
@@ -26,6 +35,7 @@
     padding: 20px 10px;
 
     h3 {
+        font-size: $font-size-large;
         text-align: center;
     }
 }

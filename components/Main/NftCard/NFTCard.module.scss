@@ -1,11 +1,21 @@
-@use "../../../styles/helpers/variables" as *;
-@use "../../../styles/helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 // NFT card styles
 .nftCardWrapper {
     height: 150px;
     width: 150px;
+    border-radius: $border-radius;
+    @include boxShadow;
+    transition: 0.3s ease-out;
+    font-family: $font-primary;
+    font-size: $font-size-small;
+    font-weight: 500;
+    color: $black;
+    overflow: hidden;
 
+    cursor: pointer;
     @media (min-width: 768px) and (max-width: 1023px) {
         height: 200px;
         width: 200px;
@@ -14,6 +24,11 @@
     @media (min-width: 1024px) {
         height: 270px;
         width: 270px;
+    }
+    &:hover {
+        @include boxShadow-hover;
+        transition: 0.1s ease-in;
+        transform: scale(1.02);
     }
 }
 
@@ -24,23 +39,7 @@
     justify-content: space-between;
     height: 150px;
     width: 150px;
-    border-radius: 5px;
-    font-family: $font-primary;
-    font-size: $font-size-small;
-    font-weight: 500;
-    color: $black;
-
-    @include boxShadow;
-    transition: 0.3s ease-out;
     overflow: hidden;
-    cursor: pointer;
-
-    &:hover {
-        @include boxShadow-hover;
-        transition: 0.1s ease-in;
-        transform: scale(1.02);
-    }
-
     @media (min-width: 768px) and (max-width: 1023px) {
         height: 200px;
         width: 200px;
@@ -53,32 +52,34 @@
 }
 
 .cardImageLoadingWaveWrapper {
-    opacity: 1;
-    display: flex;
+    @include flex-center;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute; // Stellen Sie sicher, dass es sich absolut zum Elternelement positioniert.
+    position: absolute;
+    opacity: 1;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 2; // Stellen Sie sicher, dass es über dem Bild liegt.
+    z-index: 2;
+    transition: opacity 0.5s ease-out;
 }
+
 .cardImageLoadingWaveWrapper,
 .cardImage {
-    transition: opacity 0.5s ease-out; // Sanfter Übergang für die Deckkraft
+    transition: opacity 0.5s ease-out;
 }
+
 .cardBackgroundImage {
+    overflow: hidden;
+    @include flex-center;
     position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .cardContent {
@@ -105,7 +106,7 @@
 }
 
 .cardPrice,
-.cardTitle h2 {
+.cardTitle h3 {
     font-size: $font-size-small;
     font-weight: 700;
 }

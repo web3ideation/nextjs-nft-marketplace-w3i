@@ -1,6 +1,6 @@
-@use "../../styles/helpers/variables" as *;
-@use "../../styles/helpers/mixins" as *;
-
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 // Header styles
 .headerContainer {
     position: sticky;
@@ -84,18 +84,19 @@
         @include flex-center;
         border: none;
         font-family: $font-primary;
-        font-size: $font-size-small;
-        line-height: $line-height-small;
+        font-size: $font-size-large;
         font-weight: 500;
         color: $black;
         background-color: $background-color;
         cursor: pointer;
 
         @media (min-width: 768px) and (max-width: 1023px) {
+            font-size: $font-size-medium;
             padding: 10px;
         }
 
         @media (min-width: 1024px) {
+            font-size: $font-size-small;
             padding: 18px;
             &:hover {
                 color: $hover-blue;
@@ -112,6 +113,7 @@
     right: 0;
     height: 100%;
     width: 50px;
+    z-index: 150;
 
     @media (min-width: 768px) and (max-width: 1023px) {
         display: none;

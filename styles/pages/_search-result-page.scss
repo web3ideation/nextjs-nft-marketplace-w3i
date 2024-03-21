@@ -1,5 +1,5 @@
-@use "../helpers/variables" as *;
-@use "../helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
 
 .nftSearchResultsContainer {
     display: flex;
@@ -15,9 +15,17 @@
     font-family: $font-primary;
 
     h1 {
-        font-size: $font-size-medium;
+        font-size: $font-size-xxl;
         font-weight: 700;
         text-align: center;
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: $font-size-extra-large;
+    }
+
+    @media (min-width: 1024px) {
+        font-size: $font-size-large;
     }
 }
 

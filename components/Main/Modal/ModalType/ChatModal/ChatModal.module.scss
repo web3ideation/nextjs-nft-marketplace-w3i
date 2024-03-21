@@ -1,5 +1,6 @@
-@use "../../../../../styles/helpers/variables" as *;
-@use "../../../../../styles/helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 .chatModalContainerWrapper {
     position: relative;
@@ -7,7 +8,7 @@
 
 .chatModalContainer {
     display: flex;
-    height: 70vh;
+    min-height: 100%;
     @media (min-width: 768px) and (max-width: 1023px) {
     }
 

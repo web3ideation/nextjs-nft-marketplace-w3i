@@ -1,6 +1,6 @@
-@use "../helpers/variables" as *;
-@use "../helpers/mixins" as *;
-@use "../helpers/keyframes" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 .withdrawProceedsContainer {
     display: flex;

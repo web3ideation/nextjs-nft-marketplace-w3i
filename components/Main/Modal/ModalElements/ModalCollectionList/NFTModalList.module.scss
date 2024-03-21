@@ -1,7 +1,17 @@
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
+
+.modalListContainer {
+    @include flex-center;
+    padding: 10px;
+    padding-bottom: 0;
+    width: 100%;
+}
+
 .modalListWrapper {
     overflow-x: auto;
     padding: 10px;
-    margin: 10px;
 }
 .modalList {
     display: flex;

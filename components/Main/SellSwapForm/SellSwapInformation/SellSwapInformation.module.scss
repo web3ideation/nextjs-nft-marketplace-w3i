@@ -1,5 +1,6 @@
-@use "../../../../styles/helpers/variables" as *;
-@use "../../../../styles/helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 .sellSwapInformationWrapper {
     @include flex-center;

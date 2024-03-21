@@ -1,7 +1,6 @@
-@use "../../../../styles/helpers/keyframes" as *;
-@use "../../../../styles/helpers/variables" as *;
-@use "../../../../styles/helpers/mixins" as *;
-
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 .searchSideFilters {
     width: 100%;
     background-color: $background-color;

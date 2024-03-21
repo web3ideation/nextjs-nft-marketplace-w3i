@@ -1,5 +1,6 @@
-@use "../../../../styles/helpers/variables" as *;
-@use "../../../../styles/helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 .walletMenu {
     @media (min-width: 768px) and (max-width: 1023px) {
@@ -44,8 +45,7 @@
         width: 100%;
         text-align: start;
         font-family: $font-primary;
-        font-size: $font-size-small;
-        line-height: $line-height-small;
+        font-size: $font-size-large;
         font-weight: 400;
         color: $black;
         background-color: $white;
@@ -62,6 +62,7 @@
         button {
             color: $white;
             background-color: $secondary-color;
+            font-size: $font-size-medium;
         }
     }
     @media (min-width: 1024px) {
@@ -69,6 +70,7 @@
         button {
             color: $white;
             background-color: $secondary-color;
+            font-size: $font-size-small;
         }
     }
 }
@@ -81,14 +83,19 @@
         display: none;
     }
 }
+.disconnect button {
+    text-align: center;
+    background-color: $color-firebrick;
+    color: $color-white;
+    border-radius: $border-radius;
+    border: solid 1px $color-light-black;
+}
 
 .walletMenuBalance {
     @include flex-center;
-
     border-bottom: solid 1px $black;
     font-family: $font-primary;
-    font-size: $font-size-small;
-    line-height: $line-height-small;
+    font-size: $font-size-large;
     font-weight: 400;
     color: $black;
     background-color: $white;
@@ -96,10 +103,12 @@
 
     @media (min-width: 768px) and (max-width: 1023px) {
         border: none;
+        font-size: $font-size-medium;
         border-radius: 5px;
         margin: 5px 10px;
     }
     @media (min-width: 1024px) {
+        font-size: $font-size-small;
         border: none;
         border-radius: 5px;
         margin: 5px 10px;

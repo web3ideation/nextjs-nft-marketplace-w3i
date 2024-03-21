@@ -1,10 +1,10 @@
-@use "../../../../styles/helpers/keyframes" as *;
-@use "../../../../styles/helpers/variables" as *;
-@use "../../../../styles/helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 .nftNotification {
     width: 300px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: $white-semi-transparent;
     border-radius: 5px 0 0 5px;
 
     &.enter {

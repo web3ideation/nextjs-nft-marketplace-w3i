@@ -1,16 +1,19 @@
-@use "../../../../styles/helpers/variables" as *;
-@use "../../../../styles/helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 .nftListMostWrapper {
-    @include flex-center;
+    display: flex;
+    justify-content: flex-start;
     flex-direction: column;
     width: 100%;
     font-family: $font-primary;
 
-    h1 {
-        font-size: $font-size-medium;
+    h2 {
+        padding: 10px 50px;
+        font-size: $font-size-xxl;
         font-weight: 700;
-        text-align: center;
+        text-align: left;
     }
 }
 
@@ -20,15 +23,8 @@
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     justify-items: center;
     padding: 10px 0;
-
     width: 100%;
     gap: 14px;
-    &:first-child {
-        justify-self: start;
-    }
-    &:last-child {
-        justify-self: end;
-    }
 
     @media (min-width: 768px) and (max-width: 1023px) {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -45,6 +41,7 @@
 .showMoreBtns {
     @include flex-center;
     justify-content: center;
+    max-width: 100%;
     gap: 18px;
-    padding: 20px;
+    margin: 20px;
 }

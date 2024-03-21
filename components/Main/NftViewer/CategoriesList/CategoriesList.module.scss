@@ -1,0 +1,10 @@
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
+
+.categoriesListWrapper {
+    @include flex-center;
+    flex-direction: row;
+    font-family: $font-primary;
+    width: 100%;
+}

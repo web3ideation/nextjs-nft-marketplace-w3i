@@ -1,6 +1,6 @@
-@use "../helpers/variables" as *;
-@use "../helpers/mixins" as *;
-@use "../helpers/keyframes" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 // Sell/Swap Nft page styles
 .nftSellSwapContainer {
@@ -8,15 +8,16 @@
     flex-direction: column;
     height: 100%;
     font-family: $font-primary;
-    font-size: $font-size-small;
-    font-weight: 500;
+    font-weight: 400;
     padding: 16px 25px;
 
     @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: $font-size-medium;
         padding: 16px 50px;
     }
 
     @media (min-width: 1024px) {
+        font-size: $font-size-small;
         padding: 16px 100px;
     }
 }

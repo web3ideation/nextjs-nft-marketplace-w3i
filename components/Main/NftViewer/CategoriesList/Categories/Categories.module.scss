@@ -1,0 +1,96 @@
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
+
+.categoryList {
+    @include boxShadow;
+    display: grid;
+    grid-column: auto;
+    scroll-behavior: smooth;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    width: 100%;
+    padding: 10px 20px;
+    border-radius: $border-radius;
+}
+
+.categoryWrapper {
+    display: flex;
+    overflow: auto;
+    scroll-behavior: smooth;
+    padding: 0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.category {
+    @include flex-center;
+    flex-direction: column;
+    border-top: solid 1px white;
+    padding: 0 10px;
+    flex: 0 0 auto;
+    cursor: pointer;
+
+    &:hover {
+        border-top: none;
+        border-bottom: solid 1px $hover-blue;
+        transform: scale(1.02);
+    }
+}
+
+.categoryImage,
+.categoryName {
+    @include flex-center;
+}
+
+.categoryName {
+    text-align: center;
+    font-size: $font-size-xs;
+    font-weight: 500;
+}
+
+.scrollButtonContainer {
+    @include flex-center;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 50px;
+    z-index: 5;
+
+    &.left {
+        left: 10px;
+    }
+
+    &.right {
+        justify-content: end;
+        right: 10px;
+    }
+}
+
+.scrollButton {
+    @include flex-center;
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: solid 2px black;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 0 20px 20px white;
+    cursor: pointer;
+}
+
+.left,
+.right {
+    img {
+        transform: rotate(90deg);
+    }
+
+    &.right img {
+        transform: rotate(-90deg);
+    }
+}

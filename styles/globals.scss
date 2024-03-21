@@ -1,4 +1,6 @@
-@use "helpers/variables" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 html {
     /* Stile für die Scrollbar */

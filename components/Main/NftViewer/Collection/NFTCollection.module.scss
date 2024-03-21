@@ -1,5 +1,6 @@
-@use "../../../../styles/helpers/variables" as *;
-@use "../../../../styles/helpers/mixins" as *;
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
 
 // NFT table container styles
 .nftTableContainer {
@@ -20,11 +21,12 @@
     @include flex-center;
     flex-direction: column;
     font-family: $font-primary;
+    width: 100%;
 
-    h1 {
-        font-size: $font-size-medium;
+    h2 {
+        padding: 10px 50px;
+        font-size: $font-size-xxl;
         font-weight: 700;
-        text-align: center;
     }
 }
 
