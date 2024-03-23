@@ -137,7 +137,11 @@ const NftModal = forwardRef((props, ref) => {
         } else if (action === "swap") {
             // Logic for swap
             router.push(
-                `/swap-nft?nftAddress=${modalContent.nftAddress}&tokenId=${modalContent.tokenId}`
+                `/swap-nft?nftAddress=${modalContent.nftAddress}&tokenId=${
+                    modalContent.tokenId
+                }&price=${formatPriceToEther(modalContent.price)}&desiredNftAddress=${
+                    modalContent.desiredNftAddress
+                }&desiredTokenId=${modalContent.desiredTokenId}`
             )
         }
         closeModal(currentModalId)
