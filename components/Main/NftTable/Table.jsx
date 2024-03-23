@@ -2,10 +2,10 @@
 import React from "react"
 
 // Style Imports
-import styles from "./NFTTable.module.scss"
+import styles from "./Table.module.scss"
 
 /**
- * NFTTable Component
+ * Table Component
  * - This component renders a table displaying NFT collection data.
  * - It takes a single prop 'tableRows', which is an array of table row elements.
  *
@@ -14,9 +14,9 @@ import styles from "./NFTTable.module.scss"
  *              Expected to be passed from a parent component, typically representing NFT collections.
  */
 
-export default function NFTTable({ tableRows }) {
+export default function Table({ tableRows }) {
     return (
-        <table className={styles.nftTable}>
+        <table className={styles.table}>
             <thead>
                 <tr>
                     <th></th>

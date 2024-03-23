@@ -6,13 +6,13 @@ import { useRouter } from "next/router"
 import { useNFT } from "@context/NFTDataProvider"
 import SearchSideFilters from "@components/Main/SearchSideBar/SearchSideFilters"
 import NFTBox from "@components/Main/NftCard/NFTCard"
+import BtnWithAction from "@components/UI/BtnWithAction"
 
 // --- Third-party Libraries ---
 import { ethers } from "ethers"
 
 // --- Styles ---
 import styles from "@styles/Home.module.scss"
-import BtnWithAction from "@components/uiComponents/BtnWithAction"
 
 // SearchResultPage Component
 // This component displays the search results for NFTs based on the user's query.

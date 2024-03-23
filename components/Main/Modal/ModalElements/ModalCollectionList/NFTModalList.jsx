@@ -3,7 +3,7 @@ import React, { useMemo, useRef, useEffect } from "react"
 
 // Importing custom hooks and components
 import { useNFT } from "@context/NFTDataProvider"
-import NFTBox from "@components/Main/NftCard/NFTCard"
+import NFTCard from "@components/Main/NftCard/NFTCard"
 
 // Styles import
 import styles from "./NFTModalList.module.scss"
@@ -17,7 +17,12 @@ function NFTModalList({ filterAddress, filterTokenId }) {
     // Funktion zum horizontalen Scrollen
     const onWheel = (e) => {
         if (!listRef.current) return
+
+        // Horizontales Scrollen ermöglichen
         listRef.current.scrollLeft += e.deltaY
+
+        // Verhindern, dass das Scroll-Event weitergeleitet wird und andere Scroll-Operationen ausführt
+        e.preventDefault()
     }
 
     // Effect Hook, um den Event Listener hinzuzufügen
@@ -53,7 +58,7 @@ function NFTModalList({ filterAddress, filterTokenId }) {
 
         // Mapping over filtered NFTs to render them
         return filteredNFTs.map((nft) => (
-            <NFTBox nftData={nft} key={`${nft.nftAddress}${nft.tokenId}`} />
+            <NFTCard nftData={nft} key={`${nft.nftAddress}${nft.tokenId}`} />
         ))
     }
 

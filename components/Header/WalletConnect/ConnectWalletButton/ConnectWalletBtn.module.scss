@@ -2,7 +2,13 @@
 @use "@styles/helpers/mixins" as *;
 @use "@styles/helpers/keyframes" as *;
 
-.headerAccountInfoWrapper {
+.connectButtonWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 23.5px 20px;
+
     @media (min-width: 768px) and (max-width: 1023px) {
         padding: 16px;
     }
@@ -13,43 +19,5 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-    }
-}
-
-// Connect button styles
-.connectButton {
-    button {
-        padding: 10px 0;
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        color: $color-white;
-        background-color: $hover-blue;
-        cursor: pointer;
-
-        &:hover {
-            color: $hover-grey;
-            background-color: $hover-blue;
-        }
-        @media (min-width: 768px) and (max-width: 1023px) {
-            border-radius: 5px;
-            padding: 0 18px;
-            width: 128px;
-        }
-
-        @media (min-width: 1024px) {
-            border-radius: 5px;
-            padding: 0 18px;
-            width: 128px;
-        }
-    }
-
-    @media (min-width: 768px) and (max-width: 1023px) {
-        background-color: $background-color;
-        align-items: center;
-    }
-
-    @media (min-width: 1024px) {
-        background-color: $background-color;
-        align-items: center;
     }
 }

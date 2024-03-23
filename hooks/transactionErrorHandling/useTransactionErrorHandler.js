@@ -1,6 +1,6 @@
 // hooks/useTransactionErrorHandler.js
 import { useCallback } from "react"
-import { useNftNotification } from "../context/NotificationProvider"
+import { useNftNotification } from "@context/NotificationProvider"
 
 export const useTransactionErrorHandler = () => {
     const { showNftNotification } = useNftNotification()

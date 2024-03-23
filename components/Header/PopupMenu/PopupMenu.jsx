@@ -3,8 +3,8 @@ import React, { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 
 import styles from "./PopupMenu.module.scss"
-import WalletConnectionManager from "../../Header/WalletConnect/WalletConnectionManager"
-import WalletMenu from "../../Header/WalletConnect/WalletMenu/WalletMenu"
+import WalletConnectionManager from "../WalletConnect/WalletConnectionManager"
+import WalletMenu from "../WalletConnect/WalletMenu/WalletMenu"
 
 const PopupMenu = () => {
     // State to manage the visibility of the popup menu

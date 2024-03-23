@@ -1,20 +1,23 @@
 // React and Hooks imports
 import React, { useState, useEffect } from "react"
 import { useAccount } from "wagmi"
+import { useWeb3Modal } from "@web3modal/wagmi/react"
 
 // Custom components and hooks
 import { useNFT } from "@context/NFTDataProvider"
-import NFTBox from "@components/Main/NftCard/NFTCard"
-import LoadingWave from "@components/Main/ux/LoadingWave"
+import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
 import { formatPriceToEther, truncatePrice } from "@utils/formatting"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 
 // Styles import
 import styles from "@styles/Home.module.scss"
+import NFTList from "../components/Main/NftViewer/Lists/NFTList"
+import ConnectWalletBtn from "../components/Header/WalletConnect/ConnectWalletButton/ConnectWalletBtn"
 
 const MyNFTs = () => {
     // State for managing NFT data, loading states, and price calculations
     const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
+    const { open } = useWeb3Modal()
     const [hasOwnNFT, setHasOwnNFT] = useState(false)
     const [totalPrice, setTotalPrice] = useState(0)
     const [nftCount, setNftCount] = useState(0)
@@ -78,7 +81,7 @@ const MyNFTs = () => {
     if (nftsLoading) {
         return (
             <div className={styles.myNftWrapper}>
-                <h1>My NFTs</h1>
+                <h2>My NFTs</h2>
                 <div className={styles.myNftLoadingWaveWrapper}>
                     <LoadingWave />
                 </div>
@@ -88,7 +91,7 @@ const MyNFTs = () => {
 
     return (
         <div className={styles.myNftWrapper}>
-            <h1>My NFTs</h1>
+            <h2>My NFTs</h2>
             {isConnected && (
                 <div className={styles.myNftTotalInformation}>
                     <p>Total NFTs: {nftCount}</p>
@@ -99,17 +102,16 @@ const MyNFTs = () => {
             <div className={styles.myNftList}>
                 {isConnected ? (
                     hasOwnNFT ? (
-                        nftsData
-                            .filter((nft) => isOwnedByUser(nft.tokenOwner))
-                            .map((nft) => (
-                                <NFTBox key={`${nft.nftAddress}${nft.tokenId}`} nftData={nft} />
-                            ))
+                        <NFTList sortType={"myNFT"} />
                     ) : (
-                        <div>You don't own any NFTs yet!</div>
+                        <div>
+                            <h2>You don't own any NFTs yet!</h2>
+                        </div>
                     )
                 ) : (
                     <div>
                         <h2>Web3 is currently not enabled - Connect your Wallet here</h2>
+                        <ConnectWalletBtn onConnect={() => open()} />
                     </div>
                 )}
             </div>

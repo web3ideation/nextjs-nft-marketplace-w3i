@@ -1,33 +1,33 @@
-// React imports
+// React Imports
 import React, { useEffect } from "react"
 
-// ------------------ Custom Hook Imports ------------------
+// Custom Hooks and Components Imports
 import { useNFT } from "@context/NFTDataProvider"
+import Table from "@components/Main/NftTable/Table"
+import TableElement from "@components/Main/NftTable/TableElement/TableElement"
 
-// ------------------ Component Imports ------------------
-import NFTTable from "../../NftTable/NFTTable"
-import NFTTableElement from "../../NftTable/NftTableElement/NFTTableElement"
-
-// Style imports
+// Style Imports
 import styles from "./NFTCollection.module.scss"
 
-function NFTCollection() {
+function NFTCollection({ sortBy, title }) {
     // Hooks & Data Retrieval
     const { collections: nftCollections, loadingImage, reloadNFTs } = useNFT()
 
-    // Reload NFT collections on component mount
+    // Reload NFT collections on dependency change
     useEffect(() => {
         reloadNFTs()
     }, [reloadNFTs])
 
-    // Sort collections based on collectionPrice in descending order
-    const sortedCollections = [...nftCollections].sort(
-        (a, b) => b.collectionPrice - a.collectionPrice
-    )
+    // Dynamische Sortierung basierend auf sortBy Prop
+    const sortFunction = (a, b) => {
+        return b[sortBy] - a[sortBy]
+    }
 
-    // Create table rows for each collection
+    const sortedCollections = [...nftCollections].sort(sortFunction)
+
+    // Map each collection to a table row element
     const tableRows = sortedCollections.map((collection) => (
-        <NFTTableElement
+        <TableElement
             key={`"coll"${collection.nftAddress}${collection.itemCount}`}
             collection={collection}
             loadingImage={loadingImage}
@@ -35,14 +35,14 @@ function NFTCollection() {
         />
     ))
 
-    // Render Function
+    // Render component
     return (
         <>
-            <div className={styles.nftTableContainer}>
-                <div className={styles.nftTableWrapper}>
-                    <h2>Top Value</h2>
+            <div className={styles.tableContainer}>
+                <div className={styles.tableWrapper}>
+                    <h2>{title}</h2>
                     <div className={styles.nftCollection}>
-                        <NFTTable tableRows={tableRows} />
+                        <Table tableRows={tableRows} />
                     </div>
                 </div>
             </div>

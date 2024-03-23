@@ -3,7 +3,7 @@
 @use "@styles/helpers/keyframes" as *;
 
 // NFT Table row styles
-.nftTableRow {
+.tableRow {
     @include boxShadow;
     margin: 15px auto;
     border-radius: $border-radius;

@@ -2,7 +2,7 @@ import React from "react"
 import Link from "next/link"
 import Image from "next/image"
 
-import BtnWithAction from "@components/uiComponents/BtnWithAction"
+import BtnWithAction from "@components/UI/BtnWithAction"
 
 import styles from "./Footer.module.scss"
 

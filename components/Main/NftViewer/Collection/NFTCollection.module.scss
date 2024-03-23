@@ -3,7 +3,7 @@
 @use "@styles/helpers/keyframes" as *;
 
 // NFT table container styles
-.nftTableContainer {
+.tableContainer {
     @include flex-center();
     width: 100%;
 
@@ -17,7 +17,7 @@
     }
 }
 
-.nftTableWrapper {
+.tableWrapper {
     @include flex-center;
     flex-direction: column;
     font-family: $font-primary;

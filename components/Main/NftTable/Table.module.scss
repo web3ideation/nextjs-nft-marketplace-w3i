@@ -7,7 +7,7 @@ $table-width: 100%;
 $shadow: 0 5px 5px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 
 // NFT Table styles
-.nftTable {
+.table {
     @include boxShadow;
     table-layout: fixed;
     border-radius: $border-radius;
@@ -30,14 +30,14 @@ $shadow: 0 5px 5px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
 
 // Full-width table rows and headers
-.nftTable thead,
-.nftTable tbody tr {
+.table thead,
+.table tbody tr {
     display: table;
     width: $table-width;
     table-layout: fixed;
 }
 
-.nftTable thead th {
+.table thead th {
     width: $table-width;
 }
 

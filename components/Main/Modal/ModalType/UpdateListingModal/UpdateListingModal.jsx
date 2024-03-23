@@ -8,7 +8,7 @@ import { useAccount, usePublicClient } from "wagmi"
 
 // Custom hooks and components
 import { useNFT } from "@context/NFTDataProvider"
-import Tooltip from "@components/Main/ux/Tooltip"
+import Tooltip from "@components/UX/Tooltip/Tooltip"
 import Modal from "../../ModalBasis/Modal"
 import { validateField } from "@utils/validation"
 import { useUpdateListing } from "@hooks/useUpdateListing"

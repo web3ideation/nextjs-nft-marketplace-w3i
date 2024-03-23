@@ -1,22 +1,26 @@
-// ------------------ React Imports ------------------
+// React Imports
 import React, { useState, useMemo, useEffect } from "react"
+import { useAccount } from "wagmi"
 
-// ------------------ Custom Hooks & Component Imports ------------------
-import NFTBox from "../../NftCard/NFTCard"
+// Custom Hooks & Components Imports
 import { useNFT } from "@context/NFTDataProvider"
-import BtnWithAction from "@components/uiComponents/BtnWithAction"
+import { formatPriceToEther } from "@utils/formatting"
+import NFTCard from "@components/Main/NftCard/NFTCard"
+import BtnWithAction from "@components/UI/BtnWithAction"
 
-// ------------------ Styles ------------------
-import styles from "./NFTMostSold.module.scss"
+// Styles import
+import styles from "./NFTList.module.scss"
 
-// Component for displaying the most sold NFTs
-function NFTMostSold() {
+function NFTList({ sortType, title }) {
     // State hooks for managing NFT visibility
     const [visibleNFTs, setVisibleNFTs] = useState(null)
     const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(null)
 
     // Custom hook to retrieve NFT data and loading state
     const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
+
+    // Account information from wagmi hook
+    const { address, isConnected } = useAccount()
 
     useEffect(() => {
         // Function to determine initial count of visible items based on screen width
@@ -49,23 +53,42 @@ function NFTMostSold() {
         return () => window.removeEventListener("resize", handleResize)
     }, [])
 
-    // Memoized sorting and filtering of NFTs based on buyerCount and limit per address
+    // Define sort and filter functions based on sortType
+    const sortAndFilterNFTs = (nfts, sortType) => {
+        switch (sortType) {
+            case "brandNew":
+                return nfts
+                    .filter((nft) => nft.isListed)
+                    .sort((a, b) => Number(b.listingId) - Number(a.listingId))
+            case "mostSold":
+                const addressCount = {} // Tracks the number of NFTs per address
+                const filteredNFTs = []
+
+                nfts.sort((a, b) => b.buyerCount - a.buyerCount).forEach((nft) => {
+                    const count = addressCount[nft.nftAddress] || 0
+                    if (count < 3) {
+                        filteredNFTs.push(nft)
+                        addressCount[nft.nftAddress] = count + 1
+                    }
+                })
+                return filteredNFTs
+            case "expensive":
+                return nfts
+                    .filter((nft) => Number(formatPriceToEther(nft.price)) > 0.01)
+                    .sort((a, b) => Number(b.price) - Number(a.price))
+            case "myNFT":
+                const isOwnedByUser = (tokenOwner) =>
+                    address && tokenOwner?.toLowerCase() === address.toLowerCase()
+                return nfts.filter((nft) => isOwnedByUser(nft.tokenOwner))
+            default:
+                return nfts // Default to unsorted if no sortType is matched
+        }
+    }
+
+    // Memoized sorting and filtering of NFTs
     const sortedAndFilteredNFTs = useMemo(() => {
-        const addressCount = {} // Tracks the number of NFTs per address
-        const filteredNFTs = []
-
-        ;[...nftsData]
-            .sort((a, b) => b.buyerCount - a.buyerCount)
-            .forEach((nft) => {
-                const count = addressCount[nft.nftAddress] || 0
-                if (count < 3) {
-                    filteredNFTs.push(nft)
-                    addressCount[nft.nftAddress] = count + 1
-                }
-            })
-
-        return filteredNFTs.slice(0, visibleNFTs)
-    }, [nftsData, visibleNFTs])
+        return sortAndFilterNFTs(nftsData, sortType).slice(0, visibleNFTs)
+    }, [nftsData, visibleNFTs, sortType])
 
     // Render the list of NFTs or a loading message
     const renderNFTList = () => {
@@ -73,21 +96,19 @@ function NFTMostSold() {
             return <p>No NFTs available</p>
         }
 
-        return sortedAndFilteredNFTs
-            .slice(0, visibleNFTs)
-            .map((nft) => (
-                <NFTBox
-                    nftData={nft}
-                    reloadNFTs={reloadNFTs}
-                    key={`${nft.nftAddress}${nft.tokenId}`}
-                />
-            ))
+        return sortedAndFilteredNFTs.map((nft) => (
+            <NFTCard
+                nftData={nft}
+                reloadNFTs={reloadNFTs}
+                key={`${nft.nftAddress}${nft.tokenId}`}
+            />
+        ))
     }
 
     return (
-        <div className={styles.nftListMostWrapper}>
-            <h2>Hot Picks</h2>
-            <div className={styles.nftListMost}>{renderNFTList()}</div>
+        <div className={styles.listWrapper}>
+            <h2>{title}</h2>
+            <div className={styles.list}>{renderNFTList()}</div>
             {nftsLoading ? null : (
                 <div className={styles.showMoreBtns}>
                     <BtnWithAction
@@ -112,4 +133,4 @@ function NFTMostSold() {
     )
 }
 
-export default NFTMostSold
+export default NFTList

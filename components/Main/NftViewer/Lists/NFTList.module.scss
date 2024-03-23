@@ -2,10 +2,11 @@
 @use "@styles/helpers/mixins" as *;
 @use "@styles/helpers/keyframes" as *;
 
-.nftListNewWrapper {
+.listWrapper {
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
+    width: 100%;
     font-family: $font-primary;
 
     h2 {
@@ -17,7 +18,7 @@
 }
 
 // NFT boxes grid styles
-.nftListNew {
+.list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     justify-items: center;

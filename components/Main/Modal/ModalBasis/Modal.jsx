@@ -6,7 +6,7 @@ import Image from "next/image"
 // Custom hooks import
 import { useModal } from "@context/ModalProvider"
 
-import BtnWithAction from "@components/uiComponents/BtnWithAction"
+import BtnWithAction from "@components/UI/BtnWithAction"
 
 // Styles import
 import styles from "./Modal.module.scss"

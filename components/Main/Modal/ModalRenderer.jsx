@@ -3,9 +3,9 @@ import React from "react"
 
 // Importing user-created modal components
 import ChatModal from "./ModalType/ChatModal/ChatModal"
-import NftInfoModal from "./ModalType/InfoModal/NFTInfoModal"
-import NFTCollectionModal from "./ModalType/CollectionModal/NFTCollectionModal"
-import NFTUpdateListingModal from "./ModalType/UpdateListingModal/NFTUpdateListingModal"
+import InfoModal from "./ModalType/InfoModal/InfoModal"
+import CollectionModal from "./ModalType/CollectionModal/CollectionModal"
+import UpdateListingModal from "./ModalType/UpdateListingModal/UpdateListingModal"
 // Importing custom hooks
 import { useModal } from "@context/ModalProvider"
 
@@ -25,11 +25,11 @@ const ModalRenderer = () => {
         case "sell":
         case "list":
             // 'info', 'sell', and 'list' share the same modal type: NftInfoModal
-            return <NftInfoModal />
+            return <InfoModal />
         case "collection":
-            return <NFTCollectionModal />
+            return <CollectionModal />
         case "update":
-            return <NFTUpdateListingModal />
+            return <UpdateListingModal />
         default:
             // Return null for unknown modal types
             return null

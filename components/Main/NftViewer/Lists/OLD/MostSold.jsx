@@ -1,15 +1,16 @@
-// ------------------ React Imports ------------------
+// React Imports
 import React, { useState, useMemo, useEffect } from "react"
 
-// ------------------ Custom Hooks & Component Imports ------------------
+// Custom Hooks & Components Imports
 import { useNFT } from "@context/NFTDataProvider"
-import NFTBox from "../../NftCard/NFTCard"
-import BtnWithAction from "@components/uiComponents/BtnWithAction"
+import NFTCard from "@components/Main/NftCard/NFTCard"
+import BtnWithAction from "@components/UI/BtnWithAction"
 
-// ------------------ Styles ------------------
-import styles from "./NFTListed.module.scss"
+// Styles import
+import styles from "./List.module.scss"
 
-function NFTListed() {
+// Component for displaying the most sold NFTs
+function MostSold() {
     // State hooks for managing NFT visibility
     const [visibleNFTs, setVisibleNFTs] = useState(null)
     const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(null)
@@ -48,12 +49,23 @@ function NFTListed() {
         return () => window.removeEventListener("resize", handleResize)
     }, [])
 
-    // Memoized sorting and filtering of NFTs based on their listed status and listing ID
+    // Memoized sorting and filtering of NFTs based on buyerCount and limit per address
     const sortedAndFilteredNFTs = useMemo(() => {
-        return nftsData
-            .filter((nft) => nft.isListed)
-            .sort((a, b) => Number(b.listingId) - Number(a.listingId))
-    }, [nftsData])
+        const addressCount = {} // Tracks the number of NFTs per address
+        const filteredNFTs = []
+
+        ;[...nftsData]
+            .sort((a, b) => b.buyerCount - a.buyerCount)
+            .forEach((nft) => {
+                const count = addressCount[nft.nftAddress] || 0
+                if (count < 3) {
+                    filteredNFTs.push(nft)
+                    addressCount[nft.nftAddress] = count + 1
+                }
+            })
+
+        return filteredNFTs.slice(0, visibleNFTs)
+    }, [nftsData, visibleNFTs])
 
     // Render the list of NFTs or a loading message
     const renderNFTList = () => {
@@ -64,7 +76,7 @@ function NFTListed() {
         return sortedAndFilteredNFTs
             .slice(0, visibleNFTs)
             .map((nft) => (
-                <NFTBox
+                <NFTCard
                     nftData={nft}
                     reloadNFTs={reloadNFTs}
                     key={`${nft.nftAddress}${nft.tokenId}`}
@@ -73,9 +85,9 @@ function NFTListed() {
     }
 
     return (
-        <div className={styles.nftListNewWrapper}>
-            <h2>Brand New Drops</h2>
-            <div className={styles.nftListNew}>{renderNFTList()}</div>
+        <div className={styles.listWrapper}>
+            <h2>Hot Picks</h2>
+            <div className={styles.list}>{renderNFTList()}</div>
             {nftsLoading ? null : (
                 <div className={styles.showMoreBtns}>
                     <BtnWithAction
@@ -100,4 +112,4 @@ function NFTListed() {
     )
 }
 
-export default NFTListed
+export default MostSold

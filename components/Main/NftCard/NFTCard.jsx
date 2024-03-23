@@ -9,7 +9,7 @@ import { useAccount } from "wagmi"
 import { useModal } from "@context/ModalProvider"
 
 // ------------------ Component Imports ------------------
-import LoadingWave from "@components/Main/ux/LoadingWave"
+import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
 
 // ------------------ Utility Imports ------------------
 import { formatPriceToEther, truncatePrice } from "@utils/formatting"
@@ -19,7 +19,7 @@ import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 import styles from "./NFTCard.module.scss"
 
 // ------------------ Main Component Function ------------------
-export default function NFTBox({ nftData }) {
+export default function NFTCard({ nftData }) {
     // Destructuring for clarity
     const { isListed, listingId, tokenOwner, desiredNftAddress } = nftData
 
@@ -74,7 +74,7 @@ export default function NFTBox({ nftData }) {
     const handleCardClick = (nftData) => {
         console.log("Card Clicked. Owned by user:", isOwnedByUser, "Listed:", isListed)
         console.log("NFT Address:", nftData.nftAddress, "Token ID:", nftData.tokenId)
-        const modalId = "nftBoxModal-" + `${nftData.nftAddress}${nftData.tokenId}`
+        const modalId = "nftCardModal-" + `${nftData.nftAddress}${nftData.tokenId}`
 
         if (!isOwnedByUser) {
             console.log("Opening Info Modal")

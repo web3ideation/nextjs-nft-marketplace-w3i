@@ -1,16 +1,16 @@
 // React Imports
 import React, { useEffect } from "react"
 
-// Custom Hooks and Components
+// Custom Hooks and Components Imports
 import { useNFT } from "@context/NFTDataProvider"
-import NFTTable from "../../NftTable/NFTTable"
-import NFTTableElement from "../../NftTable/NftTableElement/NFTTableElement"
+import Table from "@components/Main/NftTable/Table"
+import TableElement from "@components/Main/NftTable/TableElement/TableElement"
 
 // Style Imports
-import styles from "./NFTCollection.module.scss"
+import styles from "./Collection.module.scss"
 
 function NFTCollection() {
-    // State management for NFT collections and modal states
+    // Hooks & Data Retrieval
     const { collections: nftCollections, loadingImage, reloadNFTs } = useNFT()
 
     // Reload NFT collections on dependency change
@@ -25,7 +25,7 @@ function NFTCollection() {
 
     // Map each collection to a table row element
     const tableRows = sortedCollections.map((collection) => (
-        <NFTTableElement
+        <TableElement
             key={`"topColl"${collection.nftAddress}${collection.itemCount}`}
             collection={collection}
             loadingImage={loadingImage}
@@ -36,11 +36,11 @@ function NFTCollection() {
     // Render component
     return (
         <>
-            <div className={styles.nftTableContainer}>
-                <div className={styles.nftTableWrapper}>
+            <div className={styles.tableContainer}>
+                <div className={styles.tableWrapper}>
                     <h2>Top 10</h2>
                     <div className={styles.nftCollection}>
-                        <NFTTable tableRows={tableRows} />
+                        <Table tableRows={tableRows} />
                     </div>
                 </div>
             </div>

@@ -13,7 +13,7 @@ import { useWithdrawProceeds } from "@hooks/useWithdrawProceeds"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 import networkMapping from "@constants/networkMapping.json"
 
-import BtnWithAction from "@components/uiComponents/BtnWithAction"
+import BtnWithAction from "@components/UI/BtnWithAction"
 
 // Styles
 import styles from "@styles/Home.module.scss"

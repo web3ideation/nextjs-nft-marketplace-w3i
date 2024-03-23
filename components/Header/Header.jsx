@@ -6,7 +6,7 @@ import Link from "next/link"
 // Importing custom components
 import SearchBar from "./SearchBar/SearchBar"
 import WalletConnectionManager from "./WalletConnect/WalletConnectionManager"
-import PopupMenu from "@components/OLDComponents/PopupMenu/PopupMenu"
+import PopupMenu from "@components/Header/PopupMenu/PopupMenu"
 
 // Styles
 import styles from "./Header.module.scss"

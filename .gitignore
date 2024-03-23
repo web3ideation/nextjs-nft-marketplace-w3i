@@ -136,3 +136,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# workspace
+styles/nextjs-nft-marketplace-w3i.code-workspace

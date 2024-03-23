@@ -1,16 +1,19 @@
+// React imports
 import React from "react"
 import Image from "next/image"
 
-import LoadingWave from "@components/Main/ux/LoadingWave"
+// Custom Components imports
+import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
 import { useModal } from "@context/ModalProvider"
 
 // Utility functions for formatting
 import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
 
-import styles from "./NFTTableElement.module.scss"
+// Styles import
+import styles from "./TableElement.module.scss"
 
-// NFTTableElement: A React component to render a table row for a specific NFT collection
-export default function NFTTableElement({ collection }) {
+// TableElement: A React component to render a table row for a specific NFT collection
+export default function TableElement({ collection }) {
     // Destructuring properties from the 'collection' object
     const {
         nftAddress,
@@ -37,7 +40,7 @@ export default function NFTTableElement({ collection }) {
             {imageURI ? (
                 // Render table row for NFT collection with image
                 <tr
-                    className={styles.nftTableRow}
+                    className={styles.tableRow}
                     key={`${collection.nftAddress}${collection.collectionCount}`}
                     onClick={() => handleCollectionClick(collection)}
                 >
