@@ -79,7 +79,9 @@ function NFTList({ sortType, title }) {
             case "myNFT":
                 const isOwnedByUser = (tokenOwner) =>
                     address && tokenOwner?.toLowerCase() === address.toLowerCase()
-                return nfts.filter((nft) => isOwnedByUser(nft.tokenOwner))
+                return nfts
+                    .filter((nft) => isOwnedByUser(nft.tokenOwner))
+                    .sort((a, b) => Number(b.price) - Number(a.price))
             default:
                 return nfts // Default to unsorted if no sortType is matched
         }
