@@ -5,14 +5,15 @@ import { useRouter } from "next/router"
 // Ethereum and Smart Contract Interaction
 import { ethers } from "ethers"
 import { useAccount, usePublicClient } from "wagmi"
+import { useWeb3Modal } from "@web3modal/wagmi/react"
 
 // User-Created Hooks and Components
-
 import { useGetProceeds } from "@hooks/useGetProceeds"
 import { useWithdrawProceeds } from "@hooks/useWithdrawProceeds"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 import networkMapping from "@constants/networkMapping.json"
 
+import ConnectWalletBtn from "@components/Header/WalletConnect/ConnectWalletButton/ConnectWalletBtn"
 import BtnWithAction from "@components/UI/BtnWithAction"
 
 // Styles
@@ -22,6 +23,7 @@ const SellSwapNFT = () => {
     // -------------------- Web3 Elements ---------------------
     const router = useRouter()
     const provider = usePublicClient()
+    const { open } = useWeb3Modal()
     const chainId = provider.chains[0]
     const chainString = chainId.id ? parseInt(chainId.id).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
@@ -96,36 +98,45 @@ const SellSwapNFT = () => {
                         or further information, do not hesitate to contact our support.
                     </p>
                 </div>
-                <div className={styles.proceedsInformationWrapper}>
-                    <div className={styles.proceedsInformation}>
-                        <h3>Your credit:</h3>
-                        {isLoadingProceeds ? (
-                            <div>Processing...</div>
-                        ) : errorLoadingProceeds ? (
-                            <div>Error loading proceeds. Please try again later.</div>
-                        ) : (
-                            <div className={styles.proceeds}>
-                                <div>{proceeds} ETH</div>
-                                <div>{proceedsInEur} €</div>
-                            </div>
-                        )}
+                {!isConnected ? (
+                    <div>
+                        Connect Wallet to show proceeds
+                        <ConnectWalletBtn onConnect={() => open()} />
                     </div>
-                </div>
-                <div className={styles.withdrawProceedsBtn}>
-                    {proceeds !== "0.0" ? (
-                        <BtnWithAction
-                            buttonText={"Withdraw"}
-                            onClickAction={() => {
-                                handleWithdrawProceeds()
-                            }}
-                            type="button"
-                        />
-                    ) : (
-                        <div>
-                            <div>No proceeds detected</div>
+                ) : (
+                    <>
+                        <div className={styles.proceedsInformationWrapper}>
+                            <div className={styles.proceedsInformation}>
+                                <h3>Your credit:</h3>
+                                {isLoadingProceeds ? (
+                                    <div>Processing...</div>
+                                ) : errorLoadingProceeds ? (
+                                    <div>Error loading proceeds. Please try again later.</div>
+                                ) : (
+                                    <div className={styles.proceeds}>
+                                        <div>{proceeds} ETH</div>
+                                        <div>{proceedsInEur} €</div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    )}
-                </div>
+                        <div className={styles.withdrawProceedsBtn}>
+                            {isConnected & (proceeds !== "0.0") ? (
+                                <BtnWithAction
+                                    buttonText={"Withdraw"}
+                                    onClickAction={() => {
+                                        handleWithdrawProceeds()
+                                    }}
+                                    type="button"
+                                />
+                            ) : (
+                                <div>
+                                    <div>No proceeds detected</div>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     )
