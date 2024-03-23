@@ -9,7 +9,7 @@ import { validateField } from "@utils/validation"
 // ------------------ Component Imports ------------------
 // Tooltip component for error display
 import Tooltip from "@components/UX/Tooltip/Tooltip"
-import SellSwapInformation from "./SellSwapInformation/SellSwapInformation"
+import SellSwapInformation from "../SellSwapInformation/SellSwapInformation"
 import BtnWithAction from "@components/UI/BtnWithAction"
 
 // ------------------ Style Imports ------------------
