@@ -18,7 +18,6 @@ export default function Home() {
             </div>
             <div className={styles.nftListingContainer}>
                 <NFTList sortType={"brandNew"} title={"Brand New"} />
-                <NFTList sortType={"myNFT"} title={"My NFT"} />
             </div>
             <div className={styles.nftCollectionsContainer}>
                 <NFTCollection sortBy={"collectionCount"} title={"Top 10"} />

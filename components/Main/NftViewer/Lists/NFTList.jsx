@@ -113,16 +113,18 @@ function NFTList({ sortType, title }) {
             <div className={styles.list}>{renderNFTList()}</div>
             {nftsLoading ? null : (
                 <div className={styles.showMoreBtns}>
-                    <BtnWithAction
-                        buttonText={"More"}
-                        onClickAction={() =>
-                            setVisibleNFTs(
-                                (prevVisible) =>
-                                    prevVisible +
-                                    (initialVisibleNFTs > 12 ? initialVisibleNFTs : 12)
-                            )
-                        }
-                    />
+                    {visibleNFTs == sortedAndFilteredNFTs.length && (
+                        <BtnWithAction
+                            buttonText={"More"}
+                            onClickAction={() =>
+                                setVisibleNFTs(
+                                    (prevVisible) =>
+                                        prevVisible +
+                                        (initialVisibleNFTs > 12 ? initialVisibleNFTs : 12)
+                                )
+                            }
+                        />
+                    )}
                     {visibleNFTs > initialVisibleNFTs && (
                         <BtnWithAction
                             buttonText={"Less"}
