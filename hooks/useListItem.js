@@ -28,7 +28,6 @@ export const useListItem = (
     price,
     desiredNftAddress,
     desiredTokenId,
-    userAddress,
     onSuccessCallback
 ) => {
     // State for transaction hash and listing status
@@ -41,6 +40,31 @@ export const useListItem = (
     // Refs to store notification ids
     const confirmListingNotificationId = useRef(null)
     const whileListingNotificationId = useRef(null)
+
+    // Define a state for polling interval
+    const [polling, setPolling] = useState(false)
+
+    // Function to check the transaction status
+    const checkTransactionStatus = async () => {
+        try {
+            const receipt = await web3Provider.getTransactionReceipt(listItemTxHash)
+            if (receipt) {
+                handleTransactionSuccess()
+                setPolling(false) // Stop polling
+            }
+        } catch (error) {
+            console.error("Error fetching transaction receipt: ", error)
+        }
+    }
+
+    // Start polling when a transaction is initiated
+    useEffect(() => {
+        let interval
+        if (polling) {
+            interval = setInterval(checkTransactionStatus, 2500) // Poll every 5 seconds
+        }
+        return () => clearInterval(interval) // Cleanup
+    }, [polling])
 
     // Callback to handle transaction error
     const handleTransactionError = useCallback(
@@ -86,6 +110,7 @@ export const useListItem = (
         showNftNotification("Success", "Listing successful", "success")
         console.log("List item data", listItemData, "List item receipt", listItemTxReceipt)
         onSuccessCallback?.()
+        setPolling(false) // Stop polling on success
     }, [closeNftNotification, showNftNotification, onSuccessCallback])
 
     // Function to handle transaction failure
@@ -93,6 +118,7 @@ export const useListItem = (
         setListing(false)
         closeNftNotification(whileListingNotificationId.current)
         showNftNotification("Error", "Failed to list the NFT.", "error")
+        setPolling(false) // Stop polling on failure
     }, [closeNftNotification, showNftNotification])
 
     // Write contract function to list item
@@ -133,6 +159,7 @@ export const useListItem = (
                 true
             )
             await listItem()
+            setPolling(true) // Start polling after initiating the transaction
         } catch (error) {
             // This will handle any errors that are not caught by the onError callback
             console.error("An error occurred during the transaction: ", error)
