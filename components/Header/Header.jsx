@@ -19,6 +19,7 @@ const Header = () => {
                 <div className={styles.logoAndHeadlineWrapper}>
                     <Link className={styles.headerLogo} href="/" target="_self">
                         <Image
+                            className={styles.headerImage}
                             height={30}
                             width={100}
                             src="/media/Logo-w3i-marketplace.png"
@@ -43,6 +44,7 @@ const Header = () => {
                         rel="noopener noreferrer"
                     >
                         <Image
+                            className={styles.headerImage}
                             height={30}
                             width={100}
                             src="/media/Logo-insconsolata-straightened-e1690296964226.png"
