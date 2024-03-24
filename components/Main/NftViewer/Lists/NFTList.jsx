@@ -55,6 +55,9 @@ function NFTList({ sortType, title }) {
 
     // Define sort and filter functions based on sortType
     const sortAndFilterNFTs = (nfts, sortType) => {
+        const isOwnedByUser = (tokenOwner) =>
+            address && tokenOwner?.toLowerCase() === address.toLowerCase()
+
         switch (sortType) {
             case "brandNew":
                 return nfts
@@ -76,12 +79,10 @@ function NFTList({ sortType, title }) {
                 return nfts
                     .filter((nft) => Number(formatPriceToEther(nft.price)) > 0.01)
                     .sort((a, b) => Number(b.price) - Number(a.price))
-            case "myNFT":
-                const isOwnedByUser = (tokenOwner) =>
-                    address && tokenOwner?.toLowerCase() === address.toLowerCase()
-                return nfts
-                    .filter((nft) => isOwnedByUser(nft.tokenOwner))
-                    .sort((a, b) => Number(b.price) - Number(a.price))
+            case "myNFTListed":
+                return nfts.filter((nft) => isOwnedByUser(nft.tokenOwner) && nft.isListed)
+            case "myNFTNotListed":
+                return nfts.filter((nft) => isOwnedByUser(nft.tokenOwner) && !nft.isListed)
             default:
                 return nfts // Default to unsorted if no sortType is matched
         }
@@ -109,7 +110,7 @@ function NFTList({ sortType, title }) {
 
     return (
         <div className={styles.listWrapper}>
-            <h2>{title}</h2>
+            <h3>{title}</h3>
             <div className={styles.list}>{renderNFTList()}</div>
             {nftsLoading ? null : (
                 <div className={styles.showMoreBtns}>
