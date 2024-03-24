@@ -1,6 +1,5 @@
 // React Imports
-import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
+import React, { useEffect, useState } from "react"
 
 // Ethereum and Smart Contract Interaction
 import { ethers } from "ethers"
@@ -21,7 +20,8 @@ import styles from "@styles/Home.module.scss"
 
 const SellSwapNFT = () => {
     // -------------------- Web3 Elements ---------------------
-    const router = useRouter()
+    const [isClient, setIsClient] = useState(false)
+    const [initialized, setInitialized] = useState(false)
     const provider = usePublicClient()
     const { open } = useWeb3Modal()
     const chainId = provider.chains[0]
@@ -47,7 +47,6 @@ const SellSwapNFT = () => {
         proceedsStatus,
         refetchProceeds,
     } = useGetProceeds(marketplaceAddress, userAdress)
-    console.log("Proceeds status", proceedsStatus)
 
     //Function hook to withdraw proceeds
     const { handleWithdrawProceeds, isWithdrawTxSuccess } = useWithdrawProceeds(
@@ -56,7 +55,6 @@ const SellSwapNFT = () => {
         handleWithdrawCompletion
     )
 
-    console.log("Withdraw ", isWithdrawTxSuccess)
     // Setup the UI, checking for any proceeds the user can withdraw
     useEffect(() => {
         if (returnedProceeds) {
@@ -75,6 +73,13 @@ const SellSwapNFT = () => {
         }
         updatePriceInEur()
     }, [proceeds])
+
+    useEffect(() => {
+        setIsClient(typeof window !== "undefined")
+        setInitialized(true)
+    }, [])
+
+    if (!initialized) return null
 
     return (
         <div className={styles.withdrawProceedsContainer}>
@@ -101,7 +106,7 @@ const SellSwapNFT = () => {
                 {!isConnected ? (
                     <div>
                         Connect Wallet to show proceeds
-                        <ConnectWalletBtn onConnect={() => open()} />
+                        <ConnectWalletBtn onConnect={() => open()} isClient={isClient} />
                     </div>
                 ) : (
                     <>
