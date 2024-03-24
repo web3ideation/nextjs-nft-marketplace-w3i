@@ -87,7 +87,6 @@ const NFTActionForm = ({ action, formTitle, extraFields = [] }) => {
     // Function to handle form submission
     const handleFormSubmit = (newFormData) => {
         console.log("Form Data Received: ", newFormData)
-        updateFormData(newFormData)
 
         const { price, desiredNftAddress, desiredTokenId } = newFormData
 
