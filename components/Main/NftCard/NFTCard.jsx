@@ -134,7 +134,7 @@ export default function NFTCard({ nftData }) {
                         <div className={styles.cardContent}>
                             <div className={styles.cardTitleWrapper}>
                                 <div className={styles.cardTitle}>
-                                    <h3>{tokenSymbol}</h3>
+                                    <h4>{tokenSymbol}</h4>
                                 </div>
                                 <div>#{tokenId}</div>
                             </div>

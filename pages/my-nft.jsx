@@ -99,22 +99,25 @@ const MyNFTs = () => {
                     <p title={totalPriceInEur}>Total Price: {formattedTotalPriceInEur}... €</p>
                 </div>
             )}
-            <div className={styles.myNftList}>
+            <>
                 {isConnected ? (
                     hasOwnNFT ? (
-                        <NFTList sortType={"myNFT"} />
+                        <>
+                            <NFTList sortType={"myNFTListed"} title={"Listed"} />
+                            <NFTList sortType={"myNFTNotListed"} title={"Not listed"} />
+                        </>
                     ) : (
                         <div>
-                            <h2>You don't own any NFTs yet!</h2>
+                            <h3>You don't own any NFTs yet!</h3>
                         </div>
                     )
                 ) : (
                     <div>
-                        <h2>Web3 is currently not enabled - Connect your Wallet here</h2>
+                        <h3>Web3 is currently not enabled - Connect your Wallet here</h3>
                         <ConnectWalletBtn onConnect={() => open()} />
                     </div>
                 )}
-            </div>
+            </>
         </div>
     )
 }

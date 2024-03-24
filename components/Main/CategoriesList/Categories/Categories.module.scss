@@ -3,7 +3,6 @@
 @use "@styles/helpers/keyframes" as *;
 
 .categoryList {
-    @include boxShadow;
     display: grid;
     grid-column: auto;
     scroll-behavior: smooth;
@@ -38,7 +37,7 @@
 
     &:hover {
         border-top: none;
-        border-bottom: solid 1px $hover-blue;
+        border-bottom: solid 2px $hover-blue;
         transform: scale(1.02);
     }
 }
