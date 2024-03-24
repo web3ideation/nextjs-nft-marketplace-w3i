@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 // Custom hooks
+import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
 import { useNftNotification } from "@context/NotificationProvider"
 
 // Constants Imports
@@ -55,20 +56,22 @@ export const useWithdrawProceeds = (marketplaceAddress, isConnected, onSuccessCa
         return () => clearInterval(interval) // Cleanup
     }, [polling])
 
+    const { handleTransactionError } = useTransactionErrorHandler()
+
     // Callback to handle transaction error
-    const handleTransactionError = useCallback(
-        (error) => {
-            const userDenied = error.message.includes("User denied transaction signature")
-            showNftNotification(
-                userDenied ? "Transaction Rejected" : "Error",
-                userDenied
-                    ? "You rejected the transaction."
-                    : error.message || "Failed to withdraw proceeds.",
-                "error"
-            )
-        },
-        [showNftNotification]
-    )
+    //const handleTransactionError = useCallback(
+    //    (error) => {
+    //        const userDenied = error.message.includes("User denied transaction signature")
+    //        showNftNotification(
+    //            userDenied ? "Transaction Rejected" : "Error",
+    //            userDenied
+    //                ? "You rejected the transaction."
+    //                : error.message || "Failed to withdraw proceeds.",
+    //            "error"
+    //        )
+    //    },
+    //    [showNftNotification]
+    //)
 
     // Function to handle transaction loading
     const handleTransactionLoading = useCallback(() => {

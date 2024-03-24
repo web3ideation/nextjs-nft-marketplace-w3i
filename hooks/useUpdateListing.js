@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
+import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
 import { useNftNotification } from "@context/NotificationProvider"
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
@@ -64,20 +65,22 @@ export const useUpdateListing = (
         return () => clearInterval(interval) // Cleanup
     }, [polling])
 
+    const { handleTransactionError } = useTransactionErrorHandler()
+
     // Callback to handle transaction error
-    const handleTransactionError = useCallback(
-        (error) => {
-            const userDenied = error.message.includes("User denied transaction signature")
-            showNftNotification(
-                userDenied ? "Transaction Rejected" : "Error",
-                userDenied
-                    ? "You rejected the transaction."
-                    : error.message || "Failed to update the NFT.",
-                "error"
-            )
-        },
-        [showNftNotification]
-    )
+    //const handleTransactionError = useCallback(
+    //    (error) => {
+    //        const userDenied = error.message.includes("User denied transaction signature")
+    //        showNftNotification(
+    //            userDenied ? "Transaction Rejected" : "Error",
+    //            userDenied
+    //                ? "You rejected the transaction."
+    //                : error.message || "Failed to update the NFT.",
+    //            "error"
+    //        )
+    //    },
+    //    [showNftNotification]
+    //)
 
     // Function to handle transaction loading
     const handleTransactionLoading = useCallback(() => {

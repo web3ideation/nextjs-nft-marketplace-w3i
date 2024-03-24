@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 // Custom hooks and utility imports
+import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
 import { useNftNotification } from "@context/NotificationProvider"
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
@@ -63,34 +64,7 @@ export const useBuyItem = (
         return () => clearInterval(interval) // Cleanup
     }, [polling])
 
-    // Callback to handle transaction error
-    const handleTransactionError = useCallback(
-        (error) => {
-            const userDenied = error.message.includes("User denied transaction signature")
-            const userDontOwn = error.message.includes("You don't own the desired NFT for swap")
-            const userNFTNotApproved = error.message.includes(
-                "NftMarketplace__NotApprovedForMarketplace()"
-            )
-            showNftNotification(
-                userDenied
-                    ? "Transaction Rejected"
-                    : userDontOwn
-                    ? "Transaction Rejected"
-                    : userNFTNotApproved
-                    ? "NFT Not Approved"
-                    : "Error",
-                userDenied
-                    ? "You rejected the transaction."
-                    : userDontOwn
-                    ? "You don't own the desired NFT for swap"
-                    : userNFTNotApproved
-                    ? "You own the NFT to swap but it is not approved for the marketplace. You need to list the NFT."
-                    : error.message || "Failed to buy the NFT.",
-                userDenied || userDontOwn ? "error" : "error"
-            )
-        },
-        [showNftNotification]
-    )
+    const { handleTransactionError } = useTransactionErrorHandler()
 
     // Function to handle transaction loading
     const handleTransactionLoading = useCallback(() => {

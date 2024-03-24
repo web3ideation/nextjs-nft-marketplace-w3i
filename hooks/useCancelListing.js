@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 
 // Custom Hooks and Utility Imports
+import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 import { useNftNotification } from "@context/NotificationProvider"
 
@@ -62,21 +63,7 @@ export const useCancelListing = (
         return () => clearInterval(interval) // Cleanup
     }, [polling])
 
-    // Callback to handle transaction errors
-    const handleTransactionError = useCallback(
-        (error) => {
-            // Checking if the error is due to user's action
-            const userDenied = error.message.includes("User rejected the request")
-            showNftNotification(
-                userDenied ? "Transaction Rejected" : "Error",
-                userDenied
-                    ? "You rejected the transaction."
-                    : error.message || "Failed to delist the NFT.",
-                "error"
-            )
-        },
-        [showNftNotification]
-    )
+    const { handleTransactionError } = useTransactionErrorHandler()
 
     // Function to handle transaction loading
     const handleTransactionLoading = useCallback(() => {

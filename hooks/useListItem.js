@@ -5,6 +5,8 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 // Custom hooks and utility imports
+import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
+
 import { useNftNotification } from "@context/NotificationProvider"
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
@@ -66,32 +68,34 @@ export const useListItem = (
         return () => clearInterval(interval) // Cleanup
     }, [polling])
 
+    const { handleTransactionError } = useTransactionErrorHandler()
+
     // Callback to handle transaction error
-    const handleTransactionError = useCallback(
-        (error) => {
-            const userDenied = error.message.includes("User denied transaction signature")
-            const userDontOwn = error.message.includes("You don't own the desired NFT for swap")
-            const nftNotApproved = error.message.includes("not approved")
-            showNftNotification(
-                userDenied
-                    ? "Transaction Rejected"
-                    : userDontOwn
-                    ? "Transaction Rejected"
-                    : nftNotApproved
-                    ? "Transaction Rejected"
-                    : "Error",
-                userDenied
-                    ? "You rejected the transaction."
-                    : userDontOwn
-                    ? "You don't own the desired NFT for swap"
-                    : nftNotApproved
-                    ? "The NFT was not succesfully approved"
-                    : error.message || "Failed to buy the NFT.",
-                userDenied || userDontOwn || nftNotApproved ? "error" : "error"
-            )
-        },
-        [showNftNotification]
-    )
+    //const handleTransactionError = useCallback(
+    //    (error) => {
+    //        const userDenied = error.message.includes("User denied transaction signature")
+    //        const userDontOwn = error.message.includes("You don't own the desired NFT for swap")
+    //        const nftNotApproved = error.message.includes("not approved")
+    //        showNftNotification(
+    //            userDenied
+    //                ? "Transaction Rejected"
+    //                : userDontOwn
+    //                ? "Transaction Rejected"
+    //                : nftNotApproved
+    //                ? "Transaction Rejected"
+    //                : "Error",
+    //            userDenied
+    //                ? "You rejected the transaction."
+    //                : userDontOwn
+    //                ? "You don't own the desired NFT for swap"
+    //                : nftNotApproved
+    //                ? "The NFT was not succesfully approved"
+    //                : error.message || "Failed to buy the NFT.",
+    //            userDenied || userDontOwn || nftNotApproved ? "error" : "error"
+    //        )
+    //    },
+    //    [showNftNotification]
+    //)
 
     // Function to handle transaction loading
     const handleTransactionLoading = useCallback(() => {
