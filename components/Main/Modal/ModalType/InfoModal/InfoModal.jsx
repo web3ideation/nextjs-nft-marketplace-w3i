@@ -35,7 +35,6 @@ const NftModal = forwardRef((props, ref) => {
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
     const { showNftNotification } = useNftNotification()
     const { openModal, modalContent, modalType, closeModal, currentModalId } = useModal()
-    console.log("MODAL Type", modalType)
 
     // State for handling UI and modal visibility
     const [loveLightClass, setLoveLightClass] = useState("")

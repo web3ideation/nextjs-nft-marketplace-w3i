@@ -67,7 +67,7 @@ export const NFTProvider = ({ children }) => {
 
     // console.log("Active Data", activeItemsData)
     // console.log("Inactive Data", inactiveItemsData)
-    console.log("Nfts Data", nftState.data)
+    // console.log("Nfts Data", nftState.data)
     // console.log("Nft Collections", nftState.collections)
     // console.log("loaded all attributes", loadingAllAttributes)
     // console.log("Is Loaded Context", isLoading)
@@ -89,11 +89,11 @@ export const NFTProvider = ({ children }) => {
 
         // Check if window.ethereum is available(wallet)
         if (window.ethereum) {
-            console.log("Using wallet provider")
+            // console.log("Using wallet provider")
             provider = new ethers.providers.Web3Provider(window.ethereum)
         } else {
             // Using the Infura provider if no wallet is available
-            console.log("Using Infura provider")
+            // console.log("Using Infura provider")
             const infuraUrl = "https://sepolia.infura.io/v3/2c8fdbbe1b46451fa44c97b461ccb3c5"
             provider = new ethers.providers.JsonRpcProvider(infuraUrl)
         }
@@ -127,15 +127,15 @@ export const NFTProvider = ({ children }) => {
                     tokenURI,
                     imageURI: {
                         src: tokenURIData.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
-                        width: 0,
-                        height: 0,
+                        width: 100,
+                        height: 100,
                         alt: "",
                     },
                 }
             } else {
                 // Additional code for fetching and handling tokenURI data...
                 return {
-                    imageURI: { src: requestURL, width: 0, height: 0, alt: "" },
+                    imageURI: { src: requestURL, width: 100, height: 100, alt: "" },
                     tokenOwner,
                     collectionName,
                     tokenSymbol,

@@ -20,11 +20,9 @@ const NFTCollectionModal = forwardRef((prop, ref) => {
     const { data: nftsData } = useNFT()
     const { modalContent } = useModal()
 
-    console.log("Collection modal content", modalContent)
     const selectedCollection = modalContent
 
     const [priceInEur, setPriceInEur] = useState(null)
-    console.log("SElected", selectedCollection)
     // Find the selected collection from the list of NFT collections
 
     // Extract NFTs of the selected collection
