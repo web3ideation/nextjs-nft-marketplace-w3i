@@ -38,9 +38,10 @@
 .headerLogo {
     @include flex-center;
     padding: 10px;
-    img {
+    .headerImage {
         object-fit: contain;
         height: 30px;
+        width: 100%;
     }
     @media (min-width: 768px) and (max-width: 1023px) {
         padding: 15px;

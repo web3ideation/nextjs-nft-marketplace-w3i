@@ -40,6 +40,7 @@ export default function NFTCard({ nftData }) {
     const [price, setPrice] = useState(defaultPrice)
     const [tokenDescription, setTokenDescription] = useState(defaultTokenDescription)
     const [collectionName, setCollectionName] = useState(defaultCollectionName)
+    const imageURISrc = imageURI.src
     // ... Weitere Zustandsvariablen für andere NFT-Eigenschaften
 
     // useEffect Hook, um echte Daten zu laden und Zustände zu aktualisieren
@@ -72,20 +73,13 @@ export default function NFTCard({ nftData }) {
     const isListedForSwap = desiredNftAddress !== "0x0000000000000000000000000000000000000000"
 
     const handleCardClick = (nftData) => {
-        console.log("Card Clicked. Owned by user:", isOwnedByUser, "Listed:", isListed)
-        console.log("NFT Address:", nftData.nftAddress, "Token ID:", nftData.tokenId)
         const modalId = "nftCardModal-" + `${nftData.nftAddress}${nftData.tokenId}`
 
         if (!isOwnedByUser) {
-            console.log("Opening Info Modal")
-
             openModal("info", modalId, nftData)
         } else if (isOwnedByUser && isListed) {
-            console.log("Opening Sell Modal")
             openModal("sell", modalId, nftData)
         } else if (isOwnedByUser && !isListed) {
-            console.log("Opening List Modal")
-
             openModal("list", modalId, nftData)
         }
     }
@@ -110,12 +104,11 @@ export default function NFTCard({ nftData }) {
         setImageOpacity(1) // Bild einblenden
         setLoadingWaveOpacity(0) // Ladeindikator ausblenden
     }
-
     // ------------------ Component Return ------------------
 
     return (
         <>
-            {imageURI ? (
+            {imageURISrc && (
                 <div className={styles.nftCardWrapper}>
                     <div className={styles.nftCard} onClick={() => handleCardClick(nftData)}>
                         <div className={styles.cardBackgroundImage}>
@@ -126,10 +119,11 @@ export default function NFTCard({ nftData }) {
                                 <LoadingWave />
                             </div>
                             <Image
-                                src={imageURI.src}
+                                src={imageURISrc}
                                 width={300}
                                 height={300}
                                 loading="lazy"
+                                priority={false}
                                 //placeholder="blur"
                                 alt={tokenDescription || "..."}
                                 className={styles.cardImage}
@@ -171,8 +165,6 @@ export default function NFTCard({ nftData }) {
                         </div>
                     </div>
                 </div>
-            ) : (
-                <LoadingWave />
             )}
         </>
     )
