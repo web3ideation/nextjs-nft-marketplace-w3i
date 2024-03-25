@@ -9,7 +9,7 @@
     width: 100%;
     font-family: $font-primary;
 
-    h3 {
+    h2 {
         padding: 10px 50px;
         font-size: $font-size-xxl;
         font-weight: 700;
@@ -20,19 +20,19 @@
 // NFT boxes grid styles
 .list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     justify-items: center;
     padding: 10px 0;
     width: 100%;
     gap: 14px;
 
     @media (min-width: 768px) and (max-width: 1023px) {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 15px;
     }
 
     @media (min-width: 1024px) {
-        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
         gap: 16px;
     }
 }

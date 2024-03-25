@@ -23,6 +23,13 @@ html {
     ::-webkit-scrollbar-thumb:hover {
         background: $secondary-color; /* Farbe des Thumb beim Hover */
     }
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+body {
+    max-width: 2000px;
 }
 
 * {

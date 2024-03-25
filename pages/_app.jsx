@@ -20,7 +20,7 @@ import Header from "@components/Header/Header"
 import Footer from "@components/Footer/Footer"
 
 // Importing global styles
-import "../styles/globals.scss"
+import "@styles/globals.scss"
 
 // Apollo Client Initialization with environment variable for GraphQL endpoint
 const client = new ApolloClient({

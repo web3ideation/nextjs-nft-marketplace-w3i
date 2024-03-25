@@ -4,8 +4,10 @@
 
 // NFT card styles
 .nftCardWrapper {
-    height: 150px;
-    width: 150px;
+    height: 100%;
+    width: 100%;
+    min-width: 150px;
+    min-height: 150px;
     border-radius: $border-radius;
     @include boxShadow;
     transition: 0.3s ease-out;
@@ -15,19 +17,19 @@
     color: $black;
 
     cursor: pointer;
-    @media (min-width: 768px) and (max-width: 1023px) {
-        height: 200px;
-        width: 200px;
-    }
-
-    @media (min-width: 1024px) {
-        height: 270px;
-        width: 270px;
-    }
     &:hover {
         @include boxShadow-hover;
         transition: 0.1s ease-in;
         transform: scale(1.02);
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+        min-width: 200px;
+        min-height: 200px;
+    }
+
+    @media (min-width: 1024px) {
+        min-width: 270px;
+        min-height: 270px;
     }
 }
 
@@ -37,18 +39,10 @@
     flex-direction: column;
     justify-content: space-between;
     border-radius: $border-radius;
-    height: 150px;
-    width: 150px;
+    aspect-ratio: 1/1;
+    height: 100%;
+    width: 100%;
     overflow: hidden;
-    @media (min-width: 768px) and (max-width: 1023px) {
-        height: 200px;
-        width: 200px;
-    }
-
-    @media (min-width: 1024px) {
-        height: 270px;
-        width: 270px;
-    }
 }
 
 .cardImageLoadingWaveWrapper {
@@ -106,7 +100,7 @@
 }
 
 .cardPrice,
-.cardTitle h4 {
+.cardTitle h3 {
     font-size: $font-size-small;
     font-weight: 700;
 }
@@ -127,7 +121,6 @@
     position: relative;
     width: 100%;
     height: 100%;
-    border-radius: $border-radius;
 }
 
 // NFT text area styles
