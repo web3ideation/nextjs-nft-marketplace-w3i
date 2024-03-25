@@ -59,11 +59,6 @@ const NFTActionForm = ({ action, formTitle, extraFields = [] }) => {
         handleListItem()
     }
 
-    // Funktion zum Aktualisieren der Formulardaten
-    const updateFormData = (newFormData) => {
-        setFormData(newFormData)
-    }
-
     // ------------------ Contract Functions ------------------
     //Function hook to approve an Item for the marketplace
     const { handleApproveItem, isApprovingTxSuccess } = useRawApprove(
@@ -81,13 +76,13 @@ const NFTActionForm = ({ action, formTitle, extraFields = [] }) => {
         formData.price,
         formData.desiredNftAddress,
         formData.desiredTokenId,
+        formData.checkboxData,
         handleTransactionCompletion
     )
 
     // Function to handle form submission
     const handleFormSubmit = (newFormData) => {
         console.log("Form Data Received: ", newFormData)
-
         const { price, desiredNftAddress, desiredTokenId } = newFormData
 
         const formattedPrice = ethers.utils.parseUnits(price, "ether").toString() // Add any other data formatting here
