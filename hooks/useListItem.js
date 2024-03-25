@@ -30,12 +30,13 @@ export const useListItem = (
     price,
     desiredNftAddress,
     desiredTokenId,
+    checkboxData,
     onSuccessCallback
 ) => {
     // State for transaction hash and listing status
     const [listItemTxHash, setListItemTxHash] = useState(null)
     const [listing, setListing] = useState(false)
-
+    console.log("Checkbox Data", checkboxData)
     // Custom notification hook to show transaction status
     const { showNftNotification, closeNftNotification } = useNftNotification()
 
