@@ -1,4 +1,4 @@
-// ------------------ React Imports ------------------
+// React imports
 import React, { forwardRef, useEffect, useState } from "react"
 
 // User-created hooks and components
@@ -9,9 +9,9 @@ import NFTModalList from "../../ModalElements/ModalCollectionList/NFTModalList"
 
 // Utility imports
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
-import { formatPriceToEther } from "@utils/formatting"
+import { formatPriceToEther, truncatePrice } from "@utils/formatting"
 
-// ------------------ Styles ------------------
+// Styles imports
 import styles from "./CollectionModal.module.scss"
 
 // Component for displaying a modal with NFT collection details
@@ -23,6 +23,7 @@ const NFTCollectionModal = forwardRef((prop, ref) => {
     const selectedCollection = modalContent
 
     const [priceInEur, setPriceInEur] = useState(null)
+    const [formattedPriceInEur, setFormattedPriceInEur] = useState(null)
     // Find the selected collection from the list of NFT collections
 
     // Extract NFTs of the selected collection
@@ -36,6 +37,10 @@ const NFTCollectionModal = forwardRef((prop, ref) => {
     )
     // Sort the filtered NFTs data by tokenId
     filteredNFTsData.sort((a, b) => parseInt(a.tokenId) - parseInt(b.tokenId))
+
+    useEffect(() => {
+        setFormattedPriceInEur(truncatePrice(priceInEur, 10))
+    }, [priceInEur])
 
     useEffect(() => {
         const updatePriceInEur = async () => {
@@ -81,7 +86,11 @@ const NFTCollectionModal = forwardRef((prop, ref) => {
                                     {formatPriceToEther(selectedCollection.collectionPrice)}
                                     ETH
                                 </strong>
-                                <strong>{priceInEur ? `${priceInEur} €` : "Loading..."}</strong>
+                                <strong>
+                                    {formattedPriceInEur
+                                        ? `${formattedPriceInEur} €`
+                                        : "Loading..."}
+                                </strong>
                             </div>
                         </div>
                     </div>
