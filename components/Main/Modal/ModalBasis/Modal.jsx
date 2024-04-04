@@ -17,7 +17,7 @@ import styles from "./Modal.module.scss"
  */
 const Modal = forwardRef((props, ref) => {
     // Destructuring props for clarity and ease of use
-    const { children, okText, onOk, cancelListing, clearMessages, modalTitle } = props
+    const { children, modalTitle, buttons = [] } = props
     // Using useModal hook to manage modal state and actions
     const { isModalOpen, closeModal, modalState, currentModalId } = useModal()
     useEffect(() => {
@@ -50,9 +50,15 @@ const Modal = forwardRef((props, ref) => {
     // Prevents propagation of click events within the modal content
     const handleModalContentClick = (e) => e.stopPropagation()
 
-    // Determine the text and action for the secondary button based on the available props
-    const secondaryButtonText = clearMessages ? "Clear Messages" : "DELIST"
-    const secondaryButtonAction = clearMessages ? clearMessages : cancelListing
+    // Generate buttons from the 'buttons' prop
+    const renderedButtons = buttons.map((button, index) => (
+        <BtnWithAction
+            key={index} // It's better to use a unique identifier if possible
+            onClickAction={button.action}
+            buttonText={button.text}
+            style={{ width: "50%" }}
+        />
+    ))
 
     const modalBackdropClassName = `${styles.modalBackdrop} ${
         modalState === "opening"
@@ -93,31 +99,7 @@ const Modal = forwardRef((props, ref) => {
                         </button>
                     </div>
                     <div className={styles.modalContentInnerWrapper}>{children}</div>
-                    <div className={styles.modalFooterWrapper}>
-                        {(clearMessages || cancelListing) && (
-                            <BtnWithAction
-                                onClickAction={secondaryButtonAction}
-                                buttonText={secondaryButtonText}
-                                style={{ width: "50%" }}
-                            />
-                        )}
-                        {Array.isArray(okText)
-                            ? okText.map((text, index) => (
-                                  <BtnWithAction
-                                      key={text}
-                                      onClickAction={onOk[index]}
-                                      buttonText={text}
-                                      style={{ width: "50%" }}
-                                  />
-                              ))
-                            : okText && (
-                                  <BtnWithAction
-                                      onClickAction={onOk}
-                                      buttonText={okText}
-                                      style={{ width: "50%" }}
-                                  />
-                              )}
-                    </div>
+                    <div className={styles.modalFooterWrapper}>{renderedButtons}</div>
                 </div>
             </div>
         </div>

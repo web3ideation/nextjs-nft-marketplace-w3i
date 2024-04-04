@@ -117,13 +117,15 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         })
     }
 
+    const buttons = [
+        {
+            text: "UPDATE",
+            action: validateAndUpdateListing,
+        },
+    ]
+
     return (
-        <Modal
-            ref={ref}
-            modalTitle="Updating price or the desired swap"
-            okText="UPDATE"
-            onOk={validateAndUpdateListing}
-        >
+        <Modal ref={ref} modalTitle="Updating price or the desired swap" buttons={buttons}>
             <form className={styles.updateListingForm} ref={formRef}>
                 <div className={styles.updateListingFormTitle}>
                     <h3>The data of your NFT</h3>

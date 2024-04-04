@@ -6,6 +6,7 @@ import ChatModal from "./ModalType/ChatModal/ChatModal"
 import InfoModal from "./ModalType/InfoModal/InfoModal"
 import CollectionModal from "./ModalType/CollectionModal/CollectionModal"
 import UpdateListingModal from "./ModalType/UpdateListingModal/UpdateListingModal"
+import TransactionModal from "./ModalType/TransactionModal/TransactionModal"
 // Importing custom hooks
 import { useModal } from "@context/ModalProvider"
 
@@ -30,6 +31,12 @@ const ModalRenderer = () => {
             return <CollectionModal />
         case "update":
             return <UpdateListingModal />
+        case "listed":
+        case "bought":
+        case "delisted":
+        case "updated":
+        case "withdrawn":
+            return <TransactionModal />
         default:
             // Return null for unknown modal types
             return null

@@ -1,5 +1,3 @@
-// ChatModalComponent.tsx
-
 // React Imports
 import React, { useState, useRef, useEffect, forwardRef } from "react"
 
@@ -11,17 +9,16 @@ import styles from "./ChatModal.module.scss"
 import ChatList from "./ChatList/ChatList"
 
 /**
- * ChatModal Component
- * This component is a specialized modal for chat functionality,
- * using forwardRef for parent component referencing. It maintains
- * the state of messages and handles sending and clearing messages.
+ * The ChatModal component serves as a specialized chat interface within a modal.
+ * It leverages forwardRef for parent component referencing and manages chat states,
+ * including current messages and active chats.
  */
 const ChatModal = forwardRef((props, ref) => {
-    // Local State: Managing message input and message list
     const [message, setMessage] = useState("")
     const [messages, setMessages] = useState({})
-    const [activeChat, setActiveChat] = useState(null) // Aktiver Chatpartner
+    const [activeChat, setActiveChat] = useState(null)
 
+    // Pre-defined chat partners, simulating fetched data or static assignment.
     const chatPartners = [
         { id: 1, partnerAddress: "0x123...6781", lastMessage: "Wie geht's dir heute?" },
         { id: 2, partnerAddress: "0x123...6782", lastMessage: "Hast du den Bericht fertig?" },
@@ -43,20 +40,18 @@ const ChatModal = forwardRef((props, ref) => {
         messagesEndRef.current?.scrollIntoView({ behavior: "instant" })
     }
 
-    // Function: handleMessageChange
-    // Updates the message state as the user types in the input.
     const handleMessageChange = (e) => {
         setMessage(e.target.value)
     }
 
-    // Funktion, um den aktiven Chatpartner zu ändern
     const handleChatSelect = (chatPartner) => {
         setActiveChat(chatPartner)
     }
 
-    // Function: handleSendMessage
-    // Adds the current message to the messages list and clears the input field.
-    // Anpassung der sendMessage Funktion, um Nachrichten nach Chatpartner zu speichern
+    const handleClearMessages = () => {
+        setMessages([])
+    }
+
     const handleSendMessage = () => {
         if (message.trim() && activeChat) {
             const updatedMessages = {
@@ -64,36 +59,32 @@ const ChatModal = forwardRef((props, ref) => {
                 [activeChat.id]: [...(messages[activeChat.id] || []), message],
             }
 
-            // Aktualisieren der lastMessage im chatPartners Zustand
             const updatedChatPartners = chatPartners.map((partner) =>
                 partner.id === activeChat.id ? { ...partner, lastMessage: message } : partner
             )
 
             setMessages(updatedMessages)
             setMessage("")
-            // Hier müssen Sie möglicherweise auch den chatPartners Zustand im Elternteil aktualisieren,
-            // wenn dieser Zustand dort verwaltet wird
         }
     }
 
-    // Function: handleClearMessages
-    // Clears all messages from the chat.
-    const handleClearMessages = () => {
-        setMessages([])
-    }
+    const buttons = [
+        {
+            text: "Send",
+            action: handleSendMessage,
+        },
+        {
+            text: "Clear",
+            action: handleClearMessages,
+        },
+    ]
 
     useEffect(() => {
         scrollToBottom()
     }, [messages, activeChat])
 
     return (
-        <Modal
-            ref={ref}
-            modalTitle={"Chat"}
-            okText={"Send"}
-            onOk={handleSendMessage}
-            clearMessages={handleClearMessages}
-        >
+        <Modal ref={ref} modalTitle={"Chat"} buttons={buttons}>
             <div className={styles.chatModalContainerWrapper}>
                 <div className={styles.chatModalContainer}>
                     <ChatList

@@ -62,7 +62,7 @@
     max-height: 95%;
     border-radius: 5px;
     font-family: $font-primary;
-    background: white;
+    background: $white;
 
     @media (min-width: 768px) and (max-width: 1023px) {
         min-width: 40%;
