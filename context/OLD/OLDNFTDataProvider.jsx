@@ -1,7 +1,7 @@
-// React Imports
+// ------------------ React Imports ------------------
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react"
 
-// External Library Imports
+// ------------------ External Library Imports ------------------
 // Ethereum blockchain interaction library.
 import { ethers } from "ethers"
 import { erc721ABI } from "wagmi"
@@ -9,18 +9,16 @@ import { erc721ABI } from "wagmi"
 // Apollo Client for GraphQL queries.
 import { useQuery } from "@apollo/client"
 
-// GraphQL Queries
-// Importing GraphQL query for active items.
-import { GET_ACTIVE_ITEMS } from "@constants/subgraphQueries"
+// ------------------ GraphQL Queries ------------------
+// Importing GraphQL queries for active and inactive items.
+import { GET_ACTIVE_ITEMS, GET_INACTIVE_ITEMS } from "@constants/subgraphQueries"
 
-// Custom hooks
 import useSaveNft from "@database/hooks/useSaveNFT"
-
-// Context Creation
+// ------------------ Context Creation ------------------
 // Creating a React context for NFT data management.
 const NFTContext = createContext({})
 
-// Custom Hooks creation
+// ------------------ Custom Hooks ------------------
 // Hook for accessing NFT context.
 export const useNFT = () => useContext(NFTContext)
 
@@ -32,19 +30,24 @@ export const NFTProvider = ({ children }) => {
         collections: [],
         isLoading: true,
         isError: false,
+        loadingAllAttributes: true,
     })
 
-    // Custom hook for Apollo Client GraphQL query.
+    // Custom hook for Apollo Client GraphQL queries.
     const {
         data: activeItemsData,
         loading: activeLoading,
         error: activeError,
         refetch: refetchActiveItems,
     } = useQuery(GET_ACTIVE_ITEMS)
+    const {
+        data: inactiveItemsData,
+        loading: inactiveLoading,
+        error: inactiveError,
+        refetch: refetchInactiveItems,
+    } = useQuery(GET_INACTIVE_ITEMS)
 
     const { saveNft } = useSaveNft()
-
-    console.log("Nfts Data", nftState.data)
 
     // Helper function for updating NFT state.
     const updateNftState = useCallback((newState) => {
@@ -55,15 +58,33 @@ export const NFTProvider = ({ children }) => {
     const reloadNFTs = useCallback(async () => {
         try {
             updateNftState({ isLoading: true })
-            await refetchActiveItems()
+            await Promise.all([refetchActiveItems(), refetchInactiveItems()])
             updateNftState({ isError: false })
         } catch (error) {
-            console.error("Error reloading NFT data:", error)
+            console.error("Fehler beim Neuladen der NFT-Daten:", error)
             updateNftState({ isError: true })
         } finally {
             updateNftState({ isLoading: false })
         }
-    }, [refetchActiveItems])
+    }, [refetchActiveItems, refetchInactiveItems])
+
+    // console.log("Active Data", activeItemsData)
+    // console.log("Inactive Data", inactiveItemsData)
+    // console.log("Nfts Data", nftState.data)
+    // console.log("Nft Collections", nftState.collections)
+    // console.log("loaded all attributes", loadingAllAttributes)
+    // console.log("Is Loaded Context", isLoading)
+
+    // Function to retrieve the Ethereum object from the window
+    //const getEthereumObject = useCallback(() => {
+    //    const ethereum = window.ethereum
+    //    if (!ethereum) {
+    //        console.error("Ethereum object not found")
+    //        updateNftState({ isError: true })
+    //        return null
+    //    }
+    //    return ethereum
+    //}, [])
 
     // Function to fetch NFT information.
     const getNFTInfo = useCallback(async (nftAddress, tokenId) => {
@@ -150,26 +171,36 @@ export const NFTProvider = ({ children }) => {
         }
     }, [])
 
-    // Effect to load images and attributes for all NFTs when data changes.
-    useEffect(() => {
-        const loadAllAttributes = async (items) => {
-            const loadedItems = await Promise.all(items.map(loadAttributes))
-            return loadedItems.filter((item) => item !== null)
-        }
+    // Callback to get the highest listing ID and buyer count for each NFT.
+    const getHighestListingIdPerNFT = useCallback((arr) => {
+        const map = new Map()
+        arr.forEach((item) => {
+            const key = `${item.nftAddress}-${item.tokenId}`
+            const existingItem = map.get(key)
+            if (!existingItem) {
+                map.set(key, {
+                    ...item,
+                    highestListingId: item.listingId,
+                    buyerCount: item.buyer ? 1 : 0,
+                })
+            } else {
+                if (Number(item.listingId) > Number(existingItem.highestListingId)) {
+                    map.set(key, {
+                        ...item,
+                        highestListingId: item.listingId,
+                        buyerCount: existingItem.buyerCount + (item.buyer ? 1 : 0),
+                    })
+                } else if (item.buyer) {
+                    map.set(key, {
+                        ...existingItem,
+                        buyerCount: existingItem.buyerCount + 1,
+                    })
+                }
+            }
+        })
 
-        if (activeItemsData) {
-            updateNftState({ isLoading: true })
-            loadAllAttributes(activeItemsData.items)
-                .then((loadedData) => {
-                    updateNftState({ data: loadedData, isLoading: false })
-                    console.log("Loaded Data", loadedData)
-                })
-                .catch((error) => {
-                    console.error("Error loading all attributes:", error)
-                    updateNftState({ isError: true, isLoading: false })
-                })
-        }
-    }, [activeItemsData, loadAttributes])
+        return Array.from(map.values())
+    }, [])
 
     // Callback to create collections from NFT data.
     const createCollections = useCallback((nfts) => {
@@ -217,23 +248,57 @@ export const NFTProvider = ({ children }) => {
         })
     }, [])
 
+    // Effect zum Laden von Bildern und Attributen für alle NFTs, wenn sich die Daten ändern.
+    useEffect(() => {
+        const loadAllAttributes = async (items) => {
+            const loadedItems = await Promise.all(items.map(loadAttributes))
+            return loadedItems.filter((item) => item !== null)
+        }
+
+        if (activeItemsData && inactiveItemsData) {
+            updateNftState({ loadingAllAttributes: true })
+            const combinedData = [...activeItemsData.items, ...inactiveItemsData.items]
+            const highestListingData = getHighestListingIdPerNFT(combinedData)
+
+            loadAllAttributes(highestListingData)
+                .then((loadedData) => {
+                    updateNftState({ data: loadedData, loadingAllAttributes: false })
+                    console.log("Loaded Data", loadedData)
+
+                    // Aufrufen von saveNft hier, um loadedData zu speichern
+                    //saveNft(loadedData)
+                    //    .then(() => {
+                    //        console.log("NFT-Daten erfolgreich gespeichert.")
+                    //    })
+                    //    .catch((error) => {
+                    //        console.error("Fehler beim Speichern der NFT-Daten:", error)
+                    //    })
+                })
+                .catch((error) => {
+                    console.error("Fehler beim Laden aller Attribute:", error)
+                    updateNftState({ isError: true, loadingAllAttributes: false })
+                })
+        }
+    }, [activeItemsData, inactiveItemsData, loadAttributes, getHighestListingIdPerNFT])
+
     // Effect to update collections when NFT data changes.
     useEffect(() => {
         const collections = createCollections(nftState.data)
         updateNftState({ collections })
     }, [nftState.data, createCollections])
 
-    // Effect to check and set loading status.
+    // Effect zur Prüfung des Ladestatus.
     useEffect(() => {
-        updateNftState({ isLoading: activeLoading })
-    }, [activeLoading])
+        const isDataLoading = activeLoading || inactiveLoading || nftState.loadingAllAttributes
+        updateNftState({ isLoading: isDataLoading })
+    }, [activeLoading, inactiveLoading, nftState.loadingAllAttributes])
 
-    // Effect to check and set error status.
+    // Effect zur Überprüfung und Festlegung des Fehlerstatus.
     useEffect(() => {
-        if (activeError) {
+        if (activeError || inactiveError) {
             updateNftState({ isError: true })
         }
-    }, [activeError])
+    }, [activeError, inactiveError])
 
     // Context provider for NFT data and state.
     return (
