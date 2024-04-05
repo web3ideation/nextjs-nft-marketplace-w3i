@@ -161,7 +161,7 @@ function SellSwapForm({
                     </div>
                     <div className={styles.checkboxFieldsWrapper}>
                         <div className={styles.sellSwapFormTitles}>
-                            <h3>Choose up to 3 categories</h3>
+                            <h3>Choose up to 2 categories</h3>
                         </div>
                         {Object.keys(checkboxData).map((category) => (
                             <div key={category} className={styles.checkboxWrapper}>

@@ -85,7 +85,7 @@ const SellSwapNFT = () => {
         <div className={styles.withdrawProceedsContainer}>
             <div className={styles.withdrawProceeds}>
                 <div className={styles.withdrawProceedsTitle}>
-                    <h2>Important note for users:</h2>
+                    <h3>Important note for users:</h3>
                 </div>
                 <div className={styles.withdrawProceedsInformation}>
                     <p>
@@ -112,7 +112,7 @@ const SellSwapNFT = () => {
                     <>
                         <div className={styles.proceedsInformationWrapper}>
                             <div className={styles.proceedsInformation}>
-                                <h3>Your credit:</h3>
+                                <h4>Your credit:</h4>
                                 {isLoadingProceeds ? (
                                     <div>Processing...</div>
                                 ) : errorLoadingProceeds ? (

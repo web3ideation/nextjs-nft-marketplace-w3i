@@ -5,7 +5,7 @@
 .withdrawProceedsContainer {
     display: flex;
     flex-direction: column;
-    height: 90vh;
+    min-height: 90dvh;
     font-family: $font-primary;
     font-size: $font-size-small;
     font-weight: 500;
@@ -31,14 +31,10 @@
     padding: 20px;
     border-radius: 5px;
     gap: 10px;
-
-    h2 {
-        font-size: $font-size-medium;
-        font-weight: 600;
-    }
-
-    @media (min-width: 1024px) {
-        height: 60%;
+    overflow: auto;
+    h3 {
+        font-size: $font-size-xxl;
+        font-weight: 700;
     }
 }
 
@@ -48,7 +44,9 @@
     flex-wrap: wrap;
     justify-content: space-around;
 
-    h3 {
+    h4 {
+        font-size: $font-size-extra-large;
+        font-weight: 700;
         text-align: center;
     }
 }
@@ -62,7 +60,7 @@
     p {
         overflow-y: auto;
         width: 100%;
-        max-height: 300px;
+        max-height: 500px;
     }
 }
 
@@ -80,17 +78,15 @@
     align-items: center;
     padding: 10px;
 
-    h3,
+    h4,
     div {
         text-align: center;
-        font-size: 24px;
-        font-weight: 500;
     }
 
     @media (min-width: 768px) and (max-width: 1023px) {
         flex-direction: row;
         padding: 10px 50px;
-        h3,
+        h4,
         div {
             text-align: end;
             font-size: $font-size-medium;
@@ -101,11 +97,11 @@
     @media (min-width: 1024px) {
         flex-direction: row;
         padding: 10px 50px;
-        h3,
+        h4,
         div {
             text-align: end;
-            font-size: $font-size-medium;
-            font-weight: 500;
+            font-size: $font-size-extra-large;
+            font-weight: 700;
         }
     }
 }
