@@ -35,8 +35,11 @@ const NFTOverview = ({
     const [formattedPriceInEur, setFormattedPriceInEur] = useState("")
     const [formattedExternalLink, setFormattedExternalLink] = useState("")
     console.log("Modal content overview", modalContent)
+
     const isOwnedByUser =
-        isConnected && modalContent.tokenOwner?.toLowerCase() === address?.toLowerCase()
+        isConnected &&
+        modalContent.tokenOwner &&
+        modalContent.tokenOwner.toLowerCase() === address?.toLowerCase()
 
     const handleCopyAddress = () =>
         copyNftAddressToClipboard(modalContent.nftAddress, showNftNotification)
@@ -68,11 +71,13 @@ const NFTOverview = ({
     }, [modalContent.price])
 
     useEffect(() => {
-        setFormattedDesiredNftAddress(truncateStr(modalContent.desiredNftAddress, 4, 4))
-        setFormattedNftAddress(truncateStr(modalContent.nftAddress, 4, 4))
-        setFormattedTokenOwner(truncateStr(modalContent.tokenOwner, 4, 4))
-        setFormattedPrice(formatPriceToEther(modalContent.price))
-        setFormattedPriceInEur(truncatePrice(priceInEur, 5))
+        if (modalContent) {
+            setFormattedDesiredNftAddress(truncateStr(modalContent.desiredNftAddress, 4, 4))
+            setFormattedNftAddress(truncateStr(modalContent.nftAddress, 4, 4))
+            setFormattedTokenOwner(truncateStr(modalContent.tokenOwner, 4, 4))
+            setFormattedPrice(formatPriceToEther(modalContent.price))
+            setFormattedPriceInEur(truncatePrice(priceInEur, 5))
+        }
     }, [
         modalContent.nftAddress,
         modalContent.tokenOwner,
@@ -94,7 +99,7 @@ const NFTOverview = ({
                     src={modalContent.imageURI.src}
                     alt={modalContent.tokenDescription || ""}
                     width={600}
-                    height={800}
+                    height={600}
                 />
             </div>
             <div className={styles.modalTextWrapper}>
@@ -121,6 +126,7 @@ const NFTOverview = ({
                             </>
                         )}
                     </div>
+
                     <div className={styles.modalLoveLightWrapper}>
                         <p>Turn me on if you love me</p>
                         <div

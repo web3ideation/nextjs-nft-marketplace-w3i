@@ -1,29 +1,24 @@
-// React imports (React core and hooks
-import React, { forwardRef, useState, useEffect } from "react"
+// React imports
+import React, { forwardRef, useState, useEffect, useMemo } from "react"
 import { useRouter } from "next/router"
 
+// Contract hooks
 import { useAccount, usePublicClient } from "wagmi"
 
 // Custom hooks and components
 import { useNFT } from "@context/NFTDataProvider"
+import { useModal } from "@context/ModalProvider"
 import { useBuyItem } from "@hooks/useBuyItem"
 import { useCancelListing } from "@hooks/useCancelListing"
-import { useNftNotification } from "@context/NotificationProvider"
-import { useModal } from "@context/ModalProvider"
 import Modal from "../../ModalBasis/Modal"
+import NFTOverview from "../../ModalElements/NFTOverview/NFTOverview"
 import NFTModalList from "../../ModalElements/ModalCollectionList/NFTModalList"
 
-// ------------------ Utility Imports ------------------
-import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
-import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
-import { copyNftAddressToClipboard } from "@utils/copyAddress"
+// Utility Imports
+import { formatPriceToEther } from "@utils/formatting"
 
 // Constants import
 import networkMapping from "@constants/networkMapping.json"
-
-// Styles import
-import styles from "./InfoModal.module.scss"
-import NFTOverview from "../../ModalElements/NFTOverview/NFTOverview"
 
 const NftModal = forwardRef((props, ref) => {
     // Destructuring the passed properties
@@ -38,13 +33,14 @@ const NftModal = forwardRef((props, ref) => {
 
     const [formattedPrice, setFormattedPrice] = useState("")
 
-    console.log("Modal content info", modalContent)
-    const nftToShow = () => {
+    console.log("Modal content info", modalContent, modalType)
+
+    const nftToShow = useMemo(() => {
         return nftData.find(
             (nft) =>
                 nft.nftAddress === modalContent.nftAddress && nft.tokenId === modalContent.tokenId
         )
-    }
+    }, [nftData, modalContent.nftAddress, modalContent.tokenId])
 
     const handleUpdatePriceButtonClick = () => {
         const modalId = "nftUpdateModal-" + `${modalContent.nftAddress}${modalContent.tokenId}`
@@ -128,7 +124,7 @@ const NftModal = forwardRef((props, ref) => {
 
     return (
         <Modal ref={ref} modalTitle={titleText} buttons={buttons}>
-            <NFTOverview modalContent={nftToShow()}></NFTOverview>
+            <NFTOverview modalContent={nftToShow || modalContent}></NFTOverview>
             <NFTModalList
                 filterAddress={modalContent.nftAddress}
                 filterTokenId={modalContent.tokenId}
