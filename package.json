@@ -19,6 +19,7 @@
     "@walletconnect/web3wallet": "^1.9.4",
     "@web3modal/ethers5": "^3.4.0",
     "@web3modal/wagmi": "^3.4.0",
+    "alchemy-sdk": "^3.2.1",
     "autoprefixer": "^10.4.14",
     "ethers": "5.7.2",
     "graphql": "^16.6.0",
