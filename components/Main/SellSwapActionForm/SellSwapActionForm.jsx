@@ -76,7 +76,7 @@ const NFTActionForm = ({ action, formTitle, extraFields = [] }) => {
         formData.price,
         formData.desiredNftAddress,
         formData.desiredTokenId,
-        formData.checkboxData,
+        formData.categories,
         handleTransactionCompletion
     )
 
