@@ -5,14 +5,17 @@ import { useWeb3Modal } from "@web3modal/wagmi/react"
 
 // Custom components and hooks
 import { useNFT } from "@context/NFTDataProvider"
+import useFetchNFTsFromWallet from "@hooks/fetchNFTsForWallet"
 import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
+import NFTList from "@components/Main/NftViewer/Lists/NFTList"
+import ConnectWalletBtn from "@components/Header/WalletConnect/ConnectWalletButton/ConnectWalletBtn"
+
+// Utility imports
 import { formatPriceToEther, truncatePrice } from "@utils/formatting"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 
 // Styles import
 import styles from "@styles/Home.module.scss"
-import NFTList from "../components/Main/NftViewer/Lists/NFTList"
-import ConnectWalletBtn from "../components/Header/WalletConnect/ConnectWalletButton/ConnectWalletBtn"
 
 const MyNFTs = () => {
     // State for managing NFT data, loading states, and price calculations
@@ -29,9 +32,24 @@ const MyNFTs = () => {
     // Account information from wagmi hook
     const { address, isConnected } = useAccount()
 
+    const { nfts, loading, error } = useFetchNFTsFromWallet(address)
+    const [unlistedNfts, setUnlistedNfts] = useState([])
+    console.log("NFTS FROM USER", nfts)
+    console.log("NFTS filtered", unlistedNfts)
     // Checks if the NFT is owned by the current user
     const isOwnedByUser = (tokenOwner) =>
         address && tokenOwner?.toLowerCase() === address.toLowerCase()
+
+    // Filterfunktion, um NFTs zu finden, die nicht gelistet sind
+    useEffect(() => {
+        const listedNftsSet = new Set(nftsData.map((nft) => `${nft.nftAddress}-${nft.tokenId}`))
+
+        // Filter NFTs, die NICHT in `listedNftsSet` enthalten sind, um ungelistete NFTs zu finden
+        const filteredNfts = nfts.filter(
+            (nft) => !listedNftsSet.has(`${nft.nftAddress}-${nft.tokenId}`)
+        )
+        setUnlistedNfts(filteredNfts)
+    }, [nfts, nftsData])
 
     // Effect for updating NFT count and total price based on the user's ownership
     useEffect(() => {
@@ -94,17 +112,32 @@ const MyNFTs = () => {
             <h2>My NFTs</h2>
             {isConnected && (
                 <div className={styles.myNftTotalInformation}>
-                    <p>Total NFTs: {nftCount}</p>
-                    <p title={formattedTotalPrice}>Total Price: {truncatedTotalPrice}... ETH</p>
-                    <p title={totalPriceInEur}>Total Price: {formattedTotalPriceInEur}... €</p>
+                    <p>Total NFTs listed: {nftCount}</p>
+                    <p title={formattedTotalPrice}>
+                        Total price listed NFTs: {truncatedTotalPrice}... ETH
+                    </p>
+                    <p title={totalPriceInEur}>
+                        Total price listed NFTs: {formattedTotalPriceInEur}... €
+                    </p>
                 </div>
             )}
             <>
                 {isConnected ? (
                     hasOwnNFT ? (
                         <>
-                            <NFTList sortType={"myNFTListed"} title={"Listed"} />
-                            <NFTList sortType={"myNFTNotListed"} title={"Not listed"} />
+                            <NFTList sortType={"myNFTListed"} title={"Listed on marketplace"} />
+                            {/*<NFTList sortType={"myNFTNotListed"} title={"Not listed"} />*/}
+                            {unlistedNfts.length > 0 ? (
+                                <>
+                                    <NFTList
+                                        sortType={"myNFTFromWallet"}
+                                        title={"In your wallet"}
+                                        nftsData={unlistedNfts}
+                                    />
+                                </>
+                            ) : (
+                                <h3>Congratulations you don't own any unlisted NFTs yet!</h3>
+                            )}
                         </>
                     ) : (
                         <div>

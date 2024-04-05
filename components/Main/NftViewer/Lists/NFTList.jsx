@@ -11,14 +11,17 @@ import BtnWithAction from "@components/UI/BtnWithAction"
 // Styles import
 import styles from "./NFTList.module.scss"
 
-function NFTList({ sortType, title }) {
+function NFTList({ nftsData: externalNftsData, sortType, title }) {
     // State hooks for managing NFT visibility
     const [visibleNFTs, setVisibleNFTs] = useState(null)
     const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(null)
 
     // Custom hook to retrieve NFT data and loading state
-    const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
-
+    const { data: internalNftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
+    const nftsData = externalNftsData || internalNftsData
+    console.log("External", externalNftsData)
+    console.log("internal", internalNftsData)
+    console.log("NFTS data list", nftsData)
     // Account information from wagmi hook
     const { address, isConnected } = useAccount()
 
@@ -27,8 +30,10 @@ function NFTList({ sortType, title }) {
         function getInitialVisibleCount() {
             const width = window.innerWidth
             if (width < 768) {
+                return 4
+            } else if (width >= 768 && width < 1023) {
                 return 6
-            } else if (width >= 768 && width < 1024) {
+            } else if (width >= 1024 && width < 1440) {
                 return 9
             } else {
                 return 12
@@ -54,37 +59,39 @@ function NFTList({ sortType, title }) {
     }, [])
 
     // Define sort and filter functions based on sortType
-    const sortAndFilterNFTs = (nfts, sortType) => {
+    const sortAndFilterNFTs = (nftsData, sortType) => {
         const isOwnedByUser = (tokenOwner) =>
             address && tokenOwner?.toLowerCase() === address.toLowerCase()
 
         switch (sortType) {
             case "brandNew":
-                return nfts
+                return nftsData
                     .filter((nft) => nft.isListed)
                     .sort((a, b) => Number(b.listingId) - Number(a.listingId))
             case "mostSold":
                 const addressCount = {} // Tracks the number of NFTs per address
                 const filteredNFTs = []
 
-                nfts.sort((a, b) => b.buyerCount - a.buyerCount).forEach((nft) => {
-                    const count = addressCount[nft.nftAddress] || 0
-                    if (count < 3) {
-                        filteredNFTs.push(nft)
-                        addressCount[nft.nftAddress] = count + 1
-                    }
-                })
+                nftsData
+                    .sort((a, b) => b.buyerCount - a.buyerCount)
+                    .forEach((nft) => {
+                        const count = addressCount[nft.nftAddress] || 0
+                        if (count < 3) {
+                            filteredNFTs.push(nft)
+                            addressCount[nft.nftAddress] = count + 1
+                        }
+                    })
                 return filteredNFTs
             case "expensive":
-                return nfts
+                return nftsData
                     .filter((nft) => Number(formatPriceToEther(nft.price)) > 0.01)
                     .sort((a, b) => Number(b.price) - Number(a.price))
             case "myNFTListed":
-                return nfts.filter((nft) => isOwnedByUser(nft.tokenOwner) && nft.isListed)
+                return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && nft.isListed)
             case "myNFTNotListed":
-                return nfts.filter((nft) => isOwnedByUser(nft.tokenOwner) && !nft.isListed)
+                return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && !nft.isListed)
             default:
-                return nfts // Default to unsorted if no sortType is matched
+                return nftsData // Default to unsorted if no sortType is matched
         }
     }
 
