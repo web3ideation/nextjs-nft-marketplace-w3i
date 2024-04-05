@@ -25,6 +25,7 @@ $shadow: 0 5px 5px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
         max-height: 300px;
         padding: 0 15px;
         border-radius: 0 0 $border-radius $border-radius;
+        scroll-behavior: smooth;
         overflow-y: auto;
     }
 }
@@ -44,10 +45,12 @@ $shadow: 0 5px 5px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 .nonNecessaryTableItems {
     display: none;
     @media (min-width: 768px) and (max-width: 1023px) {
-        display: table-cell;
+        display: none;
     }
-
-    @media (min-width: 1024px) {
+    @media (min-width: 1024px) and (max-width: 1439px) {
+        display: none;
+    }
+    @media (min-width: 1440px) {
         display: table-cell;
     }
 }

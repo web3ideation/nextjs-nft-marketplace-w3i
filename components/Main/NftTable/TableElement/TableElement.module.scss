@@ -42,12 +42,14 @@
 
 .nonNecessaryTableItems {
     display: none;
-
     @media (min-width: 768px) and (max-width: 1023px) {
-        display: table-cell;
+        display: none;
     }
 
-    @media (min-width: 1024px) {
+    @media (min-width: 1024px) and (max-width: 1439px) {
+        display: none;
+    }
+    @media (min-width: 1440px) {
         display: table-cell;
     }
 }

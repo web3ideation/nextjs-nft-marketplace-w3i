@@ -18,15 +18,23 @@
 }
 
 .tableWrapper {
-    @include flex-center;
+    display: flex;
     flex-direction: column;
     font-family: $font-primary;
     width: 100%;
 
-    h2 {
+    h3 {
         padding: 10px 50px;
         font-size: $font-size-xxl;
         font-weight: 700;
+        text-align: center;
+        @media (min-width: 768px) and (max-width: 1023px) {
+            text-align: left;
+        }
+
+        @media (min-width: 1024px) {
+            text-align: left;
+        }
     }
 }
 

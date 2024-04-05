@@ -40,8 +40,6 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     z-index: -1;
     width: 200px;
     max-height: 400px;
@@ -53,6 +51,7 @@
     background-color: $secondary-color;
     border-radius: 0 5px 5px 0;
     box-shadow: inset 5px 0 5px rgb(0 0 0 / 0.1), inset 1px 0 2px -1px rgb(0 0 0 / 0.1);
+    scroll-behavior: smooth;
     overflow: auto;
 }
 
