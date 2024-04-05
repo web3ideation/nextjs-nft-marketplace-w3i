@@ -1,5 +1,5 @@
 // React Imports
-import React from "react"
+import React, { useEffect, useRef } from "react"
 
 // Style Imports
 import styles from "./Table.module.scss"
@@ -15,6 +15,32 @@ import styles from "./Table.module.scss"
  */
 
 export default function Table({ tableRows }) {
+    const listRef = useRef(null)
+
+    // Funktion zum horizontalen Scrollen
+    const onWheel = (e) => {
+        if (!listRef.current) return
+
+        // Horizontales Scrollen ermöglichen
+        listRef.current.scrollTop += e.deltaY
+
+        // Verhindern, dass das Scroll-Event weitergeleitet wird und andere Scroll-Operationen ausführt
+        e.preventDefault()
+    }
+    // Effect Hook, um den Event Listener hinzuzufügen
+    useEffect(() => {
+        const listElement = listRef.current
+        if (listElement) {
+            listElement.addEventListener("wheel", onWheel)
+        }
+
+        // Cleanup-Funktion
+        return () => {
+            if (listElement) {
+                listElement.removeEventListener("wheel", onWheel)
+            }
+        }
+    }, [])
     return (
         <table className={styles.table}>
             <thead>
@@ -27,7 +53,7 @@ export default function Table({ tableRows }) {
                     <th>Total price</th>
                 </tr>
             </thead>
-            <tbody>{tableRows}</tbody>
+            <tbody ref={listRef}>{tableRows}</tbody>
         </table>
     )
 }

@@ -1,5 +1,5 @@
 // React Imports
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 
 // Style Imports
 import styles from "./SearchSideFiltersElement.module.scss"
@@ -40,6 +40,30 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
         setIsButtonPressed(false)
     }
 
+    const listRef = useRef(null)
+
+    const onWheel = (e) => {
+        if (!listRef.current) return
+
+        listRef.current.scrollTop += e.deltaY
+
+        // Verhindern, dass das Scroll-Event weitergeleitet wird und andere Scroll-Operationen ausführt
+        e.preventDefault()
+    }
+    // Effect Hook, um den Event Listener hinzuzufügen
+    useEffect(() => {
+        const listElement = listRef.current
+        if (listElement) {
+            listElement.addEventListener("wheel", onWheel)
+        }
+
+        // Cleanup-Funktion
+        return () => {
+            if (listElement) {
+                listElement.removeEventListener("wheel", onWheel)
+            }
+        }
+    }, [])
     // renderIcon: Renders the check/uncheck icon based on the selected option.
     const renderIcon = (optionValue) => (
         <div className={selected === optionValue ? styles.checkIcon : styles.uncheckedIcon} />
@@ -63,6 +87,7 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
                 <h4>{label}</h4>
             </div>
             <div
+                ref={listRef}
                 className={`${styles.searchSideFiltersItemsWrapper} ${
                     isOpen ? styles.searchSideFiltersItemsWrapperOpen : ""
                 }`}
