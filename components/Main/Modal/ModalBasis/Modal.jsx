@@ -50,15 +50,20 @@ const Modal = forwardRef((props, ref) => {
     // Prevents propagation of click events within the modal content
     const handleModalContentClick = (e) => e.stopPropagation()
 
-    // Generate buttons from the 'buttons' prop
-    const renderedButtons = buttons.map((button, index) => (
-        <BtnWithAction
-            key={index} // It's better to use a unique identifier if possible
-            onClickAction={button.action}
-            buttonText={button.text}
-            style={{ width: "50%" }}
-        />
-    ))
+    // Generate buttons from the 'buttons' prop or display a placeholder if empty
+    const renderedButtons =
+        buttons.length > 0 ? (
+            buttons.map((button, index) => (
+                <BtnWithAction
+                    key={index}
+                    onClickAction={button.action}
+                    buttonText={button.text}
+                    style={{ width: "50%" }}
+                />
+            ))
+        ) : (
+            <p className={styles.noButtonsPlaceholder}>No actions available</p>
+        ) // Placeholder for no buttons
 
     const modalBackdropClassName = `${styles.modalBackdrop} ${
         modalState === "opening"
