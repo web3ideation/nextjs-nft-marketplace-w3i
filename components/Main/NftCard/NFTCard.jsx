@@ -138,30 +138,40 @@ export default function NFTCard({ nftData }) {
                                 </div>
                                 <div>#{tokenId}</div>
                             </div>
-                            <div className={styles.cardTextArea}>
-                                <div className={styles.cardSwapAndListingStatusWrapper}>
-                                    <div>
-                                        {isListedForSwap ? <div>Swap</div> : <div>Sell</div>}
+                            {isListed ? (
+                                <div className={styles.cardTextArea}>
+                                    <div className={styles.cardSwapAndListingStatusWrapper}>
+                                        <>{isListedForSwap ? <div>Swap</div> : <div>Sell</div>}</>
+                                        <>
+                                            {isListed ? (
+                                                <div className={styles.cardListedStatus}>
+                                                    Listed #{listingId}
+                                                </div>
+                                            ) : (
+                                                <div className={styles.cardNotListedStatus}>
+                                                    Not Listed #{listingId}
+                                                </div>
+                                            )}
+                                        </>
                                     </div>
-                                    <div>
-                                        {isListed ? (
-                                            <div className={styles.cardListedStatus}>
-                                                Listed #{listingId}
+                                    <div className={styles.cardPriceWrapper}>
+                                        {formattedPrice ? (
+                                            <div className={styles.cardPrice}>
+                                                {formattedPrice} ETH{/*Ξ*/}
                                             </div>
-                                        ) : (
-                                            <div className={styles.cardNotListedStatus}>
-                                                Not Listed #{listingId}
-                                            </div>
-                                        )}
+                                        ) : null}
+                                        {priceInEur ? (
+                                            <strong>{formattedPriceInEur} €</strong>
+                                        ) : null}
                                     </div>
                                 </div>
-                                <div className={styles.cardPriceWrapper}>
-                                    <div className={styles.cardPrice}>
-                                        {formattedPrice} ETH{/*Ξ*/}
+                            ) : (
+                                <div className={styles.cardTextArea}>
+                                    <div className={styles.cardNotListedStatus}>
+                                        Not Listed #{listingId}
                                     </div>
-                                    {priceInEur && <strong>{formattedPriceInEur} €</strong>}
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>
