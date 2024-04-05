@@ -6,6 +6,7 @@ import { useRouter } from "next/router"
 import { useNFT } from "@context/NFTDataProvider"
 import SearchSideFilters from "@components/Main/SearchSideBar/SearchSideFilters"
 import NFTBox from "@components/Main/NftCard/NFTCard"
+import NFTList from "@components/Main/NftViewer/Lists/NFTList"
 import BtnWithAction from "@components/UI/BtnWithAction"
 
 // --- Third-party Libraries ---
@@ -22,7 +23,6 @@ const SearchResultPage = () => {
 
     const [searchResults, setSearchResults] = useState([])
     const [filteredNFTs, setFilteredNFTs] = useState([])
-    const [visibleResults, setVisibleResults] = useState(25) // Anfangszustand auf 50 gesetzte Ergebnisse
 
     // Retrieving the search term from the URL query.
     const searchTermFromQuery = router.query.search || ""
@@ -81,14 +81,6 @@ const SearchResultPage = () => {
         setFilteredNFTs(newFilteredItems)
     }
 
-    const showMoreResults = () => {
-        setVisibleResults((prevVisibleResults) => prevVisibleResults + 25)
-    }
-
-    const showLessResults = () => {
-        setVisibleResults((prevVisibleResults) => Math.max(prevVisibleResults - 25, 25))
-    }
-
     // Rendering loading state or the search results.
     if (loadingImage) {
         return <div>Loading...</div>
@@ -103,28 +95,11 @@ const SearchResultPage = () => {
             />
             <div className={styles.nftSearchResultsContainer}>
                 <div className={styles.nftSearchResultsWrapper}>
-                    <h1>Search results for: {searchTermFromQuery}</h1>
-                    <div className={styles.nftSearchResults}>
-                        {filteredNFTs.slice(0, visibleResults).map((result) => (
-                            <div key={`${result.nftAddress}${result.tokenId}`}>
-                                <NFTBox nftData={result} />
-                            </div>
-                        ))}
-                    </div>
-                    <div className={styles.loadMoreBtns}>
-                        {visibleResults < filteredNFTs.length && (
-                            <BtnWithAction
-                                buttonText={"Load More"}
-                                onClickAction={showMoreResults}
-                            ></BtnWithAction>
-                        )}
-                        {visibleResults > 25 && (
-                            <BtnWithAction
-                                buttonText={"Show Less"}
-                                onClickAction={showLessResults}
-                            ></BtnWithAction>
-                        )}
-                    </div>
+                    <NFTList
+                        nftsData={filteredNFTs}
+                        sortType={""} // Ersetze "yourSortType" mit dem gewünschten Sortierungstyp
+                        title={`${"Search Results for: "}${searchTermFromQuery}`}
+                    />
                 </div>
             </div>
         </>
