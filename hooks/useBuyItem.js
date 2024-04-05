@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 // Custom hooks and utility imports
+import { useModal } from "@context/ModalProvider"
 import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
 import { useNftNotification } from "@context/NotificationProvider"
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
@@ -34,6 +35,7 @@ export const useBuyItem = (
 
     // Custom notification hook to show transaction status
     const { showNftNotification, closeNftNotification } = useNftNotification()
+    const { openModal, modalContent, modalType, closeModal, currentModalId } = useModal()
 
     // Refs to store notification ids
     const confirmPurchaseNotificationId = useRef(null)
@@ -78,12 +80,20 @@ export const useBuyItem = (
 
     // Function to handle transaction success
     const handleTransactionSuccess = useCallback(() => {
+        const modalId = "nftBoughtModal-" + `${modalContent.nftAddress}${modalContent.tokenId}`
+        const nftKey = {
+            nftAddress: modalContent.nftAddress,
+            tokenId: modalContent.tokenId,
+        }
+
+        console.log("NFT key", nftKey)
         setBuying(false)
         closeNftNotification(whilePurchaseNotificationId.current)
         showNftNotification("Success", "Purchase successful", "success")
         console.log("Buy item data", buyItemData, "Buy item receipt", buyTxReceipt)
         onSuccessCallback?.()
         setPolling(false) // Stop polling on success
+        openModal("bought", modalId, nftKey)
     }, [closeNftNotification, showNftNotification, onSuccessCallback])
 
     // Function to handle transaction failure
