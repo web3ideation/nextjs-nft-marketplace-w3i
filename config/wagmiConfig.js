@@ -1,11 +1,12 @@
 "use client"
 
 // External Library Imports
-import { sepolia } from "wagmi"
+import { configureChains, sepolia } from "wagmi"
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react"
+import { alchemyProvider } from "wagmi/providers/alchemy"
 
 // Constants for Configuration
-const projectId = "b1cc00b672bdffd144b48bba5e1a8932" // Project ID for WalletConnect
+const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID // Project ID for WalletConnect
 
 // Metadata configuration for the Web3 modal
 const metadata = {
@@ -16,7 +17,10 @@ const metadata = {
 }
 
 // Chains configuration, using the 'sepolia' testnet from Wagmi
-const chains = [sepolia]
+const { chains } = configureChains(
+    [sepolia],
+    [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY })]
+)
 
 // Wagmi Configuration Object
 // Includes the chains, project ID, and metadata for the setup
