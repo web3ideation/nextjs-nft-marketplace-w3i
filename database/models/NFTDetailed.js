@@ -18,6 +18,9 @@ const nftDetailedSchema = new mongoose.Schema({
         type: String,
         index: true,
     },
+    highestListingId: {
+        type: Number,
+    },
     external_url: {
         type: String,
     },
@@ -31,6 +34,12 @@ const nftDetailedSchema = new mongoose.Schema({
     desiredTokenId: {
         type: Number,
     },
+    seller: {
+        type: String,
+    },
+    buyer: {
+        type: String,
+    },
     buyerCount: {
         type: Number,
         index: true,
@@ -38,6 +47,12 @@ const nftDetailedSchema = new mongoose.Schema({
     loveCount: {
         type: Number,
         index: true,
+    },
+    tokenURI: {
+        type: String,
+    },
+    __typename: {
+        type: String,
     },
 })
 

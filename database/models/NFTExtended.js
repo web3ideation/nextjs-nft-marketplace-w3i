@@ -8,7 +8,6 @@ const nftExtendedSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        required: false,
         index: true,
     },
     collectionName: {
@@ -19,8 +18,8 @@ const nftExtendedSchema = new mongoose.Schema({
         type: String,
         index: true,
     },
-    imageUri: {
-        type: String,
+    imageURI: {
+        type: Object,
     },
 })
 

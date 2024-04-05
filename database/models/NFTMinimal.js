@@ -12,7 +12,11 @@ const nftMinimalSchema = new mongoose.Schema({
     listingId: {
         type: Number,
     },
-    categories: {
+    isListed: {
+        type: Boolean,
+        index: true,
+    },
+    category: {
         type: Array,
         index: true,
     },
