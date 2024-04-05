@@ -10,15 +10,15 @@
     -webkit-overflow-scrolling: touch;
     position: relative;
     width: 100%;
-    padding: 10px 20px;
+    padding: 0 20px;
     border-radius: $border-radius;
 }
 
 .categoryWrapper {
     display: flex;
+    justify-content: space-between;
     overflow: auto;
     scroll-behavior: smooth;
-    padding: 0;
     -ms-overflow-style: none;
     scrollbar-width: none;
 
@@ -30,8 +30,8 @@
 .category {
     @include flex-center;
     flex-direction: column;
-    border-top: solid 1px white;
-    padding: 0 10px;
+    border-top: solid 2px white;
+    padding: 5px 30px;
     flex: 0 0 auto;
     cursor: pointer;
 
@@ -41,6 +41,10 @@
         transform: scale(1.02);
     }
 }
+
+// .categoryImage {
+//    @include invert;
+// }
 
 .categoryImage,
 .categoryName {

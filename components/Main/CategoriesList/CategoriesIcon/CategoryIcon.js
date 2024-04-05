@@ -23,13 +23,19 @@ import EntertainmentIcon from "@public/media/categories/entertainment.svg"
 import EducationIcon from "@public/media/categories/education.svg"
 import HealthWellnessIcon from "@public/media/categories/health.svg"
 import EnvironmentIcon from "@public/media/categories/environment.svg"
+import WearablesIcon from "@public/media/categories/wearables.svg"
+import TopTenIcon from "@public/media/categories/topTen.svg"
+import TopValueIcon from "@public/media/categories/topValue.svg"
+import MostSoldIcon from "@public/media/categories/mostSold.svg"
+import DigitalTwinIcon from "@public/media/categories/digitalTwin.svg"
+import UtilityIcon from "@public/media/categories/utility.svg"
 
 // Style Import
 import styles from "./CategoryIcon.module.scss"
 
 // Mapping category names to their respective icons
 const categoryIcons = {
-    New: NewIcon,
+    "Brand New": NewIcon,
     Music: MusicIcon,
     DAO: DaoIcon,
     Membership: MembershipIcon,
@@ -50,6 +56,12 @@ const categoryIcons = {
     Education: EducationIcon,
     "Health & Wellness": HealthWellnessIcon,
     Environment: EnvironmentIcon,
+    Wearables: WearablesIcon,
+    10: TopTenIcon,
+    "Top Value": TopValueIcon,
+    "Most Sold": MostSoldIcon,
+    "Digital Twin": DigitalTwinIcon,
+    Utility: UtilityIcon,
 }
 
 // CategoryIcon Component - Displays the icon corresponding to the provided category name
@@ -58,7 +70,12 @@ const CategoryIcon = ({ categoryName }) => {
     const Icon = categoryIcons[categoryName] || null
 
     // Conditional rendering of the Icon component if it exists
-    return Icon ? <Icon className={styles.categoryIcon} /> : null
+
+    return Icon ? (
+        <div className={styles.categoryIconWrapper}>
+            <Icon className={styles.categoryIcon} />
+        </div>
+    ) : null
 }
 
 export default CategoryIcon
