@@ -5,6 +5,7 @@ import { useAccount } from "wagmi"
 // Custom Hooks & Components Imports
 import { useNFT } from "@context/NFTDataProvider"
 import { formatPriceToEther } from "@utils/formatting"
+import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
 import NFTCard from "@components/Main/NftCard/NFTCard"
 import BtnWithAction from "@components/UI/BtnWithAction"
 
@@ -17,7 +18,12 @@ function NFTList({ nftsData: externalNftsData, sortType, title }) {
     const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(null)
 
     // Custom hook to retrieve NFT data and loading state
-    const { data: internalNftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
+    const {
+        data: internalNftsData,
+        isLoading: nftsLoading,
+        isError: nftsError,
+        reloadNFTs,
+    } = useNFT()
     const nftsData = externalNftsData || internalNftsData
     console.log("External", externalNftsData)
     console.log("internal", internalNftsData)
@@ -102,7 +108,7 @@ function NFTList({ nftsData: externalNftsData, sortType, title }) {
 
     // Render the list of NFTs or a loading message
     const renderNFTList = () => {
-        if (sortedAndFilteredNFTs.length === 0) {
+        if (nftsError) {
             return <p>No NFTs available</p>
         }
 
@@ -118,29 +124,35 @@ function NFTList({ nftsData: externalNftsData, sortType, title }) {
     return (
         <div className={styles.listWrapper}>
             <h3>{title}</h3>
-            <div className={styles.list}>{renderNFTList()}</div>
-            {nftsLoading ? null : (
-                <div className={styles.showMoreBtns}>
-                    {visibleNFTs == sortedAndFilteredNFTs.length && (
-                        <BtnWithAction
-                            buttonText={"More"}
-                            onClickAction={() =>
-                                setVisibleNFTs(
-                                    (prevVisible) =>
-                                        prevVisible +
-                                        (initialVisibleNFTs > 12 ? initialVisibleNFTs : 12)
-                                )
-                            }
-                        />
-                    )}
-                    {visibleNFTs > initialVisibleNFTs && (
-                        <BtnWithAction
-                            buttonText={"Less"}
-                            onClickAction={() => setVisibleNFTs(initialVisibleNFTs)}
-                        />
-                    )}
+            {nftsLoading ? (
+                <div className={styles.listLoading}>
+                    <LoadingWave />
+                </div>
+            ) : (
+                <div className={styles.list}>
+                    <>{renderNFTList()} </>
                 </div>
             )}
+            <div className={styles.showMoreBtns}>
+                {visibleNFTs == sortedAndFilteredNFTs.length && (
+                    <BtnWithAction
+                        buttonText={"More"}
+                        onClickAction={() =>
+                            setVisibleNFTs(
+                                (prevVisible) =>
+                                    prevVisible +
+                                    (initialVisibleNFTs > 12 ? initialVisibleNFTs : 12)
+                            )
+                        }
+                    />
+                )}
+                {visibleNFTs > initialVisibleNFTs && (
+                    <BtnWithAction
+                        buttonText={"Less"}
+                        onClickAction={() => setVisibleNFTs(initialVisibleNFTs)}
+                    />
+                )}
+            </div>
         </div>
     )
 }
