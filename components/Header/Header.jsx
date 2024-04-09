@@ -26,7 +26,7 @@ const Header = () => {
                             alt="Logo-W3I-Market"
                         />
                     </Link>
-                    <h1 className={styles.headerHeadline}></h1>
+                    <h1 className={styles.headerHeadline}>@ sepolia testnet</h1>
                 </div>
                 <div className={styles.headerElementsWrapper}>
                     <SearchBar />
