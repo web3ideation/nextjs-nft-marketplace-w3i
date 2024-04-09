@@ -10,7 +10,7 @@ const handleClick = () => {
     window.location.href = "https://web3ideation.com/contact"
 }
 
-export default function Footer({}) {
+export default function Footer() {
     return (
         <footer className={styles.footer}>
             <div className={styles.footerTop}>
@@ -59,7 +59,7 @@ export default function Footer({}) {
                             </section>
                         </div>
                         <div className={styles.footerThree}>
-                            <section id="text-3" className={styles.footerTextWrapper}>
+                            <section className={styles.footerTextWrapper}>
                                 <h3 className={styles.footerTitle}>Rechtliches</h3>{" "}
                                 <div className={styles.footerText}>
                                     <p>
@@ -112,6 +112,7 @@ export default function Footer({}) {
                                             <a
                                                 href="https://www.linkedin.com/company/web3ideation/ "
                                                 target="_blank"
+                                                rel="noopener noreferrer"
                                             >
                                                 <span>
                                                     <i className="fa fa-linkedin"></i>
@@ -122,6 +123,7 @@ export default function Footer({}) {
                                             <a
                                                 href="https://github.com/web3ideation "
                                                 target="_blank"
+                                                rel="noopener noreferrer"
                                             >
                                                 <span>
                                                     <i className="fab fa-github"></i>
