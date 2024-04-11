@@ -1,27 +1,13 @@
-// React and Next.js imports
 import React, { useRef, useState, useEffect } from "react"
 import Image from "next/image"
-
-// User-created components imports
 import CategoryIcon from "../CategoriesIcon/CategoryIcon"
-
-// Style imports
 import styles from "./Categories.module.scss"
 
-/**
- * Displays a scrollable list of categories with forward and backward scroll functionality.
- * Each category can be selected, triggering a callback function.
- *
- * Props:
- * - categories: Array of category objects to display.
- * - onCategorySelect: Function to call when a category is selected.
- */
 const Categories = ({ categories, onCategorySelect }) => {
     const scrollContainerRef = useRef(null)
     const [showScrollBackButton, setShowScrollBackButton] = useState(false)
     const [showScrollForwardButton, setShowScrollForwardButton] = useState(true)
 
-    // Checks the scroll position to toggle the visibility of scroll buttons
     const checkScrollButtons = () => {
         const container = scrollContainerRef.current
         const canScrollLeft = container?.scrollLeft > 0
@@ -32,18 +18,15 @@ const Categories = ({ categories, onCategorySelect }) => {
         setShowScrollForwardButton(canScrollRight)
     }
 
-    // Scrolls the category list in the specified direction
     const scroll = (direction) => {
         const scrollContainer = scrollContainerRef.current
         if (scrollContainer) {
-            // Calculate scroll offset as a percentage of the container's width (e.g., 75%)
-            const scrollOffset = scrollContainer.clientWidth * 0.75
+            const scrollOffset = scrollContainer.clientWidth * 0.75 // Adjusted for readability
             scrollContainer.scrollLeft += direction === "forward" ? scrollOffset : -scrollOffset
             checkScrollButtons()
         }
     }
 
-    // Adds a scroll event listener to check button visibility and performs an initial check
     useEffect(() => {
         const scrollContainer = scrollContainerRef.current
         scrollContainer.addEventListener("scroll", checkScrollButtons)

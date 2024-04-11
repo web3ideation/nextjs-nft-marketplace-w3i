@@ -37,41 +37,35 @@
     opacity: 1;
 }
 
-.walletMenuLinks {
+.walletMenuLinks,
+.walletMenuLinks button {
     display: flex;
     padding: 10px;
     text-decoration: none;
-    button {
-        width: 100%;
-        text-align: start;
-        font-family: $font-primary;
-        font-size: $font-size-large;
-        font-weight: 400;
-        color: $black;
-        background-color: $white;
-        cursor: pointer;
+    text-align: start;
+    font-family: $font-primary;
+    font-size: $font-size-large;
+    font-weight: 400;
+    color: $black;
+    background-color: $white;
+    cursor: pointer;
 
-        &:hover {
-            color: $hover-grey;
-        }
+    &:hover {
+        color: $hover-grey;
     }
 
     @media (min-width: 768px) and (max-width: 1023px) {
         padding: 10px 40px;
         background-color: $secondary-color;
-        button {
-            color: $white;
-            background-color: $secondary-color;
-            font-size: $font-size-medium;
-        }
+        color: $white;
+        background-color: $secondary-color;
+        font-size: $font-size-medium;
     }
     @media (min-width: 1024px) {
         padding: 10px 40px;
-        button {
-            color: $white;
-            background-color: $secondary-color;
-            font-size: $font-size-small;
-        }
+        color: $white;
+        background-color: $secondary-color;
+        font-size: $font-size-small;
     }
 }
 
@@ -83,12 +77,14 @@
         display: none;
     }
 }
+
 .disconnect button {
     text-align: center;
     background-color: $color-firebrick;
     color: $color-white;
     border-radius: $border-radius;
     border: solid 1px $color-light-black;
+    padding: 0 40px;
 }
 
 .walletMenuBalance {

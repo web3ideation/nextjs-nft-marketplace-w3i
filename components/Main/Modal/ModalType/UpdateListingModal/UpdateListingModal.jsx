@@ -1,34 +1,27 @@
-// React core and hooks
-import React, { forwardRef, useState, useRef } from "react"
-import PropTypes from "prop-types"
+import React, { forwardRef, useState, useRef, useEffect } from "react"
 
-// Blockchain and Ethereum functionality
 import { ethers } from "ethers"
 import { useAccount, usePublicClient } from "wagmi"
 
-// Custom hooks and components
 import { useNFT } from "@context/NFTDataProvider"
-import Tooltip from "@components/UX/Tooltip/Tooltip"
-import Modal from "../../ModalBasis/Modal"
 import { validateField } from "@utils/validation"
 import { useUpdateListing } from "@hooks/useUpdateListing"
 import { useModal } from "@context/ModalProvider"
+import Modal from "../../ModalBasis/Modal"
+import Tooltip from "@components/UX/Tooltip/Tooltip"
+
 import networkMapping from "@constants/networkMapping.json"
 
-// Styles
 import styles from "./UpdateListingModal.module.scss"
 
-// Component for updating NFT listings, with form validation and blockchain interaction
 const NFTUpdateListingModal = forwardRef((props, ref) => {
-    // Destructuring props for better readability
-    const { modalContent, modalType } = useModal()
-    console.log("MODAL Type", modalType)
-    console.log("Modal content", modalContent)
-    const { address, isConnected } = useAccount()
+    const { modalContent, isModalOpen } = useModal()
+    const { isConnected } = useAccount()
     const chainString = usePublicClient().chains[0]?.id?.toString() ?? "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
+    const formRef = useRef(null)
+    const { reloadNFTs } = useNFT()
 
-    // State for form data and validation errors
     const [formData, setFormData] = useState({
         newPrice: modalContent.price,
         newDesiredNftAddress: modalContent.desiredNftAddress,
@@ -40,17 +33,11 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         newDesiredTokenId: "",
     })
 
-    // Refs and custom hooks
-    const formRef = useRef(null)
-    const { reloadNFTs } = useNFT()
-
-    // Callback for reloading NFTs
     const handleTransactionCompletion = () => reloadNFTs()
 
-    // Function to handle the listing update
     const { handleUpdateListing } = useUpdateListing(
         marketplaceAddress,
-        ethers.utils.parseEther(formData.newPrice),
+        ethers.utils.parseEther(formData.newPrice || "0"),
         modalContent.nftAddress,
         modalContent.tokenId,
         formData.newDesiredNftAddress,
@@ -59,7 +46,6 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         handleTransactionCompletion
     )
 
-    // Function to validate and initiate the listing update
     const validateAndUpdateListing = async () => {
         if (validateForm(formData)) {
             try {
@@ -70,8 +56,6 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         }
     }
 
-    // ------------------ Form Validation ------------------
-    // Validates the entire form data and logs validation results
     const validateForm = (data) => {
         let newErrors = {}
         let isValid = true
@@ -80,30 +64,23 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
             const errorMessage = validateField(key, data[key])
             newErrors[key] = errorMessage
 
-            console.log(`validateForm: Field: ${key}, Error: ${errorMessage}`)
-
             if (errorMessage) {
                 isValid = false
             }
         })
 
         setErrors(newErrors)
-        console.log("Form validation result:", isValid)
         return isValid
     }
 
-    // Function to handle changes in form fields
     const handleChange = (e) => {
         const { name, value } = e.target
         const error = validateField(name, value)
-
-        console.log(`handleChange: ${name}, Value: ${value}, Error: ${error}`)
 
         setFormData((prev) => ({ ...prev, [name]: value }))
         setErrors((prev) => ({ ...prev, [name]: error ? error : "" }))
     }
 
-    // Function to reset the form to its initial state
     const resetForm = () => {
         setFormData({
             newPrice: modalContent.price || "",
@@ -116,6 +93,12 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
             newDesiredTokenId: "",
         })
     }
+
+    useEffect(() => {
+        if (!isModalOpen) {
+            resetForm()
+        }
+    }, [isModalOpen])
 
     const buttons = [
         {
@@ -221,16 +204,5 @@ const NFTUpdateListingModal = forwardRef((props, ref) => {
         </Modal>
     )
 })
-
-NFTUpdateListingModal.propTypes = {
-    nftAddress: PropTypes.string.isRequired,
-    tokenId: PropTypes.string.isRequired,
-    showUpdateListingModal: PropTypes.bool.isRequired,
-    marketplaceAddress: PropTypes.string.isRequired,
-    onCancel: PropTypes.func,
-    price: PropTypes.string,
-    desiredNftAddress: PropTypes.string,
-    desiredTokenId: PropTypes.string,
-}
 
 export default NFTUpdateListingModal

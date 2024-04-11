@@ -1,29 +1,14 @@
-// React imports
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
-import { useAccount, usePublicClient } from "wagmi"
+import { useAccount } from "wagmi"
+import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
 import { useNftNotification } from "@context/NotificationProvider"
 import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 import { copyNftAddressToClipboard } from "@utils/copyAddress"
-// Style imports
 import styles from "./NFTOverview.module.scss"
 
-const NFTOverview = ({
-    modalContent,
-    //isListedForSwap,
-    //formattedPrice,
-    //formattedPriceInEur,
-    //formattedDesiredNftAddress,
-    //handleLoveLightClick,
-    //handleCopyAddress,
-    //formattedNftAddress,
-    //isOwnedByUser,
-    //formattedTokenOwner,
-    //formattedExternalLink,
-    //loveLightClass,
-    //capitalizeFirstLetter,
-}) => {
+const NFTOverview = ({ modalContent }) => {
     const { address, isConnected } = useAccount()
     const { showNftNotification } = useNftNotification()
     const [loveLightClass, setLoveLightClass] = useState("")
@@ -34,30 +19,26 @@ const NFTOverview = ({
     const [priceInEur, setPriceInEur] = useState("")
     const [formattedPriceInEur, setFormattedPriceInEur] = useState("")
     const [formattedExternalLink, setFormattedExternalLink] = useState("")
-    console.log("Modal content overview", modalContent)
-
+    const [imageLoaded, setImageLoaded] = useState(false)
+    console.log("Modal Content", modalContent)
     const isOwnedByUser =
         isConnected &&
         modalContent.tokenOwner &&
         modalContent.tokenOwner.toLowerCase() === address?.toLowerCase()
 
-    const handleCopyAddress = () =>
-        copyNftAddressToClipboard(modalContent.nftAddress, showNftNotification)
-
-    // Utility function for capitalizing the first letter
-    const capitalizeFirstLetter = (string) => {
-        return typeof string === "string"
-            ? string.charAt(0).toUpperCase() + string.slice(1)
-            : string
-    }
     const isListedForSwap =
         modalContent.desiredNftAddress !== "0x0000000000000000000000000000000000000000"
 
-    const handleLoveLightClick = () => {
+    const handleCopyAddress = () =>
+        copyNftAddressToClipboard(modalContent.nftAddress, showNftNotification)
+
+    const capitalizeFirstLetter = (string) =>
+        typeof string === "string" ? string.charAt(0).toUpperCase() + string.slice(1) : string
+
+    const handleLoveLightClick = () =>
         setLoveLightClass((currentClass) =>
             currentClass === "" ? "modalLoveLightInnerYellow" : ""
         )
-    }
 
     useEffect(() => {
         const updatePriceInEur = async () => {
@@ -78,28 +59,39 @@ const NFTOverview = ({
             setFormattedPrice(formatPriceToEther(modalContent.price))
             setFormattedPriceInEur(truncatePrice(priceInEur, 5))
         }
-    }, [
-        modalContent.nftAddress,
-        modalContent.tokenOwner,
-        modalContent.desiredNftAddress,
-        priceInEur,
-    ])
+    }, [modalContent, priceInEur])
 
-    // Only update formattedExternalLink if tokenExternalLink exists
     useEffect(() => {
         if (modalContent.tokenExternalLink) {
             setFormattedExternalLink(truncateStr(modalContent.tokenExternalLink, 25, 0))
         }
     }, [modalContent.tokenExternalLink])
 
+    useEffect(() => {
+        setImageLoaded(false)
+    }, [modalContent.imageURI])
+
+    const handleImageLoad = () => {
+        setImageLoaded(true)
+    }
+
     return (
         <div className={styles.modalContent}>
-            <div className={styles.modalImage}>
+            <div className={styles.modalImageWrapper}>
+                {!imageLoaded && (
+                    <div className={styles.modalImageLoadingWaveWrapper}>
+                        <LoadingWave />
+                    </div>
+                )}
                 <Image
-                    src={modalContent.imageURI.src}
-                    alt={modalContent.tokenDescription || ""}
+                    src={modalContent.imageURI}
+                    alt={modalContent.tokenDescription || "..."}
                     width={600}
                     height={600}
+                    loading="eager"
+                    priority={false}
+                    className={`${styles.modalImage} ${!imageLoaded ? styles.imageLoading : ""}`}
+                    onLoad={handleImageLoad}
                 />
             </div>
             <div className={styles.modalTextWrapper}>

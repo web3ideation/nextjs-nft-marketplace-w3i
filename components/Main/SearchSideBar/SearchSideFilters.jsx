@@ -1,19 +1,13 @@
-// Importing React functionalities
 import React, { useState, useRef, useEffect } from "react"
-
-// Importing custom components
+import Image from "next/image"
 import SearchSideFiltersElement from "./SideBarElement/SearchSideFiltersElement"
-
-// Importing styles
 import styles from "./SearchSideFilters.module.scss"
 
-// SearchSideFilters component definition
 const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     const menuRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
     const [isButtonPressed, setIsButtonPressed] = useState(false)
 
-    // State for managing filter options
     const [optionsMap, setOptionsMap] = useState({
         Status: [],
         Sorting: [],
@@ -21,7 +15,6 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
         Collections: [],
     })
 
-    // State for managing selected filters
     const [filters, setFilters] = useState({
         selectedSorting: "default",
         selectedStatus: "default",
@@ -29,29 +22,19 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
         selectedCollections: "default",
     })
 
-    // Function to extract unique collections and their names
     const getUniqueCollections = () => {
         const collections = { default: "Default" }
-
-        initialItems.forEach((nft) => {
-            if (!collections[nft.nftAddress]) {
-                collections[nft.nftAddress] = nft.collectionName
-            }
+        initialItems.forEach(({ nftAddress, collectionName }) => {
+            collections[nftAddress] = collections[nftAddress] || collectionName
         })
-
-        return Object.entries(collections).map(([address, name]) => ({
-            value: address,
-            label: name,
-        }))
+        return Object.entries(collections).map(([value, label]) => ({ value, label }))
     }
 
-    // Effect to initialize filter options based on initial items
     useEffect(() => {
-        setOptionsMap({
+        setOptionsMap((prev) => ({
+            ...prev,
             Status: [
                 { value: "default", label: "All" },
-                //{ value: "listed", label: "Listed" },
-                //{ value: "not listed", label: "Not listed" },
                 { value: "sell", label: "Sell" },
                 { value: "swap", label: "Swap" },
             ],
@@ -74,50 +57,30 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 { value: "wearables", label: "Wearables" },
                 { value: "digital twin", label: "Digital Twin" },
                 { value: "utility", label: "Utility" },
-                //{ value: "art", label: "Art" },
-                //{ value: "vr estate", label: "VR Estate" },
-                //{ value: "collectibles", label: "Collectibles" },
-                //{ value: "sports", label: "Sports" },
-                //{ value: "entertainment", label: "Entertainment" },
-                //{ value: "education", label: "Education" },
-                //{ value: "health & wellness", label: "Health & Wellness" },
-                //{ value: "finance", label: "Finance" },
-                //{ value: "technology", label: "Technology" },
-                //{ value: "fashion", label: "Fashion" },
-                //{ value: "literature", label: "Literature" },
-                //{ value: "travel", label: "Travel" },
-                //{ value: "f&b", label: "F&B" },
-                //{ value: "social media", label: "Social Media" },
-                //{ value: "environment", label: "Environment" },
             ],
             Collections: getUniqueCollections(),
-        })
+        }))
     }, [initialItems])
 
-    // ------------------ Filtering Logic ------------------
-    // Function to apply filters to the initial items
     const filterItems = () => {
         let filteredList = [...initialItems]
-        console.log("Vor dem Filtern:", filteredList.length)
-        console.log("selected Filters", filters)
-        console.log(initialItems)
-
-        // Apply status filter
-        if (filters.selectedStatus === "listed") {
-            filteredList = filteredList.filter((nft) => nft.isListed)
-        } else if (filters.selectedStatus === "not listed") {
-            filteredList = filteredList.filter((nft) => !nft.isListed)
-        } else if (filters.selectedStatus === "sell") {
+        if (filters.selectedStatus !== "default") {
+            filteredList = filteredList.filter((nft) => {
+                if (filters.selectedStatus === "sell")
+                    return nft.desiredNftAddress === "0x0000000000000000000000000000000000000000"
+                if (filters.selectedStatus === "swap")
+                    return nft.desiredNftAddress !== "0x0000000000000000000000000000000000000000"
+                return true
+            })
+        }
+        if (filters.selectedCategory !== "default") {
+            filteredList = filteredList.filter((nft) => nft.category === filters.selectedCategory)
+        }
+        if (filters.selectedCollections !== "default") {
             filteredList = filteredList.filter(
-                (nft) => nft.desiredNftAddress === "0x0000000000000000000000000000000000000000"
-            )
-        } else if (filters.selectedStatus === "swap") {
-            filteredList = filteredList.filter(
-                (nft) => nft.desiredNftAddress !== "0x0000000000000000000000000000000000000000"
+                (nft) => nft.nftAddress === filters.selectedCollections
             )
         }
-
-        // Apply sorting logic
         filteredList.sort((a, b) => {
             switch (filters.selectedSorting) {
                 case "lowestId":
@@ -137,64 +100,17 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
             }
         })
 
-        // Apply category filter
-        if (filters.selectedCategory !== "default") {
-            filteredList = filteredList.filter((nft) => nft.category === filters.selectedCategory)
-        }
-        // Apply collection filter
-        if (filters.selectedCollections != "default") {
-            filteredList = filteredList.filter((nft) => {
-                return nft.nftAddress === filters.selectedCollections
-            })
-        }
-        console.log("Nach dem Filtern:", filteredList)
-        console.log("Nach dem Filtern:", filteredList.length)
-
-        // Inform parent component about the filtered items
         onFilteredItemsChange(filteredList)
     }
 
-    // Function to reset filter states
-    const resetFilters = () => {
-        setFilters({
-            selectedSorting: "default",
-            selectedStatus: "default",
-            selectedCategory: "default",
-            selectedCollections: "default",
-        })
-    }
+    useEffect(() => filterItems(), [filters])
 
-    // ------------------ Handlers ------------------
-    // Function to update filter states based on selected options
     const handleOptionChange = (type, value) => {
         setFilters((prevFilters) => ({ ...prevFilters, [type]: value }))
     }
 
-    // Function to toggle the filter menu
-    const toggleMenu = () => {
-        setIsOpen((prevIsOpen) => !prevIsOpen)
-    }
-    const handleTouchStart = () => {
-        setIsButtonPressed(true)
-    }
-
-    const handleTouchEnd = () => {
-        setIsButtonPressed(false)
-        resetFilters()
-    }
-
-    const handleMouseDown = () => {
-        setIsButtonPressed(true)
-    }
-
-    const handleMouseUp = () => {
-        setIsButtonPressed(false)
-    }
-
-    // Effect to re-filter items when filter states change
-    useEffect(() => {
-        filterItems()
-    }, [filters])
+    const toggleMenu = () => setIsOpen((prevIsOpen) => !prevIsOpen)
+    const handleButtonInteraction = (isPressed) => setIsButtonPressed(isPressed)
 
     return (
         <div ref={menuRef}>
@@ -203,7 +119,6 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                     isOpen ? styles.searchSideFiltersWrapperOpen : ""
                 }`}
             >
-                {" "}
                 <div className={`${styles.backgroundPlaceholder} ${styles.placeholderA}`}></div>
                 <div className={styles.filterHeadlineWrapper}>
                     <h3>Filter</h3>
@@ -218,7 +133,12 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                                 isOpen ? styles.sideBarArrowOpen : ""
                             }`}
                         >
-                            <img src="media/arrow_down.png" alt="Menu Arrow"></img>
+                            <Image
+                                width={20}
+                                height={20}
+                                src="/media/arrow_down.png"
+                                alt="Menu Arrow"
+                            />
                         </div>
                     </div>
                 </div>
@@ -234,11 +154,18 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 ))}
                 <div className={styles.resetButton}>
                     <button
-                        onTouchStart={handleTouchStart}
-                        onTouchEnd={handleTouchEnd}
-                        onMouseDown={handleMouseDown}
-                        onMouseUp={handleMouseUp}
-                        onClick={resetFilters}
+                        onTouchStart={() => handleButtonInteraction(true)}
+                        onTouchEnd={() => handleButtonInteraction(false)}
+                        onMouseDown={() => handleButtonInteraction(true)}
+                        onMouseUp={() => handleButtonInteraction(false)}
+                        onClick={() =>
+                            setFilters({
+                                selectedSorting: "default",
+                                selectedStatus: "default",
+                                selectedCategory: "default",
+                                selectedCollections: "default",
+                            })
+                        }
                         style={{ transform: isButtonPressed ? "scale(0.95)" : "scale(1)" }}
                     >
                         Reset Filters

@@ -1,25 +1,13 @@
-// React imports
 import React from "react"
-
-// Style imports
 import styles from "./LoadingWave.module.scss"
 
-/**
- * LoadingWave Component
- * Purpose: To display a loading animation with wave-like elements.
- * Returns a series of div elements styled to create a wave effect.
- */
 const LoadingWave = () => {
-    return (
-        <div className={styles.loadingWave}>
-            {/* Each wave element represents a part of the loading animation */}
-            <div className={styles.wave}></div>
-            <div className={styles.wave}></div>
-            <div className={styles.wave}></div>
-            <div className={styles.wave}></div>
-            <div className={styles.wave}></div>
-        </div>
-    )
+    const numberOfWaves = 5
+    const waves = Array.from({ length: numberOfWaves }, (_, index) => (
+        <div key={index} className={styles.wave}></div>
+    ))
+
+    return <div className={styles.loadingWave}>{waves}</div>
 }
 
 export default LoadingWave

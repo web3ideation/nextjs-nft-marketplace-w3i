@@ -6,59 +6,66 @@ export const useTransactionErrorHandler = () => {
 
     const handleTransactionError = useCallback(
         (error) => {
-            // Identification of specific error cases
-            const userDenied = error.message.includes("User denied transaction signature")
-            const userDontOwn = error.message.includes("0xa9fbf51f")
-            const nonExistentToken = error.message.includes("0x7e273289")
-            const nftNotApproved = error.message.includes("NftMarketplace__NotApproved")
-            const nftAlreadyListed = error.message.includes("NftMarketplace__AlreadyListed")
-            const listingFailed = error.message.includes("Failed to list the NFT.")
-            const delistingFailed = error.message.includes("Failed to delist the NFT.")
-            const updateFailed = error.message.includes("Failed to update the NFT.")
-            const withdrawFailed = error.message.includes("Failed to withdraw proceeds.")
+            const errorMessageMapping = {
+                "User denied transaction signature": {
+                    title: "Transaction Rejected",
+                    description: "You rejected the transaction.",
+                },
+                "0xa9fbf51f": {
+                    title: "Transaction Rejected",
+                    description: "You don't own the desired NFT for sell or swap",
+                },
+                "0x7e273289": { title: "Token problem", description: "Token does not exist" },
+                NftMarketplace__NotApproved: {
+                    title: "Transaction Rejected",
+                    description: "The NFT is not approved for transactions.",
+                },
+                NftMarketplace__AlreadyListed: {
+                    title: "Transaction failed",
+                    description: "The NFT is already listed",
+                },
+                "Failed to list the NFT.": {
+                    title: "Listing Failed",
+                    description:
+                        "Failed to list the NFT. Please ensure it meets all listing requirements.",
+                },
+                "Failed to delist the NFT.": {
+                    title: "Delisting Failed",
+                    description: "Failed to delist the NFT. Please try again or contact support.",
+                },
+                "Failed to update the NFT.": {
+                    title: "Update Failed",
+                    description:
+                        "Failed to update the NFT. Please check the details and try again.",
+                },
+                "Failed to withdraw proceeds.": {
+                    title: "Withdrawal Failed",
+                    description:
+                        "Failed to withdraw proceeds. Please ensure you have available funds to withdraw.",
+                },
+                "invalid token ID": {
+                    title: "Listing Failed",
+                    description: "Failed to list the NFT. Please ensure your token ID is correct.",
+                },
+                "Execution reverted for an unknown reason": {
+                    title: "Transaction Failed",
+                    description:
+                        "Transaction failed for unknown reason check all parameters and try again.",
+                },
+            }
 
-            // Entscheidung über die anzuzeigende Benachrichtigung basierend auf dem Fehler
-            showNftNotification(
-                userDenied
-                    ? "Transaction Rejected"
-                    : userDontOwn
-                    ? "Transaction Rejected"
-                    : nonExistentToken
-                    ? "Token problem"
-                    : nftNotApproved
-                    ? "Transaction Rejected"
-                    : nftAlreadyListed
-                    ? "Transaction failed"
-                    : listingFailed
-                    ? "Listing Failed"
-                    : delistingFailed
-                    ? "Delisting Failed"
-                    : updateFailed
-                    ? "Update Failed"
-                    : withdrawFailed
-                    ? "Withdrawal Failed"
-                    : "Error",
-                userDenied
-                    ? "You rejected the transaction."
-                    : userDontOwn
-                    ? "You don't own the desired NFT for sell or swap"
-                    : nonExistentToken
-                    ? "Token does not exist"
-                    : nftNotApproved
-                    ? "The NFT is not approved for transactions."
-                    : nftAlreadyListed
-                    ? "The NFT is already listed"
-                    : listingFailed
-                    ? "Failed to list the NFT. Please ensure it meets all listing requirements."
-                    : delistingFailed
-                    ? "Failed to delist the NFT. Please try again or contact support."
-                    : updateFailed
-                    ? "Failed to update the NFT. Please check the details and try again."
-                    : withdrawFailed
-                    ? "Failed to withdraw proceeds. Please ensure you have available funds to withdraw."
-                    : error.message || "Failed to process the transaction.",
-                "error"
+            const foundError = Object.entries(errorMessageMapping).find(([key]) =>
+                error.message.includes(key)
             )
+
+            const { title, description } = foundError
+                ? errorMessageMapping[foundError[0]]
+                : {
+                      title: "Error",
+                      description: error.message || "Failed to process the transaction.",
+                  }
+
+            showNftNotification(title, description, "error")
         },
         [showNftNotification]
     )

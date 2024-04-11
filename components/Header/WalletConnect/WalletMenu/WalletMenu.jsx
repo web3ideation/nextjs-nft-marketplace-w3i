@@ -6,46 +6,52 @@ import { useModal } from "@context/ModalProvider"
 import styles from "./WalletMenu.module.scss"
 
 const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isOpen, isClient, address }) => {
+    if (!isClient) return null
+
     const defaultBalanceData = { formatted: "0", symbol: "N/A" }
     const actualBalanceData = balanceData || defaultBalanceData
-
     const { openModal } = useModal()
+    const menuClassNames = isOpen ? `${styles.walletMenu} ${styles.visible}` : styles.walletMenu
 
     const handleChatClick = () => {
         openModal("chat", address)
     }
 
-    const menuClassNames = isOpen ? `${styles.walletMenu} ${styles.visible}` : styles.walletMenu
-
-    if (!isClient) return null
-
-    return balanceData ? (
+    return (
         <div className={menuClassNames}>
             <div
                 className={`${styles.walletMenuLinks} ${styles.walletMenuBalance}`}
-                title={`${actualBalanceData.formatted} ${balanceData.symbol}`}
+                title={`${actualBalanceData.formatted} ${actualBalanceData.symbol}`}
             >
                 <p>
-                    {formattedPrice} {balanceData.symbol}
+                    {formattedPrice} {actualBalanceData.symbol}
                 </p>
             </div>
-            <Link className={styles.walletMenuLinks} href="/">
-                <button>Home</button>
+            <Link href="/" passHref className={styles.walletMenuLinks}>
+                Home
             </Link>
-            <Link className={styles.walletMenuLinks} href="/withdraw-proceeds">
-                <button>Credits</button>
+            <Link href="/withdraw-proceeds" passHref className={styles.walletMenuLinks}>
+                Credits
             </Link>
-            <Link className={styles.walletMenuLinks} href="/my-nft">
-                <button>My NFT</button>
+            <Link href="/my-nft" passHref className={styles.walletMenuLinks}>
+                My NFT
             </Link>
-            <Link className={`${styles.walletMenuLinks} ${styles.hidden}`} href="/sell-nft">
-                <button>Sell</button>
+            <Link
+                href="/sell-nft"
+                passHref
+                className={`${styles.walletMenuLinks} ${styles.hidden}`}
+            >
+                Sell
             </Link>
-            <Link className={`${styles.walletMenuLinks} ${styles.hidden}`} href="/swap-nft">
-                <button>Swap</button>
+            <Link
+                href="/swap-nft"
+                passHref
+                className={`${styles.walletMenuLinks} ${styles.hidden}`}
+            >
+                Swap
             </Link>
             <div className={styles.walletMenuLinks} onClick={handleChatClick}>
-                <button>Chat</button>
+                Chat
             </div>
             <div
                 className={`${styles.walletMenuLinks} ${styles.disconnect}`}
@@ -54,7 +60,7 @@ const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isOpen, isClien
                 <button>Disconnect</button>
             </div>
         </div>
-    ) : null
+    )
 }
 
 export default WalletMenu

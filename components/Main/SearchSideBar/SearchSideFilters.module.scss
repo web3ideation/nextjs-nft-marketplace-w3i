@@ -67,6 +67,7 @@
 
     img {
         height: 26px;
+        width: auto;
         transform: rotateZ(270deg);
     }
     @media (min-width: 768px) and (max-width: 1023px) {

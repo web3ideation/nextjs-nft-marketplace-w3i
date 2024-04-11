@@ -16,10 +16,9 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
     const [isButtonPressed, setIsButtonPressed] = useState(false)
 
     useEffect(() => {
-        if (isClient) {
-            setFormattedAddress(truncateStr(address, 4, 4))
-            setFormattedPrice(truncatePrice(balanceData?.formatted || "0", 5))
-        }
+        if (!isClient) return
+        setFormattedAddress(truncateStr(address, 4, 4))
+        setFormattedPrice(truncatePrice(balanceData?.formatted || "0", 5))
     }, [address, balanceData, isClient])
 
     const handleMouseEnter = () => {
@@ -29,25 +28,9 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
 
     const handleMouseLeave = () => setIsOpen(false)
 
-    // Aktualisierte Touch und Mouse Event-Handler, die nun `handleToggleMenu` aufrufen
-    const handleTouchStart = (event) => {
-        event.preventDefault()
-        setIsButtonPressed(true)
-    }
+    const handleTogglePress = (pressed) => () => setIsButtonPressed(pressed)
 
-    const handleTouchEnd = () => {
-        setIsButtonPressed(false)
-        setIsOpen(!isOpen)
-    }
-
-    const handleMouseDown = (event) => {
-        event.preventDefault()
-        setIsButtonPressed(true)
-    }
-
-    const handleMouseUp = () => {
-        setIsButtonPressed(false)
-    }
+    const handleToggleOpen = () => setIsOpen(!isOpen)
 
     if (!isClient) return null
 
@@ -61,10 +44,10 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
         >
             <div
                 className={styles.headerAccountInfoWrapperInner}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
+                onTouchStart={handleTogglePress(true)}
+                onTouchEnd={handleToggleOpen}
+                onMouseDown={handleTogglePress(true)}
+                onMouseUp={handleTogglePress(false)}
                 style={{ transform: isButtonPressed ? "scale(0.95)" : "scale(1)" }}
             >
                 <div className={styles.onlineDot}></div>

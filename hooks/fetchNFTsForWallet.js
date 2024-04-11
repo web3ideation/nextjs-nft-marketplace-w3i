@@ -7,7 +7,7 @@ const useFetchNFTsForWallet = (walletAddress) => {
 
     useEffect(() => {
         const fetchNFTs = async () => {
-            if (!walletAddress) return // Ends function if no walletAddress provided
+            if (!walletAddress) return
 
             setLoading(true)
             const apiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
@@ -48,7 +48,7 @@ const useFetchNFTsForWallet = (walletAddress) => {
         }
 
         fetchNFTs()
-    }, [walletAddress]) // refetch if walletAddress changes
+    }, [walletAddress])
 
     return { nfts, loading, error }
 }

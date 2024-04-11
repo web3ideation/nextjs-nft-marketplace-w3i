@@ -13,9 +13,6 @@ import { useQuery } from "@apollo/client"
 // Importing GraphQL query for active items.
 import { GET_ACTIVE_ITEMS } from "@constants/subgraphQueries"
 
-// Custom hooks
-import useSaveNft from "@database/hooks/useSaveNFT"
-
 // Context Creation
 // Creating a React context for NFT data management.
 const NFTContext = createContext({})
@@ -41,8 +38,6 @@ export const NFTProvider = ({ children }) => {
         error: activeError,
         refetch: refetchActiveItems,
     } = useQuery(GET_ACTIVE_ITEMS)
-
-    const { saveNft } = useSaveNft()
 
     console.log("Nfts Data", nftState.data)
 
@@ -107,17 +102,12 @@ export const NFTProvider = ({ children }) => {
                     collectionName,
                     tokenSymbol,
                     tokenURI,
-                    imageURI: {
-                        src: tokenURIData.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
-                        width: 100,
-                        height: 100,
-                        alt: "",
-                    },
+                    imageURI: tokenURIData.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
                 }
             } else {
                 // Additional code for fetching and handling tokenURI data...
                 return {
-                    imageURI: { src: requestURL, width: 100, height: 100, alt: "" },
+                    imageURI: { src: requestURL },
                     tokenOwner,
                     collectionName,
                     tokenSymbol,
@@ -134,20 +124,7 @@ export const NFTProvider = ({ children }) => {
     // Callback to generate attributes for an NFT.
     const loadAttributes = useCallback(async (nft) => {
         const nftInfo = await getNFTInfo(nft.nftAddress, nft.tokenId)
-        if (nftInfo) {
-            // Hier haben Sie erfolgreich die NFT-Informationen abgerufen und können nun dieses spezifische NFT speichern
-            try {
-                await saveNft({ ...nft, ...nftInfo })
-                console.log("Einzelnes NFT erfolgreich gespeichert.", nft)
-            } catch (error) {
-                console.error("Fehler beim Speichern eines einzelnen NFT:", error)
-                // Je nach Anforderung können Sie hier weitere Fehlerbehandlungen durchführen
-            }
-            return { ...nft, ...nftInfo }
-        } else {
-            // Fehlerbehandlung oder Rückgabe null, wenn keine NFT-Infos abgerufen werden konnten
-            return null
-        }
+        return { ...nft, ...nftInfo }
     }, [])
 
     // Effect to load images and attributes for all NFTs when data changes.

@@ -1,30 +1,16 @@
-// React Imports
 import React, { createContext, useContext, useState } from "react"
 
-// ModalContext Creation
 const ModalContext = createContext()
 
-// Custom Hook for modal state manipulation
 export const useModal = () => useContext(ModalContext)
 
-// ModalProvider Component
 export const ModalProvider = ({ children }) => {
-    // State for modal open status
     const [isModalOpen, setModalOpen] = useState(false)
-
-    // State for modal type ('info', 'sell', 'list', 'update', 'chat')
     const [modalType, setModalType] = useState(null)
-
-    // State for modal lifecycle state ('closed', 'opening', 'closing', 'changingIn', 'changingOut')
     const [modalState, setModalState] = useState("closed")
-
-    // State for content to display in the modal
     const [modalContent, setModalContent] = useState(null)
-
-    // State for tracking current modal ID
     const [currentModalId, setCurrentModalId] = useState(null)
 
-    // Open modal function
     const openModal = (type, id, content = null) => {
         if (isModalOpen && currentModalId !== id) {
             if (modalType !== type) {
@@ -49,7 +35,6 @@ export const ModalProvider = ({ children }) => {
         setModalContent(content)
     }
 
-    // Close modal function
     const closeModal = (id) => {
         if (currentModalId === id) {
             setModalState("closing")
@@ -63,7 +48,6 @@ export const ModalProvider = ({ children }) => {
         }
     }
 
-    // Context value
     const contextValue = {
         isModalOpen,
         modalType,

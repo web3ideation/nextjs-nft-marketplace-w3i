@@ -1,4 +1,3 @@
-// Keyframes for notification animation
 @keyframes slideIn {
     0% {
         opacity: 0;
@@ -30,7 +29,6 @@
     }
 }
 
-// Keyframes for modals animation
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -100,7 +98,6 @@
     }
 }
 
-// Keyframes for wave animation
 @keyframes wave {
     0% {
         transform: scale(0.5);

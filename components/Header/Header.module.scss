@@ -40,7 +40,7 @@
     padding: 10px;
     .headerImage {
         object-fit: contain;
-        height: 30px;
+        height: auto;
         width: 100%;
     }
     @media (min-width: 768px) and (max-width: 1023px) {
@@ -58,8 +58,15 @@
 .headerHeadline {
     font-family: $font-primary;
     font-weight: 700;
-    font-size: $font-size-xxl;
+    font-size: $font-size-large;
     font-style: italic;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: $font-size-large;
+    }
+
+    @media (min-width: 1024px) {
+        font-size: $font-size-xxl;
+    }
 }
 
 // Header elements wrapper
@@ -82,27 +89,25 @@
     display: flex;
     text-decoration: none;
 
-    button {
-        @include flex-center;
-        border: none;
-        font-family: $font-primary;
-        font-size: $font-size-large;
-        font-weight: 500;
-        color: $black;
-        background-color: $background-color;
-        cursor: pointer;
+    @include flex-center;
+    border: none;
+    font-family: $font-primary;
+    font-size: $font-size-large;
+    font-weight: 500;
+    color: $black;
+    background-color: $background-color;
+    cursor: pointer;
 
-        @media (min-width: 768px) and (max-width: 1023px) {
-            font-size: $font-size-medium;
-            padding: 10px;
-        }
+    @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: $font-size-medium;
+        padding: 10px;
+    }
 
-        @media (min-width: 1024px) {
-            font-size: $font-size-small;
-            padding: 18px;
-            &:hover {
-                color: $hover-blue;
-            }
+    @media (min-width: 1024px) {
+        font-size: $font-size-small;
+        padding: 18px;
+        &:hover {
+            color: $hover-blue;
         }
     }
 }

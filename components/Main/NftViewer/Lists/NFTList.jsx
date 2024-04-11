@@ -12,12 +12,10 @@ import BtnWithAction from "@components/UI/BtnWithAction"
 // Styles import
 import styles from "./NFTList.module.scss"
 
-function NFTList({ nftsData: externalNftsData, sortType, title }) {
-    // State hooks for managing NFT visibility
+const NFTList = ({ nftsData: externalNftsData, sortType, title }) => {
     const [visibleNFTs, setVisibleNFTs] = useState(null)
     const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(null)
 
-    // Custom hook to retrieve NFT data and loading state
     const {
         data: internalNftsData,
         isLoading: nftsLoading,
@@ -25,33 +23,22 @@ function NFTList({ nftsData: externalNftsData, sortType, title }) {
         reloadNFTs,
     } = useNFT()
     const nftsData = externalNftsData || internalNftsData
-    console.log("External", externalNftsData)
-    console.log("internal", internalNftsData)
-    console.log("NFTS data list", nftsData)
-    // Account information from wagmi hook
-    const { address, isConnected } = useAccount()
+
+    const { address } = useAccount()
 
     useEffect(() => {
-        // Function to determine initial count of visible items based on screen width
         function getInitialVisibleCount() {
             const width = window.innerWidth
-            if (width < 768) {
-                return 4
-            } else if (width >= 768 && width < 1023) {
-                return 6
-            } else if (width >= 1024 && width < 1440) {
-                return 9
-            } else {
-                return 12
-            }
+            if (width < 768) return 4
+            if (width >= 768 && width < 1023) return 6
+            if (width >= 1024 && width < 1440) return 9
+            return 12
         }
 
-        // Set initial visible NFTs based on screen size
         const initialCount = getInitialVisibleCount()
         setVisibleNFTs(initialCount)
         setInitialVisibleNFTs(initialCount)
 
-        // Handle window resize to adjust visible NFTs
         const handleResize = () => {
             const newCount = getInitialVisibleCount()
             setVisibleNFTs(newCount)
@@ -60,11 +47,9 @@ function NFTList({ nftsData: externalNftsData, sortType, title }) {
 
         window.addEventListener("resize", handleResize)
 
-        // Cleanup function to remove event listener on component unmount
         return () => window.removeEventListener("resize", handleResize)
     }, [])
 
-    // Define sort and filter functions based on sortType
     const sortAndFilterNFTs = (nftsData, sortType) => {
         const isOwnedByUser = (tokenOwner) =>
             address && tokenOwner?.toLowerCase() === address.toLowerCase()
@@ -75,7 +60,7 @@ function NFTList({ nftsData: externalNftsData, sortType, title }) {
                     .filter((nft) => nft.isListed)
                     .sort((a, b) => Number(b.listingId) - Number(a.listingId))
             case "mostSold":
-                const addressCount = {} // Tracks the number of NFTs per address
+                const addressCount = {}
                 const filteredNFTs = []
 
                 nftsData
@@ -97,16 +82,14 @@ function NFTList({ nftsData: externalNftsData, sortType, title }) {
             case "myNFTNotListed":
                 return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && !nft.isListed)
             default:
-                return nftsData // Default to unsorted if no sortType is matched
+                return nftsData
         }
     }
 
-    // Memoized sorting and filtering of NFTs
     const sortedAndFilteredNFTs = useMemo(() => {
         return sortAndFilterNFTs(nftsData, sortType).slice(0, visibleNFTs)
     }, [nftsData, visibleNFTs, sortType])
 
-    // Render the list of NFTs or a loading message
     const renderNFTList = () => {
         if (nftsError) {
             return <p>No NFTs available</p>

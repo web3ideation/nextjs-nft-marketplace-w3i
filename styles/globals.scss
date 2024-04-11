@@ -3,25 +3,24 @@
 @use "@styles/helpers/keyframes" as *;
 
 html {
-    /* Stile für die Scrollbar */
     ::-webkit-scrollbar {
-        width: 10px; /* Breite der Scrollbar */
+        width: 10px;
         height: 10px;
     }
 
     ::-webkit-scrollbar-track {
-        background: #f1f1f1; /* Hintergrundfarbe des Tracks */
-        border-radius: 4px; /* Rundung der Ecken */
+        background: #f1f1f1;
+        border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: $hover-grey; /* Farbe des Scrollbar-Thumb */
+        background: $hover-grey;
         border: solid 2px $secondary-color;
-        border-radius: 4px; /* Rundung der Ecken */
+        border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: $secondary-color; /* Farbe des Thumb beim Hover */
+        background: $secondary-color;
     }
     max-width: 100%;
     display: flex;

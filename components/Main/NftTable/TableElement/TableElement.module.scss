@@ -32,12 +32,48 @@
     @include flex-center;
     text-align: center;
     height: 100%;
+    position: relative;
+}
+
+.tableImageWrapper {
+    overflow: hidden;
+    @include flex-center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.tableImageLoadingWaveWrapper {
+    @include flex-center;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    transform: scale(0.4);
+}
+
+.tableImageLoadingWaveWrapper,
+.tableImage {
+    transition: opacity 0.5s ease-out;
 }
 
 .tableImage {
-    display: block;
+    opacity: 1;
+    position: relative;
     object-fit: cover;
     width: 50px;
+    height: 50px;
+}
+
+.imageLoading {
+    opacity: 0;
 }
 
 .nonNecessaryTableItems {

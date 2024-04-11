@@ -8,23 +8,22 @@ import ConnectWalletBtn from "../WalletConnect/ConnectWalletButton/ConnectWallet
 
 const WalletConnectionManager = () => {
     const [isClient, setIsClient] = useState(false)
-    const [initialized, setInitialized] = useState(false)
     const { isConnected } = useAccount()
     const { open } = useWeb3Modal()
     const { disconnect } = useDisconnect()
 
     useEffect(() => {
         setIsClient(typeof window !== "undefined")
-        setInitialized(true)
     }, [])
 
-    if (!initialized) return null
-
-    return isConnected ? (
-        <WalletInfo onDisconnect={disconnect} isClient={isClient} />
-    ) : (
-        <ConnectWalletBtn onConnect={() => open()} isClient={isClient} />
-    )
+    // Initialisierungscheck nicht mehr nötig, da isClient denselben Zweck erfüllt
+    return isClient ? (
+        isConnected ? (
+            <WalletInfo onDisconnect={disconnect} isClient={isClient} />
+        ) : (
+            <ConnectWalletBtn onConnect={() => open()} isClient={isClient} />
+        )
+    ) : null
 }
 
 export default WalletConnectionManager

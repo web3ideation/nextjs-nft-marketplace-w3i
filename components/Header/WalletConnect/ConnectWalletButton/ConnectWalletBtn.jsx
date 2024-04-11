@@ -5,11 +5,11 @@ import BtnWithAction from "@components/UI/BtnWithAction"
 import styles from "./ConnectWalletBtn.module.scss"
 
 const ConnectWalletBtn = ({ onConnect, isClient }) => {
-    // Nur rendern, wenn isClient true ist
+    if (!isClient) return null
 
     return (
         <div className={styles.connectButtonWrapper}>
-            <BtnWithAction onClickAction={onConnect} buttonText={"Connect"} />
+            <BtnWithAction onClickAction={onConnect} buttonText="Connect" />
         </div>
     )
 }

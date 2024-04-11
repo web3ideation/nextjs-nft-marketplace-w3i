@@ -1,25 +1,13 @@
-// React Imports
 import React from "react"
-
-// Custom Hooks and Components
 import { useNftNotification } from "@context/NotificationProvider"
 import SingleNotification from "./NotificationElement/NFTSingleNotification"
-
-// Styles
 import styles from "./Notification.module.scss"
 
-/**
- * NftNotification Component
- * Purpose: To render NFT-related notifications.
- * Uses the NFTNotificationContext for managing notification state and actions.
- */
 const NftNotification = () => {
-    // Destructuring methods and state from the NFT notification context
     const { nftNotifications, closeNftNotification, clearNftNotification } = useNftNotification()
 
     const handleNotificationClose = (notificationId) => {
-        // Hier können Sie die zusätzliche Logik hinzufügen
-        console.log("Notification closed with ID:", notificationId)
+        // Place for additional logic if necessary
     }
 
     return (

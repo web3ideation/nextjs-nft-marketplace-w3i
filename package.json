@@ -42,6 +42,7 @@
     "@babel/core": "7",
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.46",
+    "concurrently": "^8.2.2",
     "post": "^0.0.1",
     "webpack": "5"
   }

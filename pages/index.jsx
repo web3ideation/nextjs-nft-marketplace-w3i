@@ -1,16 +1,12 @@
-// React Imports
 import React from "react"
 
-// Custom Components Imports
 import CategoriesList from "@components/Main/CategoriesList/CategoriesList"
 import NFTList from "@components/Main/NftViewer/Lists/NFTList"
 import NFTCollection from "@components/Main/NftViewer/Collection/NFTCollection"
 
-// Style Imports
 import styles from "@styles/Home.module.scss"
 
-// Home Component: Displays the NFT listing, collections, top collections, and most sold NFTs.
-export default function Home() {
+const Home = () => {
     return (
         <>
             <div className={styles.categoriesListContainer}>
@@ -30,3 +26,4 @@ export default function Home() {
         </>
     )
 }
+export default Home

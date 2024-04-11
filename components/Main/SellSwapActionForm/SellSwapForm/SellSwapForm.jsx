@@ -1,33 +1,20 @@
-// React Imports
 import React, { useState, useRef } from "react"
-
-// Custom Hooks
 import useFormValidation from "@hooks/formValidation/useFormValidation"
-
-// Component Imports
 import Tooltip from "@components/UX/Tooltip/Tooltip"
 import SellSwapInformation from "../SellSwapInformation/SellSwapInformation"
 import BtnWithAction from "@components/UI/BtnWithAction"
-
-// Style Imports
 import styles from "./SellSwapForm.module.scss"
 
-// SellSwapForm Component
-// This component is responsible for rendering a form tailored for selling or swapping NFTs.
-// It includes fields for NFT address, token ID, price, and additional user-defined fields.
-function SellSwapForm({
+const SellSwapForm = ({
     title,
     onSubmit,
     defaultNftAddress = "",
     defaultTokenId = "",
     defaultPrice = "",
     extraFields = [],
-}) {
-    // ------------------ Refs ------------------
-    // Reference to the form element for direct DOM manipulation if needed
+}) => {
     const formRef = useRef(null)
 
-    // Initialisiere den Hook mit den Standardwerten und dynamisch hinzugefügten Extrafeldern
     const { formData, errors, handleChange, validateForm } = useFormValidation({
         nftAddress: defaultNftAddress,
         tokenId: defaultTokenId,
@@ -35,7 +22,6 @@ function SellSwapForm({
         ...extraFields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {}),
     })
 
-    // Checkbox-Zustände werden separat verwaltet, da sie nicht direkt in die form-spezifische Validierung einfließen
     const [checkboxData, setCheckboxData] = useState({
         DAO: false,
         Music: false,
@@ -45,24 +31,8 @@ function SellSwapForm({
         Wearables: false,
         "Digital Twin": false,
         Utility: false,
-        //"VR Estate": false,
-        //Art: false,
-        //Collectibles: false,
-        //Entertainment: false,
-        //Education: false,
-        //"Health & Wellness": false,
-        //Finance: false,
-        //Technology: false,
-        //Fashion: false,
-        //Literature: false,
-        //Travel: false,
-        //"F&B": false,
-        //"Social Media": false,
-        //Environment: false,
-        //Sports: false,
     })
 
-    // Neue Zustandsvariable für Checkbox-Fehler
     const [checkboxError, setCheckboxError] = useState("")
 
     const handleChangeCheckbox = (e) => {
@@ -70,24 +40,18 @@ function SellSwapForm({
         const selectedCount = Object.values(checkboxData).filter((val) => val).length
 
         if (!checked || selectedCount < 2) {
-            setCheckboxData({
-                ...checkboxData,
-                [name]: checked,
-            })
-
+            setCheckboxData({ ...checkboxData, [name]: checked })
             setCheckboxError("")
         } else {
             setCheckboxError("You can choose up to 2 categories.")
         }
     }
 
-    // Hinzufügen der Tooltip-Anzeige für Checkbox-Fehler
     const checkboxErrorDisplay = checkboxError ? <Tooltip message={checkboxError} /> : null
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        // Extrahiere die Kategorien, die als "true" markiert sind, aus checkboxData
         const selectedCategories = Object.entries(checkboxData)
             .filter(([category, isChecked]) => isChecked)
             .map(([category]) => category)
@@ -96,11 +60,7 @@ function SellSwapForm({
         const formData = new FormData(form)
         const formProps = Object.fromEntries(formData.entries())
 
-        // Hinzufügen der Checkbox-Daten (jetzt als 'categories')
-        const submissionData = {
-            ...formProps,
-            categories: selectedCategories, // Verwende den zusammengesetzten String der ausgewählten Kategorien
-        }
+        const submissionData = { ...formProps, categories: selectedCategories }
 
         if (validateForm(submissionData)) {
             onSubmit(submissionData)
@@ -153,7 +113,6 @@ function SellSwapForm({
                                         value={formData[field.key]}
                                         onChange={handleChange}
                                     />
-                                    {console.log("ERROR", errors[field.key])}
                                     {errors[field.key] && <Tooltip message={errors[field.key]} />}
                                 </div>
                             </div>

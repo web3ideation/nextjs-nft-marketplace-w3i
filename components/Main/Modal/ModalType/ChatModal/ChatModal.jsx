@@ -1,24 +1,13 @@
-// React Imports
 import React, { useState, useRef, useEffect, forwardRef } from "react"
-
-// User-Created Components and Hooks
 import Modal from "../../ModalBasis/Modal"
-
-// Style Imports
 import styles from "./ChatModal.module.scss"
 import ChatList from "./ChatList/ChatList"
 
-/**
- * The ChatModal component serves as a specialized chat interface within a modal.
- * It leverages forwardRef for parent component referencing and manages chat states,
- * including current messages and active chats.
- */
 const ChatModal = forwardRef((props, ref) => {
     const [message, setMessage] = useState("")
     const [messages, setMessages] = useState({})
     const [activeChat, setActiveChat] = useState(null)
 
-    // Pre-defined chat partners, simulating fetched data or static assignment.
     const chatPartners = [
         { id: 1, partnerAddress: "0x123...6781", lastMessage: "Wie geht's dir heute?" },
         { id: 2, partnerAddress: "0x123...6782", lastMessage: "Hast du den Bericht fertig?" },
@@ -36,21 +25,15 @@ const ChatModal = forwardRef((props, ref) => {
 
     const messagesEndRef = useRef(null)
 
-    const scrollToBottom = () => {
+    useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "instant" })
-    }
+    }, [messages, activeChat])
 
-    const handleMessageChange = (e) => {
-        setMessage(e.target.value)
-    }
+    const handleMessageChange = (e) => setMessage(e.target.value)
 
-    const handleChatSelect = (chatPartner) => {
-        setActiveChat(chatPartner)
-    }
+    const handleChatSelect = (chatPartner) => setActiveChat(chatPartner)
 
-    const handleClearMessages = () => {
-        setMessages([])
-    }
+    const handleClearMessages = () => setMessages([])
 
     const handleSendMessage = () => {
         if (message.trim() && activeChat) {
@@ -59,55 +42,35 @@ const ChatModal = forwardRef((props, ref) => {
                 [activeChat.id]: [...(messages[activeChat.id] || []), message],
             }
 
-            const updatedChatPartners = chatPartners.map((partner) =>
-                partner.id === activeChat.id ? { ...partner, lastMessage: message } : partner
-            )
-
             setMessages(updatedMessages)
             setMessage("")
         }
     }
 
     const buttons = [
-        {
-            text: "Send",
-            action: handleSendMessage,
-        },
-        {
-            text: "Clear",
-            action: handleClearMessages,
-        },
+        { text: "Send", action: handleSendMessage },
+        { text: "Clear", action: handleClearMessages },
     ]
 
-    useEffect(() => {
-        scrollToBottom()
-    }, [messages, activeChat])
-
     return (
-        <Modal ref={ref} modalTitle={"Chat"} buttons={buttons}>
-            <div className={styles.chatModalContainerWrapper}>
-                <div className={styles.chatModalContainer}>
-                    <ChatList
-                        chatPartners={chatPartners}
-                        onSelectChat={handleChatSelect}
-                    ></ChatList>
+        <Modal ref={ref} modalTitle="Chat" buttons={buttons}>
+            <div className={styles.chatModalContainerWrapper}></div>
+            <div className={styles.chatModalContainer}>
+                <ChatList chatPartners={chatPartners} onSelectChat={handleChatSelect} />
+                {activeChat && (
                     <div className={styles.chatContainer}>
                         <div className={styles.messagesArea}>
-                            {activeChat && (
-                                <>
-                                    <div className={styles.chatMessageInWrapper}>
-                                        <div className={styles.chatMessageIn}>
-                                            {activeChat.lastMessage}
-                                        </div>
-                                    </div>
-                                    {messages[activeChat.id]?.map((msg, index) => (
-                                        <div key={index} className={styles.chatMessageOutWrapper}>
-                                            <div className={styles.chatMessageOut}>{msg}</div>
-                                        </div>
-                                    ))}
-                                    <div ref={messagesEndRef} />
-                                </>
-                            )}
+                            <div className={styles.chatMessageInWrapper}>
+                                <div className={styles.chatMessageIn}>
+                                    {activeChat.lastMessage}
+                                </div>
+                            </div>
+                            {messages[activeChat.id]?.map((msg, index) => (
+                                <div key={index} className={styles.chatMessageOutWrapper}>
+                                    <div className={styles.chatMessageOut}>{msg}</div>
+                                </div>
+                            ))}
+                            <div ref={messagesEndRef} />
                         </div>
                         <div className={styles.inputArea}>
                             <input
@@ -120,14 +83,12 @@ const ChatModal = forwardRef((props, ref) => {
                             />
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </Modal>
     )
 })
 
-// Setting Display Name for Debugging
-// This helps in identifying the component in React Developer Tools.
 ChatModal.displayName = "ChatModal"
 
 export default ChatModal

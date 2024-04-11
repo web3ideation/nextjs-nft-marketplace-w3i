@@ -15,12 +15,12 @@
     font-size: $font-size-small;
     font-weight: 500;
     color: $black;
-
     cursor: pointer;
+
     &:hover {
         @include boxShadow-hover;
         transition: 0.1s ease-in;
-        transform: scale(1.02);
+        transform: scale(1.03);
     }
     @media (min-width: 768px) and (max-width: 1023px) {
         min-width: 200px;
@@ -45,17 +45,20 @@
     overflow: hidden;
 }
 
-.cardImageLoadingWaveWrapper {
+.cardImageLoadingWaveWrapper,
+.cardBackgroundImage {
     @include flex-center;
-    flex-direction: column;
+    overflow: hidden;
     position: absolute;
-    opacity: 1;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 0;
+}
+
+.cardImageLoadingWaveWrapper {
     z-index: 2;
-    transition: opacity 0.5s ease-out;
 }
 
 .cardImageLoadingWaveWrapper,
@@ -63,17 +66,17 @@
     transition: opacity 0.5s ease-out;
 }
 
-.cardBackgroundImage {
-    overflow: hidden;
-    @include flex-center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 0;
+// NFT image styles
+.cardImage {
+    opacity: 1;
+    z-index: 1;
+    object-fit: cover;
     width: 100%;
-    height: 100%;
+    height: auto;
+}
+
+.imageLoading {
+    opacity: 0;
 }
 
 .cardContent {
@@ -115,16 +118,6 @@
     text-align: right;
     width: 100%;
     color: $color-firebrick;
-}
-
-// NFT image styles
-.cardImage {
-    opacity: 0;
-    object-fit: cover;
-    z-index: 1;
-    position: relative;
-    width: 100%;
-    height: 100%;
 }
 
 // NFT text area styles

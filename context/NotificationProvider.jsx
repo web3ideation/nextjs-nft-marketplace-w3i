@@ -10,7 +10,7 @@ const defaultState = {
 const NftNotificationContext = createContext(defaultState)
 
 // Reducer function to manage state updates in a more predictable way
-function notificationReducer(state, action) {
+const notificationReducer = (state, action) => {
     switch (action.type) {
         case "ADD_NOTIFICATION":
             const newNotifications = [action.payload, ...state.nftNotifications]

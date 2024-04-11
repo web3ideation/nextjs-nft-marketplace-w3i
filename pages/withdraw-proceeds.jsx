@@ -1,12 +1,9 @@
-// React Imports
 import React, { useEffect, useState } from "react"
 
-// Ethereum and Smart Contract Interaction
 import { ethers } from "ethers"
 import { useAccount, usePublicClient } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
 
-// User-Created Hooks and Components
 import { useGetProceeds } from "@hooks/useGetProceeds"
 import { useWithdrawProceeds } from "@hooks/useWithdrawProceeds"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
@@ -15,11 +12,9 @@ import networkMapping from "@constants/networkMapping.json"
 import ConnectWalletBtn from "@components/Header/WalletConnect/ConnectWalletButton/ConnectWalletBtn"
 import BtnWithAction from "@components/UI/BtnWithAction"
 
-// Styles
 import styles from "@styles/Home.module.scss"
 
 const SellSwapNFT = () => {
-    // -------------------- Web3 Elements ---------------------
     const [isClient, setIsClient] = useState(false)
     const [initialized, setInitialized] = useState(false)
     const provider = usePublicClient()
@@ -29,17 +24,13 @@ const SellSwapNFT = () => {
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
     const { address: userAdress, isConnected } = useAccount()
 
-    // ------------------- State Management -------------------
     const [proceeds, setProceeds] = useState("0.0")
     const [proceedsInEur, setProceedsInEur] = useState("0.0")
-
-    // ------------------ Contract Functions ------------------
 
     const handleWithdrawCompletion = () => {
         refetchProceeds()
     }
 
-    // Function hook to get proceeds
     const {
         returnedProceeds,
         isLoadingProceeds,
@@ -48,17 +39,14 @@ const SellSwapNFT = () => {
         refetchProceeds,
     } = useGetProceeds(marketplaceAddress, userAdress)
 
-    //Function hook to withdraw proceeds
     const { handleWithdrawProceeds, isWithdrawTxSuccess } = useWithdrawProceeds(
         marketplaceAddress,
         isConnected,
         handleWithdrawCompletion
     )
 
-    // Setup the UI, checking for any proceeds the user can withdraw
     useEffect(() => {
         if (returnedProceeds) {
-            // Convert the proceeds from Wei to Ether
             const proceedsInEther = ethers.utils.formatUnits(returnedProceeds.toString(), "ether")
             setProceeds(proceedsInEther)
         }

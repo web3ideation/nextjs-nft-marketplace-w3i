@@ -15,6 +15,7 @@ $shadow: 0 5px 5px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
 
     thead {
         padding: 8px 15px;
+        padding-right: 25px;
         border-radius: $border-radius $border-radius 0 0;
         background-color: $background-color;
         box-shadow: $shadow;

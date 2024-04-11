@@ -1,12 +1,11 @@
 // React imports (React core and hooks
-import React, { forwardRef, useState, useEffect } from "react"
+import React, { forwardRef } from "react"
 import { useRouter } from "next/router"
-
-import Image from "next/image"
+import { useAccount } from "wagmi"
 
 // Custom hooks and components
 import NFTOverview from "../../ModalElements/NFTOverview/NFTOverview"
-import { useNFT } from "@context/NFTDataProvider"
+import useFetchNFTsForWallet from "@hooks/fetchNFTsForWallet"
 import { useModal } from "@context/ModalProvider"
 import Modal from "../../ModalBasis/Modal"
 import { formatPriceToEther } from "@utils/formatting"
@@ -15,13 +14,19 @@ import { formatPriceToEther } from "@utils/formatting"
 import styles from "./TransactionModal.module.scss"
 
 const TransactionModal = forwardRef((props, ref) => {
-    const { data: nftData } = useNFT()
+    const { address } = useAccount()
+    console.log("Wallet address", address)
+
+    const { nfts } = useFetchNFTsForWallet(address)
+    console.log("Fetched nfts from wallet", nfts)
+
     const router = useRouter()
 
     const { modalContent, modalType } = useModal()
     console.log("Modal content transaction", modalContent)
+
     const nftToShow = () => {
-        return nftData.find(
+        return nfts.find(
             (nft) =>
                 nft.nftAddress === modalContent.nftAddress && nft.tokenId === modalContent.tokenId
         )
@@ -82,11 +87,7 @@ const TransactionModal = forwardRef((props, ref) => {
     }
 
     return (
-        <Modal
-            ref={ref}
-            modalTitle={titleText}
-            buttons={buttons} // Übergabe des Buttons-Arrays
-        >
+        <Modal ref={ref} modalTitle={titleText} buttons={buttons}>
             <NFTOverview modalContent={nftToShow()}></NFTOverview>
         </Modal>
     )

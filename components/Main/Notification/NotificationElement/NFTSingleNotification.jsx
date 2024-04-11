@@ -1,16 +1,10 @@
-// React Imports
 import React from "react"
 import { useAccount } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
-
-// Custom Hooks and Components
 import ConnectWalletBtn from "@components/Header/WalletConnect/ConnectWalletButton/ConnectWalletBtn"
 import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
-
-// Styles
 import styles from "./SingleNotification.module.scss"
 
-// Component for displaying a single notification
 const SingleNotification = ({
     notification,
     closeNftNotification,
@@ -19,7 +13,7 @@ const SingleNotification = ({
 }) => {
     const { isConnected } = useAccount()
     const { open } = useWeb3Modal()
-    // Handles the end of the exit animation
+
     const handleAnimationEnd = (e) => {
         if (e.animationName === styles.slideOut) {
             clearNftNotification(notification.id)
@@ -33,7 +27,6 @@ const SingleNotification = ({
         }
     }
 
-    // Function to determine the appropriate style based on the notification type
     const getNotificationTypeStyle = (type) => {
         switch (type) {
             case "error":
@@ -47,7 +40,6 @@ const SingleNotification = ({
         }
     }
 
-    // Combines classes for the notification element
     const notificationClasses = [
         styles.nftNotification,
         notification.isSticky ? styles.sticky : styles.enter,
