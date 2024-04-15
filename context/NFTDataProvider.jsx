@@ -39,8 +39,6 @@ export const NFTProvider = ({ children }) => {
         refetch: refetchActiveItems,
     } = useQuery(GET_ACTIVE_ITEMS)
 
-    console.log("Nfts Data", nftState.data)
-
     // Helper function for updating NFT state.
     const updateNftState = useCallback((newState) => {
         setNftState((prevState) => ({ ...prevState, ...newState }))
