@@ -1,8 +1,8 @@
 import { useCallback } from "react"
-import { useNftNotification } from "@context/NotificationProvider"
+import { useNotification } from "@context/NotificationProvider"
 
 export const useTransactionErrorHandler = () => {
-    const { showNftNotification } = useNftNotification()
+    const { showNotification } = useNotification()
 
     const handleTransactionError = useCallback(
         (error) => {
@@ -65,9 +65,9 @@ export const useTransactionErrorHandler = () => {
                       description: error.message || "Failed to process the transaction.",
                   }
 
-            showNftNotification(title, description, "error")
+            showNotification(title, description, "error")
         },
-        [showNftNotification]
+        [showNotification]
     )
 
     return { handleTransactionError }

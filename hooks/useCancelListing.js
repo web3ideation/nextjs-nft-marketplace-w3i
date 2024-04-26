@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 
 import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
-import { useNftNotification } from "@context/NotificationProvider"
+import { useNotification } from "@context/NotificationProvider"
 
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
@@ -16,7 +16,7 @@ export const useCancelListing = (
     const [cancelTxHash, setCancelTxHash] = useState(null)
     const [delisting, setDelisting] = useState(false)
 
-    const { showNftNotification, closeNftNotification } = useNftNotification()
+    const { showNotification, closeNotification } = useNotification()
 
     const confirmCancelListingNotificationId = useRef(null)
     const whileCancelListingNotificationId = useRef(null)
@@ -46,28 +46,28 @@ export const useCancelListing = (
     const { handleTransactionError } = useTransactionErrorHandler()
 
     const handleTransactionLoading = useCallback(() => {
-        whileCancelListingNotificationId.current = showNftNotification(
+        whileCancelListingNotificationId.current = showNotification(
             "Delisting",
             "Transaction sent. Awaiting confirmation...",
             "info",
             true
         )
-    }, [showNftNotification])
+    }, [showNotification])
 
     const handleTransactionSuccess = useCallback(() => {
         setDelisting(false)
-        closeNftNotification(whileCancelListingNotificationId.current)
-        showNftNotification("Success", "Delisting successful", "success")
+        closeNotification(whileCancelListingNotificationId.current)
+        showNotification("Success", "Delisting successful", "success")
         onSuccessCallback?.()
         setPolling(false)
-    }, [closeNftNotification, showNftNotification, onSuccessCallback])
+    }, [closeNotification, showNotification, onSuccessCallback])
 
     const handleTransactionFailure = useCallback(() => {
         setDelisting(false)
-        closeNftNotification(whileCancelListingNotificationId.current)
-        showNftNotification("Error", "Failed to delist the NFT.", "error")
+        closeNotification(whileCancelListingNotificationId.current)
+        showNotification("Error", "Failed to delist the NFT.", "error")
         setPolling(false)
-    }, [closeNftNotification, showNftNotification])
+    }, [closeNotification, showNotification])
 
     const { data: cancelListingData, writeAsync: cancelListing } = useContractWrite({
         address: marketplaceAddress,
@@ -76,13 +76,13 @@ export const useCancelListing = (
         args: [nftAddress, tokenId],
         onSuccess: (data) => {
             setCancelTxHash(data.hash)
-            closeNftNotification(confirmCancelListingNotificationId.current)
+            closeNotification(confirmCancelListingNotificationId.current)
         },
         onError: (error) => {
             console.error("Cancel listing error", error)
             setDelisting(false)
             handleTransactionError(error)
-            closeNftNotification(confirmCancelListingNotificationId.current)
+            closeNotification(confirmCancelListingNotificationId.current)
         },
     })
 
@@ -97,11 +97,11 @@ export const useCancelListing = (
 
     const handleCancelListingClick = useCallback(async () => {
         if (!isConnected) {
-            showNftNotification("Connect", "Connect your wallet to cancel listing!", "info")
+            showNotification("Connect", "Connect your wallet to cancel listing!", "info")
             return
         }
         if (delisting) {
-            showNftNotification(
+            showNotification(
                 "Delisting",
                 "A delist is already in progress! Check your wallet!",
                 "error"
@@ -109,7 +109,7 @@ export const useCancelListing = (
             return
         }
         setDelisting(true)
-        confirmCancelListingNotificationId.current = showNftNotification(
+        confirmCancelListingNotificationId.current = showNotification(
             "Delisting",
             "Cancelling listing... Check wallet!",
             "info",
@@ -122,7 +122,7 @@ export const useCancelListing = (
         } catch (error) {
             console.log("An error occurred during the transaction: ", error)
         }
-    }, [isConnected, delisting, cancelListing, showNftNotification])
+    }, [isConnected, delisting, cancelListing, showNotification])
 
     useEffect(() => {
         if (isCancelTxLoading) handleTransactionLoading()
@@ -139,10 +139,10 @@ export const useCancelListing = (
 
     useEffect(() => {
         return () => {
-            closeNftNotification(confirmCancelListingNotificationId.current)
-            closeNftNotification(whileCancelListingNotificationId.current)
+            closeNotification(confirmCancelListingNotificationId.current)
+            closeNotification(whileCancelListingNotificationId.current)
         }
-    }, [closeNftNotification])
+    }, [closeNotification])
 
     return { handleCancelListingClick, delisting }
 }

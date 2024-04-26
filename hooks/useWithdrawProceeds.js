@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
-import { useNftNotification } from "@context/NotificationProvider"
+import { useNotification } from "@context/NotificationProvider"
 
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
@@ -11,7 +11,7 @@ export const useWithdrawProceeds = (marketplaceAddress, isConnected, onSuccessCa
     const [withdrawTxHash, setWithdrawTxHash] = useState(null)
     const [withdrawl, setWithdrawl] = useState(false)
 
-    const { showNftNotification, closeNftNotification } = useNftNotification()
+    const { showNotification, closeNotification } = useNotification()
 
     const confirmWithdrawlProceedsNotificationId = useRef(null)
     const whileWithdrawlProceedsNotificationId = useRef(null)
@@ -41,28 +41,28 @@ export const useWithdrawProceeds = (marketplaceAddress, isConnected, onSuccessCa
     const { handleTransactionError } = useTransactionErrorHandler()
 
     const handleTransactionLoading = useCallback(() => {
-        whileWithdrawlProceedsNotificationId.current = showNftNotification(
+        whileWithdrawlProceedsNotificationId.current = showNotification(
             "Withdrawl",
             "Transaction sent. Awaiting confirmation...",
             "info",
             true
         )
-    }, [showNftNotification])
+    }, [showNotification])
 
     const handleTransactionSuccess = useCallback(() => {
         setWithdrawl(false)
-        closeNftNotification(whileWithdrawlProceedsNotificationId.current)
-        showNftNotification("Withdrawn", "Proceeds successfully withdrawn", "success")
+        closeNotification(whileWithdrawlProceedsNotificationId.current)
+        showNotification("Withdrawn", "Proceeds successfully withdrawn", "success")
         onSuccessCallback?.()
         setPolling(false)
-    }, [closeNftNotification, showNftNotification, onSuccessCallback])
+    }, [closeNotification, showNotification, onSuccessCallback])
 
     const handleTransactionFailure = useCallback(() => {
         setWithdrawl(false)
-        closeNftNotification(whileWithdrawlProceedsNotificationId.current)
-        showNftNotification("Error", "Failed to withdraw proceeds.", "error")
+        closeNotification(whileWithdrawlProceedsNotificationId.current)
+        showNotification("Error", "Failed to withdraw proceeds.", "error")
         setPolling(false)
-    }, [closeNftNotification, showNftNotification])
+    }, [closeNotification, showNotification])
 
     const { data: withdrawData, writeAsync: withdrawProceeds } = useContractWrite({
         address: marketplaceAddress,
@@ -70,13 +70,13 @@ export const useWithdrawProceeds = (marketplaceAddress, isConnected, onSuccessCa
         functionName: "withdrawProceeds",
         onSuccess: (data) => {
             setWithdrawTxHash(data.hash)
-            closeNftNotification(confirmWithdrawlProceedsNotificationId.current)
+            closeNotification(confirmWithdrawlProceedsNotificationId.current)
         },
         onError: (error) => {
             console.error("Error sending withdrawal:", error)
             setWithdrawl(false)
             handleTransactionError(error)
-            closeNftNotification(confirmWithdrawlProceedsNotificationId.current)
+            closeNotification(confirmWithdrawlProceedsNotificationId.current)
         },
     })
 
@@ -91,15 +91,11 @@ export const useWithdrawProceeds = (marketplaceAddress, isConnected, onSuccessCa
 
     const handleWithdrawProceeds = useCallback(async () => {
         if (!isConnected) {
-            showNftNotification(
-                "Connect wallet",
-                "Connect your wallet to withdraw proceeds!",
-                "info"
-            )
+            showNotification("Connect wallet", "Connect your wallet to withdraw proceeds!", "info")
             return
         }
         if (withdrawl) {
-            showNftNotification(
+            showNotification(
                 "Withdrawl",
                 "A withdrawl is already in progress! Check your wallet!",
                 "error"
@@ -107,7 +103,7 @@ export const useWithdrawProceeds = (marketplaceAddress, isConnected, onSuccessCa
             return
         }
         setWithdrawl(true)
-        confirmWithdrawlProceedsNotificationId.current = showNftNotification(
+        confirmWithdrawlProceedsNotificationId.current = showNotification(
             "Check your wallet",
             "Confirm withdrawl...",
             "info",
@@ -119,7 +115,7 @@ export const useWithdrawProceeds = (marketplaceAddress, isConnected, onSuccessCa
         } catch (error) {
             console.error("An error occurred during the transaction: ", error)
         }
-    }, [withdrawProceeds, isConnected, withdrawl, showNftNotification])
+    }, [withdrawProceeds, isConnected, withdrawl, showNotification])
 
     useEffect(() => {
         if (isWithdrawTxLoading) handleTransactionLoading()
@@ -129,10 +125,10 @@ export const useWithdrawProceeds = (marketplaceAddress, isConnected, onSuccessCa
 
     useEffect(() => {
         return () => {
-            closeNftNotification(confirmWithdrawlProceedsNotificationId.current)
-            closeNftNotification(whileWithdrawlProceedsNotificationId.current)
+            closeNotification(confirmWithdrawlProceedsNotificationId.current)
+            closeNotification(whileWithdrawlProceedsNotificationId.current)
         }
-    }, [closeNftNotification])
+    }, [closeNotification])
 
     return { handleWithdrawProceeds, withdrawl, isWithdrawTxSuccess }
 }

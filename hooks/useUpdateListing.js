@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
-import { useNftNotification } from "@context/NotificationProvider"
+import { useNotification } from "@context/NotificationProvider"
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
 export const useUpdateListing = (
@@ -19,7 +19,7 @@ export const useUpdateListing = (
     const [updateListingTxHash, setUpdateListingTxHash] = useState(null)
     const [updating, setUpdating] = useState(false)
 
-    const { showNftNotification, closeNftNotification } = useNftNotification()
+    const { showNotification, closeNotification } = useNotification()
 
     const confirmUpdateListingNotificationId = useRef(null)
     const whileUpdatingListingNotificationId = useRef(null)
@@ -49,28 +49,28 @@ export const useUpdateListing = (
     const { handleTransactionError } = useTransactionErrorHandler()
 
     const handleTransactionLoading = useCallback(() => {
-        whileUpdatingListingNotificationId.current = showNftNotification(
+        whileUpdatingListingNotificationId.current = showNotification(
             "Updating",
             "Transaction sent. Awaiting confirmation...",
             "info",
             true
         )
-    }, [showNftNotification])
+    }, [showNotification])
 
     const handleTransactionSuccess = useCallback(() => {
         setUpdating(false)
-        closeNftNotification(whileUpdatingListingNotificationId.current)
-        showNftNotification("Listing updated", "New price approved", "success")
+        closeNotification(whileUpdatingListingNotificationId.current)
+        showNotification("Listing updated", "New price approved", "success")
         onSuccessCallback?.()
         setPolling(false)
-    }, [closeNftNotification, showNftNotification, onSuccessCallback])
+    }, [closeNotification, showNotification, onSuccessCallback])
 
     const handleTransactionFailure = useCallback(() => {
         setUpdating(false)
-        closeNftNotification(whileUpdatingListingNotificationId.current)
-        showNftNotification("Error", "Failed to update the NFT.", "error")
+        closeNotification(whileUpdatingListingNotificationId.current)
+        showNotification("Error", "Failed to update the NFT.", "error")
         setPolling(false)
-    }, [closeNftNotification, showNftNotification])
+    }, [closeNotification, showNotification])
 
     const { data: updateListingData, writeAsync: updateListing } = useContractWrite({
         address: marketplaceAddress,
@@ -79,13 +79,13 @@ export const useUpdateListing = (
         args: [nftAddress, tokenId, newPrice, newDesiredNftAddress, newDesiredTokenId],
         onSuccess: (data) => {
             setUpdateListingTxHash(data.hash)
-            closeNftNotification(confirmUpdateListingNotificationId.current)
+            closeNotification(confirmUpdateListingNotificationId.current)
         },
         onError: (error) => {
             console.error("Update listing send error: ", error)
             setUpdating(false)
             handleTransactionError(error)
-            closeNftNotification(confirmUpdateListingNotificationId.current)
+            closeNotification(confirmUpdateListingNotificationId.current)
         },
     })
 
@@ -100,7 +100,7 @@ export const useUpdateListing = (
 
     const handleUpdateListing = useCallback(async () => {
         if (updating) {
-            showNftNotification(
+            showNotification(
                 "Updating",
                 "A update is already in progress! Check your wallet!",
                 "error"
@@ -108,7 +108,7 @@ export const useUpdateListing = (
             return
         }
         setUpdating(true)
-        confirmUpdateListingNotificationId.current = showNftNotification(
+        confirmUpdateListingNotificationId.current = showNotification(
             "Check your wallet",
             "Confirm updating...",
             "info",
@@ -120,7 +120,7 @@ export const useUpdateListing = (
         } catch (error) {
             console.error("An error occurred during the transaction: ", error)
         }
-    }, [isConnected, updating, updateListing, showNftNotification])
+    }, [isConnected, updating, updateListing, showNotification])
 
     useEffect(() => {
         if (isUpdateListingTxLoading) {
@@ -134,10 +134,10 @@ export const useUpdateListing = (
 
     useEffect(() => {
         return () => {
-            closeNftNotification(confirmUpdateListingNotificationId.current)
-            closeNftNotification(whileUpdatingListingNotificationId.current)
+            closeNotification(confirmUpdateListingNotificationId.current)
+            closeNotification(whileUpdatingListingNotificationId.current)
         }
-    }, [closeNftNotification])
+    }, [closeNotification])
 
     return { handleUpdateListing, updating }
 }

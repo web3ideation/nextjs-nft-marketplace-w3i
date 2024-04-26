@@ -5,13 +5,13 @@ import Head from "next/head"
 import { WagmiConfig } from "wagmi"
 import { wagmiConfig } from "@config/wagmiConfig"
 
-import { NftNotificationProvider } from "@context/NotificationProvider"
+import { NotificationProvider } from "@context/NotificationProvider"
 import { SearchResultsProvider } from "@context/SearchResultsProvider"
-import { NFTProvider } from "@context/NFTDataProvider"
+import { NftProvider } from "@context/NftDataProvider"
 import { ModalProvider } from "@context/ModalProvider"
 
-import ModalRenderer from "@components/Main/Modal/ModalRenderer"
-import NftNotification from "@components/Main/Notification/NFTNotification"
+import ModalRenderer from "@components/Modal/ModalRenderer"
+import Notification from "@components/Notification/Notification"
 import Header from "@components/Header/Header"
 import Footer from "@components/Footer/Footer"
 
@@ -38,17 +38,17 @@ function MyApp({ Component, pageProps }) {
             <WagmiConfig config={wagmiConfig}>
                 <ApolloProvider client={client}>
                     <ModalProvider>
-                        <NFTProvider>
-                            <NftNotificationProvider>
-                                <NftNotification />
+                        <NftProvider>
+                            <NotificationProvider>
+                                <Notification />
                                 <Header />
                                 <ModalRenderer />
                                 <SearchResultsProvider>
                                     <Component {...pageProps} />
                                 </SearchResultsProvider>
                                 <Footer />
-                            </NftNotificationProvider>
-                        </NFTProvider>
+                            </NotificationProvider>
+                        </NftProvider>
                     </ModalProvider>
                 </ApolloProvider>
             </WagmiConfig>

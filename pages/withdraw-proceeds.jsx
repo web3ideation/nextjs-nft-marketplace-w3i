@@ -14,7 +14,7 @@ import BtnWithAction from "@components/UI/BtnWithAction"
 
 import styles from "@styles/Home.module.scss"
 
-const SellSwapNFT = () => {
+const WithdrawProceeds = () => {
     const [isClient, setIsClient] = useState(false)
     const [initialized, setInitialized] = useState(false)
     const provider = usePublicClient()
@@ -135,4 +135,4 @@ const SellSwapNFT = () => {
     )
 }
 
-export default SellSwapNFT
+export default WithdrawProceeds

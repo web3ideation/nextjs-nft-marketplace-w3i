@@ -4,7 +4,7 @@ import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
 
-import { useNftNotification } from "@context/NotificationProvider"
+import { useNotification } from "@context/NotificationProvider"
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
 export const useListItem = (
@@ -19,7 +19,7 @@ export const useListItem = (
 ) => {
     const [listItemTxHash, setListItemTxHash] = useState(null)
     const [listing, setListing] = useState(false)
-    const { showNftNotification, closeNftNotification } = useNftNotification()
+    const { showNotification, closeNotification } = useNotification()
 
     const confirmListingNotificationId = useRef(null)
     const whileListingNotificationId = useRef(null)
@@ -49,28 +49,28 @@ export const useListItem = (
     const { handleTransactionError } = useTransactionErrorHandler()
 
     const handleTransactionLoading = useCallback(() => {
-        whileListingNotificationId.current = showNftNotification(
+        whileListingNotificationId.current = showNotification(
             "Listing",
             "Transaction sent. Awaiting confirmation...",
             "info",
             true
         )
-    }, [showNftNotification])
+    }, [showNotification])
 
     const handleTransactionSuccess = useCallback(() => {
         setListing(false)
-        closeNftNotification(whileListingNotificationId.current)
-        showNftNotification("Success", "Listing successful", "success")
+        closeNotification(whileListingNotificationId.current)
+        showNotification("Success", "Listing successful", "success")
         onSuccessCallback?.()
         setPolling(false)
-    }, [closeNftNotification, showNftNotification, onSuccessCallback])
+    }, [closeNotification, showNotification, onSuccessCallback])
 
     const handleTransactionFailure = useCallback(() => {
         setListing(false)
-        closeNftNotification(whileListingNotificationId.current)
-        showNftNotification("Error", "Failed to list the NFT.", "error")
+        closeNotification(whileListingNotificationId.current)
+        showNotification("Error", "Failed to list the NFT.", "error")
         setPolling(false)
-    }, [closeNftNotification, showNftNotification])
+    }, [closeNotification, showNotification])
 
     const { data: listItemData, writeAsync: listItem } = useContractWrite({
         address: marketplaceAddress,
@@ -78,14 +78,14 @@ export const useListItem = (
         functionName: "listItem",
         args: [nftAddress, tokenId, price, desiredNftAddress, desiredTokenId],
         onSuccess: (data) => {
-            closeNftNotification(confirmListingNotificationId.current)
+            closeNotification(confirmListingNotificationId.current)
             setListItemTxHash(data.hash)
         },
         onError: (error) => {
             console.error("List item error: ", error)
             setListing(false)
             handleTransactionError(error)
-            closeNftNotification(confirmListingNotificationId.current)
+            closeNotification(confirmListingNotificationId.current)
         },
     })
 
@@ -101,7 +101,7 @@ export const useListItem = (
     const handleListItem = useCallback(async () => {
         try {
             setListing(true)
-            confirmListingNotificationId.current = showNftNotification(
+            confirmListingNotificationId.current = showNotification(
                 "Check your wallet",
                 "Confirm listing...",
                 "info",
@@ -122,10 +122,10 @@ export const useListItem = (
 
     useEffect(() => {
         return () => {
-            closeNftNotification(confirmListingNotificationId.current)
-            closeNftNotification(whileListingNotificationId.current)
+            closeNotification(confirmListingNotificationId.current)
+            closeNotification(whileListingNotificationId.current)
         }
-    }, [closeNftNotification])
+    }, [closeNotification])
 
     return { handleListItem, listing }
 }

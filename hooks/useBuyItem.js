@@ -4,7 +4,7 @@ import { useContractWrite, useWaitForTransaction } from "wagmi"
 
 import { useModal } from "@context/ModalProvider"
 import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
-import { useNftNotification } from "@context/NotificationProvider"
+import { useNotification } from "@context/NotificationProvider"
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
 export const useBuyItem = (
@@ -19,7 +19,7 @@ export const useBuyItem = (
     const [buyTxHash, setBuyTxHash] = useState(null)
     const [buying, setBuying] = useState(false)
 
-    const { showNftNotification, closeNftNotification } = useNftNotification()
+    const { showNotification, closeNotification } = useNotification()
     const { openModal, modalContent, modalType, closeModal, currentModalId } = useModal()
 
     const confirmPurchaseNotificationId = useRef(null)
@@ -50,13 +50,13 @@ export const useBuyItem = (
     const { handleTransactionError } = useTransactionErrorHandler()
 
     const handleTransactionLoading = useCallback(() => {
-        whilePurchaseNotificationId.current = showNftNotification(
+        whilePurchaseNotificationId.current = showNotification(
             "Buying",
             "Transaction sent. Awaiting confirmation...",
             "info",
             true
         )
-    }, [showNftNotification])
+    }, [showNotification])
 
     const handleTransactionSuccess = useCallback(() => {
         const modalId = "nftBoughtModal-" + `${modalContent.nftAddress}${modalContent.tokenId}`
@@ -67,19 +67,19 @@ export const useBuyItem = (
 
         console.log("NFT key", nftKey)
         setBuying(false)
-        closeNftNotification(whilePurchaseNotificationId.current)
-        showNftNotification("Success", "Purchase successful", "success")
+        closeNotification(whilePurchaseNotificationId.current)
+        showNotification("Success", "Purchase successful", "success")
         onSuccessCallback?.()
         setPolling(false)
         openModal("bought", modalId, nftKey)
-    }, [closeNftNotification, showNftNotification, onSuccessCallback])
+    }, [closeNotification, showNotification, onSuccessCallback])
 
     const handleTransactionFailure = useCallback(() => {
         setBuying(false)
-        closeNftNotification(whilePurchaseNotificationId.current)
-        showNftNotification("Error", "Failed to purchase the NFT.", "error")
+        closeNotification(whilePurchaseNotificationId.current)
+        showNotification("Error", "Failed to purchase the NFT.", "error")
         setPolling(false) // Stop polling on failure
-    }, [closeNftNotification, showNftNotification])
+    }, [closeNotification, showNotification])
 
     const { data: buyItemData, writeAsync: buyItem } = useContractWrite({
         address: marketplaceAddress,
@@ -89,13 +89,13 @@ export const useBuyItem = (
         args: [nftAddress, tokenId],
         onSuccess: (data) => {
             setBuyTxHash(data.hash)
-            closeNftNotification(confirmPurchaseNotificationId.current)
+            closeNotification(confirmPurchaseNotificationId.current)
         },
         onError: (error) => {
             console.error("Buy item error", error)
             setBuying(false)
             handleTransactionError(error)
-            closeNftNotification(confirmPurchaseNotificationId.current)
+            closeNotification(confirmPurchaseNotificationId.current)
         },
     })
 
@@ -110,11 +110,11 @@ export const useBuyItem = (
 
     const handleBuyClick = useCallback(async () => {
         if (!isConnected) {
-            showNftNotification("Connect wallet", "Connect your wallet to buy items!", "info")
+            showNotification("Connect wallet", "Connect your wallet to buy items!", "info")
             return
         }
         if (buying) {
-            showNftNotification(
+            showNotification(
                 "Buying",
                 "A purchase is already in progress! Check your wallet!",
                 "error"
@@ -122,7 +122,7 @@ export const useBuyItem = (
             return
         }
         setBuying(true)
-        confirmPurchaseNotificationId.current = showNftNotification(
+        confirmPurchaseNotificationId.current = showNotification(
             "Check your wallet",
             `Confirm purchase for ${formattedPrice} ETH excluding fees...`,
             "info",
@@ -135,7 +135,7 @@ export const useBuyItem = (
             console.error("An error occurred during the transaction: ", error)
             setBuying(false)
         }
-    }, [isConnected, buying, formattedPrice, buyItem, showNftNotification])
+    }, [isConnected, buying, formattedPrice, buyItem, showNotification])
 
     useEffect(() => {
         if (isBuyTxLoading) handleTransactionLoading()
@@ -152,10 +152,10 @@ export const useBuyItem = (
 
     useEffect(() => {
         return () => {
-            closeNftNotification(confirmPurchaseNotificationId.current)
-            closeNftNotification(whilePurchaseNotificationId.current)
+            closeNotification(confirmPurchaseNotificationId.current)
+            closeNotification(whilePurchaseNotificationId.current)
         }
-    }, [closeNftNotification])
+    }, [closeNotification])
 
     return { handleBuyClick, buying }
 }

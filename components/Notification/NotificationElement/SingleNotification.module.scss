@@ -1,0 +1,71 @@
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
+
+.notification {
+    width: 300px;
+    background-color: $white-semi-transparent;
+    border-radius: 5px 0 0 5px;
+
+    &.enter {
+        animation: slideIn 1.5s forwards ease-out, slideOut 1.5s 4s forwards;
+    }
+
+    &.sticky {
+        animation: slideIn 1.5s forwards ease-out;
+    }
+
+    &.exit {
+        animation: slideOut 1.5s forwards;
+    }
+
+    &.info {
+        color: $hover-blue;
+        border: solid 3px $hover-blue;
+        border-right: none;
+    }
+
+    &.success {
+        color: $color-forestgreen;
+        border: solid 3px $color-forestgreen;
+        border-right: none;
+    }
+
+    &.error {
+        color: $color-firebrick;
+        border: solid 3px $color-firebrick;
+        border-right: none;
+    }
+}
+
+.notificationInnerWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.notificationBtnWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    height: auto;
+    width: 50px;
+    margin-right: 20px;
+}
+.notificationCloseButton {
+    cursor: pointer;
+    img {
+        @include boxShadowFields;
+        height: 20px;
+        width: auto;
+        border: solid 2px $color-black;
+        border-radius: 5px;
+        background-color: $color-white;
+    }
+}
+
+.loadingWrapperNotification {
+    padding-bottom: 10px;
+    transform: scale(0.4);
+}

@@ -6,11 +6,10 @@ import BtnWithAction from "@components/UI/BtnWithAction"
 
 import styles from "./Footer.module.scss"
 
-const handleClick = () => {
-    window.location.href = "https://web3ideation.com/contact"
-}
-
 const Footer = () => {
+    const handleClick = () => {
+        window.location.href = "https://web3ideation.com/contact"
+    }
     return (
         <footer className={styles.footer}>
             <div className={styles.footerTop}>

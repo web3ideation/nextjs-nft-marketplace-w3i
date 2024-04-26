@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { erc721ABI, useContractWrite, useWaitForTransaction } from "wagmi"
 
 import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
-import { useNftNotification } from "@context/NotificationProvider"
+import { useNotification } from "@context/NotificationProvider"
 
 export const useRawApprove = (
     nftAddress,
@@ -15,7 +15,7 @@ export const useRawApprove = (
     const [approvingTxHash, setApprovingTxHash] = useState(null)
     const [approving, setApproving] = useState(false)
 
-    const { showNftNotification, closeNftNotification } = useNftNotification()
+    const { showNotification, closeNotification } = useNotification()
 
     const confirmApprovingNotificationId = useRef(null)
     const whileApprovingNotificationId = useRef(null)
@@ -45,28 +45,28 @@ export const useRawApprove = (
     const { handleTransactionError } = useTransactionErrorHandler()
 
     const handleTransactionLoading = useCallback(() => {
-        whileApprovingNotificationId.current = showNftNotification(
+        whileApprovingNotificationId.current = showNotification(
             "Approving",
             "Approval sent. Awaiting confirmation...",
             "info",
             true
         )
-    }, [showNftNotification])
+    }, [showNotification])
 
     const handleTransactionSuccess = useCallback(() => {
         setApproving(false)
-        closeNftNotification(whileApprovingNotificationId.current)
-        showNftNotification("Success", "Approving successful", "success")
+        closeNotification(whileApprovingNotificationId.current)
+        showNotification("Success", "Approving successful", "success")
         onSuccessCallback?.()
         setPolling(false)
-    }, [closeNftNotification, showNftNotification, onSuccessCallback])
+    }, [closeNotification, showNotification, onSuccessCallback])
 
     const handleTransactionFailure = useCallback(() => {
         setApproving(false)
-        closeNftNotification(whileApprovingNotificationId.current)
-        showNftNotification("Error", "Failed to approve the NFT.", "error")
+        closeNotification(whileApprovingNotificationId.current)
+        showNotification("Error", "Failed to approve the NFT.", "error")
         setPolling(false)
-    }, [closeNftNotification, showNftNotification])
+    }, [closeNotification, showNotification])
 
     const { data: approvingItemData, writeAsync: approveItem } = useContractWrite({
         address: nftAddress,
@@ -75,13 +75,13 @@ export const useRawApprove = (
         args: [marketplaceAddress, tokenId],
         onSuccess: (data) => {
             setApprovingTxHash(data.hash)
-            closeNftNotification(confirmApprovingNotificationId.current)
+            closeNotification(confirmApprovingNotificationId.current)
         },
         onError: (error) => {
             console.error("Approve item error", error)
             setApproving(false)
             handleTransactionError(error)
-            closeNftNotification(confirmApprovingNotificationId.current)
+            closeNotification(confirmApprovingNotificationId.current)
         },
     })
 
@@ -96,15 +96,11 @@ export const useRawApprove = (
 
     const handleApproveItem = useCallback(async () => {
         if (!isConnected) {
-            showNftNotification(
-                "Connect wallet",
-                "Connect your wallet to approve and list!",
-                "info"
-            )
+            showNotification("Connect wallet", "Connect your wallet to approve and list!", "info")
             return
         }
         if (approving) {
-            showNftNotification(
+            showNotification(
                 "Approving",
                 "An approval is already in progress! Check your wallet!",
                 "error"
@@ -112,7 +108,7 @@ export const useRawApprove = (
             return
         }
         setApproving(true)
-        confirmApprovingNotificationId.current = showNftNotification(
+        confirmApprovingNotificationId.current = showNotification(
             "Check your wallet",
             "Confirm approving...",
             "info",
@@ -134,10 +130,10 @@ export const useRawApprove = (
 
     useEffect(() => {
         return () => {
-            closeNftNotification(confirmApprovingNotificationId.current)
-            closeNftNotification(whileApprovingNotificationId.current)
+            closeNotification(confirmApprovingNotificationId.current)
+            closeNotification(whileApprovingNotificationId.current)
         }
-    }, [closeNftNotification])
+    }, [closeNotification])
 
     return { handleApproveItem, isApprovingTxSuccess, approving }
 }
