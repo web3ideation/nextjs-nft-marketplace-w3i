@@ -14,6 +14,7 @@ import { ethers } from "ethers"
  */
 export const truncateStr = (fullStr, frontChars, backChars) => {
     // Check whether the total length of the string is shorter than the sum of the characters to be kept
+    if (!fullStr) return
     if (fullStr.length <= frontChars + backChars) return fullStr
 
     const separator = "..."
@@ -34,6 +35,7 @@ export const truncateStr = (fullStr, frontChars, backChars) => {
  * @returns {string} - The price in Ether.
  */
 export const formatPriceToEther = (priceInWei) => {
+    if (!priceInWei) return
     const priceAsString = String(priceInWei)
     return ethers.utils.formatUnits(priceAsString, "ether")
 }

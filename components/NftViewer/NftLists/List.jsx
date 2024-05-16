@@ -1,11 +1,10 @@
 // React Imports
-import React, { useState, useMemo, useEffect } from "react"
+import React, { useState, useMemo, useEffect, useCallback } from "react"
 import { useAccount } from "wagmi"
 
 // Custom Hooks & Components Imports
 import { useNFT } from "@context/NftDataProvider"
 import { formatPriceToEther } from "@utils/formatting"
-import LoadingWave from "@components/LoadingWave/LoadingWave"
 import Card from "@components/NftCard/Card"
 import BtnWithAction from "@components/Btn/BtnWithAction"
 
@@ -30,8 +29,8 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
         function getInitialVisibleCount() {
             const width = window.innerWidth
             if (width < 768) return 4
-            if (width >= 768 && width < 1023) return 6
-            if (width >= 1024 && width < 1440) return 9
+            if (width < 1023) return 6
+            if (width < 1440) return 9
             return 12
         }
 
@@ -46,7 +45,6 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
         }
 
         window.addEventListener("resize", handleResize)
-
         return () => window.removeEventListener("resize", handleResize)
     }, [])
 
@@ -90,21 +88,16 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
         return sortAndFilterNFTs(nftsData, sortType).slice(0, visibleNFTs)
     }, [nftsData, visibleNFTs, sortType])
 
-    const renderNFTList = () => {
+    const renderNFTList = useCallback(() => {
         if (!nftsData) {
-            console.log("Error on load", nftsError)
+            console.log("Error on load", isError)
             return <p>No NFTs available</p>
         }
-        if (nftsData) {
-            return sortedAndFilteredNFTs.map((nft) => (
-                <Card
-                    nftData={nft}
-                    reloadNFTs={reloadNFTs}
-                    key={`${nft.nftAddress}${nft.tokenId}`}
-                />
-            ))
-        }
-    }
+
+        return sortedAndFilteredNFTs.map((nft) => (
+            <Card nftData={nft} reloadNFTs={reloadNFTs} key={`${nft.nftAddress}${nft.tokenId}`} />
+        ))
+    }, [nftsData, sortedAndFilteredNFTs, nftsError, reloadNFTs])
 
     return (
         <div className={styles.listWrapper}>
@@ -115,7 +108,7 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
             </div>
 
             <div className={styles.showMoreBtns}>
-                {visibleNFTs == sortedAndFilteredNFTs.length && (
+                {visibleNFTs === sortedAndFilteredNFTs.length && (
                     <BtnWithAction
                         buttonText={"More"}
                         onClickAction={() =>
