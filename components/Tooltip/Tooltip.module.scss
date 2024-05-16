@@ -4,14 +4,15 @@
 
 // Tooltip styles
 .tooltip {
-    position: relative;
+    position: absolute;
     display: inline-block;
+    overflow: visible;
+    z-index: 100;
 }
 
 // Tooltip text styles
 .tooltip .tooltipText {
     position: absolute;
-    z-index: 5;
     left: 16px;
     padding: 5px;
     transform: translateY(-50%);

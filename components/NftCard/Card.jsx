@@ -66,10 +66,13 @@ const Card = ({ nftData }) => {
     const handleCardClick = (nftData) => {
         const modalId = "nftCardModal-" + `${nftData.nftAddress}${nftData.tokenId}`
         if (!isOwnedByUser) {
+            console.log(nftData)
             openModal("info", modalId, nftData)
         } else if (isOwnedByUser && isListed) {
+            console.log(nftData)
             openModal("sell", modalId, nftData)
         } else if (isOwnedByUser && !isListed) {
+            console.log(nftData)
             openModal("list", modalId, nftData)
         }
     }
@@ -84,7 +87,7 @@ const Card = ({ nftData }) => {
 
     return (
         <div className={styles.nftCardWrapper}>
-            <div className={styles.nftCard} onClick={handleCardClick}>
+            <div className={styles.nftCard} onClick={() => handleCardClick(nftData)}>
                 <div className={styles.cardBackgroundImage}>
                     {!imageLoaded && (
                         <div className={styles.cardImageLoadingWaveWrapper}>

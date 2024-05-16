@@ -2,11 +2,13 @@ import React, { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import CategoryIcon from "../CategoriesIcon/CategoryIcon"
 import styles from "./Categories.module.scss"
+import Tooltip from "../../Tooltip/Tooltip"
 
 const Categories = ({ categories, onCategorySelect }) => {
     const scrollContainerRef = useRef(null)
     const [showScrollBackButton, setShowScrollBackButton] = useState(false)
     const [showScrollForwardButton, setShowScrollForwardButton] = useState(true)
+    const [tooltipContent, setTooltipContent] = useState(null)
 
     const checkScrollButtons = () => {
         const container = scrollContainerRef.current
@@ -25,6 +27,14 @@ const Categories = ({ categories, onCategorySelect }) => {
             scrollContainer.scrollLeft += direction === "forward" ? scrollOffset : -scrollOffset
             checkScrollButtons()
         }
+    }
+
+    const handleMouseEnter = (categoryName) => {
+        setTooltipContent(`${categoryName} coming soon`)
+    }
+
+    const handleMouseLeave = () => {
+        setTooltipContent(null)
     }
 
     useEffect(() => {
@@ -60,11 +70,16 @@ const Categories = ({ categories, onCategorySelect }) => {
                         key={category.id}
                         className={styles.category}
                         onClick={() => onCategorySelect(category.name)}
+                        onMouseEnter={() => handleMouseEnter(category.name)}
+                        onMouseLeave={handleMouseLeave}
                     >
                         <div className={styles.categoryImage}>
                             <CategoryIcon categoryName={category.name} />
                         </div>
                         <div className={styles.categoryName}>{category.name}</div>
+                        {tooltipContent === `${category.name} coming soon` && (
+                            <Tooltip message={tooltipContent} />
+                        )}
                     </div>
                 ))}
             </div>

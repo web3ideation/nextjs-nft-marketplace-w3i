@@ -88,8 +88,7 @@ const Overview = ({ modalContent }) => {
                     alt={modalContent.tokenDescription || "..."}
                     width={600}
                     height={600}
-                    loading="eager"
-                    priority={false}
+                    loading="lazy"
                     className={`${styles.modalImage} ${!imageLoaded ? styles.imageLoading : ""}`}
                     onLoad={handleImageLoad}
                 />
