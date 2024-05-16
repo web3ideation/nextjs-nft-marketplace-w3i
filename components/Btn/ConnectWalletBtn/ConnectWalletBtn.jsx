@@ -1,6 +1,6 @@
 import React from "react"
 
-import BtnWithAction from "@components/UI/BtnWithAction"
+import BtnWithAction from "@components/Btn/BtnWithAction"
 
 import styles from "./ConnectWalletBtn.module.scss"
 

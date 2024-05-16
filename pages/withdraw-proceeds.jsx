@@ -9,8 +9,8 @@ import { useWithdrawProceeds } from "@hooks/useWithdrawProceeds"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 import networkMapping from "@constants/networkMapping.json"
 
-import ConnectWalletBtn from "@components/Header/WalletConnect/ConnectWalletButton/ConnectWalletBtn"
-import BtnWithAction from "@components/UI/BtnWithAction"
+import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
+import BtnWithAction from "@components/Btn/BtnWithAction"
 
 import styles from "@styles/Home.module.scss"
 

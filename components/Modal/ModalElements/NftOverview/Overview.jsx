@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import { useAccount } from "wagmi"
-import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
+import LoadingWave from "@components/LoadingWave/LoadingWave"
 import { useNotification } from "@context/NotificationProvider"
 import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"

@@ -140,12 +140,6 @@
     font-size: $font-size-large;
     font-weight: 400;
     color: $black;
-    cursor: pointer;
-
-    &:hover {
-        background-color: $hover-blue;
-        color: $hover-grey;
-    }
 
     @media (min-width: 768px) and (max-width: 1023px) {
         height: 53px;

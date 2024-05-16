@@ -2,7 +2,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react"
 
 // External Library Imports
-// Ethereum blockchain interaction library.
 import { ethers } from "ethers"
 import { erc721ABI } from "wagmi"
 
@@ -10,122 +9,113 @@ import { erc721ABI } from "wagmi"
 import { useQuery } from "@apollo/client"
 
 // GraphQL Queries
-// Importing GraphQL query for active items.
 import { GET_ACTIVE_ITEMS } from "@constants/subgraphQueries"
 
 // Context Creation
-// Creating a React context for NFT data management.
 const NftContext = createContext({})
 
 // Custom Hooks creation
-// Hook for accessing NFT context.
 export const useNFT = () => useContext(NftContext)
 
 // ------------------ NFT Provider Component ------------------
 export const NftProvider = ({ children }) => {
-    // State hook to manage NFT data and collections.
     const [nftState, setNftState] = useState({
         data: [],
         collections: [],
         isLoading: true,
         isError: false,
     })
+    const [provider, setProvider] = useState(null)
 
-    // Custom hook for Apollo Client GraphQL query.
+    // Prüfen ob window definiert ist, bevor window.ethereum verwendet wird
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const ethProvider = window.ethereum
+                ? new ethers.providers.Web3Provider(window.ethereum)
+                : new ethers.providers.JsonRpcProvider(
+                      "https://ethereum-sepolia-rpc.publicnode.com"
+                  )
+            setProvider(ethProvider)
+        }
+    }, [])
+
     const {
         data: activeItemsData,
         loading: activeLoading,
         error: activeError,
         refetch: refetchActiveItems,
-    } = useQuery(GET_ACTIVE_ITEMS)
-
-    // Helper function for updating NFT state.
+    } = useQuery(GET_ACTIVE_ITEMS, { skip: !provider })
+    console.log("Data", activeItemsData)
     const updateNftState = useCallback((newState) => {
         setNftState((prevState) => ({ ...prevState, ...newState }))
     }, [])
 
-    // Function to reload NFT data.
     const reloadNFTs = useCallback(async () => {
+        if (!provider) return
         try {
             updateNftState({ isLoading: true })
             await refetchActiveItems()
-            updateNftState({ isError: false })
+            updateNftState({ isError: false, isLoading: false })
         } catch (error) {
             console.error("Error reloading NFT data:", error)
-            updateNftState({ isError: true })
-        } finally {
-            updateNftState({ isLoading: false })
+            updateNftState({ isError: true, isLoading: false })
         }
-    }, [refetchActiveItems])
+    }, [refetchActiveItems, updateNftState, provider])
 
-    // Function to fetch NFT information.
-    const getNFTInfo = useCallback(async (nftAddress, tokenId) => {
-        let provider
+    const getNFTInfo = useCallback(
+        async (nftAddress, tokenId) => {
+            if (!provider) return null
+            const contract = new ethers.Contract(nftAddress, erc721ABI, provider)
+            const tokenIdBigNumber = ethers.BigNumber.from(tokenId)
 
-        // Check if window.ethereum is available(wallet)
-        if (window.ethereum) {
-            // console.log("Using wallet provider")
-            provider = new ethers.providers.Web3Provider(window.ethereum)
-        } else {
-            // Using the Infura provider if no wallet is available
-            // console.log("Using Infura provider")
-            const infuraUrl = "https://sepolia.infura.io/v3/2c8fdbbe1b46451fa44c97b461ccb3c5"
-            provider = new ethers.providers.JsonRpcProvider(infuraUrl)
-        }
+            try {
+                const [tokenURI, tokenOwner, collectionName, tokenSymbol] = await Promise.all([
+                    contract.tokenURI(tokenIdBigNumber),
+                    contract.ownerOf(tokenIdBigNumber),
+                    contract.name(),
+                    contract.symbol(),
+                ])
 
-        const contract = new ethers.Contract(nftAddress, erc721ABI, provider)
-        const tokenIdBigNumber = ethers.BigNumber.from(tokenId)
+                const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
+                const response = await fetch(requestURL)
+                const contentType = response.headers.get("content-type")
 
-        try {
-            const [tokenURI, tokenOwner, collectionName, tokenSymbol] = await Promise.all([
-                contract.tokenURI(tokenIdBigNumber),
-                contract.ownerOf(tokenIdBigNumber),
-                contract.name(),
-                contract.symbol(),
-            ])
-
-            // Fetch tokenURI and other details, then return structured NFT info.
-            const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-            const response = await fetch(requestURL)
-            const contentType = response.headers.get("content-type")
-
-            if (contentType && contentType.includes("application/json")) {
-                const tokenURIData = await response.json()
-                return {
-                    attributes: tokenURIData.attributes || "",
-                    tokenDescription: tokenURIData.description || "",
-                    tokenExternalLink: tokenURIData.external_url || "",
-                    tokenName: tokenURIData.name,
-                    tokenOwner,
-                    collectionName,
-                    tokenSymbol,
-                    tokenURI,
-                    imageURI: tokenURIData.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
+                if (contentType && contentType.includes("application/json")) {
+                    const tokenURIData = await response.json()
+                    return {
+                        ...tokenURIData,
+                        tokenOwner,
+                        collectionName,
+                        tokenSymbol,
+                        tokenURI,
+                        imageURI: tokenURIData.image.replace("ipfs://", "https://ipfs.io/ipfs/"),
+                    }
+                } else {
+                    return {
+                        imageURI: { src: requestURL },
+                        tokenOwner,
+                        collectionName,
+                        tokenSymbol,
+                        tokenURI,
+                    }
                 }
-            } else {
-                // Additional code for fetching and handling tokenURI data...
-                return {
-                    imageURI: { src: requestURL },
-                    tokenOwner,
-                    collectionName,
-                    tokenSymbol,
-                    tokenURI,
-                }
+            } catch (error) {
+                console.error("Error fetching NFT info:", error)
+                updateNftState({ isError: true })
+                return null
             }
-        } catch (error) {
-            console.error("Fehler beim Abrufen von NFT-Infos:", error)
-            updateNftState({ isError: true })
-            return null
-        }
-    }, [])
+        },
+        [provider, updateNftState]
+    )
 
-    // Callback to generate attributes for an NFT.
-    const loadAttributes = useCallback(async (nft) => {
-        const nftInfo = await getNFTInfo(nft.nftAddress, nft.tokenId)
-        return { ...nft, ...nftInfo }
-    }, [])
+    const loadAttributes = useCallback(
+        async (nft) => {
+            const nftInfo = await getNFTInfo(nft.nftAddress, nft.tokenId)
+            return { ...nft, ...nftInfo }
+        },
+        [getNFTInfo]
+    )
 
-    // Effect to load images and attributes for all NFTs when data changes.
     useEffect(() => {
         const loadAllAttributes = async (items) => {
             const loadedItems = await Promise.all(items.map(loadAttributes))
@@ -144,9 +134,8 @@ export const NftProvider = ({ children }) => {
                     updateNftState({ isError: true, isLoading: false })
                 })
         }
-    }, [activeItemsData, loadAttributes])
+    }, [activeItemsData, loadAttributes, updateNftState])
 
-    // Callback to create collections from NFT data.
     const createCollections = useCallback((nfts) => {
         const collectionsMap = new Map()
         nfts.forEach((nft) => {
@@ -192,25 +181,21 @@ export const NftProvider = ({ children }) => {
         })
     }, [])
 
-    // Effect to update collections when NFT data changes.
     useEffect(() => {
         const collections = createCollections(nftState.data)
         updateNftState({ collections })
-    }, [nftState.data, createCollections])
+    }, [nftState.data, createCollections, updateNftState])
 
-    // Effect to check and set loading status.
     useEffect(() => {
         updateNftState({ isLoading: activeLoading })
-    }, [activeLoading])
+    }, [activeLoading, updateNftState])
 
-    // Effect to check and set error status.
     useEffect(() => {
         if (activeError) {
             updateNftState({ isError: true })
         }
-    }, [activeError])
+    }, [activeError, updateNftState])
 
-    // Context provider for NFT data and state.
     return (
         <NftContext.Provider value={{ ...nftState, reloadNFTs }}>{children}</NftContext.Provider>
     )

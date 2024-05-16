@@ -4,7 +4,7 @@ import Link from "next/link"
 
 import SearchBar from "./SearchBar/SearchBar"
 import WalletConnectionManager from "./WalletConnect/WalletConnectionManager"
-import PopupMenu from "@components/Header/PopupMenu/PopupMenu"
+import PopupMenu from "./PopupMenu/PopupMenu"
 
 import styles from "./Header.module.scss"
 

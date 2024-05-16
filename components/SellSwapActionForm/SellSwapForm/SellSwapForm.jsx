@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react"
 import useFormValidation from "@hooks/formValidation/useFormValidation"
-import Tooltip from "@components/UX/Tooltip/Tooltip"
+import Tooltip from "@components/Tooltip/Tooltip"
 import SellSwapInformation from "../SellSwapInformation/SellSwapInformation"
-import BtnWithAction from "@components/UI/BtnWithAction"
+import BtnWithAction from "@components/Btn/BtnWithAction"
 import styles from "./SellSwapForm.module.scss"
 
 const SellSwapForm = ({

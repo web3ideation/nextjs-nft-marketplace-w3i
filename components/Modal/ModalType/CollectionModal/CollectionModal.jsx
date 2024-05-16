@@ -54,26 +54,29 @@ const NFTCollectionModal = forwardRef((prop, ref) => {
                 <div className={styles.collectionModalContent}>
                     <div className={styles.collectionModalTextWrapper}>
                         <div className={styles.collectionModalText}>
-                            <p>
-                                Collection address:{" "}
+                            <div>
+                                <p>Collection address: </p>
                                 <strong>{selectedCollection?.nftAddress}</strong>
-                            </p>
-                            <p>
-                                Items: <strong>{selectedCollection?.count}</strong>
-                            </p>
-                            <p>
-                                Token-Id's:{" "}
+                            </div>
+                            <div>
+                                <p>Items:</p>
+                                <strong>{selectedCollection?.count}</strong>
+                            </div>
+                            <div>
+                                <p>Token-Id's: </p>
                                 <strong>
                                     {selectedCollection?.tokenIds.split(",").join(", ")}
                                 </strong>
-                            </p>
-                            <p>
-                                Volume:{" "}
+                            </div>
+                            <div>
+                                <p>Volume: </p>
                                 <strong>
                                     {formatPriceToEther(selectedCollection?.collectionPrice)} ETH
                                 </strong>
-                                {priceInEur ? ` (${priceInEur} €)` : " Loading..."}
-                            </p>
+                                <strong>
+                                    {priceInEur ? ` (${priceInEur} €)` : " Loading..."}
+                                </strong>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
 
-import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
+import LoadingWave from "@components/LoadingWave/LoadingWave"
 import { useModal } from "@context/ModalProvider"
 
 import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
@@ -53,7 +53,7 @@ const TableElement = ({ collection }) => {
                                 </div>
                             )}
                             <Image
-                                src={imageURI}
+                                src={imageURI || "/media/nftDefault.jpg"}
                                 alt={tokenDescription || "..."}
                                 height={50}
                                 width={50}

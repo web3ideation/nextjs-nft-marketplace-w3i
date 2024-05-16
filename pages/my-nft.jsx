@@ -4,9 +4,9 @@ import { useWeb3Modal } from "@web3modal/wagmi/react"
 
 import { useNFT } from "@context/NftDataProvider"
 import useFetchNFTsFromWallet from "@hooks/fetchNFTsForWallet"
-import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
+import LoadingWave from "@components/LoadingWave/LoadingWave"
 import NFTList from "@components/NftViewer/NftLists/List"
-import ConnectWalletBtn from "@components/Header/WalletConnect/ConnectWalletButton/ConnectWalletBtn"
+import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
 
 import { formatPriceToEther, truncatePrice } from "@utils/formatting"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"

@@ -4,7 +4,7 @@ import { useAccount, useDisconnect } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
 
 import WalletInfo from "../WalletConnect/WalletInfo/WalletInfo"
-import ConnectWalletBtn from "../WalletConnect/ConnectWalletButton/ConnectWalletBtn"
+import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
 
 const WalletConnectionManager = () => {
     const [isClient, setIsClient] = useState(false)

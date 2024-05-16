@@ -5,10 +5,10 @@ import Head from "next/head"
 import { WagmiConfig } from "wagmi"
 import { wagmiConfig } from "@config/wagmiConfig"
 
-import { NotificationProvider } from "@context/NotificationProvider"
-import { SearchResultsProvider } from "@context/SearchResultsProvider"
 import { NftProvider } from "@context/NftDataProvider"
 import { ModalProvider } from "@context/ModalProvider"
+import { SearchResultsProvider } from "@context/SearchResultsProvider"
+import { NotificationProvider } from "@context/NotificationProvider"
 
 import ModalRenderer from "@components/Modal/ModalRenderer"
 import Notification from "@components/Notification/Notification"

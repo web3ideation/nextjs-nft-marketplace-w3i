@@ -5,7 +5,7 @@ import { useAccount } from "wagmi"
 
 import { useModal } from "@context/ModalProvider"
 
-import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
+import LoadingWave from "@components/LoadingWave/LoadingWave"
 
 import { formatPriceToEther, truncatePrice } from "@utils/formatting"
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
@@ -16,7 +16,7 @@ const Card = ({ nftData }) => {
     const { isListed, listingId, tokenOwner, desiredNftAddress } = nftData
     const { address, isConnected } = useAccount()
     const defaultValues = {
-        imageURI: "/path/to/default/image.jpg",
+        imageURI: "/media/nftDefault.jpg",
         tokenSymbol: "LOADING...",
         tokenId: "000",
         price: "0",
@@ -52,6 +52,7 @@ const Card = ({ nftData }) => {
     }, [priceInEur])
 
     useEffect(() => {
+        if (!price) return
         const updatePriceInEur = async () => {
             const ethToEurRate = await fetchEthToEurRate()
             if (ethToEurRate) {

@@ -5,9 +5,9 @@ import { useAccount } from "wagmi"
 // Custom Hooks & Components Imports
 import { useNFT } from "@context/NftDataProvider"
 import { formatPriceToEther } from "@utils/formatting"
-import LoadingWave from "@components/UX/LoadingWave/LoadingWave"
+import LoadingWave from "@components/LoadingWave/LoadingWave"
 import Card from "@components/NftCard/Card"
-import BtnWithAction from "@components/UI/BtnWithAction"
+import BtnWithAction from "@components/Btn/BtnWithAction"
 
 // Styles import
 import styles from "./List.module.scss"
@@ -91,27 +91,29 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
     }, [nftsData, visibleNFTs, sortType])
 
     const renderNFTList = () => {
-        if (nftsError) {
+        if (!nftsData) {
+            console.log("Error on load", nftsError)
             return <p>No NFTs available</p>
         }
-
-        return sortedAndFilteredNFTs.map((nft) => (
-            <Card nftData={nft} reloadNFTs={reloadNFTs} key={`${nft.nftAddress}${nft.tokenId}`} />
-        ))
+        if (nftsData) {
+            return sortedAndFilteredNFTs.map((nft) => (
+                <Card
+                    nftData={nft}
+                    reloadNFTs={reloadNFTs}
+                    key={`${nft.nftAddress}${nft.tokenId}`}
+                />
+            ))
+        }
     }
 
     return (
         <div className={styles.listWrapper}>
             <h3>{title}</h3>
-            {nftsLoading ? (
-                <div className={styles.listLoading}>
-                    <LoadingWave />
-                </div>
-            ) : (
-                <div className={styles.list}>
-                    <>{renderNFTList()} </>
-                </div>
-            )}
+
+            <div className={styles.list}>
+                <>{renderNFTList()} </>
+            </div>
+
             <div className={styles.showMoreBtns}>
                 {visibleNFTs == sortedAndFilteredNFTs.length && (
                     <BtnWithAction

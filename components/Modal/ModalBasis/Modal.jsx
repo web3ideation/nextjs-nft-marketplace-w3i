@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect } from "react"
 import ReactDOM from "react-dom"
 import Image from "next/image"
 import { useModal } from "@context/ModalProvider"
-import BtnWithAction from "@components/UI/BtnWithAction"
+import BtnWithAction from "@components/Btn/BtnWithAction"
 import styles from "./Modal.module.scss"
 
 const Modal = forwardRef((props, ref) => {
@@ -38,7 +38,7 @@ const Modal = forwardRef((props, ref) => {
             />
         ))
     ) : (
-        <p className={styles.noButtonsPlaceholder}>No actions available</p>
+        <div className={styles.noButtonsPlaceholder}></div>
     )
 
     const modalBackdropClassName = `${styles.modalBackdrop} ${

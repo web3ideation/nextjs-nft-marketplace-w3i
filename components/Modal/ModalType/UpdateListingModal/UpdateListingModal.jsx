@@ -8,7 +8,7 @@ import { validateField } from "@utils/validation"
 import { useUpdateListing } from "@hooks/useUpdateListing"
 import { useModal } from "@context/ModalProvider"
 import Modal from "../../ModalBasis/Modal"
-import Tooltip from "@components/UX/Tooltip/Tooltip"
+import Tooltip from "@components/Tooltip/Tooltip"
 
 import networkMapping from "@constants/networkMapping.json"
 

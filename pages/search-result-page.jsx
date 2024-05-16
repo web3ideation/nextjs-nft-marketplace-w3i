@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 
-import { useNFT } from "@context/NFTDataProvider"
+import { useNFT } from "@context/NftDataProvider"
 import SearchSideFilters from "@components/SearchSideBar/SearchSideFilters"
 import NFTList from "@components/NftViewer/NftLists/List"
 
