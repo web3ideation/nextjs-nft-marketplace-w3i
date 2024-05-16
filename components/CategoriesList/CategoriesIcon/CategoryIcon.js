@@ -18,7 +18,7 @@ import styles from "./CategoryIcon.module.scss"
 const CategoryIcon = ({ categoryName }) => {
     const categoryIcons = {
         "Brand New": NewIcon,
-        10: TopTenIcon,
+        "Top 10": TopTenIcon,
         "Top Value": TopValueIcon,
         "Most Sold": MostSoldIcon,
         DAO: DaoIcon,

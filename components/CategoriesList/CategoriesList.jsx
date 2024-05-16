@@ -9,7 +9,7 @@ const CategoriesList = () => {
 
     const categories = [
         { id: "1", name: "Brand New" },
-        { id: "2", name: "10" },
+        { id: "2", name: "Top 10" },
         { id: "3", name: "Top Value" },
         { id: "4", name: "Most Sold" },
         { id: "5", name: "DAO" },

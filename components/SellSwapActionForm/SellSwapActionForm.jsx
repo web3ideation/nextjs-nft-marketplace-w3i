@@ -17,27 +17,21 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
     const { address: userAddress, isConnected } = useAccount()
     const { reloadNFTs } = useNFT()
 
-    const [nftAddressFromQuery, setNftAddressFromQuery] = useState("")
-    const [tokenIdFromQuery, setTokenIdFromQuery] = useState("")
-    const [priceFromQuery, setPriceFromQuery] = useState("")
     const [formData, setFormData] = useState({
-        nftAddress: "",
-        tokenId: "",
-        price: "",
+        nftAddress: router.query.nftAddress || "",
+        tokenId: router.query.tokenId || "",
+        price: router.query.price || "",
         desiredNftAddress: "",
         desiredTokenId: "",
     })
 
     useEffect(() => {
         const { nftAddress, tokenId, price } = router.query
-        setNftAddressFromQuery(nftAddress || "")
-        setTokenIdFromQuery(tokenId || "")
-        setPriceFromQuery(price || "")
-        setFormData((fData) => ({
-            ...fData,
-            nftAddress: nftAddress || fData.nftAddress,
-            tokenId: tokenId || fData.tokenId,
-            price: price || fData.price,
+        setFormData((prevData) => ({
+            ...prevData,
+            nftAddress: nftAddress || prevData.nftAddress,
+            tokenId: tokenId || prevData.tokenId,
+            price: price || prevData.price,
         }))
     }, [router.query])
 
@@ -98,9 +92,9 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
                 <SellSwapForm
                     onSubmit={handleFormSubmit}
                     title={formTitle}
-                    defaultNftAddress={nftAddressFromQuery}
-                    defaultTokenId={tokenIdFromQuery}
-                    defaultPrice={priceFromQuery}
+                    defaultNftAddress={formData.nftAddress}
+                    defaultTokenId={formData.tokenId}
+                    defaultPrice={formData.price}
                     extraFields={extraFields}
                 />
             </div>

@@ -95,29 +95,30 @@ const Overview = ({ modalContent }) => {
             </div>
             <div className={styles.modalTextWrapper}>
                 <div className={styles.modalTextInnerWrapper}>
-                    <div className={styles.modalPriceWrapper}>
-                        {!isListedForSwap ? (
-                            <>
-                                <p>Price:</p>
-                                <div className={styles.modalPriceInnerWrapper}>
-                                    <strong>{formattedPrice} ETH </strong>
-                                    <strong>{formattedPriceInEur} €</strong>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <p>Swap:</p>
-                                <div className={styles.modalPriceInnerWrapper}>
-                                    <p>Desired Address: </p>
-                                    <strong>{formattedDesiredNftAddress}</strong>
+                    {modalContent.price ? (
+                        <div className={styles.modalPriceWrapper}>
+                            {!isListedForSwap ? (
+                                <>
+                                    <p>Price:</p>
+                                    <div className={styles.modalPriceInnerWrapper}>
+                                        <strong>{formattedPrice} ETH </strong>
+                                        <strong>{formattedPriceInEur} €</strong>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <p>Swap:</p>
+                                    <div className={styles.modalPriceInnerWrapper}>
+                                        <p>Desired Address: </p>
+                                        <strong>{formattedDesiredNftAddress}</strong>
 
-                                    <p>Desired Token-Id: </p>
-                                    <strong>{modalContent.desiredTokenId}</strong>
-                                </div>
-                            </>
-                        )}
-                    </div>
-
+                                        <p>Desired Token-Id: </p>
+                                        <strong>{modalContent.desiredTokenId}</strong>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    ) : null}
                     <div className={styles.modalLoveLightWrapper}>
                         <p>Turn me on if you love me</p>
                         <div

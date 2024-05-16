@@ -78,10 +78,14 @@ const Card = ({ nftData }) => {
     }
 
     useEffect(() => {
-        setImageLoaded(false)
+        if (imageURI) {
+            console.log("Image URI changed: ", imageURI)
+            setImageLoaded(false)
+        }
     }, [imageURI])
 
     const handleImageLoad = () => {
+        console.log("Image loaded: ", imageURI)
         setImageLoaded(true)
     }
 
