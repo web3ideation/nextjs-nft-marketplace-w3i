@@ -3,6 +3,7 @@ import Image from "next/image"
 
 import LoadingWave from "@components/LoadingWave/LoadingWave"
 import { useModal } from "@context/ModalProvider"
+import ComingSoon from "@components/ComingSoon/ComingSoon"
 
 import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
 
@@ -76,7 +77,9 @@ const TableElement = ({ collection }) => {
                     <div className={styles.contentWrapper}>{itemCount}</div>
                 </td>
                 <td>
-                    <div className={styles.contentWrapper}>{collectionCount || ""}</div>
+                    <div className={styles.contentWrapper}>
+                        {collectionCount || <ComingSoon size="small"></ComingSoon>}
+                    </div>
                 </td>
                 <td>
                     <div className={styles.contentWrapper}>{formattedPrice} ETH</div>

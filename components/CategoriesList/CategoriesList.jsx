@@ -28,7 +28,7 @@ const CategoriesList = () => {
 
     return (
         <div className={styles.categoriesListWrapper}>
-            <ComingSoon></ComingSoon>
+            <ComingSoon size="large"></ComingSoon>
             <Categories categories={categories} onCategorySelect={handleCategorySelect} />
         </div>
     )

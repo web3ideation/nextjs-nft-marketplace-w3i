@@ -122,10 +122,11 @@ const SellSwapForm = ({
                     </div>
 
                     <div className={styles.checkboxFieldsWrapper}>
-                        <ComingSoon></ComingSoon>
                         <div className={styles.sellSwapFormTitles}>
+                            <ComingSoon></ComingSoon>
                             <h3>Choose up to 2 categories</h3>
                         </div>
+
                         {Object.keys(checkboxData).map((category) => (
                             <div key={category} className={styles.checkboxWrapper}>
                                 <input

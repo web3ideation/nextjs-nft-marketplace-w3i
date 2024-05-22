@@ -60,7 +60,6 @@ const ChatModal = forwardRef((props, ref) => {
                     <ChatList chatPartners={chatPartners} onSelectChat={handleChatSelect} />
                     {activeChat && (
                         <div className={styles.chatContainer}>
-                            <ComingSoon></ComingSoon>
                             <div className={styles.messagesArea}>
                                 <div className={styles.chatMessageInWrapper}>
                                     <div className={styles.chatMessageIn}>
@@ -86,6 +85,7 @@ const ChatModal = forwardRef((props, ref) => {
                             </div>
                         </div>
                     )}
+                    <ComingSoon size="large"></ComingSoon>
                 </div>
             </div>
         </Modal>

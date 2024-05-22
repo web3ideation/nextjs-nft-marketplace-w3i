@@ -4,8 +4,10 @@
 
 .comingSoonWrapper {
     position: relative;
-    top: 5%;
-    left: 15%;
+    width: auto;
+    height: auto;
+    top: 0;
+    left: 0;
 }
 
 .comingSoonOverlay {
@@ -17,13 +19,20 @@
     align-items: center;
     color: $secondary-color;
     transform: rotate(-15deg);
-    font-size: 40px;
     font-weight: 700;
     letter-spacing: 5px;
-    z-index: 1000;
+    z-index: 1;
     pointer-events: none;
 }
 
 .comingSoonText {
     pointer-events: all;
+}
+
+.comingSoonOverlaySmall {
+    font-size: 0.75rem;
+}
+
+.comingSoonOverlayLarge {
+    font-size: 2rem;
 }
