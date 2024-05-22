@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, forwardRef } from "react"
 import Modal from "../../ModalBasis/Modal"
 import styles from "./ChatModal.module.scss"
 import ChatList from "./ChatList/ChatList"
+import ComingSoon from "@components/ComingSoon/ComingSoon"
 
 const ChatModal = forwardRef((props, ref) => {
     const [message, setMessage] = useState("")
@@ -54,36 +55,38 @@ const ChatModal = forwardRef((props, ref) => {
 
     return (
         <Modal ref={ref} modalTitle="Chat" buttons={buttons}>
-            <div className={styles.chatModalContainerWrapper}></div>
-            <div className={styles.chatModalContainer}>
-                <ChatList chatPartners={chatPartners} onSelectChat={handleChatSelect} />
-                {activeChat && (
-                    <div className={styles.chatContainer}>
-                        <div className={styles.messagesArea}>
-                            <div className={styles.chatMessageInWrapper}>
-                                <div className={styles.chatMessageIn}>
-                                    {activeChat.lastMessage}
+            <div className={styles.chatModalContainerWrapper}>
+                <div className={styles.chatModalContainer}>
+                    <ChatList chatPartners={chatPartners} onSelectChat={handleChatSelect} />
+                    {activeChat && (
+                        <div className={styles.chatContainer}>
+                            <ComingSoon></ComingSoon>
+                            <div className={styles.messagesArea}>
+                                <div className={styles.chatMessageInWrapper}>
+                                    <div className={styles.chatMessageIn}>
+                                        {activeChat.lastMessage}
+                                    </div>
                                 </div>
+                                {messages[activeChat.id]?.map((msg, index) => (
+                                    <div key={index} className={styles.chatMessageOutWrapper}>
+                                        <div className={styles.chatMessageOut}>{msg}</div>
+                                    </div>
+                                ))}
+                                <div ref={messagesEndRef} />
                             </div>
-                            {messages[activeChat.id]?.map((msg, index) => (
-                                <div key={index} className={styles.chatMessageOutWrapper}>
-                                    <div className={styles.chatMessageOut}>{msg}</div>
-                                </div>
-                            ))}
-                            <div ref={messagesEndRef} />
+                            <div className={styles.inputArea}>
+                                <input
+                                    type="text"
+                                    placeholder="Enter your message..."
+                                    value={message}
+                                    onChange={handleMessageChange}
+                                    onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+                                    className={styles.messageInput}
+                                />
+                            </div>
                         </div>
-                        <div className={styles.inputArea}>
-                            <input
-                                type="text"
-                                placeholder="Enter your message..."
-                                value={message}
-                                onChange={handleMessageChange}
-                                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                                className={styles.messageInput}
-                            />
-                        </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </Modal>
     )

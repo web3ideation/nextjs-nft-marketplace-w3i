@@ -1,0 +1,29 @@
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
+
+.comingSoonWrapper {
+    position: relative;
+    top: 5%;
+    left: 15%;
+}
+
+.comingSoonOverlay {
+    position: absolute;
+    max-width: 50%;
+    max-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $secondary-color;
+    transform: rotate(-15deg);
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.comingSoonText {
+    pointer-events: all;
+}

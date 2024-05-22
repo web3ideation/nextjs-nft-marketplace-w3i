@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 
 import Categories from "./Categories/Categories"
-
+import ComingSoon from "@components/ComingSoon/ComingSoon"
 import styles from "./CategoriesList.module.scss"
 
 const CategoriesList = () => {
@@ -28,6 +28,7 @@ const CategoriesList = () => {
 
     return (
         <div className={styles.categoriesListWrapper}>
+            <ComingSoon></ComingSoon>
             <Categories categories={categories} onCategorySelect={handleCategorySelect} />
         </div>
     )

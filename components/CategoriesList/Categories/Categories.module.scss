@@ -30,7 +30,7 @@
 .category {
     @include flex-center;
     flex-direction: column;
-    border-top: solid 2px white;
+    border-top: solid 2px transparent;
     padding: 5px 30px;
     flex: 0 0 auto;
     cursor: pointer;

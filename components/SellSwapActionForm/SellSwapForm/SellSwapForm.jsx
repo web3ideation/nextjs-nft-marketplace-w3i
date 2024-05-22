@@ -3,6 +3,8 @@ import useFormValidation from "@hooks/formValidation/useFormValidation"
 import Tooltip from "@components/Tooltip/Tooltip"
 import SellSwapInformation from "../SellSwapInformation/SellSwapInformation"
 import BtnWithAction from "@components/Btn/BtnWithAction"
+import ComingSoon from "@components/ComingSoon/ComingSoon"
+
 import styles from "./SellSwapForm.module.scss"
 
 const SellSwapForm = ({
@@ -118,7 +120,9 @@ const SellSwapForm = ({
                             </div>
                         ))}
                     </div>
+
                     <div className={styles.checkboxFieldsWrapper}>
+                        <ComingSoon></ComingSoon>
                         <div className={styles.sellSwapFormTitles}>
                             <h3>Choose up to 2 categories</h3>
                         </div>

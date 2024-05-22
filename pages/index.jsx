@@ -12,6 +12,7 @@ const Home = () => {
             <div className={styles.categoriesListContainer}>
                 <CategoriesList />
             </div>
+
             <div className={styles.nftListingContainer}>
                 <List sortType={"brandNew"} title={"Brand New"} />
             </div>
