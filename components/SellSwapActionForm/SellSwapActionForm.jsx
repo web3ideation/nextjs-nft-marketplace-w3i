@@ -36,8 +36,8 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
     }, [router.query])
 
     const handleTransactionCompletion = () => {
-        reloadNFTs()
         router.push("/my-nft")
+        reloadNFTs()
     }
 
     const { handleApproveItem, isApprovingTxSuccess } = useRawApprove(

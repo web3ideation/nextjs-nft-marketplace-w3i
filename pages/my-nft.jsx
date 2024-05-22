@@ -114,7 +114,7 @@ const MyNFTs = () => {
                                 <>
                                     <NFTList
                                         sortType={"myNFTFromWallet"}
-                                        title={"In your wallet"}
+                                        title={"Unlisted in your wallet"}
                                         nftsData={unlistedNfts}
                                     />
                                 </>
@@ -130,7 +130,7 @@ const MyNFTs = () => {
                 ) : (
                     <div>
                         <h3>Web3 is currently not enabled - Connect your Wallet here</h3>
-                        <ConnectWalletBtn onConnect={() => open()} />
+                        <ConnectWalletBtn onConnect={() => open()} isClient={true} />
                     </div>
                 )}
             </>

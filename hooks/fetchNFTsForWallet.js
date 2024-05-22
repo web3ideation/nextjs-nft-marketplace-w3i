@@ -25,12 +25,7 @@ const useFetchNFTsForWallet = (walletAddress) => {
                     tokenURI: nft.tokenUri.raw || "",
                     attributes: nft.metadata.attributes || "",
                     tokenOwner: walletAddress,
-                    imageURI: {
-                        src: nft.media[0]?.gateway,
-                        width: 100,
-                        height: 100,
-                        alt: "",
-                    },
+                    imageURI: nft.media[0]?.gateway.replace("ipfs://", "https://ipfs.io/ipfs/"),
                     tokenDescription: nft.description || "",
                     nftAddress: nft.contract.address,
                     tokenId: BigInt(nft.id.tokenId).toString(),

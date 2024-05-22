@@ -111,9 +111,11 @@ const Overview = ({ modalContent }) => {
                                     <div className={styles.modalPriceInnerWrapper}>
                                         <p>Desired Address: </p>
                                         <strong>{formattedDesiredNftAddress}</strong>
-
                                         <p>Desired Token-Id: </p>
                                         <strong>{modalContent.desiredTokenId}</strong>
+                                        <p>Price:</p>
+                                        <strong>{formattedPrice} ETH </strong>
+                                        <strong>{formattedPriceInEur} €</strong>
                                     </div>
                                 </>
                             )}

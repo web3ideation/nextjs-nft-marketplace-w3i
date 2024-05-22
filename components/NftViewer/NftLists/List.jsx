@@ -79,6 +79,8 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
                 return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && nft.isListed)
             case "myNFTNotListed":
                 return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && !nft.isListed)
+            case "myNFTFromWallet":
+                return nftsData
             default:
                 return nftsData
         }
