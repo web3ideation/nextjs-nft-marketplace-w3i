@@ -1,23 +1,13 @@
-// React Imports
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react"
-
-// External Library Imports
 import { ethers } from "ethers"
 import { erc721ABI } from "wagmi"
-
-// Apollo Client for GraphQL queries.
 import { useQuery } from "@apollo/client"
-
-// GraphQL Queries
 import { GET_ACTIVE_ITEMS } from "@constants/subgraphQueries"
 
-// Context Creation
 const NftContext = createContext({})
 
-// Custom Hooks creation
 export const useNFT = () => useContext(NftContext)
 
-// ------------------ NFT Provider Component ------------------
 export const NftProvider = ({ children }) => {
     const [nftState, setNftState] = useState({
         data: [],
@@ -25,48 +15,29 @@ export const NftProvider = ({ children }) => {
         isLoading: true,
         isError: false,
     })
+    console.log("NFTDATA", nftState)
     const [provider, setProvider] = useState(null)
 
-    // Prüfen ob window definiert ist, bevor window.ethereum verwendet wird
     useEffect(() => {
         if (typeof window !== "undefined") {
             const ethProvider = window.ethereum
                 ? new ethers.providers.Web3Provider(window.ethereum)
-                : new ethers.providers.JsonRpcProvider(
-                      "https://ethereum-sepolia-rpc.publicnode.com"
-                  )
+                : new ethers.providers.JsonRpcProvider("wss://ethereum-sepolia-rpc.publicnode.com")
             setProvider(ethProvider)
         }
     }, [])
 
-    const {
-        data: activeItemsData,
-        loading: activeLoading,
-        error: activeError,
-        refetch: refetchActiveItems,
-    } = useQuery(GET_ACTIVE_ITEMS, { skip: !provider })
-    console.log("Data", activeItemsData)
     const updateNftState = useCallback((newState) => {
         setNftState((prevState) => ({ ...prevState, ...newState }))
     }, [])
 
-    const reloadNFTs = useCallback(async () => {
-        if (!provider) return
-        try {
-            updateNftState({ isLoading: true })
-            await refetchActiveItems()
-            updateNftState({ isError: false, isLoading: false })
-        } catch (error) {
-            console.error("Error reloading NFT data:", error)
-            updateNftState({ isError: true, isLoading: false })
-        }
-    }, [refetchActiveItems, updateNftState, provider])
-
     const getNFTInfo = useCallback(
         async (nftAddress, tokenId) => {
+            console.log("Get nft info for", nftAddress, tokenId, provider)
             if (!provider) return null
             const contract = new ethers.Contract(nftAddress, erc721ABI, provider)
             const tokenIdBigNumber = ethers.BigNumber.from(tokenId)
+            console.log("Contract", contract, "TokenId", tokenIdBigNumber)
 
             try {
                 const [tokenURI, tokenOwner, collectionName, tokenSymbol] = await Promise.all([
@@ -76,12 +47,21 @@ export const NftProvider = ({ children }) => {
                     contract.symbol(),
                 ])
 
+                console.log(
+                    "Fetched token data",
+                    tokenURI,
+                    tokenOwner,
+                    collectionName,
+                    tokenSymbol
+                )
+
                 const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
                 const response = await fetch(requestURL)
                 const contentType = response.headers.get("content-type")
 
                 if (contentType && contentType.includes("application/json")) {
                     const tokenURIData = await response.json()
+                    console.log("Fetched token URI data", tokenURIData)
                     return {
                         ...tokenURIData,
                         tokenOwner,
@@ -92,7 +72,7 @@ export const NftProvider = ({ children }) => {
                     }
                 } else {
                     return {
-                        imageURI: { src: requestURL },
+                        imageURI: requestURL,
                         tokenOwner,
                         collectionName,
                         tokenSymbol,
@@ -116,25 +96,59 @@ export const NftProvider = ({ children }) => {
         [getNFTInfo]
     )
 
-    useEffect(() => {
-        const loadAllAttributes = async (items) => {
-            const loadedItems = await Promise.all(items.map(loadAttributes))
-            return loadedItems.filter((item) => item !== null)
-        }
+    const loadAllAttributes = useCallback(
+        async (items, batchSize = 10) => {
+            const loadedItems = []
+            for (let i = 0; i < items.length; i += batchSize) {
+                const batch = items.slice(i, i + batchSize)
+                const batchResults = await Promise.all(batch.map(loadAttributes))
+                loadedItems.push(...batchResults.filter((item) => item !== null))
+                updateNftState((prevState) => ({
+                    ...prevState,
+                    data: [...prevState.data, ...batchResults.filter((item) => item !== null)],
+                }))
+            }
+            return loadedItems
+        },
+        [loadAttributes, updateNftState]
+    )
 
-        if (activeItemsData) {
+    const {
+        data: activeItemsData,
+        loading: activeLoading,
+        error: activeError,
+        refetch: refetchActiveItems,
+    } = useQuery(GET_ACTIVE_ITEMS, { skip: !provider })
+
+    useEffect(() => {
+        if (activeLoading) {
+            updateNftState({ isLoading: true })
+        } else if (activeError) {
+            updateNftState({ isError: true, isLoading: false })
+        } else if (activeItemsData) {
             updateNftState({ isLoading: true })
             loadAllAttributes(activeItemsData.items)
                 .then((loadedData) => {
                     updateNftState({ data: loadedData, isLoading: false })
-                    console.log("Loaded Data", loadedData)
                 })
                 .catch((error) => {
                     console.error("Error loading all attributes:", error)
                     updateNftState({ isError: true, isLoading: false })
                 })
         }
-    }, [activeItemsData, loadAttributes, updateNftState])
+    }, [activeItemsData, activeLoading, activeError, loadAllAttributes, updateNftState])
+
+    const reloadNFTs = useCallback(async () => {
+        if (!provider) return
+        try {
+            updateNftState({ isLoading: true })
+            await refetchActiveItems()
+            updateNftState({ isError: false, isLoading: false })
+        } catch (error) {
+            console.error("Error reloading NFT data:", error)
+            updateNftState({ isError: true, isLoading: false })
+        }
+    }, [refetchActiveItems, updateNftState, provider])
 
     const createCollections = useCallback((nfts) => {
         const collectionsMap = new Map()
@@ -185,16 +199,6 @@ export const NftProvider = ({ children }) => {
         const collections = createCollections(nftState.data)
         updateNftState({ collections })
     }, [nftState.data, createCollections, updateNftState])
-
-    useEffect(() => {
-        updateNftState({ isLoading: activeLoading })
-    }, [activeLoading, updateNftState])
-
-    useEffect(() => {
-        if (activeError) {
-            updateNftState({ isError: true })
-        }
-    }, [activeError, updateNftState])
 
     return (
         <NftContext.Provider value={{ ...nftState, reloadNFTs }}>{children}</NftContext.Provider>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react"
 import Image from "next/image"
 import SearchSideFiltersElement from "./SideBarElement/SearchSideFiltersElement"
 import styles from "./SearchSideFilters.module.scss"
@@ -8,13 +8,6 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     const [isOpen, setIsOpen] = useState(false)
     const [isButtonPressed, setIsButtonPressed] = useState(false)
 
-    const [optionsMap, setOptionsMap] = useState({
-        Status: [],
-        Sorting: [],
-        Categories: [],
-        Collections: [],
-    })
-
     const [filters, setFilters] = useState({
         selectedSorting: "default",
         selectedStatus: "default",
@@ -22,17 +15,16 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
         selectedCollections: "default",
     })
 
-    const getUniqueCollections = () => {
+    const getUniqueCollections = useMemo(() => {
         const collections = { default: "Default" }
         initialItems.forEach(({ nftAddress, collectionName }) => {
             collections[nftAddress] = collections[nftAddress] || collectionName
         })
         return Object.entries(collections).map(([value, label]) => ({ value, label }))
-    }
+    }, [initialItems])
 
-    useEffect(() => {
-        setOptionsMap((prev) => ({
-            ...prev,
+    const optionsMap = useMemo(
+        () => ({
             Status: [
                 { value: "default", label: "All" },
                 { value: "sell", label: "Sell" },
@@ -58,11 +50,12 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 { value: "digital twin", label: "Digital Twin" },
                 { value: "utility", label: "Utility" },
             ],
-            Collections: getUniqueCollections(),
-        }))
-    }, [initialItems])
+            Collections: getUniqueCollections,
+        }),
+        [getUniqueCollections]
+    )
 
-    const filterItems = () => {
+    const filterItems = useCallback(() => {
         let filteredList = [...initialItems]
         if (filters.selectedStatus !== "default") {
             filteredList = filteredList.filter((nft) => {
@@ -101,9 +94,9 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
         })
 
         onFilteredItemsChange(filteredList)
-    }
+    }, [filters, initialItems, onFilteredItemsChange])
 
-    useEffect(() => filterItems(), [filters])
+    useEffect(() => filterItems(), [filters, filterItems])
 
     const handleOptionChange = (type, value) => {
         setFilters((prevFilters) => ({ ...prevFilters, [type]: value }))

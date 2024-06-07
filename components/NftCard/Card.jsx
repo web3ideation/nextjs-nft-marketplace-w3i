@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback, useMemo } from "react"
 import Image from "next/image"
 
 import { useAccount } from "wagmi"
-
 import { useModal } from "@context/ModalProvider"
 
 import LoadingWave from "@components/LoadingWave/LoadingWave"
@@ -15,14 +14,18 @@ import styles from "./Card.module.scss"
 const Card = ({ nftData }) => {
     const { isListed, listingId, tokenOwner, desiredNftAddress } = nftData
     const { address, isConnected } = useAccount()
-    const defaultValues = {
-        imageURI: "/media/nftDefault.jpg",
-        tokenSymbol: "LOADING...",
-        tokenId: "000",
-        price: "0",
-        tokenDescription: "Description is loading...",
-        collectionName: "Collection loading...",
-    }
+    const defaultValues = useMemo(
+        () => ({
+            imageURI: "/media/nftDefault.jpg",
+            tokenSymbol: "LOADING...",
+            tokenId: "000",
+            price: "0",
+            tokenDescription: "Description is loading...",
+            collectionName: "Collection loading...",
+        }),
+        []
+    )
+
     const [imageURI, setImageURI] = useState(defaultValues.imageURI)
     const [tokenSymbol, setTokenSymbol] = useState(defaultValues.tokenSymbol)
     const [tokenId, setTokenId] = useState(defaultValues.tokenId)
@@ -36,6 +39,7 @@ const Card = ({ nftData }) => {
     const [formattedPriceInEur, setFormattedPriceInEur] = useState()
     const isListedForSwap = desiredNftAddress !== "0x0000000000000000000000000000000000000000"
     const [imageLoaded, setImageLoaded] = useState(false)
+
     useEffect(() => {
         if (nftData) {
             setImageURI(nftData.imageURI || defaultValues.imageURI)
@@ -45,7 +49,7 @@ const Card = ({ nftData }) => {
             setTokenDescription(nftData.tokenDescription || defaultValues.tokenDescription)
             setCollectionName(nftData.collectionName || defaultValues.collectionName)
         }
-    }, [nftData])
+    }, [nftData, defaultValues])
 
     useEffect(() => {
         setFormattedPriceInEur(truncatePrice(priceInEur, 5))
@@ -63,29 +67,27 @@ const Card = ({ nftData }) => {
         updatePriceInEur()
     }, [price])
 
-    const handleCardClick = (nftData) => {
-        const modalId = "nftCardModal-" + `${nftData.nftAddress}${nftData.tokenId}`
-        if (!isOwnedByUser) {
-            console.log(nftData)
-            openModal("info", modalId, nftData)
-        } else if (isOwnedByUser && isListed) {
-            console.log(nftData)
-            openModal("sell", modalId, nftData)
-        } else if (isOwnedByUser && !isListed) {
-            console.log(nftData)
-            openModal("list", modalId, nftData)
-        }
-    }
+    const handleCardClick = useCallback(
+        (nftData) => {
+            const modalId = "nftCardModal-" + `${nftData.nftAddress}${nftData.tokenId}`
+            if (!isOwnedByUser) {
+                openModal("info", modalId, nftData)
+            } else if (isOwnedByUser && isListed) {
+                openModal("sell", modalId, nftData)
+            } else if (isOwnedByUser && !isListed) {
+                openModal("list", modalId, nftData)
+            }
+        },
+        [isOwnedByUser, isListed, openModal]
+    )
 
     useEffect(() => {
         if (imageURI) {
-            console.log("Image URI changed: ", imageURI)
             setImageLoaded(false)
         }
     }, [imageURI])
 
     const handleImageLoad = () => {
-        console.log("Image loaded: ", imageURI)
         setImageLoaded(true)
     }
 
@@ -99,7 +101,7 @@ const Card = ({ nftData }) => {
                         </div>
                     )}
                     <Image
-                        src={imageURI || "/media/nftDefault.jpg"}
+                        src={imageURI}
                         alt={tokenDescription || "..."}
                         width={300}
                         height={300}
@@ -120,15 +122,12 @@ const Card = ({ nftData }) => {
                     {isListed ? (
                         <div className={styles.cardTextArea}>
                             <div className={styles.cardSwapAndListingStatusWrapper}>
-                                <>{isListedForSwap ? <div>Swap</div> : <div>Sell</div>}</>
-
+                                {isListedForSwap ? <div>Swap</div> : <div>Sell</div>}
                                 <div className={styles.cardListedStatus}>Listed #{listingId}</div>
                             </div>
                             <div className={styles.cardPriceWrapper}>
                                 {formattedPrice && (
-                                    <div className={styles.cardPrice}>
-                                        {formattedPrice} ETH{/*Ξ*/}
-                                    </div>
+                                    <div className={styles.cardPrice}>{formattedPrice} ETH</div>
                                 )}
                                 {priceInEur ? <strong>{formattedPriceInEur} €</strong> : null}
                             </div>

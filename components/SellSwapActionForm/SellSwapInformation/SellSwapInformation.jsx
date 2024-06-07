@@ -21,7 +21,7 @@ const SellSwapInformation = () => {
                 <br></br>
                 <h4>NFT Address:</h4>
                 <p>
-                    It's crucial to enter the correct NFT Address, which is the unique contract
+                    {"It's"} crucial to enter the correct NFT Address, which is the unique contract
                     address of your NFT on the blockchain. This ensures that the right asset is
                     being listed and can be identified accurately by buyers.
                 </p>
@@ -35,7 +35,7 @@ const SellSwapInformation = () => {
                 <br></br>
                 <h4>Exchange NFT Address:</h4>
                 <p>
-                    When initiating a trade, it's important to specify the correct Exchange NFT
+                    When initiating a trade, {"it's"} important to specify the correct Exchange NFT
                     Address, which is the unique contract address of the NFT you wish to receive in
                     the exchange. This ensures that the correct asset is targeted in the trade and
                     can be accurately identified by the other party.

@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useRef, useEffect } from "react"
+import React, { forwardRef, useState, useRef, useEffect, useCallback } from "react"
 
 import { ethers } from "ethers"
 import { useAccount, usePublicClient } from "wagmi"
@@ -81,7 +81,7 @@ const UpdateListingModal = forwardRef((props, ref) => {
         setErrors((prev) => ({ ...prev, [name]: error ? error : "" }))
     }
 
-    const resetForm = () => {
+    const resetForm = useCallback(() => {
         setFormData({
             newPrice: modalContent.price || "",
             newDesiredNftAddress: modalContent.desiredNftAddress || "",
@@ -92,13 +92,13 @@ const UpdateListingModal = forwardRef((props, ref) => {
             newDesiredNftAddress: "",
             newDesiredTokenId: "",
         })
-    }
+    }, [modalContent])
 
     useEffect(() => {
         if (!isModalOpen) {
             resetForm()
         }
-    }, [isModalOpen])
+    }, [isModalOpen, resetForm])
 
     const buttons = [
         {
@@ -160,8 +160,9 @@ const UpdateListingModal = forwardRef((props, ref) => {
             <div className={styles.updateModalDescriptionWrapper}>
                 <div className={`${styles.updateModalDescription} ${styles.modalAttention}`}>
                     <h3>
-                        Here are some things to keep in mind when updating your item's listing
-                        price in ETH:
+                        {
+                            "Here are some things to keep in mind when updating your item's listing price in ETH:"
+                        }
                     </h3>
                     <br></br>
                     <h4>Entering Price:</h4>
@@ -204,5 +205,7 @@ const UpdateListingModal = forwardRef((props, ref) => {
         </Modal>
     )
 })
+
+UpdateListingModal.displayName = "UpdateListingModal"
 
 export default UpdateListingModal

@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect, useMemo } from "react"
+import React, { forwardRef, useState, useEffect, useMemo, useCallback } from "react"
 import { useRouter } from "next/router"
 
 import { useAccount, usePublicClient } from "wagmi"
@@ -15,7 +15,7 @@ import { formatPriceToEther } from "@utils/formatting"
 
 import networkMapping from "@constants/networkMapping.json"
 
-const NftModal = forwardRef((props, ref) => {
+const InfoModal = forwardRef((props, ref) => {
     const router = useRouter()
     const { data: nftData, reloadNFTs } = useNFT()
     const { isConnected } = useAccount()
@@ -55,20 +55,23 @@ const NftModal = forwardRef((props, ref) => {
         reloadNFTs
     )
 
-    const handleUpdatePriceButtonClick = () => {
+    const handleUpdatePriceButtonClick = useCallback(() => {
         const modalId = `nftUpdateModal-${modalContent.nftAddress}${modalContent.tokenId}`
         openModal("update", modalId, { ...modalContent, price: formattedPrice })
-    }
+    }, [modalContent, formattedPrice, openModal])
 
-    const handleListClick = (action) => {
-        const urlParams = `nftAddress=${modalContent.nftAddress}&tokenId=${modalContent.tokenId}&price=${formattedPrice}`
-        const basePath =
-            action === "sell"
-                ? `/sell-nft?${urlParams}`
-                : `/swap-nft?${urlParams}&desiredNftAddress=${modalContent.desiredNftAddress}&desiredTokenId=${modalContent.desiredTokenId}`
-        router.push(basePath)
-        closeModal(currentModalId)
-    }
+    const handleListClick = useCallback(
+        (action) => {
+            const urlParams = `nftAddress=${modalContent.nftAddress}&tokenId=${modalContent.tokenId}&price=${formattedPrice}`
+            const basePath =
+                action === "sell"
+                    ? `/sell-nft?${urlParams}`
+                    : `/swap-nft?${urlParams}&desiredNftAddress=${modalContent.desiredNftAddress}&desiredTokenId=${modalContent.desiredTokenId}`
+            router.push(basePath)
+            closeModal(currentModalId)
+        },
+        [modalContent, formattedPrice, router, closeModal, currentModalId]
+    )
 
     const buttons = useMemo(() => {
         let actionButtons = []
@@ -110,4 +113,6 @@ const NftModal = forwardRef((props, ref) => {
     )
 })
 
-export default NftModal
+InfoModal.displayName = "InfoModal"
+
+export default InfoModal

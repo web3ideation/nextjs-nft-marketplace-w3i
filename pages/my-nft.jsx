@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { useAccount } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
 
@@ -28,8 +28,10 @@ const MyNFTs = () => {
 
     const { nfts, loading, error } = useFetchNFTsFromWallet(address)
     const [unlistedNfts, setUnlistedNfts] = useState([])
-    const isOwnedByUser = (tokenOwner) =>
-        address && tokenOwner?.toLowerCase() === address.toLowerCase()
+    const isOwnedByUser = useCallback(
+        (tokenOwner) => address && tokenOwner?.toLowerCase() === address.toLowerCase(),
+        [address]
+    )
 
     useEffect(() => {
         const listedNftsSet = new Set(nftsData.map((nft) => `${nft.nftAddress}-${nft.tokenId}`))
@@ -56,7 +58,7 @@ const MyNFTs = () => {
             setNftCount(count)
             setHasOwnNFT(count > 0)
         }
-    }, [nftsData, address])
+    }, [nftsData, isOwnedByUser])
 
     useEffect(() => {
         reloadNFTs()
@@ -119,12 +121,12 @@ const MyNFTs = () => {
                                     />
                                 </>
                             ) : (
-                                <h3>Congratulations you don't own any unlisted NFTs yet!</h3>
+                                <h3>Congratulations you {"don't"} own any unlisted NFTs yet!</h3>
                             )}
                         </>
                     ) : (
                         <div>
-                            <h3>You don't own any NFTs yet!</h3>
+                            <h3>You {"don't"} own any NFTs yet!</h3>
                         </div>
                     )
                 ) : (

@@ -48,51 +48,54 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
         return () => window.removeEventListener("resize", handleResize)
     }, [])
 
-    const sortAndFilterNFTs = (nftsData, sortType) => {
-        const isOwnedByUser = (tokenOwner) =>
-            address && tokenOwner?.toLowerCase() === address.toLowerCase()
+    const sortAndFilterNFTs = useCallback(
+        (nftsData, sortType) => {
+            const isOwnedByUser = (tokenOwner) =>
+                address && tokenOwner?.toLowerCase() === address.toLowerCase()
 
-        switch (sortType) {
-            case "brandNew":
-                return nftsData
-                    .filter((nft) => nft.isListed)
-                    .sort((a, b) => Number(b.listingId) - Number(a.listingId))
-            case "mostSold":
-                const addressCount = {}
-                const filteredNFTs = []
+            switch (sortType) {
+                case "brandNew":
+                    return nftsData
+                        .filter((nft) => nft.isListed)
+                        .sort((a, b) => Number(b.listingId) - Number(a.listingId))
+                case "mostSold":
+                    const addressCount = {}
+                    const filteredNFTs = []
 
-                nftsData
-                    .sort((a, b) => b.buyerCount - a.buyerCount)
-                    .forEach((nft) => {
-                        const count = addressCount[nft.nftAddress] || 0
-                        if (count < 3) {
-                            filteredNFTs.push(nft)
-                            addressCount[nft.nftAddress] = count + 1
-                        }
-                    })
-                return filteredNFTs
-            case "expensive":
-                return nftsData
-                    .filter((nft) => Number(formatPriceToEther(nft.price)) > 0.01)
-                    .sort((a, b) => Number(b.price) - Number(a.price))
-            case "myNFTListed":
-                return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && nft.isListed)
-            case "myNFTNotListed":
-                return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && !nft.isListed)
-            case "myNFTFromWallet":
-                return nftsData
-            default:
-                return nftsData
-        }
-    }
+                    nftsData
+                        .sort((a, b) => b.buyerCount - a.buyerCount)
+                        .forEach((nft) => {
+                            const count = addressCount[nft.nftAddress] || 0
+                            if (count < 3) {
+                                filteredNFTs.push(nft)
+                                addressCount[nft.nftAddress] = count + 1
+                            }
+                        })
+                    return filteredNFTs
+                case "expensive":
+                    return nftsData
+                        .filter((nft) => Number(formatPriceToEther(nft.price)) > 0.01)
+                        .sort((a, b) => Number(b.price) - Number(a.price))
+                case "myNFTListed":
+                    return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && nft.isListed)
+                case "myNFTNotListed":
+                    return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && !nft.isListed)
+                case "myNFTFromWallet":
+                    return nftsData
+                default:
+                    return nftsData
+            }
+        },
+        [address]
+    )
 
     const sortedAndFilteredNFTs = useMemo(() => {
         return sortAndFilterNFTs(nftsData, sortType).slice(0, visibleNFTs)
-    }, [nftsData, visibleNFTs, sortType])
+    }, [nftsData, visibleNFTs, sortType, sortAndFilterNFTs])
 
     const renderNFTList = useCallback(() => {
         if (!nftsData) {
-            console.log("Error on load", isError)
+            console.log("Error on load", nftsError)
             return <p>No NFTs available</p>
         }
 

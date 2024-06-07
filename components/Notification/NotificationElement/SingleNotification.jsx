@@ -3,6 +3,7 @@ import { useAccount } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
 import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
 import LoadingWave from "@components/LoadingWave/LoadingWave"
+import Image from "next/image"
 import styles from "./SingleNotification.module.scss"
 
 const SingleNotification = ({ notification, closeNotification, clearNotification, onClose }) => {
@@ -58,7 +59,12 @@ const SingleNotification = ({ notification, closeNotification, clearNotification
                             className={styles.notificationCloseButton}
                             onClick={handleCloseClick}
                         >
-                            <img src="/media/close_icon.png" alt="Close Notification" />
+                            <Image
+                                width={30}
+                                height={30}
+                                src="/media/close_icon.png"
+                                alt="Close Notification"
+                            />
                         </button>
                         <div className={styles.loadingWrapperNotification}>
                             <LoadingWave />

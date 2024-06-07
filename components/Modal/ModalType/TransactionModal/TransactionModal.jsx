@@ -93,4 +93,6 @@ const TransactionModal = forwardRef((props, ref) => {
     )
 })
 
+TransactionModal.displayName = "TransactionModal"
+
 export default TransactionModal

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useCallback } from "react"
 import Link from "next/link"
 
 import { useModal } from "@context/ModalProvider"
@@ -6,16 +6,16 @@ import { useModal } from "@context/ModalProvider"
 import styles from "./WalletMenu.module.scss"
 
 const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isOpen, isClient, address }) => {
-    if (!isClient) return null
-
     const defaultBalanceData = { formatted: "0", symbol: "N/A" }
     const actualBalanceData = balanceData || defaultBalanceData
     const { openModal } = useModal()
     const menuClassNames = isOpen ? `${styles.walletMenu} ${styles.visible}` : styles.walletMenu
 
-    const handleChatClick = () => {
+    const handleChatClick = useCallback(() => {
         openModal("chat", address)
-    }
+    }, [openModal, address])
+
+    if (!isClient) return null
 
     return (
         <div className={menuClassNames}>

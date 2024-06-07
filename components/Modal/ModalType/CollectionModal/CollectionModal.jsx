@@ -11,7 +11,7 @@ import { formatPriceToEther, truncatePrice } from "@utils/formatting"
 
 import styles from "./CollectionModal.module.scss"
 
-const NFTCollectionModal = forwardRef((prop, ref) => {
+const CollectionModal = forwardRef((prop, ref) => {
     const { data: nftsData } = useNFT()
     const { modalContent: selectedCollection } = useModal()
 
@@ -63,7 +63,7 @@ const NFTCollectionModal = forwardRef((prop, ref) => {
                                 <strong>{selectedCollection?.count}</strong>
                             </div>
                             <div>
-                                <p>Token-Id's: </p>
+                                <p>{"Token-Id's: "}</p>
                                 <strong>
                                     {selectedCollection?.tokenIds.split(",").join(", ")}
                                 </strong>
@@ -85,4 +85,6 @@ const NFTCollectionModal = forwardRef((prop, ref) => {
     )
 })
 
-export default NFTCollectionModal
+CollectionModal.displayName = "CollectionModal"
+
+export default CollectionModal
