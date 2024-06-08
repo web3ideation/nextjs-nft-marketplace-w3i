@@ -105,7 +105,7 @@ const Card = ({ nftData }) => {
                         alt={tokenDescription || "..."}
                         width={300}
                         height={300}
-                        loading="lazy"
+                        loading="eager"
                         className={`${styles.cardImage} ${
                             !imageLoaded ? styles.imageLoading : ""
                         }`}
