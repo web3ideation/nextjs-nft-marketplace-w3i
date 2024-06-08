@@ -15,7 +15,6 @@ export const NftProvider = ({ children }) => {
         isLoading: true,
         isError: false,
     })
-    console.log("NFTDATA", nftState)
     const [provider, setProvider] = useState(null)
 
     useEffect(() => {
@@ -33,11 +32,9 @@ export const NftProvider = ({ children }) => {
 
     const getNFTInfo = useCallback(
         async (nftAddress, tokenId) => {
-            console.log("Get nft info for", nftAddress, tokenId, provider)
             if (!provider) return null
             const contract = new ethers.Contract(nftAddress, erc721ABI, provider)
             const tokenIdBigNumber = ethers.BigNumber.from(tokenId)
-            console.log("Contract", contract, "TokenId", tokenIdBigNumber)
 
             try {
                 const [tokenURI, tokenOwner, collectionName, tokenSymbol] = await Promise.all([
@@ -47,21 +44,12 @@ export const NftProvider = ({ children }) => {
                     contract.symbol(),
                 ])
 
-                console.log(
-                    "Fetched token data",
-                    tokenURI,
-                    tokenOwner,
-                    collectionName,
-                    tokenSymbol
-                )
-
                 const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
                 const response = await fetch(requestURL)
                 const contentType = response.headers.get("content-type")
 
                 if (contentType && contentType.includes("application/json")) {
                     const tokenURIData = await response.json()
-                    console.log("Fetched token URI data", tokenURIData)
                     return {
                         ...tokenURIData,
                         tokenOwner,

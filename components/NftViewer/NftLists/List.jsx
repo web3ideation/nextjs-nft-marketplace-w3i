@@ -1,19 +1,14 @@
-// React Imports
 import React, { useState, useMemo, useEffect, useCallback } from "react"
 import { useAccount } from "wagmi"
-
-// Custom Hooks & Components Imports
 import { useNFT } from "@context/NftDataProvider"
 import { formatPriceToEther } from "@utils/formatting"
 import Card from "@components/NftCard/Card"
 import BtnWithAction from "@components/Btn/BtnWithAction"
-
-// Styles import
 import styles from "./List.module.scss"
 
 const List = ({ nftsData: externalNftsData, sortType, title }) => {
-    const [visibleNFTs, setVisibleNFTs] = useState(null)
-    const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(null)
+    const [visibleNFTs, setVisibleNFTs] = useState(0)
+    const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(0)
 
     const {
         data: internalNftsData,
@@ -21,7 +16,10 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
         isError: nftsError,
         reloadNFTs,
     } = useNFT()
-    const nftsData = externalNftsData || internalNftsData
+    const nftsData = useMemo(
+        () => externalNftsData || internalNftsData,
+        [externalNftsData, internalNftsData]
+    )
 
     const { address } = useAccount()
 
@@ -94,7 +92,10 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
     }, [nftsData, visibleNFTs, sortType, sortAndFilterNFTs])
 
     const renderNFTList = useCallback(() => {
-        if (!nftsData) {
+        if (nftsLoading) {
+            return <p>Loading NFTs...</p>
+        }
+        if (nftsError || !nftsData) {
             console.log("Error on load", nftsError)
             return <p>No NFTs available</p>
         }
@@ -102,16 +103,12 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
         return sortedAndFilteredNFTs.map((nft) => (
             <Card nftData={nft} reloadNFTs={reloadNFTs} key={`${nft.nftAddress}${nft.tokenId}`} />
         ))
-    }, [nftsData, sortedAndFilteredNFTs, nftsError, reloadNFTs])
+    }, [nftsLoading, nftsError, nftsData, sortedAndFilteredNFTs, reloadNFTs])
 
     return (
         <div className={styles.listWrapper}>
             <h3>{title}</h3>
-
-            <div className={styles.list}>
-                <>{renderNFTList()} </>
-            </div>
-
+            <div className={styles.list}>{renderNFTList()}</div>
             <div className={styles.showMoreBtns}>
                 {visibleNFTs === sortedAndFilteredNFTs.length && (
                     <BtnWithAction
