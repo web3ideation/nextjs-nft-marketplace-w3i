@@ -92,14 +92,20 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
     }, [nftsData, visibleNFTs, sortType, sortAndFilterNFTs])
 
     const renderNFTList = useCallback(() => {
-        if (!nftsLoading || nftsError || !nftsData) {
+        if (nftsError || !nftsData) {
             console.log("Error on load", nftsError)
             return <p>No NFTs available</p>
         }
 
-        return sortedAndFilteredNFTs.map((nft) => (
-            <Card nftData={nft} reloadNFTs={reloadNFTs} key={`${nft.nftAddress}${nft.tokenId}`} />
-        ))
+        if (!nftsLoading) {
+            return sortedAndFilteredNFTs.map((nft) => (
+                <Card
+                    nftData={nft}
+                    reloadNFTs={reloadNFTs}
+                    key={`${nft.nftAddress}${nft.tokenId}`}
+                />
+            ))
+        }
     }, [nftsLoading, nftsError, nftsData, sortedAndFilteredNFTs, reloadNFTs])
 
     return (
