@@ -17,7 +17,7 @@ const useFetchNFTsForWallet = (walletAddress) => {
                 if (!response.ok) throw new Error("Network response was not ok")
 
                 const data = await response.json()
-                console.log("untransformed data", data)
+
                 const transformedNfts = data.ownedNfts.map((nft) => ({
                     tokenName: nft.title || "Unbekanntes NFT",
                     tokenSymbol: nft.contractMetadata.symbol || "",
@@ -33,7 +33,6 @@ const useFetchNFTsForWallet = (walletAddress) => {
                     desiredTokenId: "0",
                     price: 0,
                 }))
-                console.log("transformed data", transformedNfts)
                 setNfts(transformedNfts)
             } catch (error) {
                 setError(error.message)
