@@ -21,7 +21,7 @@ export const NftProvider = ({ children }) => {
         if (typeof window !== "undefined") {
             const ethProvider = window.ethereum
                 ? new ethers.providers.Web3Provider(window.ethereum)
-                : new ethers.providers.JsonRpcProvider("wss://ethereum-sepolia-rpc.publicnode.com")
+                : new ethers.providers.JsonRpcProvider("https://sepolia.gateway.tenderly.co")
             setProvider(ethProvider)
         }
     }, [])
