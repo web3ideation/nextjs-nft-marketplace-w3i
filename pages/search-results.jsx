@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react"
-import { useRouter } from "next/router"
+import React, { useState, useEffect, useCallback } from "react"
+import { useRouter, useSearchParams } from "next/router"
 
 import { useNFT } from "@context/NftDataProvider"
 import SearchSideFilters from "@components/SearchSideBar/SearchSideFilters"
@@ -9,28 +9,36 @@ import { ethers } from "ethers"
 
 import styles from "@styles/Home.module.scss"
 
-const SearchResultPage = () => {
+const SearchResults = () => {
     const router = useRouter()
     const { data: nftsData, loadingImage } = useNFT()
-
+    const [searchTerm, setSearchTerm] = useState("")
     const [searchResults, setSearchResults] = useState([])
     const [filteredNFTs, setFilteredNFTs] = useState([])
 
-    const searchTermFromQuery = router.query.search || ""
+    useEffect(() => {
+        const searchTermFromQuery = router.query.search || ""
+        setSearchTerm(searchTermFromQuery)
+    }, [router.query.search])
 
-    const attributesToString = (attributes) => {
+    const attributesToString = useCallback((attributes) => {
         if (!attributes || !Array.isArray(attributes)) {
             return ""
         }
-        return attributes
-            .map((attr) =>
-                attr.trait_type && attr.value ? `${attr.trait_type}: ${attr.value}` : ""
-            )
+        const result = attributes
+            .map((attr) => (attr.trait_type && attr.value ? `${attr.trait_type}: ${attr.value}` : ""))
             .join(" ")
             .toLowerCase()
-    }
+        return result
+    }, [])
 
     useEffect(() => {
+        if (!nftsData) {
+            setSearchResults([])
+            setFilteredNFTs([])
+            return
+        }
+
         const filteredResults = nftsData.filter((item) => {
             const formattedPrice = ethers.utils.formatUnits(item.price, "ether")
             const attributesString = attributesToString(item.attributes)
@@ -58,12 +66,13 @@ const SearchResultPage = () => {
                 .join(" ")
                 .toLowerCase()
 
-            return concatenatedFields.includes(searchTermFromQuery.toLowerCase())
+            const includesSearchTerm = concatenatedFields.includes(searchTerm.toLowerCase())
+            return includesSearchTerm
         })
 
         setSearchResults(filteredResults)
         setFilteredNFTs(filteredResults)
-    }, [nftsData, searchTermFromQuery])
+    }, [nftsData, searchTerm, attributesToString])
 
     const handleFilteredItemsChange = (newFilteredItems) => {
         setFilteredNFTs(newFilteredItems)
@@ -75,21 +84,14 @@ const SearchResultPage = () => {
 
     return (
         <>
-            <SearchSideFilters
-                initialItems={searchResults}
-                onFilteredItemsChange={handleFilteredItemsChange}
-            />
+            <SearchSideFilters initialItems={searchResults} onFilteredItemsChange={handleFilteredItemsChange} />
             <div className={styles.nftSearchResultsContainer}>
                 <div className={styles.nftSearchResultsWrapper}>
-                    <NFTList
-                        nftsData={filteredNFTs}
-                        sortType={""}
-                        title={`${"Search Results for: "}${searchTermFromQuery}`}
-                    />
+                    <NFTList nftsData={filteredNFTs} sortType={""} title={`${"Search Results for: "}${searchTerm}`} />
                 </div>
             </div>
         </>
     )
 }
 
-export default SearchResultPage
+export default SearchResults

@@ -70,11 +70,7 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
     )
 
     return (
-        <div
-            className={styles.searchSideFilters}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
+        <div className={styles.searchSideFilters} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <div
                 className={styles.searchSideFiltersOptionWrapper}
                 onTouchStart={handleTouchStart}
@@ -83,8 +79,7 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
                 onMouseUp={handleMouseUp}
                 style={{ transform: isButtonPressed ? "scale(0.95)" : "scale(1)" }}
             >
-                {" "}
-                <h4>{label}</h4>
+                <h6>{label}</h6>
             </div>
             <div
                 ref={listRef}

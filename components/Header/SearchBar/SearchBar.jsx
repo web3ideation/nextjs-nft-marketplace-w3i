@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react"
-
 import { useRouter } from "next/router"
-
 import styles from "./SearchBar.module.scss"
 
 const SearchBar = () => {
     const router = useRouter()
     const [searchTerm, setSearchTerm] = useState("")
+    console.log("searchTerm", searchTerm)
 
     useEffect(() => {
         const handleRouteChange = () => setSearchTerm("")
@@ -18,7 +17,7 @@ const SearchBar = () => {
 
     const handleSearch = () => {
         router.push({
-            pathname: "/search-result-page",
+            pathname: "/search-results",
             query: { search: searchTerm },
         })
     }
@@ -41,9 +40,11 @@ const SearchBar = () => {
                 aria-label="Search field"
             />
             {searchTerm.length > 0 && (
-                <button onClick={handleSearch} className={styles.searchBarBtn}>
-                    Go
-                </button>
+                <div className={styles.searchBarBtn}>
+                    <button onClick={handleSearch} aria-label="Start Search">
+                        Go
+                    </button>
+                </div>
             )}
         </div>
     )

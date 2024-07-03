@@ -70,9 +70,7 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
             filteredList = filteredList.filter((nft) => nft.category === filters.selectedCategory)
         }
         if (filters.selectedCollections !== "default") {
-            filteredList = filteredList.filter(
-                (nft) => nft.nftAddress === filters.selectedCollections
-            )
+            filteredList = filteredList.filter((nft) => nft.nftAddress === filters.selectedCollections)
         }
         filteredList.sort((a, b) => {
             switch (filters.selectedSorting) {
@@ -96,43 +94,35 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
         onFilteredItemsChange(filteredList)
     }, [filters, initialItems, onFilteredItemsChange])
 
-    useEffect(() => filterItems(), [filters, filterItems])
+    // disabled because we don't want to run this effect on every render (it would cause an infinite loop)
+    useEffect(() => {
+        filterItems()
+    }, [filters]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handleOptionChange = (type, value) => {
+    const handleOptionChange = useCallback((type, value) => {
         setFilters((prevFilters) => ({ ...prevFilters, [type]: value }))
-    }
+    }, [])
 
     const toggleMenu = () => setIsOpen((prevIsOpen) => !prevIsOpen)
     const handleButtonInteraction = (isPressed) => setIsButtonPressed(isPressed)
 
     return (
         <div ref={menuRef}>
-            <div
-                className={`${styles.searchSideFiltersWrapper} ${
-                    isOpen ? styles.searchSideFiltersWrapperOpen : ""
-                }`}
-            >
+            <div className={`${styles.searchSideFiltersWrapper} ${isOpen ? styles.searchSideFiltersWrapperOpen : ""}`}>
                 <div className={`${styles.backgroundPlaceholder} ${styles.placeholderA}`}></div>
                 <div className={styles.filterHeadlineWrapper}>
-                    <h3>Filter</h3>
+                    <h4>Filter</h4>
                     <div
-                        className={`${styles.filterOpenButton} ${
-                            isOpen ? styles.filterOpenButtonOpen : ""
-                        }`}
+                        className={`${styles.filterButton} ${isOpen ? styles.filterButtonOpen : ""}`}
                         onClick={toggleMenu}
                     >
-                        <div
-                            className={`${styles.sideBarArrow} ${
-                                isOpen ? styles.sideBarArrowOpen : ""
-                            }`}
-                        >
-                            <Image
-                                width={20}
-                                height={20}
-                                src="/media/arrow_down.png"
-                                alt="Menu Arrow"
-                            />
-                        </div>
+                        <Image
+                            className={styles.arrow}
+                            width={26}
+                            height={26}
+                            src="/media/arrow_down.png"
+                            alt="Menu Arrow"
+                        />
                     </div>
                 </div>
                 {["Status", "Sorting", "Categories", "Collections"].map((label) => (
