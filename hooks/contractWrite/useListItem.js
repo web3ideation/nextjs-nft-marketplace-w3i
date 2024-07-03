@@ -2,12 +2,12 @@ import { useState, useEffect, useRef, useCallback } from "react"
 
 import { useContractWrite, useWaitForTransaction } from "wagmi"
 
-import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
+import { useTransactionErrorHandler } from "../transactionErrorHandling/useTransactionErrorHandler"
 
 import { useNotification } from "@context/NotificationProvider"
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
 
-export const useListItem = (
+const useListItem = (
     marketplaceAddress,
     nftAddress,
     tokenId,
@@ -98,7 +98,7 @@ export const useListItem = (
         hash: listItemTxHash,
     })
 
-    const handleListItem = useCallback(async () => {
+    const handleList = useCallback(async () => {
         try {
             setListing(true)
             confirmListingNotificationId.current = showNotification(
@@ -127,5 +127,7 @@ export const useListItem = (
         }
     }, [closeNotification])
 
-    return { handleListItem, listing }
+    return { handleList, listing }
 }
+
+export default useListItem

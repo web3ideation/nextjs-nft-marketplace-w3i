@@ -1,0 +1,32 @@
+{
+    "buyItem": {
+        "title": "Purchase Successful",
+        "message": "You have successfully purchased the NFT.",
+        "type": "success"
+    },
+    "cancelListing": {
+        "title": "Cancellation Successful",
+        "message": "You have successfully canceled the listing.",
+        "type": "success"
+    },
+    "listItem": {
+        "title": "Listing Successful",
+        "message": "You have successfully listed the NFT.",
+        "type": "success"
+    },
+    "approve": {
+        "title": "Approval Successful",
+        "message": "You have successfully approved the transaction.",
+        "type": "success"
+    },
+    "updateListing": {
+        "title": "Update Listing Successful",
+        "message": "You have successfully updated the listing.",
+        "type": "success"
+    },
+    "withdrawProceeds": {
+        "title": "Withdraw Proceeds Successful",
+        "message": "You have successfully withdrawn your proceeds.",
+        "type": "success"
+    }
+}

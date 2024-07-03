@@ -1,0 +1,32 @@
+{
+    "buyItem": {
+        "title": "Buying",
+        "message": "Transaction sent. Awaiting confirmation...",
+        "type": "info"
+    },
+    "cancelListing": {
+        "title": "Canceling",
+        "message": "Cancellation sent. Awaiting confirmation...",
+        "type": "info"
+    },
+    "listItem": {
+        "title": "Listing",
+        "message": "Listing process started...",
+        "type": "info"
+    },
+    "approve": {
+        "title": "Approving",
+        "message": "Approving process started...",
+        "type": "info"
+    },
+    "updateListing": {
+        "title": "Updating Listing",
+        "message": "Updating listing process started...",
+        "type": "info"
+    },
+    "withdrawProceeds": {
+        "title": "Withdrawl",
+        "message": "Withdraw procceds process started...",
+        "type": "info"
+    }
+}

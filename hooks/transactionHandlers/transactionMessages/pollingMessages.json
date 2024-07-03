@@ -1,0 +1,27 @@
+{
+    "buyItem": {
+        "title": "Checking Transaction",
+        "message": "Checking the status of your purchase transaction...",
+        "type": "info"
+    },
+    "cancelListing": {
+        "title": "Checking Transaction",
+        "message": "Checking the status of your cancellation transaction...",
+        "type": "info"
+    },
+    "listItem": {
+        "title": "Checking Transaction",
+        "message": "Checking the status of your listing transaction...",
+        "type": "info"
+    },
+    "approve": {
+        "title": "Checking Transaction",
+        "message": "Checking the status of your approval transaction...",
+        "type": "info"
+    },
+    "updateListing": {
+        "title": "Checking Transaction",
+        "message": "Checking the status of your update listing transaction...",
+        "type": "info"
+    }
+}

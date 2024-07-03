@@ -1,0 +1,32 @@
+{
+    "buyItem": {
+        "title": "Purchase Failed",
+        "message": "Failed to purchase the NFT.",
+        "type": "error"
+    },
+    "cancelListing": {
+        "title": "Cancellation Failed",
+        "message": "Failed to cancel the listing.",
+        "type": "error"
+    },
+    "listItem": {
+        "title": "Listing Failed",
+        "message": "Failed to list the NFT.",
+        "type": "error"
+    },
+    "approve": {
+        "title": "Approval Failed",
+        "message": "Failed to approve the NFT.",
+        "type": "error"
+    },
+    "updateListing": {
+        "title": "Update Listing Failed",
+        "message": "Failed to update the listing.",
+        "type": "error"
+    },
+    "withdrawProceeds": {
+        "title": "Withdraw Proceeds Failed",
+        "message": "Failed to withdraw your proceeds.",
+        "type": "error"
+    }
+}

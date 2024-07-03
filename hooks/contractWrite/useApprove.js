@@ -2,16 +2,10 @@ import { useState, useEffect, useRef, useCallback } from "react"
 
 import { erc721ABI, useContractWrite, useWaitForTransaction } from "wagmi"
 
-import { useTransactionErrorHandler } from "./transactionErrorHandling/useTransactionErrorHandler"
+import { useTransactionErrorHandler } from "../transactionErrorHandling/useTransactionErrorHandler"
 import { useNotification } from "@context/NotificationProvider"
 
-export const useRawApprove = (
-    nftAddress,
-    marketplaceAddress,
-    tokenId,
-    isConnected,
-    onSuccessCallback
-) => {
+const useApprove = (marketplaceAddress, nftAddress, tokenId, isConnected, onSuccessCallback) => {
     const [approvingTxHash, setApprovingTxHash] = useState(null)
     const [approving, setApproving] = useState(false)
 
@@ -94,17 +88,13 @@ export const useRawApprove = (
         hash: approvingTxHash,
     })
 
-    const handleApproveItem = useCallback(async () => {
+    const handleApprove = useCallback(async () => {
         if (!isConnected) {
             showNotification("Connect wallet", "Connect your wallet to approve and list!", "info")
             return
         }
         if (approving) {
-            showNotification(
-                "Approving",
-                "An approval is already in progress! Check your wallet!",
-                "error"
-            )
+            showNotification("Approving", "An approval is already in progress! Check your wallet!", "error")
             return
         }
         setApproving(true)
@@ -135,5 +125,7 @@ export const useRawApprove = (
         }
     }, [closeNotification])
 
-    return { handleApproveItem, isApprovingTxSuccess, approving }
+    return { handleApprove, isApprovingTxSuccess, approving }
 }
+
+export default useApprove

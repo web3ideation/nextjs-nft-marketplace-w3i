@@ -26,8 +26,7 @@ export const useTransactionErrorHandler = () => {
                 },
                 "Failed to list the NFT.": {
                     title: "Listing Failed",
-                    description:
-                        "Failed to list the NFT. Please ensure it meets all listing requirements.",
+                    description: "Failed to list the NFT. Please ensure it meets all listing requirements.",
                 },
                 "Failed to delist the NFT.": {
                     title: "Delisting Failed",
@@ -35,13 +34,11 @@ export const useTransactionErrorHandler = () => {
                 },
                 "Failed to update the NFT.": {
                     title: "Update Failed",
-                    description:
-                        "Failed to update the NFT. Please check the details and try again.",
+                    description: "Failed to update the NFT. Please check the details and try again.",
                 },
                 "Failed to withdraw proceeds.": {
                     title: "Withdrawal Failed",
-                    description:
-                        "Failed to withdraw proceeds. Please ensure you have available funds to withdraw.",
+                    description: "Failed to withdraw proceeds. Please ensure you have available funds to withdraw.",
                 },
                 "invalid token ID": {
                     title: "Listing Failed",
@@ -49,14 +46,11 @@ export const useTransactionErrorHandler = () => {
                 },
                 "Execution reverted for an unknown reason": {
                     title: "Transaction Failed",
-                    description:
-                        "Transaction failed for unknown reason check all parameters and try again.",
+                    description: "Transaction failed for unknown reason check all parameters and try again.",
                 },
             }
 
-            const foundError = Object.entries(errorMessageMapping).find(([key]) =>
-                error.message.includes(key)
-            )
+            const foundError = Object.entries(errorMessageMapping).find(([key]) => error.message.includes(key))
 
             const { title, description } = foundError
                 ? errorMessageMapping[foundError[0]]

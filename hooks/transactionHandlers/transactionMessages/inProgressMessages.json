@@ -1,0 +1,32 @@
+{
+    "buyItem": {
+        "title": "Buying",
+        "message": "A purchase is already in progress! Check your wallet!",
+        "type": "error"
+    },
+    "cancelListing": {
+        "title": "Cancelation",
+        "message": "A cancelation is already in progress! Check your wallet!",
+        "type": "error"
+    },
+    "listItem": {
+        "title": "Listing",
+        "message": "A listing is already in progress! Check your wallet!",
+        "type": "error"
+    },
+    "approve": {
+        "title": "Approving",
+        "message": "A approval is already in progress! Check your wallet!",
+        "type": "error"
+    },
+    "updateListing": {
+        "title": "Updating",
+        "message": "A update is already in progress! Check your wallet!",
+        "type": "error"
+    },
+    "withdrawProceeds": {
+        "title": "Withdrawing",
+        "message": "A withdrawl is already in progress! Check your wallet!",
+        "type": "error"
+    }
+}

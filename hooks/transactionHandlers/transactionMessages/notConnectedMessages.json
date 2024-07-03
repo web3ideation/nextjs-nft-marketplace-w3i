@@ -1,0 +1,32 @@
+{
+    "buyItem": {
+        "title": "Connect wallet",
+        "message": "Connect your wallet to buy items!",
+        "type": "info"
+    },
+    "cancelListing": {
+        "title": "Connect wallet",
+        "message": "Connect your wallet to cancel the listing!",
+        "type": "info"
+    },
+    "listItem": {
+        "title": "Connect wallet",
+        "message": "Connect your wallet to list the item!",
+        "type": "info"
+    },
+    "approve": {
+        "title": "Connect wallet",
+        "message": "Connect your wallet to approve the transaction!",
+        "type": "info"
+    },
+    "updateListing": {
+        "title": "Connect wallet",
+        "message": "Connect your wallet to update the listing!",
+        "type": "info"
+    },
+    "withdrawProceeds": {
+        "title": "Connect Wallet",
+        "message": "Connect your wallet to withdrawn your proceeds!",
+        "type": "info"
+    }
+}

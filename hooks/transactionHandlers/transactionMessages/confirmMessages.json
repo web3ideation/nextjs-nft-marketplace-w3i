@@ -1,0 +1,64 @@
+{
+    "approve": {
+        "title": "Check your wallet",
+        "message": ["Confirm approval for the NFT with Address:", " ${nftAddress} ", " and Token ID:", " ${tokenId}."],
+        "type": "info"
+    },
+    "buyItem": {
+        "title": "Check your wallet",
+        "message": [
+            "Confirm purchase of NFT",
+            " with address:",
+            " ${nftAddress} ",
+            " and Token-ID:",
+            " ${tokenId} for",
+            " ${formattedPrice} ETH, excluding fees."
+        ],
+        "type": "info"
+    },
+    "cancelListing": {
+        "title": "Check your wallet",
+        "message": [
+            "Confirm cancellation of the listing for the item with NFT Address:",
+            " ${nftAddress} ",
+            " and Token ID:",
+            " ${tokenId}."
+        ],
+        "type": "info"
+    },
+    "listItem": {
+        "title": "Check your wallet",
+        "message": [
+            "Confirm listing of NFT",
+            " with address: ",
+            " ${nftAddress} ",
+            " and Token-ID:",
+            " ${tokenId} for",
+            " ${price} ETH."
+        ],
+        "type": "info"
+    },
+    "updateListing": {
+        "title": "Check your wallet",
+        "message": [
+            "Confirm the update for the listed NFT with Address:",
+            " ${nftAddress}, ",
+            " Token ID:",
+            " ${tokenId}, ",
+            " and Price:",
+            " ${price}. ",
+            "New Price:",
+            " ${newPrice} ",
+            "New desired NFT Address:",
+            " ${newDesiredNftAddress} ",
+            "New desired Token-ID:",
+            " ${newDesiredTokenId}."
+        ],
+        "type": "info"
+    },
+    "withdrawProceeds": {
+        "title": "Check your wallet",
+        "message": ["Confirm withdraw", " ${proceeds} ", "ETH"],
+        "type": "info"
+    }
+}

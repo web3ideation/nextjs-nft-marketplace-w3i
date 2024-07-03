@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 
-const useFetchNFTsForWallet = (walletAddress) => {
+const useWalletNFTs = (walletAddress) => {
     const [nfts, setNfts] = useState([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -47,4 +47,4 @@ const useFetchNFTsForWallet = (walletAddress) => {
     return { nfts, loading, error }
 }
 
-export default useFetchNFTsForWallet
+export default useWalletNFTs
