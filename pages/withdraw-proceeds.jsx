@@ -11,7 +11,6 @@ import BtnWithAction from "@components/Btn/BtnWithAction"
 import styles from "@styles/Home.module.scss"
 
 const WithdrawProceeds = () => {
-    const [initialized, setInitialized] = useState(false)
     const provider = usePublicClient()
     const chainId = provider.chains[0]
     const chainString = chainId.id ? parseInt(chainId.id).toString() : "31337"
@@ -26,7 +25,7 @@ const WithdrawProceeds = () => {
         useGetProceeds(marketplaceAddress, userAddress)
 
     const handleWithdrawSuccess = () => {
-        openModal("withdrawn")
+        openModal("withdrawn", modalContent)
     }
 
     const { handleWithdrawProceeds, isTxSuccess } = useWithdrawProceeds(marketplaceAddress, proceeds, refetchProceeds)
@@ -55,12 +54,6 @@ const WithdrawProceeds = () => {
         }
         updatePriceInEur()
     }, [proceeds])
-
-    useEffect(() => {
-        setInitialized(true)
-    }, [initialized])
-
-    if (!initialized) return null
 
     return (
         <div className={styles.withdrawProceedsContainer}>
