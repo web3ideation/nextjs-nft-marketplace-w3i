@@ -1,10 +1,17 @@
-import React, { createContext, useContext, useState } from "react"
-
+import React, { createContext, useEffect, useContext, useState } from "react"
+import { useAccount } from "wagmi"
 const ModalContext = createContext()
 
 export const useModal = () => useContext(ModalContext)
 
 export const ModalProvider = ({ children }) => {
+    const { isConnected } = useAccount()
+    useEffect(() => {
+        if (!isConnected) {
+            setModalOpen(true)
+            setModalType("welcome")
+        }
+    }, [isConnected])
     const [isModalOpen, setModalOpen] = useState(false)
     const [modalType, setModalType] = useState(null)
     const [modalState, setModalState] = useState("closed")
