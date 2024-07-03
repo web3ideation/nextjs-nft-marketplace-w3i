@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react"
 import useFormValidation from "@hooks/formValidation/useFormValidation"
-import Tooltip from "@components/Tooltip/Tooltip"
 import SellSwapInformation from "../SellSwapInformation/SellSwapInformation"
 import BtnWithAction from "@components/Btn/BtnWithAction"
-import ComingSoon from "@components/ComingSoon/ComingSoon"
 
 import styles from "./SellSwapForm.module.scss"
+import CategoriesCheckbox from "./CategoriesCheckbox"
+import SellSwapInputFields from "./SellSwapInputFields"
 
 const SellSwapForm = ({
     title,
@@ -14,16 +14,28 @@ const SellSwapForm = ({
     defaultTokenId = "",
     defaultPrice = "",
     extraFields = [],
+    formData,
+    setFormData,
 }) => {
     const formRef = useRef(null)
 
-    const { formData, errors, handleChange, validateForm } = useFormValidation({
+    const { errors, handleChange, validateForm } = useFormValidation({
         nftAddress: defaultNftAddress,
         tokenId: defaultTokenId,
         price: defaultPrice,
         ...extraFields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {}),
     })
-
+    const inputFields = [
+        {
+            key: "nftAddress",
+            label: "NFT Address",
+            type: "text",
+            placeholder: "0x0000000000000000000000000000000000000000",
+        },
+        { key: "tokenId", label: "Token ID", type: "text", placeholder: "0" },
+        { key: "price", label: "Price", type: "number", placeholder: "min. amount: 0.000000000000000001" },
+        ...extraFields,
+    ]
     const [checkboxData, setCheckboxData] = useState({
         DAO: false,
         Music: false,
@@ -34,22 +46,6 @@ const SellSwapForm = ({
         "Digital Twin": false,
         Utility: false,
     })
-
-    const [checkboxError, setCheckboxError] = useState("")
-
-    const handleChangeCheckbox = (e) => {
-        const { name, checked } = e.target
-        const selectedCount = Object.values(checkboxData).filter((val) => val).length
-
-        if (!checked || selectedCount < 2) {
-            setCheckboxData({ ...checkboxData, [name]: checked })
-            setCheckboxError("")
-        } else {
-            setCheckboxError("You can choose up to 2 categories.")
-        }
-    }
-
-    const checkboxErrorDisplay = checkboxError ? <Tooltip message={checkboxError} /> : null
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -65,6 +61,10 @@ const SellSwapForm = ({
         const submissionData = { ...formProps, categories: selectedCategories }
 
         if (validateForm(submissionData)) {
+            // Ensure all fields are defined and correctly formatted
+            submissionData.tokenId = submissionData.tokenId || "0"
+            submissionData.desiredTokenId = submissionData.desiredTokenId || "0"
+            submissionData.price = submissionData.price || "0"
             onSubmit(submissionData)
         }
     }
@@ -74,76 +74,14 @@ const SellSwapForm = ({
             <h2>{title}</h2>
             <form className={styles.sellSwapForm} onSubmit={handleSubmit} ref={formRef}>
                 <div className={styles.sellSwapInputFieldsWrapper}>
-                    {/* Standard form fields for NFT Address, Token ID, and Price */}
-                    <div className={styles.sellSwapFormInputWrapper}>
-                        <div className={styles.sellSwapFormTitles}>
-                            <h3>The data of your NFT</h3>
-                        </div>
-                        {["nftAddress", "tokenId", "price"].map((fieldKey) => (
-                            <div key={fieldKey} className={styles.sellSwapFormInput}>
-                                <label htmlFor={fieldKey}>
-                                    {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)}
-                                </label>
-                                <div className={styles.sellSwapInputWrapper}>
-                                    <input
-                                        type={fieldKey === "price" ? "number" : "text"}
-                                        id={fieldKey}
-                                        name={fieldKey}
-                                        placeholder={
-                                            fieldKey === "nftAddress"
-                                                ? "0x0000000000000000000000000000000000000000"
-                                                : fieldKey === "tokenId"
-                                                ? "0"
-                                                : "min. amount: 0.000000000000000001"
-                                        }
-                                        value={formData[fieldKey]}
-                                        onChange={handleChange}
-                                    />
-                                    {errors[fieldKey] && <Tooltip message={errors[fieldKey]} />}
-                                </div>
-                            </div>
-                        ))}
-                        {extraFields.map((field) => (
-                            <div key={field.key} className={styles.sellSwapFormInput}>
-                                <label htmlFor={field.key}>{field.name}</label>
-                                <div className={styles.sellSwapInputWrapper}>
-                                    <input
-                                        type={field.type}
-                                        key={field.key}
-                                        name={field.key}
-                                        placeholder={field.placeholder}
-                                        value={formData[field.key]}
-                                        onChange={handleChange}
-                                    />
-                                    {errors[field.key] && <Tooltip message={errors[field.key]} />}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className={styles.checkboxFieldsWrapper}>
-                        <div className={styles.sellSwapFormTitles}>
-                            <ComingSoon></ComingSoon>
-                            <h3>Choose up to 2 categories</h3>
-                        </div>
-
-                        {Object.keys(checkboxData).map((category) => (
-                            <div key={category} className={styles.checkboxWrapper}>
-                                <input
-                                    type="checkbox"
-                                    id={category}
-                                    name={category}
-                                    checked={checkboxData[category]}
-                                    onChange={handleChangeCheckbox}
-                                />
-                                <label htmlFor={category}>{category}</label>
-                            </div>
-                        ))}
-                        {checkboxErrorDisplay}
-                    </div>
-                </div>
-                <div className={styles.sellSwapFormTitles}>
-                    <h3>Here are some things to keep in mind when listing your item:</h3>
+                    <SellSwapInputFields
+                        fields={inputFields}
+                        formData={formData}
+                        setFormData={setFormData}
+                        errors={errors}
+                        handleChange={handleChange}
+                    />
+                    <CategoriesCheckbox checkboxData={checkboxData} setCheckboxData={setCheckboxData} />
                 </div>
                 <SellSwapInformation />
                 <BtnWithAction buttonText={"Approve and list"} type="submit" />

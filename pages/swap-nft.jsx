@@ -3,15 +3,15 @@ import ActionForm from "@components/SellSwapActionForm/SellSwapActionForm"
 const SwapNFT = () => {
     const extraFields = [
         {
-            name: "Desired NFT Address",
-            type: "text",
             key: "desiredNftAddress",
+            label: "Desired NFT Address",
+            type: "text",
             placeholder: "0x0000000000000000000000000000000000000000",
         },
-        { name: "Desired Token ID", type: "number", key: "desiredTokenId", placeholder: "0" },
+        { key: "desiredTokenId", label: "Desired Token ID", type: "number", placeholder: "0" },
     ]
 
-    return <ActionForm action="sell" formTitle="Swap your NFT!" extraFields={extraFields} />
+    return <ActionForm action="swap" formTitle="Swap your NFT!" extraFields={extraFields} />
 }
 
 export default SwapNFT
