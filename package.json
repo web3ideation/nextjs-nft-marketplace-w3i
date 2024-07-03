@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "pm2 restart nextjs-nft-marketplace-w3i",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-licenses": "node generate-licenses.js"
   },
   "dependencies": {
     "@apollo/client": "^3.7.13",
@@ -24,6 +26,8 @@
     "ethers": "5.7.2",
     "graphql": "^16.6.0",
     "immer": "^10.0.3",
+    "json2md": "^2.0.1",
+    "license-checker": "^25.0.1",
     "magic-sdk": "^21.3.0",
     "mongoose": "^8.1.0",
     "next": "^14.0.2",
@@ -44,6 +48,7 @@
     "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.46",
     "concurrently": "^8.2.2",
+    "depcheck": "^1.4.7",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "post": "^0.0.1",
