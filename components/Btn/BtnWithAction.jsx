@@ -3,7 +3,13 @@ import styles from "./BtnWithAction.module.scss"
 
 const BtnWithAction = ({ buttonText, onClickAction, type = "button", style }) => {
     return (
-        <button className={styles.button} type={type} onClick={onClickAction} style={style}>
+        <button
+            className={styles.button}
+            type={type}
+            onClick={onClickAction}
+            style={style}
+            aria-label={`${buttonText}`}
+        >
             {buttonText}
         </button>
     )
