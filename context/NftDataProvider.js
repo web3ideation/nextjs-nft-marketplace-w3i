@@ -108,7 +108,26 @@ export const NftProvider = ({ children }) => {
         loading: activeLoading,
         error: activeError,
         refetch: refetchActiveItems,
-    } = useQuery(GET_ACTIVE_ITEMS, { skip: !provider })
+    } = useQuery(GET_ACTIVE_ITEMS, {
+        skip: !provider,
+        onCompleted: (data) => {
+            if (data) {
+                updateNftState({ isLoading: true })
+                loadAllAttributes(data.items)
+                    .then((loadedData) => {
+                        updateNftState({ data: loadedData, isLoading: false })
+                    })
+                    .catch((error) => {
+                        console.error("Error loading all attributes:", error)
+                        updateNftState({ isError: true, isLoading: false })
+                    })
+            }
+        },
+        onError: (error) => {
+            console.error("Error fetching active items:", error)
+            updateNftState({ isError: true, isLoading: false })
+        },
+    })
 
     useEffect(() => {
         if (activeLoading) {
