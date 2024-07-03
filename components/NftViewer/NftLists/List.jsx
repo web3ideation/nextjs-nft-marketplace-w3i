@@ -9,17 +9,11 @@ import styles from "./List.module.scss"
 const List = ({ nftsData: externalNftsData, sortType, title }) => {
     const [visibleNFTs, setVisibleNFTs] = useState(0)
     const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(0)
+    const [isLoaded, setIsLoaded] = useState(false)
+    const [showPlaceholders, setShowPlaceholders] = useState(true)
 
-    const {
-        data: internalNftsData,
-        isLoading: nftsLoading,
-        isError: nftsError,
-        reloadNFTs,
-    } = useNFT()
-    const nftsData = useMemo(
-        () => externalNftsData || internalNftsData,
-        [externalNftsData, internalNftsData]
-    )
+    const { data: internalNftsData, isLoading: nftsLoading, isError: nftsError, reloadNFTs } = useNFT()
+    const nftsData = useMemo(() => externalNftsData || internalNftsData, [externalNftsData, internalNftsData])
 
     const { address } = useAccount()
 
@@ -48,8 +42,7 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
 
     const sortAndFilterNFTs = useCallback(
         (nftsData, sortType) => {
-            const isOwnedByUser = (tokenOwner) =>
-                address && tokenOwner?.toLowerCase() === address.toLowerCase()
+            const isOwnedByUser = (tokenOwner) => address && tokenOwner?.toLowerCase() === address.toLowerCase()
 
             switch (sortType) {
                 case "brandNew":
@@ -91,22 +84,37 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
         return sortAndFilterNFTs(nftsData, sortType).slice(0, visibleNFTs)
     }, [nftsData, visibleNFTs, sortType, sortAndFilterNFTs])
 
+    useEffect(() => {
+        if (!nftsLoading) {
+            setTimeout(() => {
+                setIsLoaded(true)
+                setTimeout(() => setShowPlaceholders(false), 500) // Wait for the fade-out transition to complete
+            }, 500) // Wait for the fade-in transition to complete
+        }
+    }, [nftsLoading])
+
     const renderNFTList = useCallback(() => {
         if (nftsError || !nftsData) {
             console.log("Error on load", nftsError)
             return <p>No NFTs available</p>
         }
 
-        if (!nftsLoading) {
+        if (nftsLoading || showPlaceholders) {
+            const placeholders = Array.from({ length: visibleNFTs }, (_, index) => (
+                <Card key={`placeholder-${index}`} nftData={null} className={`${styles.card}`} />
+            ))
+            return placeholders
+        } else {
             return sortedAndFilteredNFTs.map((nft) => (
                 <Card
                     nftData={nft}
                     reloadNFTs={reloadNFTs}
                     key={`${nft.nftAddress}${nft.tokenId}`}
+                    className={`${styles.card} ${isLoaded ? styles.loaded : ""}`}
                 />
             ))
         }
-    }, [nftsLoading, nftsError, nftsData, sortedAndFilteredNFTs, reloadNFTs])
+    }, [nftsLoading, nftsError, nftsData, sortedAndFilteredNFTs, reloadNFTs, visibleNFTs, showPlaceholders, isLoaded])
 
     return (
         <div className={styles.listWrapper}>
@@ -118,18 +126,13 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
                         buttonText={"More"}
                         onClickAction={() =>
                             setVisibleNFTs(
-                                (prevVisible) =>
-                                    prevVisible +
-                                    (initialVisibleNFTs > 12 ? initialVisibleNFTs : 12)
+                                (prevVisible) => prevVisible + (initialVisibleNFTs > 12 ? initialVisibleNFTs : 12)
                             )
                         }
                     />
                 )}
                 {visibleNFTs > initialVisibleNFTs && (
-                    <BtnWithAction
-                        buttonText={"Less"}
-                        onClickAction={() => setVisibleNFTs(initialVisibleNFTs)}
-                    />
+                    <BtnWithAction buttonText={"Less"} onClickAction={() => setVisibleNFTs(initialVisibleNFTs)} />
                 )}
             </div>
         </div>

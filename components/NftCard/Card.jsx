@@ -12,16 +12,13 @@ import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
 import styles from "./Card.module.scss"
 
 const Card = ({ nftData }) => {
-    const { isListed, listingId, tokenOwner, desiredNftAddress } = nftData
     const { address, isConnected } = useAccount()
     const defaultValues = useMemo(
         () => ({
-            imageURI: "/media/nftDefault.jpg",
+            imageURI: false,
             tokenSymbol: "LOADING...",
             tokenId: "000",
             price: "0",
-            tokenDescription: "Description is loading...",
-            collectionName: "Collection loading...",
         }),
         []
     )
@@ -31,13 +28,12 @@ const Card = ({ nftData }) => {
     const [tokenId, setTokenId] = useState(defaultValues.tokenId)
     const [price, setPrice] = useState(defaultValues.price)
     const [tokenDescription, setTokenDescription] = useState(defaultValues.tokenDescription)
-    const [collectionName, setCollectionName] = useState(defaultValues.collectionName)
     const { openModal } = useModal()
-    const isOwnedByUser = isConnected && tokenOwner?.toLowerCase() === address?.toLowerCase()
+    const isOwnedByUser = isConnected && nftData && nftData.tokenOwner?.toLowerCase() === address?.toLowerCase()
     const formattedPrice = formatPriceToEther(price)
     const [priceInEur, setPriceInEur] = useState(null)
     const [formattedPriceInEur, setFormattedPriceInEur] = useState()
-    const isListedForSwap = desiredNftAddress !== "0x0000000000000000000000000000000000000000"
+    const isListedForSwap = nftData && nftData.desiredNftAddress !== "0x0000000000000000000000000000000000000000"
     const [imageLoaded, setImageLoaded] = useState(false)
 
     useEffect(() => {
@@ -47,7 +43,12 @@ const Card = ({ nftData }) => {
             setTokenId(nftData.tokenId || defaultValues.tokenId)
             setPrice(nftData.price || defaultValues.price)
             setTokenDescription(nftData.tokenDescription || defaultValues.tokenDescription)
-            setCollectionName(nftData.collectionName || defaultValues.collectionName)
+        } else {
+            setImageURI(defaultValues.imageURI)
+            setTokenSymbol(defaultValues.tokenSymbol)
+            setTokenId(defaultValues.tokenId)
+            setPrice(defaultValues.price)
+            setTokenDescription(defaultValues.tokenDescription)
         }
     }, [nftData, defaultValues])
 
@@ -69,16 +70,17 @@ const Card = ({ nftData }) => {
 
     const handleCardClick = useCallback(
         (nftData) => {
+            if (!nftData) return
             const modalId = "nftCardModal-" + `${nftData.nftAddress}${nftData.tokenId}`
             if (!isOwnedByUser) {
                 openModal("info", modalId, nftData)
-            } else if (isOwnedByUser && isListed) {
+            } else if (isOwnedByUser && nftData.isListed) {
                 openModal("sell", modalId, nftData)
-            } else if (isOwnedByUser && !isListed) {
+            } else if (isOwnedByUser && !nftData.isListed) {
                 openModal("list", modalId, nftData)
             }
         },
-        [isOwnedByUser, isListed, openModal]
+        [isOwnedByUser, openModal]
     )
 
     useEffect(() => {
@@ -103,39 +105,35 @@ const Card = ({ nftData }) => {
                     <Image
                         src={imageURI}
                         alt={tokenDescription || "..."}
+                        priority="true"
                         width={300}
                         height={300}
-                        loading="eager"
-                        className={`${styles.cardImage} ${
-                            !imageLoaded ? styles.imageLoading : ""
-                        }`}
+                        className={`${styles.cardImage} ${!imageLoaded ? styles.imageLoading : ""}`}
                         onLoad={handleImageLoad}
                     />
                 </div>
                 <div className={styles.cardContent}>
                     <div className={styles.cardTitleWrapper}>
                         <div className={styles.cardTitle}>
-                            <h4>{tokenSymbol}</h4>
+                            <h6>{tokenSymbol}</h6>
                         </div>
                         <div>#{tokenId}</div>
                     </div>
-                    {isListed ? (
+                    {nftData && nftData.isListed ? (
                         <div className={styles.cardTextArea}>
                             <div className={styles.cardSwapAndListingStatusWrapper}>
-                                {isListedForSwap ? <div>Swap</div> : <div>Sell</div>}
-                                <div className={styles.cardListedStatus}>Listed #{listingId}</div>
+                                {isListedForSwap ? <div>SWAP</div> : <div>SELL</div>}
+                                <div className={styles.cardListedStatus}>Listed #{nftData.listingId}</div>
                             </div>
                             <div className={styles.cardPriceWrapper}>
-                                {formattedPrice && (
-                                    <div className={styles.cardPrice}>{formattedPrice} ETH</div>
-                                )}
+                                {formattedPrice && <div className={styles.cardPrice}>{formattedPrice} ETH</div>}
                                 {priceInEur ? <strong>{formattedPriceInEur} €</strong> : null}
                             </div>
                         </div>
                     ) : (
                         <div className={styles.cardTextArea}>
                             <div className={styles.cardNotListedStatus}>
-                                Not Listed #{listingId}
+                                Not Listed #{nftData ? nftData.listingId : "..."}
                             </div>
                         </div>
                     )}
