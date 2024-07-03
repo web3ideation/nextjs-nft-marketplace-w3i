@@ -10,12 +10,13 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc"
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
 const apiKeyInfura = process.env.NEXT_PUBLIC_INFURA_API_KEY
 const apiKeyAlchemy = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+
 // Metadata configuration for the Web3 modal
 const metadata = {
     name: "W3I Marketplace",
     description: "W3I Marketplace description",
-    url: "http://localhost:3000",
-    icons: ["http://localhost:3000"],
+    url: "https://localhost:3000",
+    icons: ["https//localhost:3000"],
 }
 
 // Chains configuration, using the 'sepolia' testnet from Wagmi
@@ -41,5 +42,6 @@ export const web3Modal = createWeb3Modal({
     projectId,
     publicClient,
     chains,
+    defaultChain: chains,
     themeMode: "light",
 })

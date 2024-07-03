@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect } from "react"
+import React, { forwardRef, useEffect, useState } from "react"
 import ReactDOM from "react-dom"
 import Image from "next/image"
 import { useModal } from "@context/ModalProvider"
@@ -6,14 +6,18 @@ import BtnWithAction from "@components/Btn/BtnWithAction"
 import styles from "./Modal.module.scss"
 
 const Modal = forwardRef((props, ref) => {
+    const [isClient, setIsClient] = useState(false)
+    useEffect(() => {
+        // Set the state to true after the component mounts
+        setIsClient(true)
+    }, [])
+
     const { children, modalTitle, buttons = [] } = props
     const { isModalOpen, closeModal, modalState, currentModalId } = useModal()
 
     useEffect(() => {
         const originalStyle = window.getComputedStyle(document.body).overflow
-        document.body.style.overflow = ["opening", "changingOut", "changingIn"].includes(
-            modalState
-        )
+        document.body.style.overflow = ["opening", "changingOut", "changingIn"].includes(modalState)
             ? "hidden"
             : modalState === "closed"
             ? "auto"
@@ -42,13 +46,7 @@ const Modal = forwardRef((props, ref) => {
     )
 
     const modalBackdropClassName = `${styles.modalBackdrop} ${
-        styles[
-            modalState === "opening"
-                ? "modalBackdropEnter"
-                : modalState === "closing"
-                ? "modalBackdropExit"
-                : ""
-        ]
+        styles[modalState === "opening" ? "modalBackdropEnter" : modalState === "closing" ? "modalBackdropExit" : ""]
     }`
     const modalAnimationClassName = `${styles.modalContainer} ${
         styles[
@@ -63,7 +61,10 @@ const Modal = forwardRef((props, ref) => {
                 : ""
         ]
     }`
-
+    if (!isClient) {
+        // If we are still on the server, render nothing
+        return null
+    }
     const modalContent = (
         <div ref={ref} className={modalBackdropClassName} onClick={handleCloseModal}>
             <div className={modalAnimationClassName}>

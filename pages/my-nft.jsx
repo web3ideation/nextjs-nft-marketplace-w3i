@@ -3,7 +3,7 @@ import { useAccount } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
 
 import { useNFT } from "@context/NftDataProvider"
-import useFetchNFTsFromWallet from "@hooks/fetchNFTsForWallet"
+import { useWalletNFTs } from "@hooks/index"
 import LoadingWave from "@components/LoadingWave/LoadingWave"
 import NFTList from "@components/NftViewer/NftLists/List"
 import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
@@ -26,7 +26,7 @@ const MyNFTs = () => {
 
     const { address, isConnected } = useAccount()
 
-    const { nfts, loading, error } = useFetchNFTsFromWallet(address)
+    const { nfts, loading, error } = useWalletNFTs(address)
     const [unlistedNfts, setUnlistedNfts] = useState([])
     const isOwnedByUser = useCallback(
         (tokenOwner) => address && tokenOwner?.toLowerCase() === address.toLowerCase(),
@@ -36,9 +36,7 @@ const MyNFTs = () => {
     useEffect(() => {
         const listedNftsSet = new Set(nftsData.map((nft) => `${nft.nftAddress}-${nft.tokenId}`))
 
-        const filteredNfts = nfts.filter(
-            (nft) => !listedNftsSet.has(`${nft.nftAddress}-${nft.tokenId}`)
-        )
+        const filteredNfts = nfts.filter((nft) => !listedNftsSet.has(`${nft.nftAddress}-${nft.tokenId}`))
         setUnlistedNfts(filteredNfts)
     }, [nfts, nftsData])
 
@@ -99,26 +97,26 @@ const MyNFTs = () => {
             {isConnected && (
                 <div className={styles.myNftTotalInformation}>
                     <p>Total NFTs listed: {nftCount}</p>
-                    <p title={formattedTotalPrice}>
-                        Total price listed NFTs: {truncatedTotalPrice}... ETH
-                    </p>
-                    <p title={totalPriceInEur}>
-                        Total price listed NFTs: {formattedTotalPriceInEur}... €
-                    </p>
+                    <p title={formattedTotalPrice}>Total price listed NFTs: {truncatedTotalPrice}... ETH</p>
+                    <p title={totalPriceInEur}>Total price listed NFTs: {formattedTotalPriceInEur}... €</p>
                 </div>
             )}
             <>
                 {isConnected ? (
                     hasOwnNFT ? (
                         <>
-                            <NFTList sortType={"myNFTListed"} title={"Listed on marketplace"} />
+                            <div className={styles.nftListingContainer}>
+                                <NFTList sortType={"myNFTListed"} title={"Listed on marketplace"} />
+                            </div>
                             {unlistedNfts.length > 0 ? (
                                 <>
-                                    <NFTList
-                                        sortType={"myNFTFromWallet"}
-                                        title={"Unlisted in your wallet"}
-                                        nftsData={unlistedNfts}
-                                    />
+                                    <div className={styles.nftListingContainer}>
+                                        <NFTList
+                                            sortType={"myNFTFromWallet"}
+                                            title={"Unlisted in your wallet"}
+                                            nftsData={unlistedNfts}
+                                        />
+                                    </div>
                                 </>
                             ) : (
                                 <h3>Congratulations you {"don't"} own any unlisted NFTs yet!</h3>

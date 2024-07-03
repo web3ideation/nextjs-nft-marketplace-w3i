@@ -19,16 +19,14 @@ function ModalList({ filterAddress, filterTokenId }) {
             e.preventDefault()
         }
 
-        listElement?.addEventListener("wheel", onWheel)
-        return () => listElement?.removeEventListener("wheel", onWheel)
+        listElement?.addEventListener("wheel", onWheel, { passive: false })
+        return () => listElement?.removeEventListener("wheel", onWheel, { passive: false })
     }, [])
 
     const filteredNFTs = useMemo(
         () =>
             nftsData.filter(
-                (nft) =>
-                    nft.nftAddress === filterAddress &&
-                    (!filterTokenId || nft.tokenId !== filterTokenId)
+                (nft) => nft.nftAddress === filterAddress && (!filterTokenId || nft.tokenId !== filterTokenId)
             ),
         [nftsData, filterAddress, filterTokenId]
     )

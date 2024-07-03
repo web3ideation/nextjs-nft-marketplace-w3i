@@ -13,12 +13,12 @@ const Table = ({ tableRows }) => {
     useEffect(() => {
         const listElement = listRef.current
         if (listElement) {
-            listElement.addEventListener("wheel", onWheel)
+            listElement.addEventListener("wheel", onWheel, { passive: false })
         }
 
         return () => {
             if (listElement) {
-                listElement.removeEventListener("wheel", onWheel)
+                listElement.removeEventListener("wheel", onWheel, { passive: false })
             }
         }
     }, [])

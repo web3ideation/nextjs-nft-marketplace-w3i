@@ -22,23 +22,17 @@ const Overview = ({ modalContent }) => {
     const [imageLoaded, setImageLoaded] = useState(false)
     console.log("Modal Content", modalContent)
     const isOwnedByUser =
-        isConnected &&
-        modalContent.tokenOwner &&
-        modalContent.tokenOwner.toLowerCase() === address?.toLowerCase()
+        isConnected && modalContent.tokenOwner && modalContent.tokenOwner.toLowerCase() === address?.toLowerCase()
 
-    const isListedForSwap =
-        modalContent.desiredNftAddress !== "0x0000000000000000000000000000000000000000"
+    const isListedForSwap = modalContent.desiredNftAddress !== "0x0000000000000000000000000000000000000000"
 
-    const handleCopyAddress = () =>
-        copyNftAddressToClipboard(modalContent.nftAddress, showNotification)
+    const handleCopyAddress = () => copyNftAddressToClipboard(modalContent.nftAddress, showNotification)
 
     const capitalizeFirstLetter = (string) =>
         typeof string === "string" ? string.charAt(0).toUpperCase() + string.slice(1) : string
 
     const handleLoveLightClick = () =>
-        setLoveLightClass((currentClass) =>
-            currentClass === "" ? "modalLoveLightInnerYellow" : ""
-        )
+        setLoveLightClass((currentClass) => (currentClass === "" ? "modalLoveLightInnerYellow" : ""))
 
     useEffect(() => {
         const updatePriceInEur = async () => {
@@ -86,9 +80,9 @@ const Overview = ({ modalContent }) => {
                 <Image
                     src={modalContent.imageURI}
                     alt={modalContent.tokenDescription || "..."}
+                    priority="true"
                     width={600}
                     height={600}
-                    loading="eager"
                     className={`${styles.modalImage} ${!imageLoaded ? styles.imageLoading : ""}`}
                     onLoad={handleImageLoad}
                 />
@@ -128,8 +122,10 @@ const Overview = ({ modalContent }) => {
                             onClick={handleLoveLightClick}
                         >
                             <Image
-                                width={100}
-                                height={100}
+                                className={styles.loveLight}
+                                width={40}
+                                height={40}
+                                loading="eager"
                                 src="/media/only-lightbulb.png"
                                 alt="love-lightbulb"
                             />
@@ -142,10 +138,7 @@ const Overview = ({ modalContent }) => {
                         </div>
                         <div>
                             <p>Token-Adress: </p>
-                            <div
-                                className={styles.nftNftAddressToCopy}
-                                onClick={handleCopyAddress}
-                            >
+                            <div className={styles.nftNftAddressToCopy} onClick={handleCopyAddress}>
                                 <strong>{formattedNftAddress}</strong>
                             </div>
                         </div>
@@ -169,9 +162,7 @@ const Overview = ({ modalContent }) => {
                                     <div className={styles.modalAttributes}>
                                         <p>Description:</p>
                                         <strong>
-                                            {modalContent.tokenDescription ||
-                                                modalContent.description ||
-                                                "..."}
+                                            {modalContent.tokenDescription || modalContent.description || "..."}
                                         </strong>
                                     </div>
                                 </div>
@@ -197,9 +188,7 @@ const Overview = ({ modalContent }) => {
                                     <div key={index} className={styles.modalAttributesWrapper}>
                                         <span className={styles.modalAttributes}>
                                             <p>{capitalizeFirstLetter(attribute.trait_type)}:</p>
-                                            <strong>
-                                                {capitalizeFirstLetter(attribute.value)}
-                                            </strong>
+                                            <strong>{capitalizeFirstLetter(attribute.value)}</strong>
                                         </span>
                                     </div>
                                 ))

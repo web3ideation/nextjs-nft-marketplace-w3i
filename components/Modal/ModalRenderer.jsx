@@ -1,5 +1,6 @@
 import React from "react"
 
+import WelcomeModal from "./ModalType/WelcomeModal/WelcomeModal"
 import ChatModal from "./ModalType/ChatModal/ChatModal"
 import InfoModal from "./ModalType/InfoModal/InfoModal"
 import CollectionModal from "./ModalType/CollectionModal/CollectionModal"
@@ -14,6 +15,8 @@ const ModalRenderer = () => {
     if (!isModalOpen) return null
 
     switch (modalType) {
+        case "welcome":
+            return <WelcomeModal />
         case "chat":
             return <ChatModal />
         case "info":
