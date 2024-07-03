@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from "react"
+import React, { useState, useEffect } from "react"
 import Image from "next/image"
-
-import { useAccount, useBalance } from "wagmi"
-import { truncateStr, truncatePrice } from "@utils/formatting"
-
+import { useAccount } from "wagmi"
+import { truncateStr } from "@utils/formatting"
 import WalletMenu from "../WalletMenu/WalletMenu"
 import styles from "./WalletInfo.module.scss"
 
-const WalletInfo = ({ onDisconnect, isClient }) => {
+const WalletInfo = () => {
+    const [isClient, setIsClient] = useState(false)
     const { address } = useAccount()
-    const { data: balanceData, refetch: refetchBalance } = useBalance({ address })
     const [formattedAddress, setFormattedAddress] = useState("")
-    const [formattedPrice, setFormattedPrice] = useState("")
     const [isOpen, setIsOpen] = useState(false)
     const [isButtonPressed, setIsButtonPressed] = useState(false)
 
     useEffect(() => {
+        setIsClient(typeof window !== "undefined")
+    }, [])
+
+    useEffect(() => {
         if (!isClient) return
         setFormattedAddress(truncateStr(address, 4, 4))
-        setFormattedPrice(truncatePrice(balanceData?.formatted || "0", 5))
-    }, [address, balanceData, isClient])
+    }, [address, isClient])
 
-    const handleMouseEnter = () => {
-        setIsOpen(true)
-        refetchBalance()
-    }
+    const handleMouseEnter = () => setIsOpen(true)
 
     const handleMouseLeave = () => setIsOpen(false)
 
@@ -36,9 +33,7 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
 
     return (
         <div
-            className={`${styles.headerAccountInfoContainer} ${
-                isOpen ? styles.headerAccountInfoContainerOpen : ""
-            }`}
+            className={`${styles.headerAccountInfoContainer} ${isOpen ? styles.headerAccountInfoContainerOpen : ""}`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
@@ -58,14 +53,7 @@ const WalletInfo = ({ onDisconnect, isClient }) => {
                     <Image width={20} height={20} src="/media/arrow_down.png" alt="Menu Arrow" />
                 </div>
             </div>
-            <WalletMenu
-                balanceData={balanceData}
-                formattedPrice={formattedPrice}
-                onDisconnect={onDisconnect}
-                isOpen={isOpen}
-                isClient={isClient}
-                address={address}
-            />
+            <WalletMenu isOpen={isOpen} isClient={isClient} />
         </div>
     )
 }

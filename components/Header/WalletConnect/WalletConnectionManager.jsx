@@ -1,29 +1,19 @@
+"use client"
+
 import React, { useEffect, useState } from "react"
-
-import { useAccount, useDisconnect } from "wagmi"
-import { useWeb3Modal } from "@web3modal/wagmi/react"
-
+import { useAccount } from "wagmi"
 import WalletInfo from "../WalletConnect/WalletInfo/WalletInfo"
 import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
 
 const WalletConnectionManager = () => {
-    const [isClient, setIsClient] = useState(false)
     const { isConnected } = useAccount()
-    const { open } = useWeb3Modal()
-    const { disconnect } = useDisconnect()
+    const [isClient, setIsClient] = useState(false)
 
     useEffect(() => {
         setIsClient(typeof window !== "undefined")
     }, [])
 
-    // Initialisierungscheck nicht mehr nötig, da isClient denselben Zweck erfüllt
-    return isClient ? (
-        isConnected ? (
-            <WalletInfo onDisconnect={disconnect} isClient={isClient} />
-        ) : (
-            <ConnectWalletBtn onConnect={() => open()} isClient={isClient} />
-        )
-    ) : null
+    return isClient ? isConnected ? <WalletInfo /> : <ConnectWalletBtn /> : null
 }
 
 export default WalletConnectionManager

@@ -13,7 +13,7 @@ const Header = () => {
         <header className={styles.headerContainer}>
             <nav>
                 <div className={styles.logoAndHeadlineWrapper}>
-                    <Link className={styles.headerLogo} href="/" passHref>
+                    <Link className={styles.headerLogo} href="/" passHref aria-label="Home">
                         <Image
                             className={styles.headerImage}
                             height={30}
@@ -27,10 +27,10 @@ const Header = () => {
                 </div>
                 <div className={styles.headerElementsWrapper}>
                     <SearchBar />
-                    <Link className={styles.headerMenuBtn} href="/sell-nft">
+                    <Link className={styles.headerMenuBtn} aria-label="Sell" href="/sell-nft">
                         Sell
                     </Link>
-                    <Link className={styles.headerMenuBtn} href="/swap-nft">
+                    <Link className={styles.headerMenuBtn} aria-label="Swap" href="/swap-nft">
                         Swap
                     </Link>
                     <WalletConnectionManager />
@@ -39,6 +39,7 @@ const Header = () => {
                         href="https://web3ideation.com/"
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="https://web3ideation.com/"
                     >
                         <Image
                             className={styles.headerImage}

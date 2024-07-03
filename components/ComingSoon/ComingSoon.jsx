@@ -3,18 +3,14 @@ import styles from "./ComingSoon.module.scss"
 
 const ComingSoon = ({ children, size }) => {
     const overlayClass = `${styles.comingSoonOverlay} ${
-        size === "small"
-            ? styles.comingSoonOverlaySmall
-            : size === "large"
-            ? styles.comingSoonOverlayLarge
-            : ""
+        size === "small" ? styles.comingSoonOverlaySmall : size === "large" ? styles.comingSoonOverlayLarge : ""
     }`
 
     return (
         <div className={styles.comingSoonWrapper}>
             {children}
             <div className={overlayClass}>
-                <span className={styles.comingSoonText}>Coming soon...</span>
+                <span className={styles.comingSoonText}>COMING SOON...</span>
             </div>
         </div>
     )

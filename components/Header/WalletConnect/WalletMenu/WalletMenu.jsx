@@ -1,19 +1,45 @@
-import React, { useCallback } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
-
+import { useBalance, useDisconnect, useAccount } from "wagmi"
 import { useModal } from "@context/ModalProvider"
-
+import { truncatePrice } from "@utils/formatting"
 import styles from "./WalletMenu.module.scss"
 
-const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isOpen, isClient, address }) => {
-    const defaultBalanceData = { formatted: "0", symbol: "N/A" }
-    const actualBalanceData = balanceData || defaultBalanceData
+const WalletMenu = ({ isOpen, isClient }) => {
+    const { address } = useAccount()
     const { openModal } = useModal()
+    const { disconnect } = useDisconnect()
+
+    const { data: balanceData, refetch: refetchBalance } = useBalance({
+        address,
+        watch: true,
+        cacheTime: 2000,
+        blockTag: "latest",
+    })
+    const [formattedBalance, setFormattedBalance] = useState("")
+    const defaultBalanceData = { formatted: "0", symbol: "N/A" }
+
     const menuClassNames = isOpen ? `${styles.walletMenu} ${styles.visible}` : styles.walletMenu
 
     const handleChatClick = useCallback(() => {
         openModal("chat", address)
     }, [openModal, address])
+
+    const handleWelcomeClick = useCallback(() => {
+        openModal("welcome")
+    }, [openModal])
+
+    useEffect(() => {
+        if (balanceData) {
+            setFormattedBalance(truncatePrice(balanceData?.formatted || "0", 5))
+        }
+    }, [balanceData])
+
+    useEffect(() => {
+        if (isOpen) {
+            refetchBalance()
+        }
+    }, [isOpen, refetchBalance])
 
     if (!isClient) return null
 
@@ -21,43 +47,36 @@ const WalletMenu = ({ balanceData, formattedPrice, onDisconnect, isOpen, isClien
         <div className={menuClassNames}>
             <div
                 className={`${styles.walletMenuLinks} ${styles.walletMenuBalance}`}
-                title={`${actualBalanceData.formatted} ${actualBalanceData.symbol}`}
+                title={`${balanceData?.formatted} ${balanceData?.symbol || defaultBalanceData.symbol}`}
+                aria-label={`${balanceData?.formatted} ${balanceData?.symbol || defaultBalanceData.symbol}`}
             >
-                <p>
-                    {formattedPrice} {actualBalanceData.symbol}
+                <p aria-label={`${formattedBalance} ${balanceData?.symbol || defaultBalanceData.symbol}`}>
+                    {formattedBalance} {balanceData?.symbol || defaultBalanceData.symbol}
                 </p>
             </div>
-            <Link href="/" passHref className={styles.walletMenuLinks}>
+            <Link href="/" passHref aria-label="Home" className={styles.walletMenuLinks}>
                 Home
             </Link>
-            <Link href="/withdraw-proceeds" passHref className={styles.walletMenuLinks}>
+            <div aria-label="Welcome" className={styles.walletMenuLinks} onClick={handleWelcomeClick}>
+                Welcome
+            </div>
+            <Link href="/withdraw-proceeds" passHref aria-label="Credits" className={styles.walletMenuLinks}>
                 Credits
             </Link>
-            <Link href="/my-nft" passHref className={styles.walletMenuLinks}>
+            <Link href="/my-nft" passHref aria-label="My-NFT" className={styles.walletMenuLinks}>
                 My NFT
             </Link>
-            <Link
-                href="/sell-nft"
-                passHref
-                className={`${styles.walletMenuLinks} ${styles.hidden}`}
-            >
+            <Link href="/sell-nft" passHref aria-label="Sell" className={`${styles.walletMenuLinks} ${styles.hidden}`}>
                 Sell
             </Link>
-            <Link
-                href="/swap-nft"
-                passHref
-                className={`${styles.walletMenuLinks} ${styles.hidden}`}
-            >
+            <Link href="/swap-nft" passHref aria-label="Swap" className={`${styles.walletMenuLinks} ${styles.hidden}`}>
                 Swap
             </Link>
-            <div className={styles.walletMenuLinks} onClick={handleChatClick}>
+            <div aria-label="Chat" className={styles.walletMenuLinks} onClick={handleChatClick}>
                 Chat
             </div>
-            <div
-                className={`${styles.walletMenuLinks} ${styles.disconnect}`}
-                onClick={onDisconnect}
-            >
-                <button>Disconnect</button>
+            <div className={`${styles.walletMenuLinks} ${styles.disconnect}`} onClick={disconnect}>
+                <button aria-label="Disconnect">Disconnect</button>
             </div>
         </div>
     )
