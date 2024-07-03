@@ -7,7 +7,7 @@ import Modal from "@components/Modal/ModalBasis/Modal"
 import ModalList from "@components/Modal/ModalElements/NftModalCollectionList/ModalList"
 
 import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
-import { formatPriceToEther, truncatePrice } from "@utils/formatting"
+import { formatPriceToEther, truncatePrice, truncateStr } from "@utils/formatting"
 
 import styles from "./CollectionModal.module.scss"
 
@@ -16,6 +16,7 @@ const CollectionModal = forwardRef((prop, ref) => {
     const { modalContent: selectedCollection } = useModal()
 
     const [priceInEur, setPriceInEur] = useState(null)
+    const [truncCollectionAddress, setTruncCollectionAddress] = useState()
 
     const selectedNFTs = selectedCollection ? selectedCollection.items : []
     const filteredNFTsData = nftsData.filter((nftData) =>
@@ -30,7 +31,8 @@ const CollectionModal = forwardRef((prop, ref) => {
 
     useEffect(() => {
         setPriceInEur(truncatePrice(priceInEur, 10))
-    }, [priceInEur])
+        setTruncCollectionAddress(truncateStr(selectedCollection?.nftAddress, 5, 5))
+    }, [priceInEur, selectedCollection.nftAddress])
 
     useEffect(() => {
         const updatePriceInEur = async () => {
@@ -56,7 +58,7 @@ const CollectionModal = forwardRef((prop, ref) => {
                         <div className={styles.collectionModalText}>
                             <div>
                                 <p>Collection address: </p>
-                                <strong>{selectedCollection?.nftAddress}</strong>
+                                <strong>{truncCollectionAddress}</strong>
                             </div>
                             <div>
                                 <p>Items:</p>

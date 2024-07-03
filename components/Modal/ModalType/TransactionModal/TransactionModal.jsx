@@ -5,32 +5,30 @@ import { useAccount } from "wagmi"
 
 // Custom hooks and components
 import Overview from "../../ModalElements/NftOverview/Overview"
-import useFetchNFTsForWallet from "@hooks/fetchNFTsForWallet"
+import useWalletNFTs from "./../../../../hooks/index"
 import { useModal } from "@context/ModalProvider"
 import Modal from "../../ModalBasis/Modal"
 import { formatPriceToEther } from "@utils/formatting"
 
 // Styles import
 import styles from "./TransactionModal.module.scss"
+import { current } from "immer"
 
 const TransactionModal = forwardRef((props, ref) => {
     const { address } = useAccount()
     console.log("Wallet address", address)
 
-    const { nfts } = useFetchNFTsForWallet(address)
-    console.log("Fetched nfts from wallet", nfts)
+    //const { nfts } = useWalletNFTs(address)
+    //console.log("Fetched nfts from wallet", nfts)
 
     const router = useRouter()
 
-    const { modalContent, modalType } = useModal()
+    const { modalContent, modalType, closeModal, currentModalId } = useModal()
     console.log("Modal content transaction", modalContent)
 
-    const nftToShow = () => {
-        return nfts.find(
-            (nft) =>
-                nft.nftAddress === modalContent.nftAddress && nft.tokenId === modalContent.tokenId
-        )
-    }
+    //const nftToShow = () => {
+    //    return nfts.find((nft) => nft.nftAddress === modalContent.nftAddress && nft.tokenId === modalContent.tokenId)
+    //}
 
     // Initialisiere das Array für die Buttons
     const buttons = []
@@ -79,18 +77,17 @@ const TransactionModal = forwardRef((props, ref) => {
             break
         case "withdrawn":
             titleText = "Your withdrawal overview: "
-            // Füge hier spezifische Buttons für den Fall "withdrawn" hinzu, falls nötig
+            buttons.push({
+                text: "Close",
+                action: () => closeModal(currentModalId),
+            })
             break
         default:
             // Optionale Default-Case-Logik
             break
     }
 
-    return (
-        <Modal ref={ref} modalTitle={titleText} buttons={buttons}>
-            <Overview modalContent={nftToShow()} />
-        </Modal>
-    )
+    return <Modal ref={ref} modalTitle={titleText} buttons={buttons}></Modal>
 })
 
 TransactionModal.displayName = "TransactionModal"
