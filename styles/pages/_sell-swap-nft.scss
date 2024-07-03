@@ -7,7 +7,7 @@
     flex-direction: column;
     height: 100%;
     font-family: $font-primary;
-    font-weight: 400;
+    font-weight: $font-weight-normal;
     padding: 16px 25px;
 
     @media (min-width: 768px) and (max-width: 1023px) {

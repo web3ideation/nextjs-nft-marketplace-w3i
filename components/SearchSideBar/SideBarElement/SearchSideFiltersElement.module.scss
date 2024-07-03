@@ -3,7 +3,7 @@
 @use "@styles/helpers/keyframes" as *;
 .searchSideFilters {
     width: 100%;
-    background-color: $background-color;
+    background-color: $color-primary;
 }
 
 // Side filter option wrapper styles
@@ -14,22 +14,19 @@
     justify-content: flex-start;
     z-index: 1;
     width: 128px;
-    background-color: $background-color;
-    border-bottom: solid 1px $background-color;
-    border-top: solid 1px $background-color;
+    background-color: $color-primary;
+    border-bottom: solid 1px $color-primary;
+    border-top: solid 1px $color-primary;
 
-    h4 {
+    h6 {
         padding: 18px;
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        font-weight: 500;
         cursor: pointer;
 
         @media (min-width: 768px) and (max-width: 1023px) {
         }
         @media (min-width: 1024px) {
             &:hover {
-                color: $hover-blue;
+                color: $color-hover-blue;
             }
         }
     }
@@ -48,7 +45,7 @@
     transform: translate3d(-100%, -59px, 0);
     transition: 0.5s ease-out;
     opacity: 0;
-    background-color: $secondary-color;
+    background-color: $color-secondary;
     border-radius: 0 5px 5px 0;
     box-shadow: inset 5px 0 5px rgb(0 0 0 / 0.1), inset 1px 0 2px -1px rgb(0 0 0 / 0.1);
     scroll-behavior: smooth;

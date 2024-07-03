@@ -3,28 +3,31 @@
 @use "@styles/helpers/keyframes" as *;
 
 html {
+    //overflow: overlay; würde springen der seite verhindern
+
     ::-webkit-scrollbar {
         width: 10px;
         height: 10px;
     }
 
     ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: transparent;
         border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: $hover-grey;
-        border: solid 2px $secondary-color;
+        background: $color-hover-grey;
+        border: solid 2px $color-secondary;
         border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: $secondary-color;
+        background: $color-secondary;
     }
     max-width: 100%;
     display: flex;
     justify-content: center;
+    font-size: 17px;
 }
 
 body {
@@ -45,4 +48,66 @@ body {
     padding-inline-end: 0;
     border: none;
     outline: 0;
+}
+
+h1 {
+    font-size: $h1-font-size;
+    font-weight: $font-weight-bold;
+}
+
+h2 {
+    font-size: $h2-font-size;
+    font-weight: $font-weight-bold;
+}
+
+h3 {
+    font-size: $h3-font-size;
+    font-weight: $font-weight-bold;
+}
+
+h4 {
+    font-size: $h4-font-size;
+    font-weight: $font-weight-bold;
+}
+
+h5 {
+    font-size: $h5-font-size;
+    font-weight: $font-weight-bold;
+}
+
+h6 {
+    font-size: $h6-font-size;
+    font-weight: $font-weight-bold;
+}
+
+p {
+    font-size: $p-font-size;
+    font-weight: $font-weight-normal;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+input {
+    font-size: $p-font-size;
+    font-weight: $font-weight-normal;
+}
+
+textarea {
+    font-size: $p-font-size;
+    font-weight: $font-weight-normal;
+}
+
+ul {
+    list-style-type: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
 }

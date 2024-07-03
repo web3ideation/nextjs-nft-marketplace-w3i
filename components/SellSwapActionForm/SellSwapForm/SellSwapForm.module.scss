@@ -8,36 +8,10 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     padding: 20px;
-    border-radius: 5px;
-
-    h2 {
-        font-size: $font-size-xxl;
-        font-weight: 700;
-    }
-
-    @media (min-width: 768px) and (max-width: 1023px) {
-        font-size: $font-size-extra-large;
-    }
-
-    @media (min-width: 1024px) {
-        font-size: $font-size-large;
-    }
-}
-
-.sellSwapFormTitles {
-    display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 20px 10px;
-
-    h3 {
-        font-size: $font-size-large;
-        text-align: center;
-    }
+    border-radius: $border-radius;
+    gap: 20px;
 }
 
 .sellSwapForm {
@@ -47,7 +21,7 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    border-radius: 5px;
+    border-radius: $border-radius;
 
     // Styles to remove spinner from number inputs
     input::-webkit-outer-spin-button,
@@ -68,94 +42,5 @@
 
     @media (min-width: 1024px) {
         flex-direction: row;
-    }
-}
-
-// Input wrapper styles
-.sellSwapFormInputWrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    @include boxShadowFields;
-    border-radius: $border-radius;
-    padding: 10px;
-    padding-bottom: 30px;
-    width: 100%;
-    height: 100%;
-    @media (min-width: 768px) and (max-width: 1023px) {
-        width: 100%;
-    }
-
-    @media (min-width: 1024px) {
-        width: 50%;
-    }
-}
-
-// Input styles
-.sellSwapFormInput {
-    width: 100%;
-    padding: 10px 0;
-    label {
-        width: 50%;
-        padding: 0 18px;
-        font-weight: 500;
-    }
-}
-
-.checkboxFieldsWrapper {
-    @include boxShadowFields;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    padding: 10px;
-    height: 100%;
-    width: 100%;
-    border-radius: $border-radius;
-    @media (min-width: 768px) and (max-width: 1023px) {
-        width: 100%;
-    }
-
-    @media (min-width: 1024px) {
-        width: 50%;
-    }
-}
-
-.sellSwapInputWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    input {
-        @include boxShadowFields;
-        outline: none;
-        border-radius: 5px;
-        width: 100%;
-        height: 40px;
-        padding: 0 5px;
-        background-color: $color-white;
-
-        // Focused input styles
-        &:focus {
-            border: 1px solid blue;
-        }
-    }
-}
-
-.checkboxWrapper {
-    flex: 0 0 33.33%;
-    box-sizing: border-box;
-    padding: 10px 10px 10px 30px;
-    label {
-        padding-left: 5px;
-    }
-    input {
-        @include boxShadowFields;
-        border-radius: 5px;
-        padding: 5px 5px;
-        background-color: $color-white;
-        outline: yellow;
-
-        &:focus {
-            border: 1px solid blue;
-        }
     }
 }

@@ -10,15 +10,11 @@
     padding: 10px;
 
     @media (min-width: 768px) and (max-width: 1023px) {
-        display: flex;
-        align-items: center;
         max-width: 200px;
         padding: 15px;
     }
 
     @media (min-width: 1024px) {
-        display: flex;
-        align-items: center;
         min-width: 300px;
         padding: 20px;
     }
@@ -28,38 +24,34 @@
     flex-grow: 1;
     flex-basis: calc(100% - 50px);
     height: $line-height-small;
-    border-radius: 5px;
+    border-radius: $border-radius;
     padding: 0 5px;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
     transition: border 0.3s ease, box-shadow 0.3s ease;
 
     &:focus {
-        border: solid 1px $hover-blue;
+        border: solid 1px $color-hover-blue;
         box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
         transform: scale(1.02);
     }
 }
 
-.searchBarBtn {
-    button {
-        @include flex-center;
-        max-width: 50px;
-        padding: 10px;
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        font-weight: 500;
-        color: $black;
-        background-color: transparent;
-        opacity: 0;
-        transition: opacity 0.3s ease, transform 0.3s ease, max-width 0.3s ease;
-        cursor: pointer;
-        overflow: hidden;
+.searchBarBtn button {
+    @include flex-center;
+    margin-left: 10px;
+    max-width: 50px;
+    padding: 0 10px;
+    height: $line-height-small;
+    font-size: $font-size-small;
+    font-weight: 500;
+    color: $color-white;
+    border-radius: $border-radius;
+    background-color: $color-secondary;
+    transition: opacity 0.3s ease, transform 0.3s ease, max-width 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
 
-        &.visible {
-            opacity: 1;
-        }
-        &:hover {
-            color: $hover-blue;
-        }
+    &:hover {
+        color: $color-hover-grey;
     }
 }

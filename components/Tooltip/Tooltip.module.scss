@@ -17,10 +17,10 @@
     padding: 5px;
     transform: translateY(-50%);
     width: 200px;
-    border-radius: 5px;
-    font-weight: 400;
+    border-radius: $border-radius;
+    font-weight: $font-weight-normal;
     text-align: center;
-    background-color: $hover-grey;
+    background-color: $color-hover-grey;
     color: $color-firebrick;
     opacity: 90%;
     transition: opacity 1s;

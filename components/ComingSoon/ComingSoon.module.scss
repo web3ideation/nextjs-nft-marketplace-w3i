@@ -17,9 +17,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: $secondary-color;
+    color: $color-secondary;
     transform: rotate(-15deg);
-    font-weight: 700;
+    font-weight: $font-weight-bold;
     letter-spacing: 5px;
     z-index: 1;
     pointer-events: none;
@@ -30,9 +30,9 @@
 }
 
 .comingSoonOverlaySmall {
-    font-size: 0.75rem;
+    font-size: $font-size-small;
 }
 
 .comingSoonOverlayLarge {
-    font-size: 2rem;
+    font-size: $h2-font-size;
 }

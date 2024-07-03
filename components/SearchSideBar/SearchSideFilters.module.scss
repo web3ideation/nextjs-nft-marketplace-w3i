@@ -6,7 +6,7 @@
 .searchSideFiltersWrapper {
     transform: translateX(-100%);
     transition: transform 0.5s ease-out;
-    background-color: $background-color;
+    background-color: $color-primary;
     font-family: $font-primary;
     top: 40px;
     z-index: 5;
@@ -32,58 +32,34 @@
     align-items: center;
     padding: 10px 0;
     width: 100%;
-    background-color: $background-color;
+    background-color: $color-primary;
 }
 
 // Filter open button styles
-.filterOpenButton {
-    background-color: $background-color;
+.filterButton {
+    background-color: $color-primary;
     transition: 0.5s ease-out;
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
     left: 128px;
+    height: 36px;
+    width: 36px;
     border-radius: 0 5px 5px 0;
     box-shadow: 5px 5px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     cursor: pointer;
 }
 
-.filterOpenButtonOpen {
+.filterButtonOpen {
     left: 102px;
-    border-radius: none;
-    box-shadow: none;
+    border-radius: $border-radius;
+    transform: rotateY(-180deg);
 }
 
-.sideBarArrow {
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    padding: 5px;
-    padding-right: 0;
+.arrow {
+    transform: rotate(-90deg);
     transition: transform 0.5s ease-out;
-    border-radius: 0 5px 5px 0;
-    box-shadow: 5px 0px 5px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-
-    img {
-        height: 26px;
-        width: auto;
-        transform: rotateZ(270deg);
-    }
-    @media (min-width: 768px) and (max-width: 1023px) {
-    }
-    @media (min-width: 1024px) {
-        &:hover {
-            @include invert;
-        }
-    }
-}
-
-.sideBarArrowOpen {
-    transform: rotateY(180deg);
-    transition: transform 0.5s ease-out;
-    @media (min-width: 768px) and (max-width: 1023px) {
-    }
     @media (min-width: 1024px) {
         &:hover {
             @include invert;
@@ -95,15 +71,15 @@
     width: 100%;
     z-index: 1;
     padding: 18px;
-    background-color: $background-color;
-    border-bottom: solid 1px $background-color;
-    border-top: solid 1px $background-color;
+    background-color: $color-primary;
+    border-bottom: solid 1px $color-primary;
+    border-top: solid 1px $color-primary;
     button {
         width: 100%;
         font-family: $font-primary;
         font-size: $font-size-small;
         font-weight: 500;
-        background-color: $background-color;
+        background-color: $color-primary;
         cursor: pointer;
 
         @media (min-width: 768px) and (max-width: 1023px) {
@@ -119,7 +95,7 @@
 // Background placeholder styles
 .backgroundPlaceholder {
     width: 100%;
-    background-color: $background-color;
+    background-color: $color-primary;
     z-index: 5;
 }
 .placeholderA {

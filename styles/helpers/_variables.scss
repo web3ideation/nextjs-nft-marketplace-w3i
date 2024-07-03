@@ -2,27 +2,72 @@
 $font-primary: "Poppins", sans-serif;
 $font-secondary: "Roboto", sans-serif;
 
-$black: rgb(0, 0, 0);
-$white: rgb(255, 255, 255);
-$white-semi-transparent: rgb(255, 255, 255, 0.9);
-$white-transparent: rgb(255, 255, 255, 0.8);
-$color-forestgreen: rgb(34, 139, 34);
-$color-firebrick: rgb(178, 34, 34);
+$color-primary: rgb(255, 249, 226);
+$color-secondary: rgb(18, 115, 235);
+
 $color-black: rgb(0, 0, 0);
 $color-light-black: rgb(16, 16, 16);
+
 $color-white: rgb(255, 255, 255);
+$color-white-semi-transparent: rgb(255, 255, 255, 0.9);
+$color-white-transparent: rgb(255, 255, 255, 0.8);
+
+$color-forestgreen: rgb(34, 139, 34);
+$color-firebrick: rgb(178, 34, 34);
+$color-orange: rgb(255, 165, 0); // love-light
+
+$color-hover-blue: rgb(18, 115, 235);
+$color-hover-grey: rgb(204, 204, 204);
+
+//variablen im code noch ändern
 $hover-blue: rgb(18, 115, 235);
 $hover-grey: rgb(204, 204, 204);
 $background-color: rgb(255, 249, 226);
 $secondary-color: rgb(18, 115, 235);
+$white-semi-transparent: rgb(255, 255, 255, 0.9);
+$white-transparent: rgb(255, 255, 255, 0.8);
+$black: rgb(0, 0, 0);
+$white: rgb(255, 255, 255);
 
-$font-size-xs: 11px;
-$font-size-small: 15px;
-$font-size-medium: 19px;
-$font-size-large: 23px;
-$font-size-extra-large: 27px;
-$font-size-xxl: 31px;
+$font-size-xs: 0.6875rem;
+$font-size-small: 0.875rem;
+$font-size-medium: 1rem;
+$font-size-large: 1.125rem;
+$font-size-extra-large: 1.25rem;
+$font-size-xxl: 1.5rem;
 
-$line-height-small: 24px;
+$h1-font-size: 2.25rem;
+$h2-font-size: 2rem;
+$h3-font-size: 1.75rem;
+$h4-font-size: 1.5rem;
+$h5-font-size: 1.25rem;
+$h6-font-size: 1rem;
+
+$p-font-size: 1rem;
+
+$font-weight-thin: 100;
+$font-weight-extra-light: 200;
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semi-bold: 600;
+$font-weight-bold: 700;
+$font-weight-extra-bold: 800;
+$font-weight-black: 900;
+
+$font-style-normal: normal;
+$font-style-italic: italic;
+
+$line-height-xxs: 0.75rem;
+$line-height-xs: 1rem;
+$line-height-small: 1.5rem;
+$line-height-medium: 1.875rem;
+$line-height-large: 2.25rem;
+$line-height-extra-large: 2.625rem;
+$line-height-xxl: 3rem;
 
 $border-radius: 5px;
+
+$border-radius-small: 5px;
+$border-radius-medium: 10px;
+$border-radius-large: 15px;

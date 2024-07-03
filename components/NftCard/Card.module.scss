@@ -13,8 +13,8 @@
     transition: 0.3s ease-out;
     font-family: $font-primary;
     font-size: $font-size-small;
-    font-weight: 500;
-    color: $black;
+    font-weight: $font-size-medium;
+    color: $color-black;
     cursor: pointer;
 
     &:hover {
@@ -73,6 +73,7 @@
     object-fit: cover;
     width: 100%;
     height: auto;
+    background-color: $color-white;
 }
 
 .imageLoading {
@@ -90,7 +91,7 @@
 
 // Owner, price, and card information styles
 .cardTitleWrapper {
-    background-color: $white-semi-transparent;
+    background-color: $color-white-semi-transparent;
 }
 
 .cardTitleWrapper,
@@ -102,16 +103,24 @@
     padding: 0 5px;
 }
 
-.cardPrice,
-.cardTitle h3 {
+.cardSwapAndListingStatusWrapper {
+    font-weight: $font-weight-bold;
+}
+
+.cardTitle {
+    line-height: $line-height-xs;
+}
+
+.cardPrice {
     font-size: $font-size-small;
-    font-weight: 700;
+    font-weight: $font-weight-bold;
 }
 
 .cardListedStatus {
     color: $color-forestgreen;
     text-align: right;
     width: 100%;
+    font-weight: $font-weight-medium;
 }
 
 .cardNotListedStatus {
@@ -125,7 +134,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: $white-transparent;
+    background-color: $color-white-transparent;
     visibility: hidden;
 
     @media (min-width: 768px) and (max-width: 1023px) {

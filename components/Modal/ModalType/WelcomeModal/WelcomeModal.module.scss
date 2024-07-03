@@ -1,0 +1,15 @@
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
+
+.modalContent {
+    @include boxShadowFields;
+    @include flex-center;
+    flex-direction: column;
+    margin: 10px;
+    max-width: 100%;
+    border-radius: 5px;
+    background-color: $color-white;
+    overflow: auto;
+    padding: 10px;
+}

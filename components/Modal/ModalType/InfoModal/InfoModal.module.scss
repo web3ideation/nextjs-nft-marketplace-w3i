@@ -8,7 +8,7 @@
     flex-direction: column;
     margin: 10px;
     max-width: 100%;
-    border-radius: 5px;
+    border-radius: $border-radius;
     background-color: $color-white;
     overflow: auto;
     @media (min-width: 768px) and (max-width: 1023px) {
@@ -58,7 +58,7 @@
     justify-content: space-between;
     align-items: stretch;
     height: 100%;
-    border-radius: 5px;
+    border-radius: $border-radius;
 }
 
 .modalPriceWrapper {
@@ -67,8 +67,6 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    font-size: 22px;
-    font-weight: 500;
     color: $black;
 }
 .modalPriceInnerWrapper {
@@ -99,8 +97,7 @@
     }
 }
 .modalLoveLightInnerYellow {
-    filter: invert(19%) sepia(51%) saturate(3468%) hue-rotate(342deg) brightness(96%)
-        contrast(101%);
+    filter: invert(19%) sepia(51%) saturate(3468%) hue-rotate(342deg) brightness(96%) contrast(101%);
     box-shadow: 0 -5px 0 yellow;
 }
 

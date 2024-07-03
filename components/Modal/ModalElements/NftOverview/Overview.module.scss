@@ -53,9 +53,10 @@
 
 .modalImage {
     opacity: 1;
-    width: 100%;
+    object-fit: contain;
+    width: auto;
     height: auto;
-    border-radius: 5px;
+    border-radius: $border-radius;
 }
 
 .imageLoading {
@@ -92,7 +93,7 @@
     flex-wrap: wrap;
     font-size: 22px;
     font-weight: 500;
-    color: $black;
+    color: $color-black;
 }
 .modalPriceInnerWrapper {
     display: flex;
@@ -112,26 +113,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50px;
-    width: 30px;
-    border-radius: 15px;
-    img {
-        height: 50px;
-        width: auto;
+    border-radius: $border-radius-large;
+    margin-right: 30px;
+
+    .loveLight {
+        height: 100%;
+        width: 100%;
         cursor: pointer;
     }
 }
 .modalLoveLightInnerYellow {
-    filter: invert(19%) sepia(51%) saturate(3468%) hue-rotate(342deg) brightness(96%)
-        contrast(101%);
-    box-shadow: 0 -5px 0 yellow;
+    filter: drop-shadow(0 -10px 7.5px $color-orange);
 }
 
 .modalText {
-    font-size: $font-size-small;
-    font-weight: 500;
-    color: $black;
-
     div {
         display: flex;
         justify-content: space-between;
@@ -149,31 +144,15 @@
 .modalDescriptionWrapper {
     max-width: 100%;
     padding-top: 40px;
-    background-color: white;
+    background-color: $color-white;
 }
 
 .modalDescription {
     overflow-y: auto;
-    width: 100%;
     max-height: 300px;
     border-radius: 5px;
-
-    h3,
-    h4,
-    p {
-        font-family: $font-primary;
-        font-size: $font-size-small;
-        font-weight: 700;
-        color: $black;
-    }
-    h4 {
-        font-weight: 600;
-    }
-    p {
-        font-weight: 500;
-    }
     &.modalAttention {
-        border: solid 3px firebrick;
+        border: solid 3px $color-firebrick;
     }
 }
 
@@ -184,6 +163,5 @@
 .modalAttributes {
     display: flex;
     justify-content: space-between;
-    width: 100%;
     text-align: end;
 }

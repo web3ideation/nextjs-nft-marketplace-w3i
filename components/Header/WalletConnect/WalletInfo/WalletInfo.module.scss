@@ -7,7 +7,7 @@
     justify-content: center;
     padding: 10px;
     margin-bottom: 20px;
-    border-radius: 5px;
+    border-radius: $border-radius;
     background-color: $color-white;
     cursor: pointer;
     transition: color 0.4s ease, transform 0.4s ease;
@@ -15,7 +15,7 @@
     @media (min-width: 768px) and (max-width: 1023px) {
         flex-direction: row;
         padding: 2.5px;
-        background-color: $background-color;
+        background-color: $color-primary;
         margin-bottom: 0;
         border-radius: 0;
     }
@@ -23,11 +23,11 @@
     @media (min-width: 1024px) {
         flex-direction: row;
         padding: 23.5px 20px;
-        background-color: $background-color;
+        background-color: $color-primary;
         margin-bottom: 0;
         border-radius: 0;
         &:hover {
-            color: $hover-blue;
+            color: $color-hover-blue;
 
             .menuIcon img {
                 @include invert;
@@ -38,7 +38,7 @@
 }
 .headerAccountInfoContainerOpen {
     @media (max-width: 1023px) {
-        color: $hover-blue;
+        color: $color-hover-blue;
 
         .menuIcon img {
             @include invert;
@@ -78,7 +78,7 @@
     padding: 0 10px;
     font-family: $font-primary;
     font-size: $font-size-large;
-    font-weight: 500;
+    font-weight: $font-weight-medium;
 
     @media (min-width: 768px) and (max-width: 1023px) {
         font-size: $font-size-medium;

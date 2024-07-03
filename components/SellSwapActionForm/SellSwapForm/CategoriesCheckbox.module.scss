@@ -1,0 +1,57 @@
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
+
+.checkboxWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    h3 {
+        text-align: center;
+    }
+    @media (min-width: 768px) and (max-width: 1023px) {
+        width: 100%;
+    }
+
+    @media (min-width: 1024px) {
+        min-width: 50%;
+    }
+}
+
+.checkboxFieldsWrapper {
+    @include boxShadowFields;
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 20px 10px;
+    width: 100%;
+    height: 100%;
+    border-radius: $border-radius;
+}
+
+.checkboxField {
+    flex: 0 0 33.33%;
+    box-sizing: border-box;
+    align-content: center;
+    padding: 10px;
+    padding-left: 30px;
+    label {
+        padding-left: 5px;
+        font-size: $p-font-size;
+        font-weight: $font-weight-medium;
+    }
+    input {
+        @include boxShadowFields;
+        height: 13px;
+        width: 13px;
+        border-radius: 5px;
+        padding: 5px;
+        background-color: $color-white;
+
+        &:checked {
+            border: 1px solid $color-hover-blue;
+        }
+    }
+}
