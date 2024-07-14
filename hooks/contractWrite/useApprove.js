@@ -1,131 +1,68 @@
-import { useState, useEffect, useRef, useCallback } from "react"
-
+import { useState, useCallback } from "react"
 import { erc721ABI, useContractWrite, useWaitForTransaction } from "wagmi"
+import useTransactionHandlers from "../transactionHandlers/useTransactionHandlers"
+import useTransactionStatus from "../transactionStatus/useTransactionStatus"
 
-import { useTransactionErrorHandler } from "../transactionErrorHandling/useTransactionErrorHandler"
-import { useNotification } from "@context/NotificationProvider"
+const useApprove = (marketplaceAddress, nftAddress, tokenId, onSuccessCallback) => {
+    const {
+        handleTransactionError,
+        handleTransactionFailure,
+        checkWalletConnection,
+        transactionInProgress,
+    } = useTransactionHandlers()
 
-const useApprove = (marketplaceAddress, nftAddress, tokenId, isConnected, onSuccessCallback) => {
-    const [approvingTxHash, setApprovingTxHash] = useState(null)
-    const [approving, setApproving] = useState(false)
+    const [approveTxHash, setApproveTxHash] = useState(null)
 
-    const { showNotification, closeNotification } = useNotification()
-
-    const confirmApprovingNotificationId = useRef(null)
-    const whileApprovingNotificationId = useRef(null)
-
-    const [polling, setPolling] = useState(false)
-
-    const checkTransactionStatus = async () => {
-        try {
-            const receipt = await web3Provider.getTransactionReceipt(updateListingTxHash)
-            if (receipt) {
-                handleTransactionSuccess()
-                setPolling(false)
-            }
-        } catch (error) {
-            console.error("Error fetching transaction receipt: ", error)
-        }
-    }
-
-    useEffect(() => {
-        let interval
-        if (polling) {
-            interval = setInterval(checkTransactionStatus, 2500) // Poll every 5 seconds
-        }
-        return () => clearInterval(interval) // Cleanup
-    }, [polling])
-
-    const { handleTransactionError } = useTransactionErrorHandler()
-
-    const handleTransactionLoading = useCallback(() => {
-        whileApprovingNotificationId.current = showNotification(
-            "Approving",
-            "Approval sent. Awaiting confirmation...",
-            "info",
-            true
-        )
-    }, [showNotification])
-
-    const handleTransactionSuccess = useCallback(() => {
-        setApproving(false)
-        closeNotification(whileApprovingNotificationId.current)
-        showNotification("Success", "Approving successful", "success")
-        onSuccessCallback?.()
-        setPolling(false)
-    }, [closeNotification, showNotification, onSuccessCallback])
-
-    const handleTransactionFailure = useCallback(() => {
-        setApproving(false)
-        closeNotification(whileApprovingNotificationId.current)
-        showNotification("Error", "Failed to approve the NFT.", "error")
-        setPolling(false)
-    }, [closeNotification, showNotification])
-
-    const { data: approvingItemData, writeAsync: approveItem } = useContractWrite({
+    const {
+        writeAsync: approveItem,
+        status: approveStatus,
+        error: approveStatusError,
+    } = useContractWrite({
         address: nftAddress,
         abi: erc721ABI,
         functionName: "approve",
         args: [marketplaceAddress, tokenId],
         onSuccess: (data) => {
-            setApprovingTxHash(data.hash)
-            closeNotification(confirmApprovingNotificationId.current)
+            setApproveTxHash(data.hash)
         },
         onError: (error) => {
-            console.error("Approve item error", error)
-            setApproving(false)
+            console.error("An error occurred during the transaction: ", error.message)
             handleTransactionError(error)
-            closeNotification(confirmApprovingNotificationId.current)
+            handleTransactionFailure("approve")
         },
     })
 
-    const {
-        data: approvingTxReceipt,
-        isLoading: isApprovingTxLoading,
-        isSuccess: isApprovingTxSuccess,
-        isError: isApprovingTxError,
-    } = useWaitForTransaction({
-        hash: approvingTxHash,
+    const { status: waitApproveStatus, error: waitApproveStatusError } = useWaitForTransaction({
+        hash: approveTxHash,
+        onError: (error) => {
+            handleTransactionError(error)
+            handleTransactionFailure("approve")
+        },
+    })
+
+    useTransactionStatus({
+        status: approveStatus,
+        statusError: approveStatusError,
+        waitStatus: waitApproveStatus,
+        waitStatusError: waitApproveStatusError,
+        type: "approve",
+        nftAddress,
+        tokenId,
+        onSuccessCallback,
     })
 
     const handleApprove = useCallback(async () => {
-        if (!isConnected) {
-            showNotification("Connect wallet", "Connect your wallet to approve and list!", "info")
-            return
-        }
-        if (approving) {
-            showNotification("Approving", "An approval is already in progress! Check your wallet!", "error")
-            return
-        }
-        setApproving(true)
-        confirmApprovingNotificationId.current = showNotification(
-            "Check your wallet",
-            "Confirm approving...",
-            "info",
-            true
-        )
+        if (!checkWalletConnection("approve")) return
+        if (transactionInProgress("approve", approveStatus === "loading")) return
+
         try {
             await approveItem()
-            setPolling(true)
         } catch (error) {
             console.error("An error occurred during the transaction: ", error)
         }
-    }, [approveItem, nftAddress, marketplaceAddress, tokenId, isConnected])
+    }, [checkWalletConnection, transactionInProgress, approveStatus, approveItem])
 
-    useEffect(() => {
-        if (isApprovingTxLoading) handleTransactionLoading()
-        else if (isApprovingTxSuccess) handleTransactionSuccess()
-        else if (isApprovingTxError) handleTransactionFailure()
-    }, [isApprovingTxLoading, isApprovingTxSuccess, isApprovingTxError])
-
-    useEffect(() => {
-        return () => {
-            closeNotification(confirmApprovingNotificationId.current)
-            closeNotification(whileApprovingNotificationId.current)
-        }
-    }, [closeNotification])
-
-    return { handleApprove, isApprovingTxSuccess, approving }
+    return { handleApprove }
 }
 
 export default useApprove

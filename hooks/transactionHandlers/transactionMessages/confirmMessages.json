@@ -1,7 +1,12 @@
 {
     "approve": {
         "title": "Check your wallet",
-        "message": ["Confirm approval for the NFT with Address:", " ${nftAddress} ", " and Token ID:", " ${tokenId}."],
+        "message": [
+            "Confirm approval for the NFT with Address:",
+            " ${nftAddress} ",
+            " and Token ID:",
+            " ${tokenId}."
+        ],
         "type": "info"
     },
     "buyItem": {
@@ -32,9 +37,13 @@
             "Confirm listing of NFT",
             " with address: ",
             " ${nftAddress} ",
-            " and Token-ID:",
-            " ${tokenId} for",
-            " ${price} ETH."
+            " and Token-ID: ",
+            " ${tokenId} for ",
+            " ${price} ETH ",
+            " and NFT with address: ",
+            " ${desiredNftAddress} ",
+            " with Token-ID: ",
+            " ${desiredTokenId}"
         ],
         "type": "info"
     },

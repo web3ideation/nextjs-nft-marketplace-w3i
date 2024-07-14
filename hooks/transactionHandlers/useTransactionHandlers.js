@@ -15,13 +15,14 @@ export const useTransactionHandlers = () => {
     const { showNotification, closeNotification } = useNotification()
     const { isConnected } = useAccount()
     const whilePurchaseNotificationId = useRef(null)
-    const notificationIdRef = useRef(null)
+    // const notificationIdRef = useRef(null)
     const confirmNotificationId = useRef(null)
 
-    // Handler for transaction errors
     const handleTransactionError = useCallback(
         (error) => {
-            const foundError = Object.entries(errorMessageMapping).find(([key]) => error.message.includes(key))
+            const foundError = Object.entries(errorMessageMapping).find(([key]) =>
+                error.message.includes(key)
+            )
             const {
                 title,
                 description,
@@ -29,18 +30,21 @@ export const useTransactionHandlers = () => {
                 persist = true,
             } = foundError
                 ? errorMessageMapping[foundError[0]]
-                : { title: "Error", description: error.message || "Failed to process the transaction.", type: "error" }
+                : {
+                      title: "Error",
+                      description: error.message || "Failed to process the transaction.",
+                      type: "error",
+                  }
 
             showNotification(title, description, type, persist)
         },
         [showNotification]
     )
 
-    // Handler for transaction failures
     const handleTransactionFailure = useCallback(
         (transactionType) => {
-            if (notificationIdRef.current) {
-                closeNotification(notificationIdRef.current)
+            if (confirmNotificationId.current) {
+                closeNotification(confirmNotificationId.current)
             }
             const messageConfig = failureMessages[transactionType] || {
                 title: "Error",
@@ -48,12 +52,11 @@ export const useTransactionHandlers = () => {
                 type: "error",
             }
 
-            showNotification(messageConfig.title, messageConfig.message, messageConfig.type)
+            showNotification(messageConfig.title, messageConfig.message, messageConfig.type, true)
         },
         [closeNotification, showNotification]
     )
 
-    // Handler for checking wallet connection
     const checkWalletConnection = useCallback(
         (transactionType) => {
             if (!isConnected) {
@@ -71,7 +74,6 @@ export const useTransactionHandlers = () => {
         [isConnected, showNotification]
     )
 
-    // Handler for transactions in progress
     const transactionInProgress = useCallback(
         (transactionType, isInProgress) => {
             if (isInProgress) {
@@ -89,14 +91,18 @@ export const useTransactionHandlers = () => {
         [showNotification]
     )
 
-    // Handler for confirming transactions
     const handleTransactionConfirm = useCallback(
         (transactionType, values) => {
             const messageConfig = confirmMessages[transactionType]
             if (messageConfig) {
                 const messageArray = replacePlaceholders(messageConfig.message, values)
                 const message = Array.isArray(messageArray) ? messageArray.join("") : messageArray
-                confirmNotificationId.current = showNotification(messageConfig.title, message, messageConfig.type, true)
+                confirmNotificationId.current = showNotification(
+                    messageConfig.title,
+                    message,
+                    messageConfig.type,
+                    true
+                )
             } else {
                 console.error(`Unknown transaction type: ${transactionType}`)
             }

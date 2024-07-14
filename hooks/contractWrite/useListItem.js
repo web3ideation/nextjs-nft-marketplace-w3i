@@ -1,11 +1,9 @@
-import { useState, useEffect, useRef, useCallback } from "react"
-
+import { useState, useCallback } from "react"
+import { ethers } from "ethers"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
-
-import { useTransactionErrorHandler } from "../transactionErrorHandling/useTransactionErrorHandler"
-
-import { useNotification } from "@context/NotificationProvider"
 import nftMarketplaceAbi from "@constants/NftMarketplace.json"
+import useTransactionHandlers from "../transactionHandlers/useTransactionHandlers"
+import useTransactionStatus from "../transactionStatus/useTransactionStatus"
 
 const useListItem = (
     marketplaceAddress,
@@ -17,117 +15,75 @@ const useListItem = (
     categories,
     onSuccessCallback
 ) => {
+    const {
+        handleTransactionError,
+        handleTransactionFailure,
+        checkWalletConnection,
+        transactionInProgress,
+    } = useTransactionHandlers()
+
     const [listItemTxHash, setListItemTxHash] = useState(null)
-    const [listing, setListing] = useState(false)
-    const { showNotification, closeNotification } = useNotification()
 
-    const confirmListingNotificationId = useRef(null)
-    const whileListingNotificationId = useRef(null)
-
-    const [polling, setPolling] = useState(false)
-
-    const checkTransactionStatus = async () => {
-        try {
-            const receipt = await web3Provider.getTransactionReceipt(listItemTxHash)
-            if (receipt) {
-                handleTransactionSuccess()
-                setPolling(false) // Stop polling
-            }
-        } catch (error) {
-            console.error("Error fetching transaction receipt: ", error)
-        }
-    }
-
-    useEffect(() => {
-        let interval
-        if (polling) {
-            interval = setInterval(checkTransactionStatus, 2500)
-        }
-        return () => clearInterval(interval)
-    }, [polling])
-
-    const { handleTransactionError } = useTransactionErrorHandler()
-
-    const handleTransactionLoading = useCallback(() => {
-        whileListingNotificationId.current = showNotification(
-            "Listing",
-            "Transaction sent. Awaiting confirmation...",
-            "info",
-            true
-        )
-    }, [showNotification])
-
-    const handleTransactionSuccess = useCallback(() => {
-        setListing(false)
-        closeNotification(whileListingNotificationId.current)
-        showNotification("Success", "Listing successful", "success")
-        onSuccessCallback?.()
-        setPolling(false)
-    }, [closeNotification, showNotification, onSuccessCallback])
-
-    const handleTransactionFailure = useCallback(() => {
-        setListing(false)
-        closeNotification(whileListingNotificationId.current)
-        showNotification("Error", "Failed to list the NFT.", "error")
-        setPolling(false)
-    }, [closeNotification, showNotification])
-
-    const { data: listItemData, writeAsync: listItem } = useContractWrite({
+    const {
+        writeAsync: listItem,
+        status: listItemStatus,
+        error: listItemStatusError,
+    } = useContractWrite({
         address: marketplaceAddress,
         abi: nftMarketplaceAbi,
         functionName: "listItem",
-        args: [nftAddress, tokenId, price, desiredNftAddress, desiredTokenId],
+        args: [
+            nftAddress,
+            tokenId,
+            ethers.utils.parseEther(price),
+            desiredNftAddress || ethers.constants.AddressZero,
+            desiredTokenId || "0",
+        ],
         onSuccess: (data) => {
-            closeNotification(confirmListingNotificationId.current)
             setListItemTxHash(data.hash)
         },
         onError: (error) => {
             console.error("List item error: ", error)
-            setListing(false)
             handleTransactionError(error)
-            closeNotification(confirmListingNotificationId.current)
+            handleTransactionFailure("listItem")
         },
     })
 
-    const {
-        data: listItemTxReceipt,
-        isLoading: isListItemTxLoading,
-        isSuccess: isListItemTxSuccess,
-        isError: isListItemTxError,
-    } = useWaitForTransaction({
+    const { status: waitListItemStatus, error: waitListItemStatusError } = useWaitForTransaction({
         hash: listItemTxHash,
+        onError: (error) => {
+            handleTransactionError(error)
+            handleTransactionFailure("listItem")
+        },
     })
 
-    const handleList = useCallback(async () => {
+    // Use the custom hook for handling transaction status
+    useTransactionStatus({
+        status: listItemStatus,
+        statusError: listItemStatusError,
+        waitStatus: waitListItemStatus,
+        waitStatusError: waitListItemStatusError,
+        type: "listItem",
+        tokenId,
+        nftAddress,
+        price,
+        desiredNftAddress: desiredNftAddress || ethers.constants.AddressZero,
+        desiredTokenId: desiredTokenId || "0",
+        onSuccessCallback,
+    })
+
+    const handleListItem = useCallback(async () => {
+        if (!checkWalletConnection("listItem")) return
+        if (transactionInProgress("listItem", listItemStatus === "loading")) return
+
         try {
-            setListing(true)
-            confirmListingNotificationId.current = showNotification(
-                "Check your wallet",
-                "Confirm listing...",
-                "info",
-                true
-            )
             await listItem()
-            setPolling(true)
         } catch (error) {
             console.error("An error occurred during the transaction: ", error)
         }
-    }, [listItem, nftAddress, tokenId, price, desiredNftAddress, desiredTokenId])
+    }, [checkWalletConnection, transactionInProgress, listItemStatus, listItem])
 
-    useEffect(() => {
-        if (isListItemTxLoading) handleTransactionLoading()
-        else if (isListItemTxSuccess) handleTransactionSuccess()
-        else if (isListItemTxError) handleTransactionFailure()
-    }, [isListItemTxLoading, isListItemTxSuccess, isListItemTxError])
-
-    useEffect(() => {
-        return () => {
-            closeNotification(confirmListingNotificationId.current)
-            closeNotification(whileListingNotificationId.current)
-        }
-    }, [closeNotification])
-
-    return { handleList, listing }
+    return { handleListItem }
 }
 
 export default useListItem
