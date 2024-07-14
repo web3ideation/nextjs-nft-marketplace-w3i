@@ -35,7 +35,7 @@ const Header = () => {
                     </Link>
                     <WalletConnectionManager />
                     <a
-                        className={styles.headerLogo}
+                        className={`${styles.headerLogo} ${styles.hidden}`}
                         href="https://web3ideation.com/"
                         target="_blank"
                         rel="noopener noreferrer"

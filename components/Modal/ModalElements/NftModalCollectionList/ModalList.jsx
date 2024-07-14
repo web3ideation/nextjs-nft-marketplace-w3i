@@ -26,25 +26,30 @@ function ModalList({ filterAddress, filterTokenId }) {
     const filteredNFTs = useMemo(
         () =>
             nftsData.filter(
-                (nft) => nft.nftAddress === filterAddress && (!filterTokenId || nft.tokenId !== filterTokenId)
+                (nft) =>
+                    nft.nftAddress === filterAddress &&
+                    (!filterTokenId || nft.tokenId !== filterTokenId)
             ),
         [nftsData, filterAddress, filterTokenId]
     )
 
     return (
-        <div className={styles.modalListContainer}>
-            <div className={styles.modalListWrapper} ref={listRef}>
-                {filteredNFTs.length > 0 ? (
-                    <div className={styles.modalList}>
-                        {filteredNFTs.map((nft) => (
-                            <Card nftData={nft} key={`${nft.nftAddress}${nft.tokenId}`} />
-                        ))}
-                    </div>
-                ) : (
-                    <p>No NFTs available</p>
-                )}
+        <>
+            <h4 className={styles.modalListTitle}>Other NFTs from this collection</h4>
+            <div className={styles.modalListContainer}>
+                <div className={styles.modalListWrapper} ref={listRef}>
+                    {filteredNFTs.length > 0 ? (
+                        <div className={styles.modalList}>
+                            {filteredNFTs.map((nft) => (
+                                <Card nftData={nft} key={`${nft.nftAddress}${nft.tokenId}`} />
+                            ))}
+                        </div>
+                    ) : (
+                        <p>No NFTs available</p>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 

@@ -19,7 +19,12 @@ const InfoModal = forwardRef((props, ref) => {
     const [formattedPrice, setFormattedPrice] = useState("")
 
     const nftToShow = useMemo(
-        () => nftData.find((nft) => nft.nftAddress === modalContent.nftAddress && nft.tokenId === modalContent.tokenId),
+        () =>
+            nftData.find(
+                (nft) =>
+                    nft.nftAddress === modalContent.nftAddress &&
+                    nft.tokenId === modalContent.tokenId
+            ),
         [nftData, modalContent.nftAddress, modalContent.tokenId]
     )
 
@@ -27,19 +32,29 @@ const InfoModal = forwardRef((props, ref) => {
         setFormattedPrice(formatPriceToEther(modalContent.price))
     }, [modalContent.price])
 
-    const { handleBuyClick } = useBuyItem(
+    const handleTransactionCompletion = useCallback(() => {
+        const modalId = `nftTransactionModal-${modalContent.nftAddress}${modalContent.tokenId}`
+        const modalTransactionContent = {
+            nftAddress: modalContent.nftAddress,
+            tokenId: modalContent.tokenId,
+        }
+        reloadNFTs()
+        openModal("transaction")
+    }, [openModal])
+
+    const { handleBuyItem } = useBuyItem(
         marketplaceAddress,
         modalContent.price,
         modalContent.nftAddress,
         modalContent.tokenId,
         formattedPrice,
-        reloadNFTs
+        handleTransactionCompletion
     )
-    const { handleCancelListingClick } = useCancelListing(
+    const { handleCancelListing } = useCancelListing(
         marketplaceAddress,
         modalContent.nftAddress,
         modalContent.tokenId,
-        reloadNFTs
+        handleTransactionCompletion
     )
 
     const handleUpdatePriceButtonClick = useCallback(() => {
@@ -49,7 +64,9 @@ const InfoModal = forwardRef((props, ref) => {
 
     const handleListClick = useCallback(
         (action) => {
-            const urlParams = `nftAddress=${modalContent.nftAddress}&tokenId=${modalContent.tokenId}&price=${formattedPrice}`
+            const urlParams = `nftAddress=${modalContent.nftAddress}&tokenId=${
+                modalContent.tokenId
+            }&price=${formattedPrice || "0"}`
             const basePath =
                 action === "sell"
                     ? `/sell-nft?${urlParams}`
@@ -65,7 +82,7 @@ const InfoModal = forwardRef((props, ref) => {
         switch (modalType) {
             case "info":
                 if (modalContent.isListed) {
-                    actionButtons.push({ text: "BUY", action: handleBuyClick })
+                    actionButtons.push({ text: "BUY", action: handleBuyItem })
                 }
                 break
             case "list":
@@ -74,7 +91,7 @@ const InfoModal = forwardRef((props, ref) => {
                 break
             case "sell":
                 actionButtons.push({ text: "UPDATE", action: handleUpdatePriceButtonClick })
-                actionButtons.push({ text: "DELIST", action: handleCancelListingClick })
+                actionButtons.push({ text: "DELIST", action: handleCancelListing })
                 break
             default:
                 break
@@ -83,16 +100,19 @@ const InfoModal = forwardRef((props, ref) => {
     }, [
         modalType,
         modalContent.isListed,
-        handleBuyClick,
+        handleBuyItem,
         handleListClick,
         handleUpdatePriceButtonClick,
-        handleCancelListingClick,
+        handleCancelListing,
     ])
 
     return (
         <Modal ref={ref} modalTitle={modalContent.tokenName || ""} buttons={buttons}>
             <Overview modalContent={nftToShow || modalContent} />
-            <ModalList filterAddress={modalContent.nftAddress} filterTokenId={modalContent.tokenId} />
+            <ModalList
+                filterAddress={modalContent.nftAddress}
+                filterTokenId={modalContent.tokenId}
+            />
         </Modal>
     )
 })

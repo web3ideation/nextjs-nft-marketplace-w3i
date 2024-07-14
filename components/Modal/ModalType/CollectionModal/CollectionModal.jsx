@@ -21,16 +21,16 @@ const CollectionModal = forwardRef((prop, ref) => {
     const selectedNFTs = selectedCollection ? selectedCollection.items : []
     const filteredNFTsData = nftsData.filter((nftData) =>
         selectedNFTs.some(
-            (selectedNFT) =>
-                selectedNFT.nftAddress === nftData.nftAddress &&
-                selectedNFT.tokenId === nftData.tokenId
+            (selectedNFT) => selectedNFT.nftAddress === nftData.nftAddress && selectedNFT.tokenId === nftData.tokenId
         )
     )
 
     filteredNFTsData.sort((a, b) => parseInt(a.tokenId) - parseInt(b.tokenId))
 
     useEffect(() => {
-        setPriceInEur(truncatePrice(priceInEur, 10))
+        if (priceInEur) {
+            setPriceInEur(truncatePrice(priceInEur, 10))
+        }
         setTruncCollectionAddress(truncateStr(selectedCollection?.nftAddress, 5, 5))
     }, [priceInEur, selectedCollection.nftAddress])
 
@@ -66,18 +66,12 @@ const CollectionModal = forwardRef((prop, ref) => {
                             </div>
                             <div>
                                 <p>{"Token-Id's: "}</p>
-                                <strong>
-                                    {selectedCollection?.tokenIds.split(",").join(", ")}
-                                </strong>
+                                <strong>{selectedCollection?.tokenIds.split(",").join(", ")}</strong>
                             </div>
                             <div>
                                 <p>Volume: </p>
-                                <strong>
-                                    {formatPriceToEther(selectedCollection?.collectionPrice)} ETH
-                                </strong>
-                                <strong>
-                                    {priceInEur ? ` (${priceInEur} €)` : " Loading..."}
-                                </strong>
+                                <strong>{formatPriceToEther(selectedCollection?.collectionPrice)} ETH</strong>
+                                <strong>{priceInEur ? ` (${priceInEur} €)` : " Loading..."}</strong>
                             </div>
                         </div>
                     </div>

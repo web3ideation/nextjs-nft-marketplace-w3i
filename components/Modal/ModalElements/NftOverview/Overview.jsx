@@ -20,19 +20,25 @@ const Overview = ({ modalContent }) => {
     const [formattedPriceInEur, setFormattedPriceInEur] = useState("")
     const [formattedExternalLink, setFormattedExternalLink] = useState("")
     const [imageLoaded, setImageLoaded] = useState(false)
-    console.log("Modal Content", modalContent)
+
     const isOwnedByUser =
-        isConnected && modalContent.tokenOwner && modalContent.tokenOwner.toLowerCase() === address?.toLowerCase()
+        isConnected &&
+        modalContent.tokenOwner &&
+        modalContent.tokenOwner.toLowerCase() === address?.toLowerCase()
 
-    const isListedForSwap = modalContent.desiredNftAddress !== "0x0000000000000000000000000000000000000000"
+    const isListedForSwap =
+        modalContent.desiredNftAddress !== "0x0000000000000000000000000000000000000000"
 
-    const handleCopyAddress = () => copyNftAddressToClipboard(modalContent.nftAddress, showNotification)
+    const handleCopyAddress = (addressToCopy) => () =>
+        copyNftAddressToClipboard(addressToCopy, showNotification)
 
     const capitalizeFirstLetter = (string) =>
         typeof string === "string" ? string.charAt(0).toUpperCase() + string.slice(1) : string
 
     const handleLoveLightClick = () =>
-        setLoveLightClass((currentClass) => (currentClass === "" ? "modalLoveLightInnerYellow" : ""))
+        setLoveLightClass((currentClass) =>
+            currentClass === "" ? "modalLoveLightInnerYellow" : ""
+        )
 
     useEffect(() => {
         const updatePriceInEur = async () => {
@@ -51,18 +57,20 @@ const Overview = ({ modalContent }) => {
             setFormattedNftAddress(truncateStr(modalContent.nftAddress, 4, 4))
             setFormattedTokenOwner(truncateStr(modalContent.tokenOwner, 4, 4))
             setFormattedPrice(formatPriceToEther(modalContent.price))
+        }
+        if (priceInEur) {
             setFormattedPriceInEur(truncatePrice(priceInEur, 5))
         }
     }, [modalContent, priceInEur])
 
     useEffect(() => {
-        if (modalContent.tokenExternalLink) {
+        if (modalContent.tokenExternalLink?.length > 0) {
             setFormattedExternalLink(truncateStr(modalContent.tokenExternalLink, 25, 0))
         }
     }, [modalContent.tokenExternalLink])
 
     useEffect(() => {
-        setImageLoaded(false)
+        if (!modalContent.imageURI) setImageLoaded(false)
     }, [modalContent.imageURI])
 
     const handleImageLoad = () => {
@@ -104,9 +112,23 @@ const Overview = ({ modalContent }) => {
                                     <p>Swap:</p>
                                     <div className={styles.modalPriceInnerWrapper}>
                                         <p>Desired Address: </p>
-                                        <strong>{formattedDesiredNftAddress}</strong>
+                                        <strong
+                                            className={styles.nftNftAddressToCopy}
+                                            onClick={handleCopyAddress(
+                                                modalContent.desiredNftAddress
+                                            )}
+                                        >
+                                            {formattedDesiredNftAddress}
+                                        </strong>
                                         <p>Desired Token-Id: </p>
-                                        <strong>{modalContent.desiredTokenId}</strong>
+                                        <strong
+                                            className={styles.nftNftAddressToCopy}
+                                            onClick={handleCopyAddress(
+                                                modalContent.desiredTokenId
+                                            )}
+                                        >
+                                            {modalContent.desiredTokenId}
+                                        </strong>
                                         <p>Price:</p>
                                         <strong>{formattedPrice} ETH </strong>
                                         <strong>{formattedPriceInEur} €</strong>
@@ -138,7 +160,10 @@ const Overview = ({ modalContent }) => {
                         </div>
                         <div>
                             <p>Token-Adress: </p>
-                            <div className={styles.nftNftAddressToCopy} onClick={handleCopyAddress}>
+                            <div
+                                className={styles.nftNftAddressToCopy}
+                                onClick={handleCopyAddress(modalContent.nftAddress)}
+                            >
                                 <strong>{formattedNftAddress}</strong>
                             </div>
                         </div>
@@ -162,7 +187,9 @@ const Overview = ({ modalContent }) => {
                                     <div className={styles.modalAttributes}>
                                         <p>Description:</p>
                                         <strong>
-                                            {modalContent.tokenDescription || modalContent.description || "..."}
+                                            {modalContent.tokenDescription ||
+                                                modalContent.description ||
+                                                "..."}
                                         </strong>
                                     </div>
                                 </div>
@@ -188,7 +215,9 @@ const Overview = ({ modalContent }) => {
                                     <div key={index} className={styles.modalAttributesWrapper}>
                                         <span className={styles.modalAttributes}>
                                             <p>{capitalizeFirstLetter(attribute.trait_type)}:</p>
-                                            <strong>{capitalizeFirstLetter(attribute.value)}</strong>
+                                            <strong>
+                                                {capitalizeFirstLetter(attribute.value)}
+                                            </strong>
                                         </span>
                                     </div>
                                 ))

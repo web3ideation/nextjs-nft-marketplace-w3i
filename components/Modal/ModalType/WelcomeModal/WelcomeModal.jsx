@@ -61,7 +61,7 @@ const WelcomeModal = () => {
                     <Link href="mailto:info@web3ideation.com">info@web3ideation.com</Link>
                 </p>
                 <br />
-                <SellSwapInformation />
+                <SellSwapInformation type="welcome" />
             </div>
         </Modal>
     )
