@@ -1,5 +1,4 @@
-// CategoriesCheckbox.jsx
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Tooltip from "@components/Tooltip/Tooltip"
 import ComingSoon from "@components/ComingSoon/ComingSoon"
 
@@ -14,7 +13,7 @@ const CategoriesCheckbox = ({ checkboxData, setCheckboxData }) => {
         const selectedCount = Object.values(checkboxData).filter((val) => val).length
 
         if (!checked || selectedCount < 2) {
-            setCheckboxData({ ...checkboxData, [name]: checked })
+            setCheckboxData((prevData) => ({ ...prevData, [name]: checked }))
             setCheckboxError("")
             setErrorCategory("")
         } else {
@@ -25,7 +24,7 @@ const CategoriesCheckbox = ({ checkboxData, setCheckboxData }) => {
 
     return (
         <div className={styles.checkboxWrapper}>
-            <h3>Choose up to 2 categories</h3>
+            <h3>Choose 2 categories</h3>
             <div className={styles.checkboxFieldsWrapper}>
                 {Object.keys(checkboxData).map((category) => (
                     <div key={category} className={styles.checkboxField}>
@@ -39,7 +38,9 @@ const CategoriesCheckbox = ({ checkboxData, setCheckboxData }) => {
                             aria-label={`Category ${category}`}
                         />
                         <label htmlFor={category}>{category}</label>
-                        {checkboxError && errorCategory === category && <Tooltip message={checkboxError} />}
+                        {checkboxError && errorCategory === category && (
+                            <Tooltip message={checkboxError} />
+                        )}
                     </div>
                 ))}
                 <ComingSoon size="large" />
