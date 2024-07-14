@@ -13,6 +13,7 @@ const SearchResults = () => {
     const router = useRouter()
     const { data: nftsData, loadingImage } = useNFT()
     const [searchTerm, setSearchTerm] = useState("")
+
     const [searchResults, setSearchResults] = useState([])
     const [filteredNFTs, setFilteredNFTs] = useState([])
 

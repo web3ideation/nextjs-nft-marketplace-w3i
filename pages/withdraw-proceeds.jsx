@@ -15,20 +15,30 @@ const WithdrawProceeds = () => {
     const chainId = provider.chains[0]
     const chainString = chainId.id ? parseInt(chainId.id).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
-    const { openModal, modalContent } = useModal()
+    const { openModal } = useModal()
     const { address: userAddress, isConnected } = useAccount()
 
     const [proceeds, setProceeds] = useState("0.0")
     const [proceedsInEur, setProceedsInEur] = useState("0.0")
 
-    const { returnedProceeds, isLoadingProceeds, errorLoadingProceeds, proceedsStatus, refetchProceeds } =
-        useGetProceeds(marketplaceAddress, userAddress)
+    const {
+        returnedProceeds,
+        isLoadingProceeds,
+        errorLoadingProceeds,
+        proceedsStatus,
+        refetchProceeds,
+    } = useGetProceeds(marketplaceAddress, userAddress)
 
     const handleWithdrawSuccess = () => {
-        openModal("withdrawn", modalContent)
+        refetchProceeds()
+        openModal("transaction")
     }
 
-    const { handleWithdrawProceeds, isTxSuccess } = useWithdrawProceeds(marketplaceAddress, proceeds, refetchProceeds)
+    const { handleWithdrawProceeds } = useWithdrawProceeds(
+        marketplaceAddress,
+        proceeds,
+        handleWithdrawSuccess
+    )
 
     useEffect(() => {
         if (userAddress) {
@@ -63,16 +73,18 @@ const WithdrawProceeds = () => {
                 </div>
                 <div className={styles.withdrawProceedsInformation}>
                     <p>
-                        When selling or exchanging NFTs on our platform, it is important that you are clear about the
-                        withdrawal process of your proceeds. After a successful sale or exchange, your proceeds will be
-                        credited to your account in Ether (ETH). To access these funds, you will need to make a manual
-                        withdrawal, and please note that the withdrawal will be conducted only in ETH. Additionally, be
-                        aware that withdrawing funds will incur gas fees, which are required for processing the
-                        transaction on the Ethereum network. These fees vary based on network congestion. Therefore, we
-                        recommend planning your withdrawals accordingly. Please remember to withdraw your proceeds
-                        regularly to ensure your funds remain safe and accessible. This step is crucial to maintaining
-                        full control of your earned funds. If you need help or further information, do not hesitate to
-                        contact our support.
+                        When selling or exchanging NFTs on our platform, it is important that you
+                        are clear about the withdrawal process of your proceeds. After a successful
+                        sale or exchange, your proceeds will be credited to your account in Ether
+                        (ETH). To access these funds, you will need to make a manual withdrawal,
+                        and please note that the withdrawal will be conducted only in ETH.
+                        Additionally, be aware that withdrawing funds will incur gas fees, which
+                        are required for processing the transaction on the Ethereum network. These
+                        fees vary based on network congestion. Therefore, we recommend planning
+                        your withdrawals accordingly. Please remember to withdraw your proceeds
+                        regularly to ensure your funds remain safe and accessible. This step is
+                        crucial to maintaining full control of your earned funds. If you need help
+                        or further information, do not hesitate to contact our support.
                     </p>
                 </div>
                 {!isConnected ? (
