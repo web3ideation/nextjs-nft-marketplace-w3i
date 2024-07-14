@@ -5,15 +5,23 @@ import styles from "./SearchBar.module.scss"
 const SearchBar = () => {
     const router = useRouter()
     const [searchTerm, setSearchTerm] = useState("")
-    console.log("searchTerm", searchTerm)
 
     useEffect(() => {
-        const handleRouteChange = () => setSearchTerm("")
+        // Set the search term from the query parameter on initial load
+        if (router.query.search) {
+            setSearchTerm(router.query.search)
+        }
 
-        router.events.on("routeChangeStart", handleRouteChange)
+        const handleRouteChange = (url) => {
+            const query = new URLSearchParams(url.split("?")[1])
+            const search = query.get("search") || ""
+            setSearchTerm(search)
+        }
 
-        return () => router.events.off("routeChangeStart", handleRouteChange)
-    }, [router.events])
+        router.events.on("routeChangeComplete", handleRouteChange)
+
+        return () => router.events.off("routeChangeComplete", handleRouteChange)
+    }, [router.query, router.events])
 
     const handleSearch = () => {
         router.push({
