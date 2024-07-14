@@ -14,15 +14,16 @@ const Home = () => {
             </div>
 
             <div className={styles.nftListingContainer}>
-                <List sortType={"brandNew"} title={"Brand New"} />
+                <List sortType={"brandNew"} title={"Brand New NFTs"} />
+                <List sortType={"swap"} title={"Swap NFTs"} />
             </div>
             <div className={styles.nftCollectionsContainer}>
-                <Collection sortBy={"collectionCount"} title={"Top 10"} />
-                <Collection sortBy={"collectionPrice"} title={"Top Value"} />
+                <Collection sortBy={"collectionCount"} title={"Top 10 Collections"} />
+                <Collection sortBy={"collectionPrice"} title={"Top Value Collections"} />
             </div>
             <div className={styles.nftListingContainer}>
-                <List sortType={"mostSold"} title={"Most Sold"} />
-                <List sortType={"expensive"} title={"Expensive Shit"} />
+                <List sortType={"mostSold"} title={"Most Sold NFTs"} />
+                <List sortType={"expensive"} title={"Expensive NFTs"} />
             </div>
         </>
     )
