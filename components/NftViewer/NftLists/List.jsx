@@ -5,44 +5,55 @@ import { formatPriceToEther } from "@utils/formatting"
 import Card from "@components/NftCard/Card"
 import BtnWithAction from "@components/Btn/BtnWithAction"
 import styles from "./List.module.scss"
+import { ethers } from "ethers"
 
 const List = ({ nftsData: externalNftsData, sortType, title }) => {
     const [visibleNFTs, setVisibleNFTs] = useState(0)
     const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(0)
     const [isLoaded, setIsLoaded] = useState(false)
-    const [showPlaceholders, setShowPlaceholders] = useState(true)
 
-    const { data: internalNftsData, isLoading: nftsLoading, isError: nftsError, reloadNFTs } = useNFT()
-    const nftsData = useMemo(() => externalNftsData || internalNftsData, [externalNftsData, internalNftsData])
+    const {
+        data: internalNftsData,
+        isLoading: nftsLoading,
+        isError: nftsError,
+        reloadNFTs,
+    } = useNFT()
+    const nftsData = useMemo(
+        () => externalNftsData || internalNftsData,
+        [externalNftsData, internalNftsData]
+    )
 
     const { address } = useAccount()
 
-    useEffect(() => {
-        function getInitialVisibleCount() {
-            const width = window.innerWidth
-            if (width < 768) return 4
-            if (width < 1023) return 6
-            if (width < 1440) return 9
-            return 12
-        }
+    const getInitialVisibleCount = useCallback(() => {
+        const width = window.innerWidth
+        if (width < 768) return 4
+        if (width < 1023) return 6
+        if (width < 1440) return 9
+        return 12
+    }, [])
 
+    useEffect(() => {
         const initialCount = getInitialVisibleCount()
         setVisibleNFTs(initialCount)
         setInitialVisibleNFTs(initialCount)
 
         const handleResize = () => {
             const newCount = getInitialVisibleCount()
-            setVisibleNFTs(newCount)
+            if (visibleNFTs <= initialVisibleNFTs) {
+                setVisibleNFTs(newCount)
+            }
             setInitialVisibleNFTs(newCount)
         }
 
         window.addEventListener("resize", handleResize)
         return () => window.removeEventListener("resize", handleResize)
-    }, [])
+    }, [getInitialVisibleCount, initialVisibleNFTs])
 
     const sortAndFilterNFTs = useCallback(
         (nftsData, sortType) => {
-            const isOwnedByUser = (tokenOwner) => address && tokenOwner?.toLowerCase() === address.toLowerCase()
+            const isOwnedByUser = (tokenOwner) =>
+                address && tokenOwner?.toLowerCase() === address.toLowerCase()
 
             switch (sortType) {
                 case "brandNew":
@@ -67,12 +78,17 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
                     return nftsData
                         .filter((nft) => Number(formatPriceToEther(nft.price)) > 0.01)
                         .sort((a, b) => Number(b.price) - Number(a.price))
+                case "swap":
+                    return nftsData.filter(
+                        (nft) => nft.desiredNftAddress !== ethers.constants.AddressZero
+                    )
                 case "myNFTListed":
                     return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && nft.isListed)
                 case "myNFTNotListed":
                     return nftsData.filter((nft) => isOwnedByUser(nft.tokenOwner) && !nft.isListed)
                 case "myNFTFromWallet":
                     return nftsData
+
                 default:
                     return nftsData
             }
@@ -86,53 +102,74 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
 
     useEffect(() => {
         if (!nftsLoading) {
-            setTimeout(() => {
-                setIsLoaded(true)
-                setTimeout(() => setShowPlaceholders(false), 500) // Wait for the fade-out transition to complete
-            }, 500) // Wait for the fade-in transition to complete
+            setIsLoaded(true)
         }
     }, [nftsLoading])
 
     const renderNFTList = useCallback(() => {
         if (nftsError || !nftsData) {
-            console.log("Error on load", nftsError)
-            return <p>No NFTs available</p>
-        }
-
-        if (nftsLoading || showPlaceholders) {
-            const placeholders = Array.from({ length: visibleNFTs }, (_, index) => (
-                <Card key={`placeholder-${index}`} nftData={null} className={`${styles.card}`} />
-            ))
-            return placeholders
-        } else {
-            return sortedAndFilteredNFTs.map((nft) => (
+            console.error("Error on load", nftsError)
+            return Array.from({ length: initialVisibleNFTs }, (_, index) => (
                 <Card
-                    nftData={nft}
-                    reloadNFTs={reloadNFTs}
-                    key={`${nft.nftAddress}${nft.tokenId}`}
-                    className={`${styles.card} ${isLoaded ? styles.loaded : ""}`}
+                    nftData={null}
+                    key={`placeholder-${index}`}
+                    className={` ${styles.cardPlaceholder} ${isLoaded ? styles.loaded : ""}`}
                 />
             ))
         }
-    }, [nftsLoading, nftsError, nftsData, sortedAndFilteredNFTs, reloadNFTs, visibleNFTs, showPlaceholders, isLoaded])
+
+        const renderedNFTs = sortedAndFilteredNFTs.map((nft) => (
+            <Card
+                nftData={nft}
+                reloadNFTs={reloadNFTs}
+                key={`${nft.nftAddress}${nft.tokenId}`}
+                className={`${styles.card} ${isLoaded ? styles.loaded : ""}`}
+            />
+        ))
+
+        if (renderedNFTs.length === 0) {
+            return Array.from({ length: initialVisibleNFTs }, (_, index) => (
+                <Card
+                    nftData={null}
+                    key={`placeholder-${index}`}
+                    className={` ${styles.cardPlaceholder} ${isLoaded ? styles.loaded : ""}`}
+                />
+            ))
+        }
+
+        return renderedNFTs
+    }, [nftsError, nftsData, sortedAndFilteredNFTs, reloadNFTs, initialVisibleNFTs, isLoaded])
 
     return (
         <div className={styles.listWrapper}>
             <h3>{title}</h3>
-            <div className={styles.list}>{renderNFTList()}</div>
+            <div className={styles.list}>
+                {renderNFTList().length === 0 && (
+                    <Card
+                        nftData={null}
+                        className={`${styles.card} ${isLoaded ? styles.loaded : ""}`}
+                    />
+                )}
+                {renderNFTList()}
+            </div>
             <div className={styles.showMoreBtns}>
                 {visibleNFTs === sortedAndFilteredNFTs.length && (
                     <BtnWithAction
                         buttonText={"More"}
                         onClickAction={() =>
                             setVisibleNFTs(
-                                (prevVisible) => prevVisible + (initialVisibleNFTs > 12 ? initialVisibleNFTs : 12)
+                                (prevVisible) =>
+                                    prevVisible +
+                                    (initialVisibleNFTs > 12 ? initialVisibleNFTs : 12)
                             )
                         }
                     />
                 )}
                 {visibleNFTs > initialVisibleNFTs && (
-                    <BtnWithAction buttonText={"Less"} onClickAction={() => setVisibleNFTs(initialVisibleNFTs)} />
+                    <BtnWithAction
+                        buttonText={"Less"}
+                        onClickAction={() => setVisibleNFTs(initialVisibleNFTs)}
+                    />
                 )}
             </div>
         </div>
