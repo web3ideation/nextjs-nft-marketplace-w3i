@@ -32,6 +32,7 @@ const ModalRenderer = () => {
         case "delisted":
         case "updated":
         case "withdrawn":
+        case "transaction":
             return <TransactionModal />
         default:
             return null

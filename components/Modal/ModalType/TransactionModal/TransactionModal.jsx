@@ -1,34 +1,37 @@
-// React imports (React core and hooks
-import React, { forwardRef } from "react"
+// React imports (React core and hooks)
+import React, { forwardRef, useMemo } from "react"
 import { useRouter } from "next/router"
 import { useAccount } from "wagmi"
 
 // Custom hooks and components
-import Overview from "../../ModalElements/NftOverview/Overview"
-import useWalletNFTs from "./../../../../hooks/index"
+import { useNFT } from "../../../../context/NftDataProvider"
+import Card from "../../../NftCard/Card"
 import { useModal } from "@context/ModalProvider"
 import Modal from "../../ModalBasis/Modal"
 import { formatPriceToEther } from "@utils/formatting"
 
 // Styles import
 import styles from "./TransactionModal.module.scss"
-import { current } from "immer"
 
 const TransactionModal = forwardRef((props, ref) => {
+    const { data: nftData } = useNFT()
+
     const { address } = useAccount()
     console.log("Wallet address", address)
-
-    //const { nfts } = useWalletNFTs(address)
-    //console.log("Fetched nfts from wallet", nfts)
 
     const router = useRouter()
 
     const { modalContent, modalType, closeModal, currentModalId } = useModal()
     console.log("Modal content transaction", modalContent)
-
-    //const nftToShow = () => {
-    //    return nfts.find((nft) => nft.nftAddress === modalContent.nftAddress && nft.tokenId === modalContent.tokenId)
-    //}
+    //const nftToShow = useMemo(
+    //    () =>
+    //        nftData.find(
+    //            (nft) =>
+    //                nft.nftAddress === modalContent.nftAddress &&
+    //                nft.tokenId === modalContent.tokenId
+    //        ),
+    //    [nftData, modalContent.nftAddress, modalContent.tokenId]
+    //)
 
     // Initialisiere das Array für die Buttons
     const buttons = []
@@ -65,29 +68,55 @@ const TransactionModal = forwardRef((props, ref) => {
             break
         case "listed":
             titleText = "Your listing overview for: "
-            // Füge hier spezifische Buttons für den Fall "listed" hinzu, falls nötig
+            buttons.push({
+                text: "CLOSE",
+                action: () => closeModal(currentModalId),
+            })
             break
         case "updated":
             titleText = "Your update overview for: "
-            // Füge hier spezifische Buttons für den Fall "updated" hinzu, falls nötig
+            buttons.push({
+                text: "CLOSE",
+                action: () => closeModal(currentModalId),
+            })
             break
         case "delisted":
             titleText = "Your delisting overview for: "
-            // Füge hier spezifische Buttons für den Fall "delisted" hinzu, falls nötig
+            buttons.push({
+                text: "CLOSE",
+                action: () => closeModal(currentModalId),
+            })
             break
         case "withdrawn":
             titleText = "Your withdrawal overview: "
             buttons.push({
-                text: "Close",
+                text: "CLOSE",
+                action: () => closeModal(currentModalId),
+            })
+            break
+        case "transaction":
+            titleText = "Transaction successful"
+            buttons.push({
+                text: "CLOSE",
                 action: () => closeModal(currentModalId),
             })
             break
         default:
-            // Optionale Default-Case-Logik
             break
     }
 
-    return <Modal ref={ref} modalTitle={titleText} buttons={buttons}></Modal>
+    return (
+        <Modal ref={ref} modalTitle={titleText} buttons={buttons}>
+            <div className={styles.modalContent}>
+                <br />
+                <p>Your transaction was successfully processed.</p>
+                {/*<p>You can now view your NFT in your collection.</p>
+                <br />
+                <div className={styles.cardWrapper}>{<Card nftData={nftToShow} />}</div>
+                <p>This is how your NFT appears on marketplace.</p>*/}
+            </div>
+        </Modal>
+    )
 })
 
 TransactionModal.displayName = "TransactionModal"
