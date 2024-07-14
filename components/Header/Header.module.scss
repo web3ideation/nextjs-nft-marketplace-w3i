@@ -18,6 +18,7 @@
         justify-content: space-between;
         align-items: center;
         height: 100%;
+        width: 100%;
     }
 
     @media (min-width: 768px) and (max-width: 1023px) {
@@ -39,20 +40,39 @@
 .headerLogo {
     @include flex-center;
     padding: 10px;
+
     .headerImage {
-        object-fit: contain;
-        height: auto;
         width: 100%;
+        height: 40px;
+    }
+    .invisible {
+        display: none;
     }
     @media (min-width: 768px) and (max-width: 1023px) {
         padding: 15px;
+
+        .headerImage {
+            height: 30px;
+        }
     }
 
     @media (min-width: 1024px) {
-        padding: 20px;
+        padding: 0 20px;
+
+        .headerImage {
+            height: 40px;
+        }
         &:hover {
             @include invert;
         }
+    }
+}
+
+.hidden {
+    display: none;
+
+    @media (min-width: 1024px) {
+        display: block;
     }
 }
 
@@ -99,7 +119,7 @@
     }
 
     @media (min-width: 1024px) {
-        font-size: $font-size-small;
+        font-size: $font-size-medium;
         padding: 18px;
         &:hover {
             color: $color-hover-blue;

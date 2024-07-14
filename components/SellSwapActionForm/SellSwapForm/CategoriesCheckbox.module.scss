@@ -4,7 +4,8 @@
 
 .checkboxWrapper {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     h3 {
@@ -32,11 +33,17 @@
 }
 
 .checkboxField {
-    flex: 0 0 33.33%;
+    flex: 0 0 50%;
     box-sizing: border-box;
-    align-content: center;
-    padding: 10px;
-    padding-left: 30px;
+    align-content: flex-start;
+    padding: 30px;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        flex: 0 0 50%;
+    }
+
+    @media (min-width: 1024px) {
+        flex: 0 0 25%;
+    }
     label {
         padding-left: 5px;
         font-size: $p-font-size;

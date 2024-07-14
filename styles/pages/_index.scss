@@ -35,16 +35,16 @@
 .nftCollectionsContainer {
     display: flex;
     flex-direction: column;
-    padding: 16px 25px;
+    padding: 10px 25px;
     gap: 16px;
 
     @media (min-width: 768px) and (max-width: 1023px) {
-        padding: 32px 0;
+        padding: 15px 0;
         flex-direction: column;
     }
 
     @media (min-width: 1024px) {
-        padding: 48px 100px;
+        padding: 20px 100px;
         flex-direction: row;
     }
 }

@@ -19,6 +19,7 @@
 .modalBackdropExit {
     animation-name: fadeOut;
 }
+
 .modalEnter {
     animation-name: modalEnter;
 }
@@ -107,8 +108,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    h2 {
-        padding: 0 50px;
+    h3 {
+        padding: 0 30px;
     }
 }
 

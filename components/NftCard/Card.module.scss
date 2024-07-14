@@ -8,6 +8,8 @@
     width: 100%;
     min-width: 150px;
     min-height: 150px;
+    max-width: 400px;
+    max-height: 400px;
     border-radius: $border-radius;
     @include boxShadow;
     transition: 0.3s ease-out;
@@ -70,10 +72,15 @@
 .cardImage {
     opacity: 1;
     z-index: 1;
-    object-fit: cover;
-    width: 100%;
+    object-fit: contain;
     height: auto;
+    width: 100%;
     background-color: $color-white;
+    @media (min-aspect-ratio: 1/1) {
+        .cardImage {
+            object-fit: cover; /* Schneidet das Bild so zu, dass es die Container-Abmessungen füllt */
+        }
+    }
 }
 
 .imageLoading {

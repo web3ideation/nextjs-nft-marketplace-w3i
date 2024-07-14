@@ -1,0 +1,15 @@
+.modalContent {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    position: relative;
+    z-index: 100;
+}
+
+.cardWrapper {
+    padding: 20px;
+}

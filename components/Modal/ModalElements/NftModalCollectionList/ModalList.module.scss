@@ -2,6 +2,13 @@
 @use "@styles/helpers/mixins" as *;
 @use "@styles/helpers/keyframes" as *;
 
+.modalListTitle {
+    font-size: $h4-font-size;
+    padding: 20px;
+    padding-bottom: 0;
+    margin-left: 50px;
+}
+
 .modalListContainer {
     @include flex-center;
     padding: 10px;
