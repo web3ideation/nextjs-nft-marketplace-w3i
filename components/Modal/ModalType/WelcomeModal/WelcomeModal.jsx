@@ -29,29 +29,28 @@ const WelcomeModal = () => {
     return (
         <Modal modalTitle="Welcome to the ideation market by web3ideation!" buttons={buttons}>
             <div className={styles.modalContent}>
-                <h4>You are actually connected to sepolia testnet</h4>
-                <br />
-                <p>This is a place where you can buy, sell and swap NFTs. Soon you can also chat with other users.</p>
+                <h4>You are actually connected to Sepolia testnet</h4>
                 <br />
                 <p>
-                    To be able to use all features of this platform, please connect your wallet. If you do not have a
-                    wallet yet, you can create one with MetaMask. Simply click on the {'"Connect"'} button below. You
-                    will be guided through the process.
-                </p>
-                <p>
-                    You can also use the platform without a wallet. However, you will not be able to buy, sell or swap
-                    NFTs.
+                    This is a place where you can buy, sell and swap NFTs. Soon you can also chat
+                    with other users.
                 </p>
                 <br />
-                {/*<p>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+                <p>
+                    To be able to use all features of this platform, please connect your wallet. If
+                    you do not have a wallet yet, you can create one with MetaMask. Simply click on
+                    the {'"Connect"'} button below. You will be guided through the process.
                 </p>
-                <br />*/}
+                <p>
+                    You can also use the platform without a wallet. However, you will not be able
+                    to buy, sell or swap NFTs.
+                </p>
+                <br />
+                <strong>
+                    Please ensure that your wallet is connected to the Sepolia testnet. This is
+                    essential for interacting with the {"platform's"} features.
+                </strong>
+                <br />
                 <p>Have fun!</p>
                 <p>Your web3ideation team</p>
                 <br />
