@@ -32,11 +32,11 @@ function isValidPrice(price: string): boolean {
  * Validates an individual form field based on its name and value.
  *
  * @param {string} name - The name of the form field to validate.
- * @param {string} value - The value of the form field.
+ * @param {string | number} value - The value of the form field.
  * @returns {string} An error message if validation fails, otherwise an empty string.
  */
-export const validateField = (name: string, value: string): string => {
-    value = value.trim()
+export const validateField = (name: string, value: string | number): string => {
+    value = String(value).trim()
     let errorMessage = ""
 
     console.log(`Validating field: ${name} with value: ${value}, type: ${typeof value}`)

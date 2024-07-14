@@ -13,8 +13,17 @@ import { ethers } from "ethers"
  * @returns {string} - The truncated string.
  */
 export const truncateStr = (fullStr, frontChars, backChars) => {
-    // Check whether the total length of the string is shorter than the sum of the characters to be kept
-    if (!fullStr) return
+    console.log("fullStr", fullStr)
+    if (fullStr === undefined) return
+    if (
+        typeof fullStr !== "string" ||
+        typeof frontChars !== "number" ||
+        typeof backChars !== "number"
+    ) {
+        throw new Error("Invalid input types")
+    }
+
+    if (!fullStr) return ""
     if (fullStr.length <= frontChars + backChars) return fullStr
 
     const separator = "..."
@@ -23,6 +32,20 @@ export const truncateStr = (fullStr, frontChars, backChars) => {
         separator +
         fullStr.substring(fullStr.length - backChars)
     )
+}
+
+/**
+ * Capitalizes the first character of a string.
+ * @param {string} str - The string to capitalize.
+ * @returns {string} - The string with the first character capitalized.
+ */
+export const capitalizeFirstChar = (str) => {
+    if (typeof str !== "string") {
+        throw new Error("Invalid input type")
+    }
+
+    if (!str) return ""
+    return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 // -----------------------------------------------------------------------------------
@@ -35,9 +58,26 @@ export const truncateStr = (fullStr, frontChars, backChars) => {
  * @returns {string} - The price in Ether.
  */
 export const formatPriceToEther = (priceInWei) => {
-    if (!priceInWei) return
-    const priceAsString = String(priceInWei)
-    return ethers.utils.formatUnits(priceAsString, "ether")
+    if (!priceInWei) return "0"
+
+    let priceAsString = priceInWei.toString()
+
+    try {
+        if (priceAsString.includes("e")) {
+            const [base, exponent] = priceAsString.split("e").map(Number)
+            const bigNumberBase = ethers.BigNumber.from(
+                ethers.utils.parseUnits(base.toString(), 18)
+            )
+            const bigNumberPrice = bigNumberBase.mul(ethers.BigNumber.from(10).pow(exponent - 18))
+            return ethers.utils.formatUnits(bigNumberPrice, "ether")
+        } else {
+            const bigNumberPrice = ethers.BigNumber.from(priceAsString)
+            return ethers.utils.formatUnits(bigNumberPrice, "ether")
+        }
+    } catch (error) {
+        console.error("Error converting price from Wei to Ether:", error)
+        return "0"
+    }
 }
 
 /**
@@ -48,6 +88,20 @@ export const formatPriceToEther = (priceInWei) => {
  * @returns {string} - The reduced price.
  */
 export const truncatePrice = (price, decimalPlaces) => {
+    if (typeof price !== "string" && typeof price !== "number") {
+        throw new Error("Invalid input type for price")
+    }
+    if (typeof decimalPlaces !== "number") {
+        throw new Error("Invalid input type for decimalPlaces")
+    }
+
+    const parsedPrice = parseFloat(price)
+    if (isNaN(parsedPrice)) {
+        throw new Error("Invalid price value")
+    }
+
     const factor = Math.pow(10, decimalPlaces)
-    return (Math.floor(parseFloat(price) * factor) / factor).toFixed(decimalPlaces)
+    const truncatedPrice = (Math.floor(parsedPrice * factor) / factor).toFixed(decimalPlaces)
+
+    return truncatedPrice
 }
