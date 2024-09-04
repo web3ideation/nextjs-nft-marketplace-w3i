@@ -1,3 +1,5 @@
+import { ethers } from "ethers"
+
 /**
  * Checks if a given string is a valid Ethereum address.
  *
@@ -5,7 +7,7 @@
  * @returns {boolean} True if the address is valid, false otherwise.
  */
 function isValidEthereumAddress(address: string): boolean {
-    return /^0x[a-fA-F0-9]{40}$/.test(address)
+    return ethers.utils.isAddress(address)
 }
 
 /**
@@ -25,7 +27,19 @@ function isPositiveInteger(value: string): boolean {
  * @returns {boolean} True if the price format is valid, false otherwise.
  */
 function isValidPrice(price: string): boolean {
-    return /^\d{1,18}(\.\d{1,18})?$/.test(price)
+    // Ensure the price is a valid number with up to 18 decimals
+    const regex = /^\d+(\.\d{1,18})?$/
+    if (!regex.test(price)) {
+        return false
+    }
+
+    // Check if the price can be parsed correctly by ethers
+    try {
+        ethers.utils.parseEther(price)
+        return true
+    } catch (error) {
+        return false
+    }
 }
 
 /**
@@ -58,8 +72,11 @@ export const validateField = (name: string, value: string | number): string => {
             break
         case "price":
         case "newPrice":
-            if (!isValidPrice(value)) {
-                errorMessage = "Please enter a positive amount in ETH."
+            if (value === "") {
+                errorMessage = "Price cannot be empty. Please enter a positive amount or 0 in ETH."
+            } else if (!isValidPrice(value)) {
+                errorMessage =
+                    "Please enter a valid price in ETH (up to 18 digits, with an optional 18 decimal places)."
             }
             break
         default:

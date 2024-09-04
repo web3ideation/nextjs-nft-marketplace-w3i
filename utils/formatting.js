@@ -13,7 +13,6 @@ import { ethers } from "ethers"
  * @returns {string} - The truncated string.
  */
 export const truncateStr = (fullStr, frontChars, backChars) => {
-    console.log("fullStr", fullStr)
     if (fullStr === undefined) return
     if (
         typeof fullStr !== "string" ||
