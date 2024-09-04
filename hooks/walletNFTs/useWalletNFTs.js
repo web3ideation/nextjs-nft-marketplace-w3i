@@ -19,12 +19,12 @@ const useWalletNFTs = (walletAddress) => {
                 const data = await response.json()
 
                 const transformedNfts = data.ownedNfts.map((nft) => ({
-                    tokenName: nft.title || "Unbekanntes NFT",
+                    tokenName: nft.title || "Unknown NFT",
                     tokenSymbol: nft.contractMetadata.symbol || "",
                     collectionName: nft.contractMetadata.name || "",
                     tokenURI: nft.tokenUri.raw || "",
                     attributes: nft.metadata.attributes || "",
-                    tokenOwner: walletAddress,
+                    tokenOwner: walletAddress.toLowerCase(),
                     imageURI: nft.media[0]?.gateway.replace("ipfs://", "https://ipfs.io/ipfs/"),
                     tokenDescription: nft.description || "",
                     nftAddress: nft.contract.address,
