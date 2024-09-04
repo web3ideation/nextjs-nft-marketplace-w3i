@@ -7,7 +7,7 @@ import BtnWithAction from "@components/Btn/BtnWithAction"
 import styles from "./List.module.scss"
 import { ethers } from "ethers"
 
-const List = ({ nftsData: externalNftsData, sortType, title }) => {
+const List = ({ nftsData: externalNftsData, sortType, title, showPlaceholders = true }) => {
     const [visibleNFTs, setVisibleNFTs] = useState(0)
     const [initialVisibleNFTs, setInitialVisibleNFTs] = useState(0)
     const [isLoaded, setIsLoaded] = useState(false)
@@ -109,13 +109,15 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
     const renderNFTList = useCallback(() => {
         if (nftsError || !nftsData) {
             console.error("Error on load", nftsError)
-            return Array.from({ length: initialVisibleNFTs }, (_, index) => (
-                <Card
-                    nftData={null}
-                    key={`placeholder-${index}`}
-                    className={` ${styles.cardPlaceholder} ${isLoaded ? styles.loaded : ""}`}
-                />
-            ))
+            return showPlaceholders
+                ? Array.from({ length: initialVisibleNFTs }, (_, index) => (
+                      <Card
+                          nftData={null}
+                          key={`placeholder-${index}`}
+                          className={` ${styles.cardPlaceholder} ${isLoaded ? styles.loaded : ""}`}
+                      />
+                  ))
+                : null
         }
 
         const renderedNFTs = sortedAndFilteredNFTs.map((nft) => (
@@ -127,7 +129,7 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
             />
         ))
 
-        if (renderedNFTs.length === 0) {
+        if (renderedNFTs.length === 0 && showPlaceholders) {
             return Array.from({ length: initialVisibleNFTs }, (_, index) => (
                 <Card
                     nftData={null}
@@ -138,13 +140,21 @@ const List = ({ nftsData: externalNftsData, sortType, title }) => {
         }
 
         return renderedNFTs
-    }, [nftsError, nftsData, sortedAndFilteredNFTs, reloadNFTs, initialVisibleNFTs, isLoaded])
+    }, [
+        nftsError,
+        nftsData,
+        sortedAndFilteredNFTs,
+        reloadNFTs,
+        initialVisibleNFTs,
+        isLoaded,
+        showPlaceholders,
+    ])
 
     return (
         <div className={styles.listWrapper}>
             <h3>{title}</h3>
             <div className={styles.list}>
-                {renderNFTList().length === 0 && (
+                {renderNFTList().length === 0 && showPlaceholders && (
                     <Card
                         nftData={null}
                         className={`${styles.card} ${isLoaded ? styles.loaded : ""}`}
