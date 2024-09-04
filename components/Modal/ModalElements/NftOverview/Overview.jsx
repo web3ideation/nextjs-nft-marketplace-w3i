@@ -4,7 +4,8 @@ import { useAccount } from "wagmi"
 import LoadingWave from "@components/LoadingWave/LoadingWave"
 import { useNotification } from "@context/NotificationProvider"
 import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
-import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
+import useEthToEurRate from "@hooks/ethToEurRate/useEthToEurRate"
+
 import { copyNftAddressToClipboard } from "@utils/copyAddress"
 import styles from "./Overview.module.scss"
 
@@ -20,6 +21,8 @@ const Overview = ({ modalContent }) => {
     const [formattedPriceInEur, setFormattedPriceInEur] = useState("")
     const [formattedExternalLink, setFormattedExternalLink] = useState("")
     const [imageLoaded, setImageLoaded] = useState(false)
+
+    const ethToEurRate = useEthToEurRate()
 
     const isOwnedByUser =
         isConnected &&
@@ -41,15 +44,11 @@ const Overview = ({ modalContent }) => {
         )
 
     useEffect(() => {
-        const updatePriceInEur = async () => {
-            const ethToEurRate = await fetchEthToEurRate()
-            if (ethToEurRate) {
-                const ethPrice = formatPriceToEther(modalContent.price)
-                setPriceInEur(ethPrice * ethToEurRate)
-            }
+        if (modalContent.price && ethToEurRate) {
+            const ethPrice = formatPriceToEther(modalContent.price)
+            setPriceInEur(ethPrice * ethToEurRate)
         }
-        updatePriceInEur()
-    }, [modalContent.price])
+    }, [modalContent.price, ethToEurRate])
 
     useEffect(() => {
         if (modalContent) {
@@ -59,7 +58,7 @@ const Overview = ({ modalContent }) => {
             setFormattedPrice(formatPriceToEther(modalContent.price))
         }
         if (priceInEur) {
-            setFormattedPriceInEur(truncatePrice(priceInEur, 5))
+            setFormattedPriceInEur(truncatePrice(priceInEur, 2))
         }
     }, [modalContent, priceInEur])
 

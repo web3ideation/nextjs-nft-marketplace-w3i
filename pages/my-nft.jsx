@@ -9,7 +9,7 @@ import NFTList from "@components/NftViewer/NftLists/List"
 import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
 
 import { formatPriceToEther, truncatePrice } from "@utils/formatting"
-import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
+import useEthToEurRate from "@hooks/ethToEurRate/useEthToEurRate"
 
 import styles from "@styles/Home.module.scss"
 
@@ -28,22 +28,49 @@ const MyNFTs = () => {
 
     const { nfts, loading, error } = useWalletNFTs(address)
     const [unlistedNfts, setUnlistedNfts] = useState([])
+    const ethToEurRate = useEthToEurRate()
+
     const isOwnedByUser = useCallback(
-        (tokenOwner) => address && tokenOwner?.toLowerCase() === address.toLowerCase(),
+        (tokenOwner) => {
+            const isOwned = address && tokenOwner?.toLowerCase() === address.toLowerCase()
+            console.log(
+                "Comparing token owner:",
+                tokenOwner?.toLowerCase(),
+                "with user address:",
+                address?.toLowerCase(),
+                "Result:",
+                isOwned
+            )
+            return isOwned
+        },
         [address]
     )
 
     useEffect(() => {
-        const listedNftsSet = new Set(nftsData.map((nft) => `${nft.nftAddress}-${nft.tokenId}`))
+        console.log("Fetched NFTs from wallet:", nfts)
+        console.log("NFT data from provider:", nftsData)
 
-        const filteredNfts = nfts.filter((nft) => !listedNftsSet.has(`${nft.nftAddress}-${nft.tokenId}`))
+        const listedNftsSet = new Set(nftsData.map((nft) => `${nft.nftAddress}-${nft.tokenId}`))
+        console.log("Listed NFTs Set:", listedNftsSet)
+
+        const filteredNfts = nfts.filter(
+            (nft) => !listedNftsSet.has(`${nft.nftAddress}-${nft.tokenId}`)
+        )
+        console.log("Unlisted NFTs:", filteredNfts)
         setUnlistedNfts(filteredNfts)
+
+        // Set hasOwnNFT based on unlisted NFTs
+        if (filteredNfts.length > 0 || nftsData.length > 0) {
+            setHasOwnNFT(true)
+        }
     }, [nfts, nftsData])
 
     useEffect(() => {
         if (nftsData) {
+            console.log("NFTs Data Structure:", nftsData)
             const { total, count } = nftsData.reduce(
                 (acc, nft) => {
+                    console.log("Processing NFT:", nft)
                     if (isOwnedByUser(nft.tokenOwner)) {
                         acc.total += parseFloat(nft.price)
                         acc.count += 1
@@ -52,35 +79,42 @@ const MyNFTs = () => {
                 },
                 { total: 0, count: 0 }
             )
+            console.log("Total Price of NFTs:", total)
+            console.log("NFT Count:", count)
+
             setTotalPrice(total)
             setNftCount(count)
-            setHasOwnNFT(count > 0)
+
+            // Set hasOwnNFT based on listed NFTs
+            if (count > 0) {
+                setHasOwnNFT(true)
+            }
         }
     }, [nftsData, isOwnedByUser])
 
     useEffect(() => {
+        console.log("Reloading NFTs for address:", address)
         reloadNFTs()
     }, [address, reloadNFTs])
 
     useEffect(() => {
         setFormattedTotalPrice(formatPriceToEther(totalPrice))
         setTruncatedTotalPrice(truncatePrice(formattedTotalPrice, 5))
-        setFormattedTotalPriceInEur(truncatePrice(totalPriceInEur, 5))
+        setFormattedTotalPriceInEur(truncatePrice(totalPriceInEur, 2))
+        console.log("Formatted Total Price:", formattedTotalPrice)
+        console.log("Truncated Total Price:", truncatedTotalPrice)
     }, [totalPrice, formattedTotalPrice, totalPriceInEur])
 
+    // Update the price in EUR only if we have both the price and the exchange rate
     useEffect(() => {
-        const updatePriceInEur = async () => {
-            const ethToEurRate = await fetchEthToEurRate()
-            if (ethToEurRate) {
-                const ethPrice = formatPriceToEther(totalPrice)
-                setTotalPriceInEur(ethPrice * ethToEurRate)
-            }
+        if (totalPrice && ethToEurRate) {
+            const ethPrice = formatPriceToEther(totalPrice)
+            setTotalPriceInEur(ethPrice * ethToEurRate)
         }
-
-        updatePriceInEur()
-    }, [totalPrice])
+    }, [totalPrice, ethToEurRate])
 
     if (nftsLoading) {
+        console.log("Loading NFTs...")
         return (
             <div className={styles.myNftWrapper}>
                 <h2>My NFTs</h2>
@@ -97,8 +131,12 @@ const MyNFTs = () => {
             {isConnected && (
                 <div className={styles.myNftTotalInformation}>
                     <p>Total NFTs listed: {nftCount}</p>
-                    <p title={formattedTotalPrice}>Total price listed NFTs: {truncatedTotalPrice}... ETH</p>
-                    <p title={totalPriceInEur}>Total price listed NFTs: {formattedTotalPriceInEur}... €</p>
+                    <p title={formattedTotalPrice}>
+                        Total price listed NFTs: {truncatedTotalPrice}... ETH
+                    </p>
+                    <p title={totalPriceInEur}>
+                        Total price listed NFTs: {formattedTotalPriceInEur}... €
+                    </p>
                 </div>
             )}
             <>
@@ -106,29 +144,44 @@ const MyNFTs = () => {
                     hasOwnNFT ? (
                         <>
                             <div className={styles.nftListingContainer}>
-                                <NFTList sortType={"myNFTListed"} title={"Listed on marketplace"} />
+                                {nftCount > 0 ? (
+                                    <NFTList
+                                        sortType={"myNFTListed"}
+                                        title={"Listed on marketplace"}
+                                        showPlaceholders={false}
+                                    />
+                                ) : (
+                                    <>
+                                        <h3>You {"don't"} have any listed NFTs yet!</h3>
+                                        <p>
+                                            List your NFTs on the marketplace to start selling or
+                                            swapping them. Start by clicking on your unlisted NFTs
+                                            below and choose between selling or swapping them.
+                                        </p>
+                                    </>
+                                )}
                             </div>
-                            {unlistedNfts.length > 0 ? (
-                                <>
-                                    <div className={styles.nftListingContainer}>
-                                        <NFTList
-                                            sortType={"myNFTFromWallet"}
-                                            title={"Unlisted in your wallet"}
-                                            nftsData={unlistedNfts}
-                                        />
-                                    </div>
-                                </>
-                            ) : (
-                                <h3>Congratulations you {"don't"} own any unlisted NFTs yet!</h3>
-                            )}
+                            <div className={styles.nftListingContainer}>
+                                {unlistedNfts.length > 0 ? (
+                                    <NFTList
+                                        sortType={"myNFTFromWallet"}
+                                        title={"Unlisted in your wallet"}
+                                        nftsData={unlistedNfts}
+                                    />
+                                ) : (
+                                    <h3>
+                                        Congratulations, you {"don't"} own any unlisted NFTs yet!
+                                    </h3>
+                                )}
+                            </div>
                         </>
                     ) : (
-                        <div>
+                        <div className={styles.nftListingContainer}>
                             <h3>You {"don't"} own any NFTs yet!</h3>
                         </div>
                     )
                 ) : (
-                    <div>
+                    <div className={`${styles.nftListingContainer} ${styles.notConnected}`}>
                         <h3>Web3 is currently not enabled - Connect your Wallet here</h3>
                         <ConnectWalletBtn onConnect={() => open()} isClient={true} />
                     </div>
