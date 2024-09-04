@@ -72,7 +72,6 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
         Gaming: false,
         Wearables: false,
         "Digital Twin": false,
-        Utility: false,
     })
 
     const handleTransactionCompletion = useCallback(() => {
