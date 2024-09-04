@@ -40,7 +40,7 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 { value: "lessSold", label: "Less Sold" },
             ],
             Categories: [
-                { value: "default", label: "Default" },
+                { value: "default", label: "All" },
                 { value: "dao", label: "DAO" },
                 { value: "music", label: "Music" },
                 { value: "membership", label: "Membership" },
@@ -48,7 +48,6 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
                 { value: "gaming", label: "Gaming" },
                 { value: "wearables", label: "Wearables" },
                 { value: "digital twin", label: "Digital Twin" },
-                { value: "utility", label: "Utility" },
             ],
             Collections: getUniqueCollections,
         }),
@@ -70,7 +69,9 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
             filteredList = filteredList.filter((nft) => nft.category === filters.selectedCategory)
         }
         if (filters.selectedCollections !== "default") {
-            filteredList = filteredList.filter((nft) => nft.nftAddress === filters.selectedCollections)
+            filteredList = filteredList.filter(
+                (nft) => nft.nftAddress === filters.selectedCollections
+            )
         }
         filteredList.sort((a, b) => {
             switch (filters.selectedSorting) {
@@ -108,12 +109,18 @@ const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
 
     return (
         <div ref={menuRef}>
-            <div className={`${styles.searchSideFiltersWrapper} ${isOpen ? styles.searchSideFiltersWrapperOpen : ""}`}>
+            <div
+                className={`${styles.searchSideFiltersWrapper} ${
+                    isOpen ? styles.searchSideFiltersWrapperOpen : ""
+                }`}
+            >
                 <div className={`${styles.backgroundPlaceholder} ${styles.placeholderA}`}></div>
                 <div className={styles.filterHeadlineWrapper}>
                     <h4>Filter</h4>
                     <div
-                        className={`${styles.filterButton} ${isOpen ? styles.filterButtonOpen : ""}`}
+                        className={`${styles.filterButton} ${
+                            isOpen ? styles.filterButtonOpen : ""
+                        }`}
                         onClick={toggleMenu}
                     >
                         <Image

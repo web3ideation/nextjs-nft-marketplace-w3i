@@ -11,7 +11,6 @@ import RealWorldAssetsIcon from "@public/media/categories/realWorldAssets.svg"
 import GamesIcon from "@public/media/categories/games.svg"
 import WearablesIcon from "@public/media/categories/wearables.svg"
 import DigitalTwinIcon from "@public/media/categories/digitalTwin.svg"
-import UtilityIcon from "@public/media/categories/utility.svg"
 
 import styles from "./CategoryIcon.module.scss"
 
@@ -28,7 +27,6 @@ const CategoryIcon = ({ categoryName }) => {
         Gaming: GamesIcon,
         Wearables: WearablesIcon,
         "Digital Twin": DigitalTwinIcon,
-        Utility: UtilityIcon,
     }
 
     const Icon = categoryIcons[categoryName] || null

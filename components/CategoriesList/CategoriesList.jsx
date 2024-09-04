@@ -19,7 +19,6 @@ const CategoriesList = () => {
         { id: "9", name: "Gaming" },
         { id: "10", name: "Wearables" },
         { id: "11", name: "Digital Twin" },
-        { id: "12", name: "Utility" },
     ]
 
     const handleCategorySelect = (categoryName) => {
