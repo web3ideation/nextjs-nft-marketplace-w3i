@@ -23,6 +23,8 @@ const useListItem = (
     } = useTransactionHandlers()
 
     const [listItemTxHash, setListItemTxHash] = useState(null)
+    const priceInEther =
+        price.trim() !== "" ? ethers.utils.parseEther(price) : ethers.BigNumber.from("0")
 
     const {
         writeAsync: listItem,
@@ -35,7 +37,7 @@ const useListItem = (
         args: [
             nftAddress,
             tokenId,
-            ethers.utils.parseEther(price),
+            priceInEther,
             desiredNftAddress || ethers.constants.AddressZero,
             desiredTokenId || "0",
         ],
