@@ -18,15 +18,12 @@
     font-weight: $font-size-medium;
     color: $color-black;
     cursor: pointer;
-
-    &:hover {
-        @include boxShadow-hover;
-        transition: 0.1s ease-in;
-        transform: scale(1.03);
-    }
-    @media (min-width: 768px) and (max-width: 1023px) {
-        min-width: 200px;
-        min-height: 200px;
+    @media (hover: hover) {
+        &:hover {
+            @include boxShadow-hover;
+            transition: 0.1s ease-in;
+            transform: scale(1.03);
+        }
     }
 
     @media (min-width: 1024px) {
