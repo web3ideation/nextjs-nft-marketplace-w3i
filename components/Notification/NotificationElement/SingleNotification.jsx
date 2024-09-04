@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { useAccount } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
 import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
@@ -8,7 +8,16 @@ import styles from "./SingleNotification.module.scss"
 
 const SingleNotification = ({ notification, closeNotification, clearNotification, onClose }) => {
     const { isConnected } = useAccount()
+    const [loading, setLoading] = useState(false)
     const { open } = useWeb3Modal()
+
+    useEffect(() => {
+        if (notification.type === "info") {
+            setLoading(true)
+        } else {
+            setLoading(false)
+        }
+    }, [notification.type])
 
     const handleAnimationEnd = (e) => {
         if (e.animationName === styles.slideOut) {
@@ -32,7 +41,7 @@ const SingleNotification = ({ notification, closeNotification, clearNotification
             case "info":
                 return styles.info
             default:
-                return ""
+                return "" // Add a return statement for the default case
         }
     }
 
@@ -66,9 +75,11 @@ const SingleNotification = ({ notification, closeNotification, clearNotification
                                 alt="Close Notification"
                             />
                         </button>
-                        <div className={styles.loadingWrapperNotification}>
-                            <LoadingWave />
-                        </div>
+                        {loading && (
+                            <div className={styles.loadingWrapperNotification}>
+                                <LoadingWave />
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
