@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react"
-import { useRouter, useSearchParams } from "next/router"
+import { useRouter } from "next/router"
 
 import { useNFT } from "@context/NftDataProvider"
 import SearchSideFilters from "@components/SearchSideBar/SearchSideFilters"
@@ -27,7 +27,9 @@ const SearchResults = () => {
             return ""
         }
         const result = attributes
-            .map((attr) => (attr.trait_type && attr.value ? `${attr.trait_type}: ${attr.value}` : ""))
+            .map((attr) =>
+                attr.trait_type && attr.value ? `${attr.trait_type}: ${attr.value}` : ""
+            )
             .join(" ")
             .toLowerCase()
         return result
@@ -85,10 +87,21 @@ const SearchResults = () => {
 
     return (
         <>
-            <SearchSideFilters initialItems={searchResults} onFilteredItemsChange={handleFilteredItemsChange} />
+            <SearchSideFilters
+                initialItems={searchResults}
+                onFilteredItemsChange={handleFilteredItemsChange}
+            />
             <div className={styles.nftSearchResultsContainer}>
                 <div className={styles.nftSearchResultsWrapper}>
-                    <NFTList nftsData={filteredNFTs} sortType={""} title={`${"Search Results for: "}${searchTerm}`} />
+                    {filteredNFTs.length > 0 ? (
+                        <NFTList
+                            nftsData={filteredNFTs}
+                            sortType={""}
+                            title={`Search Results for: ${searchTerm}`}
+                        />
+                    ) : (
+                        <div>No search results</div>
+                    )}{" "}
                 </div>
             </div>
         </>
