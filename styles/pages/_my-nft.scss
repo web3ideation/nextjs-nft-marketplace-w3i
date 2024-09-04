@@ -19,6 +19,17 @@
     h2 {
         text-align: center;
     }
+    h3 {
+        padding: 10px 50px;
+        text-align: center;
+        @media (min-width: 768px) and (max-width: 1023px) {
+            text-align: left;
+        }
+
+        @media (min-width: 1024px) {
+            text-align: left;
+        }
+    }
 }
 
 .myNftTotalInformation {
@@ -39,4 +50,10 @@
             width: 33.3%;
         }
     }
+}
+.notConnected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
 }
