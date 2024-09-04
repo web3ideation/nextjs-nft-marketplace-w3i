@@ -6,8 +6,8 @@
 .nftCardWrapper {
     height: 100%;
     width: 100%;
-    min-width: 150px;
-    min-height: 150px;
+    min-width: 200px;
+    min-height: 200px;
     max-width: 400px;
     max-height: 400px;
     border-radius: $border-radius;
@@ -142,13 +142,13 @@
     flex-direction: column;
     justify-content: space-between;
     background-color: $color-white-transparent;
-    visibility: hidden;
-
-    @media (min-width: 768px) and (max-width: 1023px) {
-        visibility: visible;
-    }
-
-    @media (min-width: 1024px) {
-        visibility: visible;
-    }
+    //visibility: hidden;
+    //
+    //@media (min-width: 768px) and (max-width: 1023px) {
+    //    visibility: visible;
+    //}
+    //
+    //@media (min-width: 1024px) {
+    //    visibility: visible;
+    //}
 }
