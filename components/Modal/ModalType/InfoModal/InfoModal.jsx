@@ -107,7 +107,7 @@ const InfoModal = forwardRef((props, ref) => {
     ])
 
     return (
-        <Modal ref={ref} modalTitle={modalContent.tokenName || ""} buttons={buttons}>
+        <Modal ref={ref} modalTitle={modalContent.collectionName || ""} buttons={buttons}>
             <Overview modalContent={nftToShow || modalContent} />
             <ModalList
                 filterAddress={modalContent.nftAddress}
