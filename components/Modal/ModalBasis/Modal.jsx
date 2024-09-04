@@ -17,7 +17,9 @@ const Modal = forwardRef((props, ref) => {
 
     useEffect(() => {
         const originalStyle = window.getComputedStyle(document.body).overflow
-        document.body.style.overflow = ["opening", "changingOut", "changingIn"].includes(modalState)
+        document.body.style.overflow = ["opening", "changingOut", "changingIn"].includes(
+            modalState
+        )
             ? "hidden"
             : modalState === "closed"
             ? "auto"
@@ -46,7 +48,13 @@ const Modal = forwardRef((props, ref) => {
     )
 
     const modalBackdropClassName = `${styles.modalBackdrop} ${
-        styles[modalState === "opening" ? "modalBackdropEnter" : modalState === "closing" ? "modalBackdropExit" : ""]
+        styles[
+            modalState === "opening"
+                ? "modalBackdropEnter"
+                : modalState === "closing"
+                ? "modalBackdropExit"
+                : ""
+        ]
     }`
     const modalAnimationClassName = `${styles.modalContainer} ${
         styles[
@@ -77,6 +85,7 @@ const Modal = forwardRef((props, ref) => {
                                 alt="Close modal"
                                 width={100}
                                 height={100}
+                                priority={true}
                                 aria-label="Close Button"
                             />
                         </button>
