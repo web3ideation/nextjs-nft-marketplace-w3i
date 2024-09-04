@@ -6,22 +6,29 @@
 .nftCardWrapper {
     height: 100%;
     width: 100%;
-    min-width: 200px;
-    min-height: 200px;
+    min-width: 220px;
+    min-height: 220px;
     max-width: 400px;
     max-height: 400px;
+    transition: transform 0.2s ease-in;
     border-radius: $border-radius;
     @include boxShadow;
-    transition: 0.3s ease-out;
     font-family: $font-primary;
     font-size: $font-size-small;
-    font-weight: $font-size-medium;
+    font-weight: $font-weight-medium;
     color: $color-black;
     cursor: pointer;
+
+    @media (pointer: coarse) {
+        &:active {
+            transform: scale(0.98);
+            @include boxShadow-hover;
+        }
+    }
+
     @media (hover: hover) {
         &:hover {
             @include boxShadow-hover;
-            transition: 0.1s ease-in;
             transform: scale(1.03);
         }
     }
