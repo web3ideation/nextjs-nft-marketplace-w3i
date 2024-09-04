@@ -56,7 +56,13 @@ const WelcomeModal = () => {
                 <br />
                 <p>PS: This is a testnet, so do not use real money here!</p>
                 <p>
-                    PPS: If you have any questions, please contact us{" "}
+                    PPS: Join our official WhatsApp group for all testers and developers{" "}
+                    <Link href="https://chat.whatsapp.com/BiEucaxvvQQHTLUnDTwCNv">
+                        Ideationmarket.com Tester & Developer
+                    </Link>
+                </p>
+                <p>
+                    PPPS: If you have any questions, please contact us{" "}
                     <Link href="mailto:info@web3ideation.com">info@web3ideation.com</Link>
                 </p>
                 <br />
