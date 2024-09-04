@@ -7,6 +7,10 @@
         "title": "Transaction Rejected",
         "description": "You don't own the desired NFT for sell or swap"
     },
+    "You don't own the desired NFT for swap": {
+        "title": "Transaction Rejected",
+        "description": "You don't own the desired NFT for swap"
+    },
     "0x7e273289": {
         "title": "Token problem",
         "description": "Token does not exist"
@@ -14,6 +18,10 @@
     "NftMarketplace__NotApproved": {
         "title": "Transaction Rejected",
         "description": "The NFT is not approved for transactions."
+    },
+    "The total cost (gas * gas fee + value) of executing this transaction exceeds the balance of the account.": {
+        "title": "Transaction Failed",
+        "description": "The transaction could not be completed because your account does not have enough funds to cover the gas fees and the transaction value. Please ensure your account balance is sufficient and try again."
     },
     "NftMarketplace__AlreadyListed": {
         "title": "Transaction failed",
