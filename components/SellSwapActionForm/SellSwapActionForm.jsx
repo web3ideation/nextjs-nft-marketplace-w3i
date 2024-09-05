@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef, useMemo } from "react"
+import { useEffect, useState, useCallback, useRef, useMemo } from "react"
 import { useRouter } from "next/router"
 import { usePublicClient } from "wagmi"
 import SellSwapInformation from "@components/SellSwapActionForm/SellSwapInformation/SellSwapInformation"
