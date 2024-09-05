@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef, useMemo } from "react"
+import { useEffect, useState, useCallback, useRef, useMemo } from "react"
 import { useRouter } from "next/router"
 import { usePublicClient } from "wagmi"
 import SellSwapInformation from "@components/SellSwapActionForm/SellSwapInformation/SellSwapInformation"
@@ -25,7 +25,7 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
         () => ({
             nftAddress: router.query.nftAddress || "",
             tokenId: router.query.tokenId || "",
-            price: router.query.price || "0",
+            price: router.query.price || "",
             ...extraFields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {}),
             categories: [],
         }),
