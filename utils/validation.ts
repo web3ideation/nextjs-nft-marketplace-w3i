@@ -43,6 +43,18 @@ function isValidPrice(price: string): boolean {
 }
 
 /**
+ * Checks if a given string is a valid price format for Euros.
+ *
+ * @param {string} price - The string to validate as a Euro price.
+ * @returns {boolean} True if the Euro price format is valid, false otherwise.
+ */
+function isValidEuroPrice(price: string): boolean {
+    // Ensure the price is a valid number with up to 2 decimals (common for fiat currencies)
+    const regex = /^\d+(\.\d{1,2})?$/
+    return regex.test(price)
+}
+
+/**
  * Validates an individual form field based on its name and value.
  *
  * @param {string} name - The name of the form field to validate.
@@ -77,6 +89,15 @@ export const validateField = (name: string, value: string | number): string => {
             } else if (!isValidPrice(value)) {
                 errorMessage =
                     "Please enter a valid price in ETH (up to 18 digits, with an optional 18 decimal places)."
+            }
+            break
+        case "priceInEur":
+        case "newPriceInEur":
+            if (value === "") {
+                errorMessage =
+                    "Price in EUR cannot be empty. Please enter a positive amount or 0 in EUR."
+            } else if (!isValidEuroPrice(value)) {
+                errorMessage = "Please enter a valid price in EUR (up to 2 decimal places)."
             }
             break
         default:

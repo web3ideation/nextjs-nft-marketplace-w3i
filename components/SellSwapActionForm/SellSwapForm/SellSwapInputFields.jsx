@@ -32,7 +32,7 @@ const InputFields = ({ fields, formData, setFormData, errors, handleChange }) =>
         <div className={styles.sellSwapInputWrapper}>
             <h3>The data of your NFT</h3>
             <div className={styles.sellSwapInputFieldsWrapper}>
-                {fields.map(({ key, label, type, placeholder }, index) => (
+                {fields.map(({ key, label, type, placeholder, onInput, onBlur }, index) => (
                     <div key={key} className={styles.sellSwapInputField}>
                         <label htmlFor={key}>{label}</label>
                         <input
@@ -53,6 +53,8 @@ const InputFields = ({ fields, formData, setFormData, errors, handleChange }) =>
                                     [key]: e.target.value,
                                 }))
                             }}
+                            onInput={onInput}
+                            onBlur={onBlur}
                             aria-label={`Enter ${label}`}
                         />
                         {errors[key] && <Tooltip message={errors[key]} />}

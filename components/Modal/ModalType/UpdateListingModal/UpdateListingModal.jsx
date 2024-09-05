@@ -1,7 +1,5 @@
-import React, { forwardRef, useState, useRef, useEffect, useCallback } from "react"
-
+import React, { forwardRef, useState, useRef, useEffect, useCallback, useMemo } from "react"
 import { usePublicClient } from "wagmi"
-
 import { useNFT } from "@context/NftDataProvider"
 import { validateField } from "@utils/validation"
 import { useUpdateListing } from "@hooks/contractWrite/useUpdateListing"
@@ -9,9 +7,8 @@ import SellSwapInputFields from "@components/SellSwapActionForm/SellSwapForm/Sel
 import CategoriesCheckbox from "@components/SellSwapActionForm/SellSwapForm/CategoriesCheckbox"
 import { useModal } from "@context/ModalProvider"
 import Modal from "@components/Modal/ModalBasis/Modal"
-
 import networkMapping from "@constants/networkMapping.json"
-
+import useEthToEurRate from "@hooks/ethToEurRate/useEthToEurRate"
 import styles from "./UpdateListingModal.module.scss"
 import SellSwapInformation from "../../../SellSwapActionForm/SellSwapInformation/SellSwapInformation"
 
@@ -22,23 +19,61 @@ const UpdateListingModal = forwardRef((props, ref) => {
     const formRef = useRef(null)
     const { reloadNFTs } = useNFT()
 
-    const [formData, setFormData] = useState({
-        newPrice: modalContent.price,
-        newDesiredNftAddress: modalContent.desiredNftAddress,
-        newDesiredTokenId: modalContent.desiredTokenId,
-    })
-    const [errors, setErrors] = useState({
-        newPrice: "",
-        newDesiredNftAddress: "",
-        newDesiredTokenId: "",
-    })
+    const initialFormData = useMemo(
+        () => ({
+            newPrice: modalContent.price || "",
+            newDesiredNftAddress: modalContent.desiredNftAddress || "",
+            newDesiredTokenId: modalContent.desiredTokenId || "",
+        }),
+        [modalContent]
+    )
+
+    const [formData, setFormData] = useState(initialFormData)
+    const [ethPrice, setEthPrice] = useState(formData.newPrice)
+    const [eurPrice, setEurPrice] = useState("")
+    const { ethToEurRate } = useEthToEurRate()
+
+    const initialErrors = useMemo(
+        () => ({
+            newPrice: "",
+            newDesiredNftAddress: "",
+            newDesiredTokenId: "",
+        }),
+        []
+    )
+
+    const [errors, setErrors] = useState(initialErrors)
 
     const inputFields = [
         {
             key: "newPrice",
-            label: "New Price",
+            label: "New price in ETH",
             type: "number",
             placeholder: "min. amount: 0.000000000000000001",
+            onInput: (e) => {
+                const { value } = e.target
+                const [integerPart, decimalPart] = value.split(".")
+                if (decimalPart && decimalPart.length > 18) {
+                    // Trim to 18 decimal places if exceeded
+                    e.target.value = `${integerPart}.${decimalPart.slice(0, 18)}`
+                }
+            },
+        },
+        {
+            key: "newPriceInEur",
+            label: "New price in EUR",
+            type: "number",
+            placeholder: "min. amount: 0.00",
+            onInput: (e) => {
+                const { value } = e.target
+                if (!value) return // Beende, wenn der Wert leer ist
+
+                const cleanedValue = value.replace(/[^0-9]/g, "") // Entferne alle nicht-numerischen Zeichen
+                const integerPart = cleanedValue.slice(0, -2) || "0" // Nimm die ersten Ziffern für den Ganzzahlteil
+                const decimalPart = cleanedValue.slice(-2).padStart(2, "0") // Fülle Dezimalstellen auf 2 auf
+
+                e.target.value = `${parseInt(integerPart)}.${decimalPart}` // Entferne führende Nullen
+            },
         },
         {
             key: "newDesiredNftAddress",
@@ -65,6 +100,23 @@ const UpdateListingModal = forwardRef((props, ref) => {
         Utility: false,
     })
 
+    const convertEthToEur = (eth) => {
+        if (!ethToEurRate) return "" // or any default value
+        return (eth * ethToEurRate).toFixed(2) // Convert ETH to EUR
+    }
+
+    const convertEurToEth = (eur) => {
+        if (!ethToEurRate) return "" // or any default value
+        return (eur / ethToEurRate).toFixed(18) // Convert EUR to ETH
+    }
+
+    useEffect(() => {
+        // Set initial EUR price when the component is first rendered or ETH price changes
+        if (ethPrice && ethToEurRate) {
+            setEurPrice(convertEthToEur(ethPrice))
+        }
+    }, [ethPrice, ethToEurRate]) // Dependency array ensures effect runs on ETH price or rate change
+
     const handleTransactionCompletion = useCallback(() => {
         const modalId = `nftTransactionModal-${modalContent.nftAddress}${modalContent.tokenId}`
         const modalTransactionContent = {
@@ -73,7 +125,7 @@ const UpdateListingModal = forwardRef((props, ref) => {
         }
         reloadNFTs()
         openModal("transaction", modalId, modalTransactionContent)
-    }, [openModal])
+    }, [modalContent.nftAddress, modalContent.tokenId, openModal, reloadNFTs])
 
     const { handleUpdateListing } = useUpdateListing(
         marketplaceAddress,
@@ -87,10 +139,8 @@ const UpdateListingModal = forwardRef((props, ref) => {
     )
 
     const validateAndUpdateListing = async () => {
-        console.log("Validating form with data:", formData)
         if (validateForm(formData)) {
             try {
-                console.log("Form is valid, calling handleUpdateListing")
                 await handleUpdateListing()
             } catch (error) {
                 console.error("An error occurred during the transaction: ", error)
@@ -117,8 +167,24 @@ const UpdateListingModal = forwardRef((props, ref) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target
-        const error = validateField(name, value)
 
+        if (name === "newPrice") {
+            setEthPrice(value)
+            if (value && !isNaN(value)) {
+                setEurPrice(convertEthToEur(value))
+            } else {
+                setEurPrice("") // Leeren Zustand setzen, wenn Eingabefeld leer ist
+            }
+        } else if (name === "newPriceInEur") {
+            setEurPrice(value)
+            if (value && !isNaN(value)) {
+                setEthPrice(convertEurToEth(value))
+            } else {
+                setEthPrice("") // Leeren Zustand setzen, wenn Eingabefeld leer ist
+            }
+        }
+
+        const error = validateField(name, value)
         setFormData((prev) => ({ ...prev, [name]: value }))
         setErrors((prev) => ({ ...prev, [name]: error ? error : "" }))
     }
@@ -129,12 +195,8 @@ const UpdateListingModal = forwardRef((props, ref) => {
             newDesiredNftAddress: modalContent.desiredNftAddress || "",
             newDesiredTokenId: modalContent.desiredTokenId || "",
         })
-        setErrors({
-            newPrice: "",
-            newDesiredNftAddress: "",
-            newDesiredTokenId: "",
-        })
-    }, [modalContent])
+        setErrors(initialErrors)
+    }, [modalContent, initialErrors])
 
     useEffect(() => {
         if (!isModalOpen) {
@@ -154,7 +216,7 @@ const UpdateListingModal = forwardRef((props, ref) => {
             <form className={styles.updateListingForm} ref={formRef}>
                 <SellSwapInputFields
                     fields={inputFields}
-                    formData={formData}
+                    formData={{ ...formData, newPrice: ethPrice, newPriceInEur: eurPrice }}
                     setFormData={setFormData}
                     errors={errors}
                     handleChange={handleChange}

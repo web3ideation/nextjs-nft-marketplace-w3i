@@ -10,7 +10,8 @@ import { useApprove, useListItem } from "../../hooks/index"
 import networkMapping from "@constants/networkMapping.json"
 import styles from "./SellSwapActionForm.module.scss"
 import { validateField } from "@utils/validation"
-import { capitalizeFirstChar } from "../../utils/formatting"
+import { capitalizeFirstChar } from "@utils/formatting"
+import useEthToEurRate from "@hooks/ethToEurRate/useEthToEurRate"
 import { useModal } from "@context/ModalProvider"
 
 const ActionForm = ({ action, formTitle, extraFields = [] }) => {
@@ -33,7 +34,9 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
     )
 
     const [formData, setFormData] = useState(initialFormData)
-
+    const [ethPrice, setEthPrice] = useState(formData.price)
+    const [eurPrice, setEurPrice] = useState("")
+    const { ethToEurRate } = useEthToEurRate()
     const initialErrors = useMemo(
         () => ({
             nftAddress: "",
@@ -57,9 +60,33 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
         { key: "tokenId", label: "Token ID", type: "text", placeholder: "0" },
         {
             key: "price",
-            label: "Price",
+            label: "Price in ETH",
             type: "number",
             placeholder: "min. amount: 0.000000000000000001",
+            onInput: (e) => {
+                const { value } = e.target
+                const [integerPart, decimalPart] = value.split(".")
+                if (decimalPart && decimalPart.length > 18) {
+                    // Trim to 18 decimal places if exceeded
+                    e.target.value = `${integerPart}.${decimalPart.slice(0, 18)}`
+                }
+            },
+        },
+        {
+            key: "priceInEur",
+            label: "Price in EUR",
+            type: "number",
+            placeholder: "min. amount: 0.00",
+            onInput: (e) => {
+                const { value } = e.target
+                if (!value) return // Beende, wenn der Wert leer ist
+
+                const cleanedValue = value.replace(/[^0-9]/g, "") // Entferne alle nicht-numerischen Zeichen
+                const integerPart = cleanedValue.slice(0, -2) || "0" // Nimm die ersten Ziffern für den Ganzzahlteil
+                const decimalPart = cleanedValue.slice(-2).padStart(2, "0") // Fülle Dezimalstellen auf 2 auf
+
+                e.target.value = `${parseInt(integerPart)}.${decimalPart}` // Entferne führende Nullen
+            },
         },
         ...extraFields,
     ]
@@ -73,6 +100,16 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
         Wearables: false,
         "Digital Twin": false,
     })
+
+    const convertEthToEur = (eth) => {
+        if (!ethToEurRate) return "" // or any default value
+        return (eth * ethToEurRate).toFixed(2) // Convert ETH to EUR
+    }
+
+    const convertEurToEth = (eur) => {
+        if (!ethToEurRate) return "" // or any default value
+        return (eur / ethToEurRate).toFixed(18) // Convert EUR to ETH
+    }
 
     const handleTransactionCompletion = useCallback(() => {
         const { pathname } = router
@@ -141,8 +178,29 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target
-        const error = validateField(name, value)
 
+        // Überprüfen, ob das Feld "price" (ETH) oder "priceInEur" (EUR) ist
+        if (name === "price") {
+            setEthPrice(value)
+
+            // Berechnung nur ausführen, wenn das Eingabefeld nicht leer ist
+            if (value && !isNaN(value)) {
+                setEurPrice(convertEthToEur(value))
+            } else {
+                setEurPrice("") // Leeren Zustand setzen, wenn Eingabefeld leer ist
+            }
+        } else if (name === "priceInEur") {
+            setEurPrice(value)
+
+            // Berechnung nur ausführen, wenn das Eingabefeld nicht leer ist
+            if (value && !isNaN(value)) {
+                setEthPrice(convertEurToEth(value))
+            } else {
+                setEthPrice("") // Leeren Zustand setzen, wenn Eingabefeld leer ist
+            }
+        }
+
+        const error = validateField(name, value)
         setFormData((prev) => ({ ...prev, [name]: value }))
         setErrors((prev) => ({ ...prev, [name]: error ? error : "" }))
     }
@@ -162,11 +220,12 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
                 <div className={styles.sellSwapForm} ref={formRef}>
                     <SellSwapInputFields
                         fields={inputFields}
-                        formData={formData}
+                        formData={{ ...formData, price: ethPrice, priceInEur: eurPrice }}
                         errors={errors}
                         setFormData={setFormData}
                         handleChange={handleChange}
                     />
+
                     <CategoriesCheckbox
                         checkboxData={checkboxData}
                         setCheckboxData={setCheckboxData}
