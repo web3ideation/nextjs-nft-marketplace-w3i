@@ -15,10 +15,10 @@ const CollectionModal = forwardRef((prop, ref) => {
     const { data: nftsData } = useNFT()
     const { modalContent: selectedCollection } = useModal()
 
-    const [priceInEur, setPriceInEur] = useState(null)
-    const [truncCollectionAddress, setTruncCollectionAddress] = useState()
-
-    const ethToEurRate = useEthToEurRate()
+    const { ethToEurRate } = useEthToEurRate()
+    const [collectionPriceInEur, setCollectionPriceInEur] = useState(0)
+    const [formattedPriceETH, setFormattedPriceETH] = useState("")
+    const [formattedPriceEUR, setFormattedPriceEUR] = useState("")
 
     const selectedNFTs = selectedCollection ? selectedCollection.items : []
     const filteredNFTsData = nftsData.filter((nftData) =>
@@ -31,20 +31,19 @@ const CollectionModal = forwardRef((prop, ref) => {
 
     filteredNFTsData.sort((a, b) => parseInt(a.tokenId) - parseInt(b.tokenId))
 
-    useEffect(() => {
-        if (priceInEur) {
-            setPriceInEur(truncatePrice(priceInEur, 2))
-        }
-        setTruncCollectionAddress(truncateStr(selectedCollection?.nftAddress, 5, 5))
-    }, [priceInEur, selectedCollection.nftAddress])
-
     // Update the price in EUR only if we have both the price and the exchange rate
     useEffect(() => {
-        if (selectedCollection.collectionPrice && ethToEurRate) {
+        if (selectedCollection?.collectionPrice && ethToEurRate) {
             const ethPrice = formatPriceToEther(selectedCollection.collectionPrice)
-            setPriceInEur(ethPrice * ethToEurRate)
+            setCollectionPriceInEur(ethPrice * ethToEurRate)
+            setFormattedPriceETH(truncatePrice(ethPrice, 5))
+            setFormattedPriceEUR(truncatePrice(ethPrice * ethToEurRate, 2))
+        } else {
+            setCollectionPriceInEur(0)
+            setFormattedPriceETH("0")
+            setFormattedPriceEUR("0")
         }
-    }, [selectedCollection.collectionPrice, ethToEurRate])
+    }, [selectedCollection?.collectionPrice, ethToEurRate])
 
     return (
         <Modal
@@ -59,7 +58,9 @@ const CollectionModal = forwardRef((prop, ref) => {
                         <div className={styles.collectionModalText}>
                             <div>
                                 <p>Collection address: </p>
-                                <strong>{truncCollectionAddress}</strong>
+                                <strong>
+                                    {truncateStr(selectedCollection?.nftAddress, 5, 5)}
+                                </strong>
                             </div>
                             <div>
                                 <p>Items:</p>
@@ -68,17 +69,13 @@ const CollectionModal = forwardRef((prop, ref) => {
                             <div>
                                 <p>{"Token-Id's: "}</p>
                                 <strong>
-                                    {selectedCollection?.tokenIds.split(",").join(", ")}
+                                    {selectedCollection?.tokenIds?.split(",").join(", ") || "N/A"}
                                 </strong>
                             </div>
                             <div>
                                 <p>Volume: </p>
-                                <strong>
-                                    {formatPriceToEther(selectedCollection?.collectionPrice)} ETH
-                                </strong>
-                                <strong>
-                                    {priceInEur ? ` (${priceInEur} €)` : " Loading..."}
-                                </strong>
+                                <strong>{formattedPriceETH} ETH</strong>
+                                <strong>{formattedPriceEUR} €</strong>
                             </div>
                         </div>
                     </div>

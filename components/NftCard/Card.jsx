@@ -31,7 +31,7 @@ const Card = ({ nftData }) => {
     const [tokenDescription, setTokenDescription] = useState(defaultValues.tokenDescription)
     const [priceInEur, setPriceInEur] = useState(null)
 
-    const ethToEurRate = useEthToEurRate()
+    const { ethToEurRate } = useEthToEurRate()
 
     const isOwnedByUser =
         isConnected && nftData && nftData.tokenOwner?.toLowerCase() === address?.toLowerCase()

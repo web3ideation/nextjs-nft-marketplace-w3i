@@ -25,7 +25,7 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
         () => ({
             nftAddress: router.query.nftAddress || "",
             tokenId: router.query.tokenId || "",
-            price: router.query.price || "0",
+            price: router.query.price || "",
             ...extraFields.reduce((acc, field) => ({ ...acc, [field.key]: "" }), {}),
             categories: [],
         }),

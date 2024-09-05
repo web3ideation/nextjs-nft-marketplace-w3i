@@ -22,7 +22,7 @@ const Overview = ({ modalContent }) => {
     const [formattedExternalLink, setFormattedExternalLink] = useState("")
     const [imageLoaded, setImageLoaded] = useState(false)
 
-    const ethToEurRate = useEthToEurRate()
+    const { ethToEurRate } = useEthToEurRate()
 
     const isOwnedByUser =
         isConnected &&
