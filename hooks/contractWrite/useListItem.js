@@ -24,8 +24,9 @@ const useListItem = (
 
     const [listItemTxHash, setListItemTxHash] = useState(null)
     const priceInEther =
-        price.trim() !== "" ? ethers.utils.parseEther(price) : ethers.BigNumber.from("0")
-
+        price.trim() !== ""
+            ? ethers.utils.parseEther(price.replace(",", ".")) // Replace comma with dot for valid decimal format
+            : ethers.BigNumber.from("0")
     const {
         writeAsync: listItem,
         status: listItemStatus,
