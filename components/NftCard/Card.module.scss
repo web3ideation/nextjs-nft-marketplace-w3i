@@ -10,7 +10,7 @@
     min-height: 220px;
     max-width: 400px;
     max-height: 400px;
-    transition: transform 0.2s ease-in;
+    transition: 0.2s ease-in;
     border-radius: $border-radius;
     @include boxShadow;
     font-family: $font-primary;
