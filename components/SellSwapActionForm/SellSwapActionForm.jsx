@@ -1,8 +1,13 @@
-import { useEffect, useState, useCallback, useRef, useMemo } from "react"
+import { useEffect, useState, useCallback, useRef, useMemo, use } from "react"
 import { useRouter } from "next/router"
 import { usePublicClient } from "wagmi"
 import SellSwapInformation from "@components/SellSwapActionForm/SellSwapInformation/SellSwapInformation"
 import CategoriesCheckbox from "./SellSwapForm/CategoriesCheckbox"
+import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
+import { useWeb3Modal } from "@web3modal/wagmi/react"
+import NFTList from "@components/NftViewer//NftLists/List"
+import { useWalletNFTs } from "@hooks/index"
+import { useAccount } from "wagmi"
 import SellSwapInputFields from "./SellSwapForm/SellSwapInputFields"
 import BtnWithAction from "@components/Btn/BtnWithAction"
 import { useNFT } from "@context/NftDataProvider"
@@ -13,6 +18,7 @@ import { validateField } from "@utils/validation"
 import { capitalizeFirstChar } from "@utils/formatting"
 import useEthToEurRate from "@hooks/ethToEurRate/useEthToEurRate"
 import { useModal } from "@context/ModalProvider"
+import LoadingWave from "@components/LoadingWave/LoadingWave"
 
 const ActionForm = ({ action, formTitle, extraFields = [] }) => {
     const router = useRouter()
@@ -20,7 +26,11 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
     const formRef = useRef(null)
     const { openModal, modalContent, modalType, closeModal, currentModalId } = useModal()
-    const { reloadNFTs } = useNFT()
+    const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
+    const { address, isConnected } = useAccount()
+    const { nfts } = useWalletNFTs(address)
+    const [unlistedNfts, setUnlistedNfts] = useState([])
+    const { open } = useWeb3Modal()
 
     const initialFormData = useMemo(
         () => ({
@@ -33,10 +43,43 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
         [router.query.nftAddress, router.query.tokenId, router.query.price, extraFields]
     )
 
+    useEffect(() => {
+        if (router.query.nftAddress && router.query.tokenId) {
+            setFormData((prev) => ({
+                ...prev,
+                nftAddress: router.query.nftAddress,
+                tokenId: router.query.tokenId,
+                price: router.query.price,
+            }))
+        }
+    }, [router.query.nftAddress, router.query.tokenId, router.query.price])
+
+    const isOwnedByUser = useCallback(
+        (tokenOwner) => address && tokenOwner?.toLowerCase() === address.toLowerCase(),
+        [address]
+    )
+
+    useEffect(() => {
+        if (nftsData) {
+            const listedNftsSet = new Set(
+                nftsData.map((nft) => `${nft.nftAddress}-${nft.tokenId}`)
+            )
+            const filteredNfts = nfts.filter(
+                (nft) => !listedNftsSet.has(`${nft.nftAddress}-${nft.tokenId}`)
+            )
+            setUnlistedNfts(filteredNfts)
+        }
+    }, [nfts, nftsData, isOwnedByUser])
+
+    useEffect(() => {
+        reloadNFTs()
+    }, [address, reloadNFTs])
+
     const [formData, setFormData] = useState(initialFormData)
     const [ethPrice, setEthPrice] = useState(formData.price)
     const [eurPrice, setEurPrice] = useState("")
     const { ethToEurRate } = useEthToEurRate()
+    const [activeInput, setActiveInput] = useState(null) // Neuer State für aktives Eingabefeld
     const initialErrors = useMemo(
         () => ({
             nftAddress: "",
@@ -50,66 +93,39 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
 
     const [errors, setErrors] = useState(initialErrors)
 
-    const inputFields = [
-        {
-            key: "nftAddress",
-            label: "NFT Address",
-            type: "text",
-            placeholder: "0x0000000000000000000000000000000000000000",
-        },
-        { key: "tokenId", label: "Token ID", type: "text", placeholder: "0" },
-        {
-            key: "price",
-            label: "Price in ETH",
-            type: "number",
-            placeholder: "min. amount: 0.000000000000000001",
-            onInput: (e) => {
-                const { value } = e.target
-                const [integerPart, decimalPart] = value.split(".")
-                if (decimalPart && decimalPart.length > 18) {
-                    // Trim to 18 decimal places if exceeded
-                    e.target.value = `${integerPart}.${decimalPart.slice(0, 18)}`
-                }
-            },
-        },
-        {
-            key: "priceInEur",
-            label: "Price in EUR",
-            type: "number",
-            placeholder: "min. amount: 0.00",
-            onInput: (e) => {
-                const { value } = e.target
-                if (!value) return // Beende, wenn der Wert leer ist
-
-                const cleanedValue = value.replace(/[^0-9]/g, "") // Entferne alle nicht-numerischen Zeichen
-                const integerPart = cleanedValue.slice(0, -2) || "0" // Nimm die ersten Ziffern für den Ganzzahlteil
-                const decimalPart = cleanedValue.slice(-2).padStart(2, "0") // Fülle Dezimalstellen auf 2 auf
-
-                e.target.value = `${parseInt(integerPart)}.${decimalPart}` // Entferne führende Nullen
-            },
-        },
-        ...extraFields,
-    ]
-
-    const [checkboxData, setCheckboxData] = useState({
-        DAO: false,
-        Music: false,
-        Membership: false,
-        "Real world assets": false,
-        Gaming: false,
-        Wearables: false,
-        "Digital Twin": false,
-    })
+    //const [checkboxData, setCheckboxData] = useState({
+    //    DAO: false,
+    //    Music: false,
+    //    Membership: false,
+    //    "Real world assets": false,
+    //    Gaming: false,
+    //    Wearables: false,
+    //    "Digital Twin": false,
+    //})
 
     const convertEthToEur = (eth) => {
         if (!ethToEurRate) return "" // or any default value
-        return (eth * ethToEurRate).toFixed(2) // Convert ETH to EUR
+        return eth * ethToEurRate // Convert ETH to EUR
     }
 
     const convertEurToEth = (eur) => {
         if (!ethToEurRate) return "" // or any default value
-        return (eur / ethToEurRate).toFixed(18) // Convert EUR to ETH
+        return eur / ethToEurRate // Gib den ETH-Wert als Zahl zurück
     }
+
+    // Wenn ethPrice geändert wird, aktualisiere den eurPrice, aber nur, wenn das Feld "ETH" aktiv ist
+    useEffect(() => {
+        if (ethPrice && ethToEurRate && activeInput !== "priceInEur") {
+            setEurPrice(convertEthToEur(ethPrice).toFixed(2))
+        }
+    }, [ethPrice, ethToEurRate, activeInput])
+
+    // Wenn eurPrice geändert wird, aktualisiere den ethPrice, aber nur, wenn das Feld "EUR" aktiv ist
+    useEffect(() => {
+        if (eurPrice && ethToEurRate && activeInput !== "price") {
+            setEthPrice(convertEurToEth(eurPrice).toFixed(18))
+        }
+    }, [eurPrice, ethToEurRate, activeInput])
 
     const handleTransactionCompletion = useCallback(() => {
         const { pathname } = router
@@ -179,35 +195,66 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
     const handleChange = (e) => {
         const { name, value } = e.target
 
-        // Überprüfen, ob das Feld "price" (ETH) oder "priceInEur" (EUR) ist
+        setActiveInput(name) // Set the active input field
+
         if (name === "price") {
-            setEthPrice(value)
-
-            // Berechnung nur ausführen, wenn das Eingabefeld nicht leer ist
-            if (value && !isNaN(value)) {
-                setEurPrice(convertEthToEur(value))
-            } else {
-                setEurPrice("") // Leeren Zustand setzen, wenn Eingabefeld leer ist
+            const [integerPart, decimalPart] = value.split(".")
+            if (decimalPart && decimalPart.length > 18) {
+                e.target.value = `${integerPart}.${decimalPart.slice(0, 18)}`
             }
+            setEthPrice(e.target.value)
+            setFormData((prev) => ({ ...prev, price: e.target.value })) // Update formData.price directly
         } else if (name === "priceInEur") {
-            setEurPrice(value)
-
-            // Berechnung nur ausführen, wenn das Eingabefeld nicht leer ist
-            if (value && !isNaN(value)) {
-                setEthPrice(convertEurToEth(value))
-            } else {
-                setEthPrice("") // Leeren Zustand setzen, wenn Eingabefeld leer ist
+            const [integerPart, decimalPart] = value.split(".")
+            if (decimalPart && decimalPart.length > 2) {
+                e.target.value = `${integerPart}.${decimalPart.slice(0, 2)}`
             }
+            setEurPrice(e.target.value)
+            const ethValue = convertEurToEth(e.target.value).toFixed(18) // Convert EUR to ETH
+            setEthPrice(ethValue)
+            setFormData((prev) => ({ ...prev, price: ethValue })) // Ensure formData.price is updated with ETH value
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }))
         }
 
         const error = validateField(name, value)
-        setFormData((prev) => ({ ...prev, [name]: value }))
         setErrors((prev) => ({ ...prev, [name]: error ? error : "" }))
     }
 
-    const handleCategoryChange = (updatedCategories) => {
-        setFormData((prev) => ({ ...prev, categories: updatedCategories }))
+    const handleBlur = () => {
+        setActiveInput(null) // Setze das aktive Eingabefeld zurück, wenn das Feld verlassen wird
     }
+
+    const inputFields = [
+        {
+            key: "nftAddress",
+            label: "NFT Address",
+            type: "text",
+            placeholder: "0x0000000000000000000000000000000000000000",
+        },
+        { key: "tokenId", label: "Token ID", type: "text", placeholder: "0" },
+        {
+            key: "price",
+            label: "Price in ETH",
+            type: "number",
+            placeholder: "min. amount: 0.000000000000000001",
+            onChange: handleChange,
+            onBlur: handleBlur,
+        },
+        {
+            key: "priceInEur",
+            label: "Price in EUR",
+            type: "number",
+            placeholder: "min. amount: 0.00",
+            onChange: handleChange,
+            onBlur: handleBlur,
+        },
+        ...extraFields,
+    ]
+
+    //const handleCategoryChange = (updatedCategories) => {
+    //    setFormData((prev) => ({ ...prev, categories: updatedCategories }))
+    //}
 
     useEffect(() => {
         console.log("Modal Content updated:", modalContent)
@@ -220,17 +267,71 @@ const ActionForm = ({ action, formTitle, extraFields = [] }) => {
                 <div className={styles.sellSwapForm} ref={formRef}>
                     <SellSwapInputFields
                         fields={inputFields}
-                        formData={{ ...formData, price: ethPrice, priceInEur: eurPrice }}
+                        formData={{
+                            ...formData,
+                            price: ethPrice,
+                            priceInEur: eurPrice,
+                        }}
                         errors={errors}
+                        setErrors={setErrors}
                         setFormData={setFormData}
                         handleChange={handleChange}
                     />
-
-                    <CategoriesCheckbox
+                    {!isConnected ? (
+                        <div className={styles.sellSwapFormNFTListWrapper}>
+                            <h3>Nothing to {action} here</h3>
+                            <div
+                                className={`${styles.sellSwapFormNFTList} ${styles.loading} ${
+                                    action === "sell" ? styles.sell : "swap" ? styles.swap : ""
+                                }`}
+                            >
+                                <div>
+                                    <h3>
+                                        Web3 is currently not enabled - Connect your Wallet here
+                                    </h3>
+                                    <ConnectWalletBtn onConnect={open} isClient={true} />
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={styles.sellSwapFormNFTListWrapper}>
+                            <h3>Your NFTs to list</h3>
+                            {nftsLoading ? (
+                                <div
+                                    className={`${styles.loading} ${
+                                        action === "sell" ? styles.sell : "swap" ? styles.swap : ""
+                                    }`}
+                                >
+                                    <div className={styles.myNftLoadingWaveWrapper}>
+                                        <LoadingWave />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div
+                                    className={`${styles.sellSwapFormNFTList} ${
+                                        action === "sell" ? styles.sell : "swap" ? styles.swap : ""
+                                    }`}
+                                >
+                                    {unlistedNfts.length > 0 ? (
+                                        <NFTList
+                                            sortType={"myNFTFromWallet"}
+                                            nftsData={unlistedNfts}
+                                        />
+                                    ) : (
+                                        <h3>
+                                            Congratulations, you {"don't"} own any unlisted NFTs
+                                            yet!
+                                        </h3>
+                                    )}
+                                </div>
+                            )}{" "}
+                        </div>
+                    )}
+                    {/*<CategoriesCheckbox
                         checkboxData={checkboxData}
                         setCheckboxData={setCheckboxData}
                         handleCategoryChange={handleCategoryChange}
-                    />
+                    />*/}
                 </div>
                 <SellSwapInformation type={action} />
                 <BtnWithAction buttonText={"Approve and list"} onClickAction={approveAndList} />

@@ -152,7 +152,7 @@ const List = ({ nftsData: externalNftsData, sortType, title, showPlaceholders = 
 
     return (
         <div className={styles.listWrapper}>
-            <h3>{title}</h3>
+            {title && <h3>{title}</h3>}
             <div className={styles.list}>
                 {renderNFTList().length === 0 && showPlaceholders && (
                     <Card

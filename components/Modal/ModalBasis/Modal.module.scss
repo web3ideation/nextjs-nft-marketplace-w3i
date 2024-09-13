@@ -64,7 +64,6 @@
     border-radius: $border-radius;
     font-family: $font-primary;
     background: $color-white;
-    overflow: hidden;
 
     @media (min-width: 768px) and (max-width: 1023px) {
         min-width: 40%;
@@ -99,7 +98,7 @@
 
 .modalContentInnerWrapper {
     flex: 1;
-    overflow: auto;
+    overflow-x: hidden;
     padding-top: 0;
 }
 
