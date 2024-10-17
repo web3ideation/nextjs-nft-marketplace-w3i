@@ -57,5 +57,9 @@
             "title": "Cancel Listing Failed",
             "description": "Failed to unlist the NFT, it is not listed."
         }
+    },
+    "The Transaction may not be processed on a block yet.": {
+        "title": "Cancel Listing maybe Failed",
+        "description": "Reload page and check if the NFT is succesfully delisted, if not please try again."
     }
 }
