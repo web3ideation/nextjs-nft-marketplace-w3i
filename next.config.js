@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 
 const path = require("path")
+
+const allowedOrigins =
+    process.env.NODE_ENV === "production" ? "https://ideationmarket.com" : "http://localhost:3000"
+
 const nextConfig = {
     async headers() {
         return [
@@ -9,7 +13,7 @@ const nextConfig = {
                 source: "/api/:path*",
                 headers: [
                     { key: "Access-Control-Allow-Credentials", value: "true" },
-                    { key: "Access-Control-Allow-Origin", value: "http://localhost:3000" },
+                    { key: "Access-Control-Allow-Origin", value: allowedOrigins },
                     { key: "Access-Control-Allow-Methods", value: "GET,DELETE,PATCH,POST,PUT" },
                     {
                         key: "Access-Control-Allow-Headers",
@@ -24,6 +28,7 @@ const nextConfig = {
         const fileLoaderRule = config.module.rules.find((rule) => rule.test?.test?.(".svg"))
         ;(config.resolve.alias = {
             ...config.resolve.alias,
+            "@api": path.resolve(__dirname, "api"),
             "@components": path.resolve(__dirname, "components"),
             "@config": path.resolve(__dirname, "config"),
             "@constants": path.resolve(__dirname, "constants"),
