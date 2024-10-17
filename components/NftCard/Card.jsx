@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react"
 import Image from "next/image"
-
 import { useAccount } from "wagmi"
-import { useModal } from "@context/ModalProvider"
-import useEthToEurRate from "@hooks/ethToEurRate/useEthToEurRate"
-
-import { formatPriceToEther, truncatePrice } from "@utils/formatting"
-
+import { useModal } from "@context"
+import { useEthToCurrencyRates } from "@hooks"
+import { formatPriceToEther, truncatePrice } from "@utils"
 import styles from "./Card.module.scss"
 
 const Card = ({ nftData }) => {
@@ -31,7 +28,7 @@ const Card = ({ nftData }) => {
     const [tokenDescription, setTokenDescription] = useState(defaultValues.tokenDescription)
     const [priceInEur, setPriceInEur] = useState(null)
 
-    const { ethToEurRate } = useEthToEurRate()
+    const { ethToCurrencyRates } = useEthToCurrencyRates()
 
     const isOwnedByUser =
         isConnected && nftData && nftData.tokenOwner?.toLowerCase() === address?.toLowerCase()
@@ -58,11 +55,11 @@ const Card = ({ nftData }) => {
 
     // Update the price in EUR only if we have both the price and the exchange rate
     useEffect(() => {
-        if (price && ethToEurRate) {
+        if (price && ethToCurrencyRates.eur) {
             const ethPrice = formatPriceToEther(price)
-            setPriceInEur(ethPrice * ethToEurRate)
+            setPriceInEur(ethPrice * ethToCurrencyRates.eur)
         }
-    }, [price, ethToEurRate])
+    }, [price, ethToCurrencyRates.eur])
 
     const handleCardClick = useCallback(
         (nftData) => {
@@ -108,12 +105,18 @@ const Card = ({ nftData }) => {
                                 </div>
                             </div>
                             <div className={styles.cardPriceWrapper}>
-                                {formattedPrice && (
-                                    <div className={styles.cardPrice}>{formattedPrice} ETH</div>
+                                {isListedForSwap && formattedPrice === "0.0" ? null : (
+                                    <>
+                                        {formattedPrice && (
+                                            <div className={styles.cardPrice}>
+                                                {truncatePrice(formattedPrice, 5)} ETH
+                                            </div>
+                                        )}
+                                        {priceInEur ? (
+                                            <strong>{truncatePrice(priceInEur, 2)} €</strong>
+                                        ) : null}
+                                    </>
                                 )}
-                                {priceInEur ? (
-                                    <strong>{truncatePrice(priceInEur, 2)} €</strong>
-                                ) : null}
                             </div>
                         </div>
                     ) : !nftData ? null : (

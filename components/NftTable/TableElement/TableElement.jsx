@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
-
-import LoadingWave from "@components/LoadingWave/LoadingWave"
-import { useModal } from "@context/ModalProvider"
-import ComingSoon from "@components/ComingSoon/ComingSoon"
-
-import { truncateStr, formatPriceToEther, truncatePrice } from "@utils/formatting"
-
+import { useModal } from "@context"
+import { LoadingWave, ComingSoon } from "@components"
+import { truncateStr, formatPriceToEther, truncatePrice } from "@utils"
 import styles from "./TableElement.module.scss"
 
 const TableElement = ({ collection }) => {

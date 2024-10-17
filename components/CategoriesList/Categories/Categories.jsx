@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import CategoryIcon from "../CategoriesIcon/CategoryIcon"
+import { Tooltip } from "@components"
 import styles from "./Categories.module.scss"
-import Tooltip from "../../Tooltip/Tooltip"
 
 const Categories = ({ categories, onCategorySelect }) => {
     const scrollContainerRef = useRef(null)
@@ -48,7 +48,7 @@ const Categories = ({ categories, onCategorySelect }) => {
     }, [])
 
     return (
-        <div className={styles.categoryList}>
+        <>
             {showScrollBackButton && (
                 <div className={`${styles.scrollButtonContainer} ${styles.left}`}>
                     <button
@@ -64,24 +64,24 @@ const Categories = ({ categories, onCategorySelect }) => {
                     </button>
                 </div>
             )}
-            <div className={styles.categoryWrapper} ref={scrollContainerRef}>
-                {categories.map((category) => (
-                    <div
-                        key={category.id}
-                        className={styles.category}
-                        onClick={() => onCategorySelect(category.name)}
-                        onMouseEnter={() => handleMouseEnter(category.name)}
-                        onMouseLeave={handleMouseLeave}
-                    >
-                        <div className={styles.categoryImage}>
-                            <CategoryIcon categoryName={category.name} />
+            <div className={styles.categoryList}>
+                <div className={styles.categoryWrapper} ref={scrollContainerRef}>
+                    {categories.map((category) => (
+                        <div
+                            key={category.id}
+                            className={styles.category}
+                            title={`${category.name} Coming soon`}
+                            onClick={() => onCategorySelect(category.name)}
+                            onMouseEnter={() => handleMouseEnter(category.name)}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            <div className={styles.categoryImage}>
+                                <CategoryIcon categoryName={category.name} />
+                            </div>
+                            <div className={styles.categoryName}>{category.name}</div>
                         </div>
-                        <div className={styles.categoryName}>{category.name}</div>
-                        {tooltipContent === `${category.name} coming soon` && (
-                            <Tooltip message={tooltipContent} />
-                        )}
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
             {showScrollForwardButton && (
                 <div className={`${styles.scrollButtonContainer} ${styles.right}`}>
@@ -98,7 +98,7 @@ const Categories = ({ categories, onCategorySelect }) => {
                     </button>
                 </div>
             )}
-        </div>
+        </>
     )
 }
 

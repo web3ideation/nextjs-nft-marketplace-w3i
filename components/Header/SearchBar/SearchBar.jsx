@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
+import Image from "next/image"
 import styles from "./SearchBar.module.scss"
 
 const SearchBar = () => {
@@ -47,13 +48,12 @@ const SearchBar = () => {
                 placeholder="Search..."
                 aria-label="Search field"
             />
-            {searchTerm.length > 0 && (
-                <div className={styles.searchBarBtn}>
-                    <button onClick={handleSearch} aria-label="Start Search">
-                        Go
-                    </button>
-                </div>
-            )}
+
+            <div className={styles.searchBarBtn}>
+                <button onClick={handleSearch} aria-label="Start Search">
+                    <Image src="/media/SearchIcon.png" alt="Search Icon" width={20} height={20} />
+                </button>
+            </div>
         </div>
     )
 }

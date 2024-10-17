@@ -1,0 +1,25 @@
+@use "@styles/helpers/variables" as *;
+@use "@styles/helpers/mixins" as *;
+@use "@styles/helpers/keyframes" as *;
+
+.loadingBulb {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    animation: loadingBulb 2s infinite;
+
+    img {
+        // filter: invert(1);
+        width: 30px;
+        height: auto;
+        animation: loadingBulbImg 2s infinite;
+    }
+}

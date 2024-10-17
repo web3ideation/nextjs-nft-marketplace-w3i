@@ -1,11 +1,7 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-
-import SearchBar from "./SearchBar/SearchBar"
-import WalletConnectionManager from "./WalletConnect/WalletConnectionManager"
-import PopupMenu from "./PopupMenu/PopupMenu"
-
+import { SearchBar, PopupMenu, WalletConnectionManager } from "./index"
 import styles from "./Header.module.scss"
 
 const Header = () => {

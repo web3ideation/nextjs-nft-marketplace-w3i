@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react"
+import TableElement from "./TableElement/TableElement"
 import styles from "./Table.module.scss"
 
-const Table = ({ tableRows }) => {
+const Table = ({ collections }) => {
     const listRef = useRef(null)
 
     const onWheel = (e) => {
@@ -23,6 +24,13 @@ const Table = ({ tableRows }) => {
         }
     }, [])
 
+    const tableRows = collections.map((collection) => (
+        <TableElement
+            key={`coll${collection.nftAddress}${collection.itemCount}`}
+            collection={collection}
+        />
+    ))
+
     return (
         <table className={styles.table}>
             <thead>
@@ -39,4 +47,5 @@ const Table = ({ tableRows }) => {
         </table>
     )
 }
+
 export default Table

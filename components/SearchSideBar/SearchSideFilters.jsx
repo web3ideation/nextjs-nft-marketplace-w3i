@@ -5,7 +5,7 @@ import styles from "./SearchSideFilters.module.scss"
 
 const SearchSideFilters = ({ initialItems, onFilteredItemsChange }) => {
     const menuRef = useRef(null)
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(true)
     const [isButtonPressed, setIsButtonPressed] = useState(false)
 
     const [filters, setFilters] = useState({

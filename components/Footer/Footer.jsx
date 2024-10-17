@@ -1,9 +1,7 @@
 import React from "react"
 import Link from "next/link"
 import Image from "next/image"
-
-import BtnWithAction from "@components/Btn/BtnWithAction"
-
+import { BtnWithAction } from "@components"
 import styles from "./Footer.module.scss"
 
 const Footer = () => {

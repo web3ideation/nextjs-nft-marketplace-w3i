@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react"
+import Image from "next/image"
 import { useAccount } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
-import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
-import LoadingWave from "@components/LoadingWave/LoadingWave"
-import Image from "next/image"
+import { ConnectWalletBtn, LoadingWave } from "@components"
 import styles from "./SingleNotification.module.scss"
 
 const SingleNotification = ({ notification, closeNotification, clearNotification, onClose }) => {

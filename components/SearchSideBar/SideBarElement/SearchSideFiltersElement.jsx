@@ -1,7 +1,4 @@
-// React Imports
 import React, { useState, useRef, useEffect } from "react"
-
-// Style Imports
 import styles from "./SearchSideFiltersElement.module.scss"
 
 // SearchSideFiltersElement: Dropdown filter component for search sidebar.
@@ -70,7 +67,11 @@ const SearchSideFiltersElement = ({ label, options, selected, onOptionChange }) 
     )
 
     return (
-        <div className={styles.searchSideFilters} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <div
+            className={styles.searchSideFilters}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
             <div
                 className={styles.searchSideFiltersOptionWrapper}
                 onTouchStart={handleTouchStart}

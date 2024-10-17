@@ -1,13 +1,13 @@
 import React from "react"
-
-import WelcomeModal from "./ModalType/WelcomeModal/WelcomeModal"
-import ChatModal from "./ModalType/ChatModal/ChatModal"
-import InfoModal from "./ModalType/InfoModal/InfoModal"
-import CollectionModal from "./ModalType/CollectionModal/CollectionModal"
-import UpdateListingModal from "./ModalType/UpdateListingModal/UpdateListingModal"
-import TransactionModal from "./ModalType/TransactionModal/TransactionModal"
-
-import { useModal } from "@context/ModalProvider"
+import { useModal } from "@context"
+import {
+    WelcomeModal,
+    ChatModal,
+    InfoModal,
+    CollectionModal,
+    UpdateListingModal,
+    TransactionModal,
+} from "./index"
 
 const ModalRenderer = () => {
     const { modalType, isModalOpen } = useModal()

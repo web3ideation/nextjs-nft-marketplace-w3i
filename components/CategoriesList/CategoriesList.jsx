@@ -1,7 +1,6 @@
 import React, { useState } from "react"
-
 import Categories from "./Categories/Categories"
-import ComingSoon from "@components/ComingSoon/ComingSoon"
+import { ComingSoon } from "@components"
 import styles from "./CategoriesList.module.scss"
 
 const CategoriesList = () => {

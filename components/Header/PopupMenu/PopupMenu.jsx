@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react"
-import WalletConnectionManager from "../WalletConnect/WalletConnectionManager"
-import WalletMenu from "../WalletConnect/WalletMenu/WalletMenu"
+import { WalletConnectionManager, WalletMenu } from "../index"
 import styles from "./PopupMenu.module.scss"
 
 const PopupMenu = () => {
@@ -31,7 +30,11 @@ const PopupMenu = () => {
                 <div className={styles.line}></div>
                 <div className={styles.line}></div>
             </div>
-            <div className={`${styles.popupMenuLinksWrapper} ${isOpen ? styles.popupMenuLinksWrapperOpen : ""}`}>
+            <div
+                className={`${styles.popupMenuLinksWrapper} ${
+                    isOpen ? styles.popupMenuLinksWrapperOpen : ""
+                }`}
+            >
                 <WalletConnectionManager />
                 <WalletMenu />
             </div>
