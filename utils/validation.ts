@@ -1,12 +1,22 @@
 import { ethers } from "ethers"
 
 /**
+ * Utility function to validate a string using a regex pattern.
+ * @param {string} value - The string to validate.
+ * @param {RegExp} regex - The regex pattern to validate against.
+ * @returns {boolean} True if the value matches the regex, false otherwise.
+ */
+const validateWithRegex = (value: string, regex: RegExp): boolean => {
+    return regex.test(value)
+}
+
+/**
  * Checks if a given string is a valid Ethereum address.
  *
  * @param {string} address - The string to validate as an Ethereum address.
  * @returns {boolean} True if the address is valid, false otherwise.
  */
-function isValidEthereumAddress(address: string): boolean {
+export const isValidEthereumAddress = (address: string): boolean => {
     return ethers.utils.isAddress(address)
 }
 
@@ -16,20 +26,21 @@ function isValidEthereumAddress(address: string): boolean {
  * @param {string} value - The string to validate as a positive integer.
  * @returns {boolean} True if the value is a positive integer, false otherwise.
  */
-function isPositiveInteger(value: string): boolean {
-    return /^\d+$/.test(value)
+export const isPositiveInteger = (value: string): boolean => {
+    return validateWithRegex(value, /^\d+$/)
 }
 
 /**
- * Validates if a given string is a valid price format.
+ * Validates if a given string is a valid price format for Ethereum.
  *
  * @param {string} price - The string to validate as a price.
  * @returns {boolean} True if the price format is valid, false otherwise.
  */
-function isValidPrice(price: string): boolean {
+export const isValidPrice = (price: string): boolean => {
     // Ensure the price is a valid number with up to 18 decimals
-    const regex = /^\d+(\.\d{1,18})?$/
-    if (!regex.test(price)) {
+    const priceRegex = /^\d+(\.\d{1,18})?$/
+
+    if (!validateWithRegex(price, priceRegex)) {
         return false
     }
 
@@ -43,15 +54,24 @@ function isValidPrice(price: string): boolean {
 }
 
 /**
- * Checks if a given string is a valid price format for Euros.
+ * Validates if a given string is a valid price format for Euros.
  *
  * @param {string} price - The string to validate as a Euro price.
+ * @param {string} currency - The currency to validate the price against.
  * @returns {boolean} True if the Euro price format is valid, false otherwise.
  */
-function isValidEuroPrice(price: string): boolean {
-    // Ensure the price is a valid number with up to 2 decimals (common for fiat currencies)
-    const regex = /^\d+(\.\d{1,2})?$/
-    return regex.test(price)
+export const isValidCurrencyPrice = (price: string, currency: string): boolean => {
+    let regex
+
+    if (currency === "BTC") {
+        // Bitcoin: max. 8 Nachkommastellen
+        regex = /^\d+(\.\d{1,8})?$/
+    } else {
+        // Andere Währungen wie EUR, USD, GBP: max. 2 Nachkommastellen
+        regex = /^\d+(\.\d{1,2})?$/
+    }
+
+    return validateWithRegex(price, regex)
 }
 
 /**
@@ -62,42 +82,43 @@ function isValidEuroPrice(price: string): boolean {
  * @returns {string} An error message if validation fails, otherwise an empty string.
  */
 export const validateField = (name: string, value: string | number): string => {
-    value = String(value).trim()
+    const stringValue = String(value).trim()
     let errorMessage = ""
 
-    console.log(`Validating field: ${name} with value: ${value}, type: ${typeof value}`)
+    console.log(`Validating field: ${name} with value: ${stringValue}, type: ${typeof value}`)
 
     switch (name) {
         case "nftAddress":
         case "desiredNftAddress":
         case "newDesiredNftAddress":
-            if (!isValidEthereumAddress(value)) {
+            if (!isValidEthereumAddress(stringValue)) {
                 errorMessage = "Please enter a valid Ethereum address in the format 0x1234..."
             }
             break
         case "tokenId":
         case "desiredTokenId":
         case "newDesiredTokenId":
-            if (!isPositiveInteger(value)) {
+            if (!isPositiveInteger(stringValue)) {
                 errorMessage = "Please enter a positive integer or zero."
             }
             break
         case "price":
         case "newPrice":
-            if (value === "") {
+            if (stringValue === "") {
                 errorMessage = "Price cannot be empty. Please enter a positive amount or 0 in ETH."
-            } else if (!isValidPrice(value)) {
+            } else if (!isValidPrice(stringValue)) {
                 errorMessage =
                     "Please enter a valid price in ETH (up to 18 digits, with an optional 18 decimal places)."
             }
             break
-        case "priceInEur":
-        case "newPriceInEur":
-            if (value === "") {
+        case "priceInCurrency":
+        case "newPriceInCurrency":
+            if (stringValue === "") {
                 errorMessage =
-                    "Price in EUR cannot be empty. Please enter a positive amount or 0 in EUR."
-            } else if (!isValidEuroPrice(value)) {
-                errorMessage = "Please enter a valid price in EUR (up to 2 decimal places)."
+                    "Price in your currency cannot be empty. Please enter a positive amount or 0 in currency."
+            } else if (!isValidCurrencyPrice(stringValue, "EUR")) {
+                // Replace "EUR" with the appropriate currency if needed
+                errorMessage = "Please enter a valid price in currency (up to 2 decimal places)."
             }
             break
         default:

@@ -1,4 +1,3 @@
-// External Libraries
 import { ethers } from "ethers"
 
 // -----------------------------------------------------------------------------------
@@ -47,6 +46,24 @@ export const capitalizeFirstChar = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
+/**
+ * Replaces placeholders in a string with corresponding values from an object.
+ * @param {string|array} message - The message with placeholders.
+ * @param {object} values - Object with keys corresponding to placeholders.
+ * @returns {array} - Array of strings with placeholders replaced.
+ */
+export const replacePlaceholders = (message, values) => {
+    const lines = Array.isArray(message) ? message : [message]
+
+    return lines.map((line) => {
+        return Object.keys(values).reduce((currentLine, key) => {
+            const value = values[key]
+            const regex = new RegExp(`\\$\\{${key}\\}`, "g")
+            return currentLine.replace(regex, value)
+        }, line)
+    })
+}
+
 // -----------------------------------------------------------------------------------
 // Ethereum Utilities
 
@@ -57,7 +74,7 @@ export const capitalizeFirstChar = (str) => {
  * @returns {string} - The price in Ether.
  */
 export const formatPriceToEther = (priceInWei) => {
-    if (!priceInWei) return "0"
+    if (!priceInWei) return 0
 
     let priceAsString = priceInWei.toString()
 
@@ -100,7 +117,12 @@ export const truncatePrice = (price, decimalPlaces) => {
     }
 
     const factor = Math.pow(10, decimalPlaces)
-    const truncatedPrice = (Math.floor(parsedPrice * factor) / factor).toFixed(decimalPlaces)
+    let truncatedPrice = (Math.round(parsedPrice * factor) / factor).toFixed(decimalPlaces)
+
+    // Remove unnecessary trailing zeros, but keep at most two
+    truncatedPrice = truncatedPrice.replace(/(\.\d{2})0+$/g, "$1") // Behalte zwei Dezimalstellen
+    truncatedPrice = truncatedPrice.replace(/(\.\d*?[1-9])0+$/g, "$1") // Entfernt überflüssige Nullen bei mehr Dezimalstellen
+    truncatedPrice = truncatedPrice.replace(/(\.\d)$/g, "$10") // Falls nur eine Dezimalstelle übrig bleibt, füge eine zweite hinzu
 
     return truncatedPrice
 }
