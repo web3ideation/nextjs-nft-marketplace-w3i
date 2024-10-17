@@ -16,18 +16,18 @@ const metadata = {
     name: "W3I Marketplace",
     description: "W3I Marketplace description",
     url: "https://localhost:3000",
-    icons: ["https//localhost:3000"],
+    icons: ["https://localhost:3000"],
 }
 
 // Chains configuration, using the 'sepolia' testnet from Wagmi
 const { chains, publicClient } = configureChains(
     [sepolia],
     [
-        infuraProvider(apiKeyInfura),
-        alchemyProvider(apiKeyAlchemy),
+        infuraProvider({ apiKey: apiKeyInfura }),
+        alchemyProvider({ apiKey: apiKeyAlchemy }),
         jsonRpcProvider({
             rpc: (sepolia) => ({
-                http: "https://rpc.sepolia.online/",
+                http: "https://rpc2.sepolia.org",
             }),
         }),
     ]
