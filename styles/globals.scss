@@ -94,8 +94,15 @@ button {
 }
 
 input {
-    font-size: $p-font-size;
+    font-size: $font-size-xs;
     font-weight: $font-weight-normal;
+    @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: $font-size-small;
+    }
+
+    @media (min-width: 1024px) {
+        font-size: $font-size-medium;
+    }
 }
 
 textarea {

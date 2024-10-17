@@ -1,3 +1,5 @@
+@use "@styles/helpers/variables" as *;
+
 @keyframes slideIn {
     0% {
         opacity: 0;
@@ -108,5 +110,29 @@
     }
     100% {
         transform: scale(0);
+    }
+}
+
+//@keyframes loadingBulb {
+//0% {
+//    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+//}
+//50% {
+//    filter: drop-shadow(0 -10px 7.5px $color-orange);
+//}
+//100% {
+//    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+//}
+//}
+@keyframes loadingBulb {
+    0% {
+        background-color: $color-white;
+    }
+    50% {
+        background-color: $color-orange;
+        box-shadow: 0px 0px 20px 20px $color-orange;
+    }
+    100% {
+        background-color: $color-white;
     }
 }
