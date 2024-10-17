@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import { useAccount, usePublicClient } from "wagmi"
-import { useGetProceeds } from "../hooks/index"
-import { useWithdrawProceeds } from "../hooks/index"
-import { fetchEthToEurRate } from "@utils/fetchEthToEurRate"
-import networkMapping from "@constants/networkMapping.json"
-import { useModal } from "@context/ModalProvider"
-import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
-import BtnWithAction from "@components/Btn/BtnWithAction"
+import { useModal } from "@context"
+import { networkMapping } from "@constants"
+import { useGetProceeds, useWithdrawProceeds, useEthToCurrencyRates } from "@hooks"
+import { ConnectWalletBtn, BtnWithAction } from "@components"
+import { truncatePrice } from "@utils"
 import styles from "@styles/Home.module.scss"
 
 const WithdrawProceeds = () => {
@@ -21,13 +19,10 @@ const WithdrawProceeds = () => {
     const [proceeds, setProceeds] = useState("0.0")
     const [proceedsInEur, setProceedsInEur] = useState("0.0")
 
-    const {
-        returnedProceeds,
-        isLoadingProceeds,
-        errorLoadingProceeds,
-        proceedsStatus,
-        refetchProceeds,
-    } = useGetProceeds(marketplaceAddress, userAddress)
+    const { ethToCurrencyRates } = useEthToCurrencyRates()
+
+    const { returnedProceeds, isLoadingProceeds, errorLoadingProceeds, refetchProceeds } =
+        useGetProceeds(marketplaceAddress, userAddress)
 
     const handleWithdrawSuccess = () => {
         refetchProceeds()
@@ -57,13 +52,12 @@ const WithdrawProceeds = () => {
 
     useEffect(() => {
         const updatePriceInEur = async () => {
-            const ethToEurRate = await fetchEthToEurRate()
-            if (ethToEurRate) {
-                setProceedsInEur(proceeds * ethToEurRate)
+            if (ethToCurrencyRates.eur) {
+                setProceedsInEur(proceeds * ethToCurrencyRates.eur)
             }
         }
         updatePriceInEur()
-    }, [proceeds])
+    }, [proceeds, ethToCurrencyRates])
 
     return (
         <div className={styles.withdrawProceedsContainer}>
@@ -104,7 +98,7 @@ const WithdrawProceeds = () => {
                                 ) : (
                                     <div className={styles.proceeds}>
                                         <div>{proceeds} ETH</div>
-                                        <div>{proceedsInEur} €</div>
+                                        <div>{truncatePrice(proceedsInEur, 2)} €</div>
                                     </div>
                                 )}
                             </div>

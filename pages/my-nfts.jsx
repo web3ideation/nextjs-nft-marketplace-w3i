@@ -1,29 +1,25 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react"
 import { useAccount } from "wagmi"
 import { useWeb3Modal } from "@web3modal/wagmi/react"
-
-import { useNFT } from "@context/NftDataProvider"
-import { useWalletNFTs } from "@hooks/index"
-import LoadingWave from "@components/LoadingWave/LoadingWave"
-import NFTList from "@components/NftViewer/NftLists/List"
-import ConnectWalletBtn from "@components/Btn/ConnectWalletBtn/ConnectWalletBtn"
-
-import { formatPriceToEther, truncatePrice } from "@utils/formatting"
-import useEthToEurRate from "@hooks/ethToEurRate/useEthToEurRate"
-
+import { useNFT } from "@context"
+import { useWalletNFTs, useEthToCurrencyRates } from "@hooks"
+import { LoadingWave, List, ConnectWalletBtn } from "@components"
+import { formatPriceToEther, truncatePrice } from "@utils"
 import styles from "@styles/Home.module.scss"
 
 const MyNFTs = () => {
     const { address, isConnected } = useAccount()
-    const { nfts } = useWalletNFTs(address)
+    const { nfts: walletNfts, isLoading: walletNftsLoading } = useWalletNFTs(address)
     const { data: nftsData, isLoading: nftsLoading, reloadNFTs } = useNFT()
-    const { ethToEurRate, fetching, errorFetching } = useEthToEurRate()
+    const { ethToCurrencyRates, fetching, fetchingSuccess, errorFetching } =
+        useEthToCurrencyRates()
     const { open } = useWeb3Modal()
 
     const [hasOwnNFT, setHasOwnNFT] = useState(false)
     const [unlistedNfts, setUnlistedNfts] = useState([])
-    const [nftCount, setNftCount] = useState(0)
 
+    const [nftListedCount, setNftListedCount] = useState(0)
+    const [nftTotalCount, setNftTotalCount] = useState(0)
     const [totalPrice, setTotalPrice] = useState(0)
 
     const isOwnedByUser = useCallback(
@@ -33,8 +29,8 @@ const MyNFTs = () => {
 
     const totalPriceInEth = useMemo(() => formatPriceToEther(totalPrice), [totalPrice])
     const totalPriceInEur = useMemo(
-        () => (totalPrice && ethToEurRate ? totalPriceInEth * ethToEurRate : 0),
-        [totalPriceInEth, ethToEurRate]
+        () => (totalPrice && ethToCurrencyRates ? totalPriceInEth * ethToCurrencyRates.eur : 0),
+        [totalPriceInEth, ethToCurrencyRates, totalPrice]
     )
 
     useEffect(() => {
@@ -42,7 +38,7 @@ const MyNFTs = () => {
             const listedNftsSet = new Set(
                 nftsData.map((nft) => `${nft.nftAddress}-${nft.tokenId}`)
             )
-            const filteredNfts = nfts.filter(
+            const filteredNfts = walletNfts.filter(
                 (nft) => !listedNftsSet.has(`${nft.nftAddress}-${nft.tokenId}`)
             )
             setUnlistedNfts(filteredNfts)
@@ -59,12 +55,13 @@ const MyNFTs = () => {
             )
 
             setTotalPrice(total)
-            setNftCount(count)
+            setNftTotalCount(walletNfts.length)
+            setNftListedCount(count)
             setHasOwnNFT(filteredNfts.length > 0 || count > 0)
         } else {
             setTotalPrice(0)
         }
-    }, [nfts, nftsData, isOwnedByUser])
+    }, [walletNfts, nftsData, isOwnedByUser])
 
     useEffect(() => {
         reloadNFTs()
@@ -89,14 +86,18 @@ const MyNFTs = () => {
         }
 
         return (
-            <>
-                <div className={styles.nftListingContainer}>
-                    {nftCount > 0 ? (
-                        <NFTList
-                            sortType={"myNFTListed"}
-                            title={"Listed on marketplace"}
-                            showPlaceholders={false}
-                        />
+            <div className={styles.nftListingContainer}>
+                <div className={styles.myNftContainer}>
+                    {nftListedCount > 0 ? (
+                        nftsLoading ? (
+                            <LoadingWave />
+                        ) : (
+                            <List
+                                sortType={"myNFTListed"}
+                                title={"Listed on marketplace"}
+                                showPlaceholders={false}
+                            />
+                        )
                     ) : (
                         <>
                             <h3>You {"don't"} have any listed NFTs yet!</h3>
@@ -107,19 +108,21 @@ const MyNFTs = () => {
                             </p>
                         </>
                     )}
-                </div>
-                <div className={styles.nftListingContainer}>
                     {unlistedNfts.length > 0 ? (
-                        <NFTList
-                            sortType={"myNFTFromWallet"}
-                            title={"Unlisted in your wallet"}
-                            nftsData={unlistedNfts}
-                        />
+                        walletNftsLoading ? (
+                            <LoadingWave />
+                        ) : (
+                            <List
+                                sortType={"myNFTFromWallet"}
+                                title={"Unlisted in your wallet"}
+                                nftsData={unlistedNfts}
+                            />
+                        )
                     ) : (
                         <h3>Congratulations, you {"don't"} own any unlisted NFTs yet!</h3>
                     )}
                 </div>
-            </>
+            </div>
         )
     }
 
@@ -139,7 +142,7 @@ const MyNFTs = () => {
             <h2>My NFTs</h2>
             {isConnected && (
                 <div className={styles.myNftTotalInformation}>
-                    <p>Total NFTs listed: {nftCount}</p>
+                    <p>Total NFTs listed: {nftListedCount}</p>
                     <p title={totalPriceInEth}>
                         Total price listed NFTs: {truncatePrice(totalPriceInEth, 5)}... ETH
                     </p>
@@ -152,6 +155,8 @@ const MyNFTs = () => {
                             Total price listed NFTs: {truncatePrice(totalPriceInEur, 2)}... €
                         </p>
                     )}
+                    <p>Total NFTs unlisted: {unlistedNfts.length}</p>
+                    <p>Total NFTs: {nftTotalCount}</p>
                 </div>
             )}
             {renderNftInfo()}

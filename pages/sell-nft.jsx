@@ -1,4 +1,4 @@
-import ActionForm from "@components/SellSwapActionForm/SellSwapActionForm"
+import { ActionForm } from "@components"
 
 const SellNFT = () => {
     return <ActionForm action="sell" formTitle="Sell your NFT!" />

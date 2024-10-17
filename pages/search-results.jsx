@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/router"
-
-import { useNFT } from "@context/NftDataProvider"
-import SearchSideFilters from "@components/SearchSideBar/SearchSideFilters"
-import NFTList from "@components/NftViewer/NftLists/List"
-
 import { ethers } from "ethers"
-
+import { useNFT } from "@context"
+import { SearchSideFilters, List } from "@components"
 import styles from "@styles/Home.module.scss"
 
 const SearchResults = () => {
@@ -94,7 +90,7 @@ const SearchResults = () => {
             <div className={styles.nftSearchResultsContainer}>
                 <div className={styles.nftSearchResultsWrapper}>
                     {filteredNFTs.length > 0 ? (
-                        <NFTList
+                        <List
                             nftsData={filteredNFTs}
                             sortType={""}
                             title={`Search Results for: ${searchTerm}`}

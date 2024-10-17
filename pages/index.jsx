@@ -1,9 +1,5 @@
 import React from "react"
-
-import CategoriesList from "@components/CategoriesList/CategoriesList"
-import List from "@components/NftViewer/NftLists/List"
-import Collection from "@components/NftViewer/NftCollection/Collection"
-
+import { CategoriesList, List, Collection } from "@components"
 import styles from "@styles/Home.module.scss"
 
 const Home = () => {

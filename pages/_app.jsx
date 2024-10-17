@@ -1,15 +1,10 @@
 import React from "react"
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
 import Head from "next/head"
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
 import { WagmiConfig } from "wagmi"
-import { wagmiConfig } from "@config/wagmiConfig"
-import { NftProvider } from "@context/NftDataProvider"
-import { ModalProvider } from "@context/ModalProvider"
-import { NotificationProvider } from "@context/NotificationProvider"
-import ModalRenderer from "@components/Modal/ModalRenderer"
-import Notification from "@components/Notification/Notification"
-import Header from "@components/Header/Header"
-import Footer from "@components/Footer/Footer"
+import { wagmiConfig } from "@config"
+import { ModalProvider, NftProvider, NotificationProvider } from "@context"
+import { Header, Footer, ModalRenderer, Notification, PageLoader } from "@components"
 import "@styles/globals.scss"
 
 const client = new ApolloClient({
@@ -38,7 +33,9 @@ function MyApp({ Component, pageProps }) {
                                 <Notification />
                                 <Header />
                                 <ModalRenderer />
-                                <Component {...pageProps} />
+                                <PageLoader>
+                                    <Component {...pageProps} />
+                                </PageLoader>
                                 <Footer />
                             </NotificationProvider>
                         </NftProvider>
