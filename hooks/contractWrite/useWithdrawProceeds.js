@@ -1,8 +1,7 @@
 import { useState, useCallback } from "react"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
-import nftMarketplaceAbi from "@constants/NftMarketplace.json"
-import useTransactionHandlers from "../transactionHandlers/useTransactionHandlers"
-import useTransactionStatus from "../transactionStatus/useTransactionStatus"
+import { marketplaceAbi } from "@constants"
+import { useTransactionHandlers, useTransactionStatus } from "@hooks"
 
 export const useWithdrawProceeds = (marketplaceAddress, proceeds, onSuccessCallback) => {
     const {
@@ -20,7 +19,7 @@ export const useWithdrawProceeds = (marketplaceAddress, proceeds, onSuccessCallb
         error: withdrawProceedsStatusError,
     } = useContractWrite({
         address: marketplaceAddress,
-        abi: nftMarketplaceAbi,
+        abi: marketplaceAbi,
         functionName: "withdrawProceeds",
         onSuccess: (data) => {
             setWithdrawProceedsTxHash(data.hash)

@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react"
 import { erc721ABI, useContractWrite, useWaitForTransaction } from "wagmi"
-import useTransactionHandlers from "../transactionHandlers/useTransactionHandlers"
-import useTransactionStatus from "../transactionStatus/useTransactionStatus"
+import { useTransactionHandlers, useTransactionStatus } from "@hooks"
 
 const useApprove = (marketplaceAddress, nftAddress, tokenId, onSuccessCallback) => {
     const {
@@ -24,6 +23,7 @@ const useApprove = (marketplaceAddress, nftAddress, tokenId, onSuccessCallback) 
         args: [marketplaceAddress, tokenId],
         onSuccess: (data) => {
             setApproveTxHash(data.hash)
+            console.log("Transaction successful with hash: ", data)
         },
         onError: (error) => {
             console.error("An error occurred during the transaction: ", error.message)
@@ -34,6 +34,9 @@ const useApprove = (marketplaceAddress, nftAddress, tokenId, onSuccessCallback) 
 
     const { status: waitApproveStatus, error: waitApproveStatusError } = useWaitForTransaction({
         hash: approveTxHash,
+        onSuccess: (data) => {
+            console.log("Transaction confirmed", data)
+        },
         onError: (error) => {
             handleTransactionError(error)
             handleTransactionFailure("approve")

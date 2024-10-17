@@ -28,5 +28,10 @@
         "title": "Withdrawl",
         "message": "Withdraw procceds process started...",
         "type": "info"
+    },
+    "getApproved": {
+        "title": "Checking Approval",
+        "message": "Checking if NFT is already approved.",
+        "type": "info"
     }
 }

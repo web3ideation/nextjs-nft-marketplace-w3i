@@ -1,6 +1,5 @@
 import { useContractRead } from "wagmi"
-
-import nftMarketplaceAbi from "@constants/NftMarketplace.json"
+import { marketplaceAbi } from "@constants"
 
 export const useGetProceeds = (marketplaceAddress, userAddress) => {
     const {
@@ -11,7 +10,7 @@ export const useGetProceeds = (marketplaceAddress, userAddress) => {
         refetch: refetchProceeds,
     } = useContractRead({
         address: marketplaceAddress,
-        abi: nftMarketplaceAbi,
+        abi: marketplaceAbi,
         functionName: "getProceeds",
         args: [userAddress],
     })

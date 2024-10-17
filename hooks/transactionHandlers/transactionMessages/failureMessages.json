@@ -28,5 +28,10 @@
         "title": "Withdraw Proceeds Failed",
         "message": "Failed to withdraw your proceeds.",
         "type": "error"
+    },
+    "getApproved": {
+        "title": "Get Approval Failed",
+        "message": "Failed to get approval for the NFT.",
+        "type": "error"
     }
 }

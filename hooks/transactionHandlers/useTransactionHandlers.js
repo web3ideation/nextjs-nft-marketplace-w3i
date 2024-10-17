@@ -1,15 +1,17 @@
 import { useCallback, useRef } from "react"
-import { useNotification } from "@context/NotificationProvider"
 import { useAccount } from "wagmi"
-import { replacePlaceholders } from "@utils/replacePlaceholder"
+import { useNotification } from "@context"
+import { replacePlaceholders } from "@utils"
 
-import errorMessageMapping from "./transactionMessages/errorMessages.json"
-import failureMessages from "./transactionMessages/failureMessages.json"
-import notConnectedMessages from "./transactionMessages/notConnectedMessages.json"
-import inProgressMessages from "./transactionMessages/inProgressMessages.json"
-import confirmMessages from "./transactionMessages/confirmMessages.json"
-import loadingMessages from "./transactionMessages/loadingMessages.json"
-import successMessages from "./transactionMessages/successMessages.json"
+import {
+    errorMessages,
+    failureMessages,
+    notConnectedMessages,
+    inProgressMessages,
+    confirmMessages,
+    loadingMessages,
+    successMessages,
+} from "./transactionMessages"
 
 export const useTransactionHandlers = () => {
     const { showNotification, closeNotification } = useNotification()
@@ -20,7 +22,7 @@ export const useTransactionHandlers = () => {
 
     const handleTransactionError = useCallback(
         (error) => {
-            const foundError = Object.entries(errorMessageMapping).find(([key]) =>
+            const foundError = Object.entries(errorMessages).find(([key]) =>
                 error.message.includes(key)
             )
             const {
@@ -29,7 +31,7 @@ export const useTransactionHandlers = () => {
                 type = "error",
                 persist = true,
             } = foundError
-                ? errorMessageMapping[foundError[0]]
+                ? errorMessages[foundError[0]]
                 : {
                       title: "Error",
                       description: error.message || "Failed to process the transaction.",

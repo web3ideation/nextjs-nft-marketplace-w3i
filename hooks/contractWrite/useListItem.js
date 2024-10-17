@@ -1,9 +1,8 @@
 import { useState, useCallback } from "react"
 import { ethers } from "ethers"
 import { useContractWrite, useWaitForTransaction } from "wagmi"
-import nftMarketplaceAbi from "@constants/NftMarketplace.json"
-import useTransactionHandlers from "../transactionHandlers/useTransactionHandlers"
-import useTransactionStatus from "../transactionStatus/useTransactionStatus"
+import { marketplaceAbi } from "@constants"
+import { useTransactionHandlers, useTransactionStatus } from "@hooks"
 
 const useListItem = (
     marketplaceAddress,
@@ -24,16 +23,17 @@ const useListItem = (
 
     const [listItemTxHash, setListItemTxHash] = useState(null)
     const priceInEther =
-        price.trim() !== ""
-            ? ethers.utils.parseEther(price.replace(",", ".")) // Replace comma with dot for valid decimal format
+        price && !isNaN(price)
+            ? ethers.utils.parseEther(price.toString().replace(",", "."))
             : ethers.BigNumber.from("0")
+
     const {
         writeAsync: listItem,
         status: listItemStatus,
         error: listItemStatusError,
     } = useContractWrite({
         address: marketplaceAddress,
-        abi: nftMarketplaceAbi,
+        abi: marketplaceAbi,
         functionName: "listItem",
         args: [
             nftAddress,

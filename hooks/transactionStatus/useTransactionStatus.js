@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import useTransactionHandlers from "../transactionHandlers/useTransactionHandlers"
-import { truncateStr } from "@utils/formatting"
+import { truncateStr } from "@utils"
 
 const useTransactionStatus = ({
     status,

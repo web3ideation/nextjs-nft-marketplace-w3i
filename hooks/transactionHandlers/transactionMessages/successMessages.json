@@ -11,12 +11,12 @@
     },
     "listItem": {
         "title": "Listing Successful",
-        "message": "You have successfully listed the NFT.",
+        "message": "You have successfully listed the NFT on our marketplace.",
         "type": "success"
     },
     "approve": {
         "title": "Approval Successful",
-        "message": "You have successfully approved the transaction.",
+        "message": "You have successfully approved the NFT for our marketplace.",
         "type": "success"
     },
     "updateListing": {
@@ -27,6 +27,11 @@
     "withdrawProceeds": {
         "title": "Withdraw Proceeds Successful",
         "message": "You have successfully withdrawn your proceeds.",
+        "type": "success"
+    },
+    "getApproved": {
+        "title": "NFT Already Approved",
+        "message": "You're NFT is already approved for our marketplace you can directly list.",
         "type": "success"
     }
 }
